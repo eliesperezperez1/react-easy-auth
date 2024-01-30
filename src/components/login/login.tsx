@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 function Login(props: any) {
   const [error, setError] = useState("");
   const signIn = useSignIn();
+  const navigate = useNavigate();
 
   const onSubmit = async (values: any) => {
     console.log("Values: ", values);
@@ -33,16 +34,16 @@ function Login(props: any) {
 
     try {
       const response = await axios.post(
-        "http://localhost:9000/api/v1/login",
+        "http://localhost:3000/auth/login",
         values
       );
-
       signIn({
         token: response.data.token,
         expiresIn: 3600,
         tokenType: "Bearer",
         authState: { email: values.email },
       });
+      navigate("/hola");
     } catch (err) {
       if (err && err instanceof AxiosError)
         setError(err.response?.data.message);
