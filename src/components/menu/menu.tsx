@@ -41,7 +41,7 @@ const Menu = () => {
             </li>
             <li>
               <a onClick={logout}>
-                <LogoutIcon /> <div>Tancar sessió</div>
+                <div>Tancar sessió</div>
               </a>
             </li>
           </ul>
