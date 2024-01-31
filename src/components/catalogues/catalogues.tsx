@@ -180,9 +180,6 @@ function CatalogueList() {
 
   return (
     <div>
-      <div>
-        <button onClick={logout}>LOG OUT</button>
-      </div>
       <DataGrid
         rows={catalogues}
         columns={columns}

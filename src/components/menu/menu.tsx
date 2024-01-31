@@ -31,7 +31,13 @@ const Menu = () => {
         <div className={`nav-elements  ${showNavbar && "active"}`}>
           <ul>
             <li>
-              <NavLink to="/">Inventari</NavLink>
+              <a
+                onClick={() => {
+                  navigate("/catalogues");
+                }}
+              >
+                Inventari
+              </a>
             </li>
             <li>
               <NavLink to="/blog">Serveis</NavLink>
