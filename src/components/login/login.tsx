@@ -1,14 +1,5 @@
 import { Button } from "baseui/button";
-import { Input } from "baseui/input";
-import styled from "styled-components";
-import {
-  HeadingXXLarge,
-  HeadingXLarge,
-  HeadingLarge,
-  HeadingMedium,
-  HeadingSmall,
-  HeadingXSmall,
-} from "baseui/typography";
+import { HeadingXXLarge } from "baseui/typography";
 import {
   Container,
   ErrorText,
@@ -22,6 +13,7 @@ import { useFormik } from "formik";
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API } from "../../utils/constants";
 
 function Login(props: any) {
   const [error, setError] = useState("");
@@ -33,15 +25,13 @@ function Login(props: any) {
     setError("");
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/auth/login",
-        values
-      );
+      const response = await axios.post(API + "/auth/login", values);
+      console.log(response.data);
       signIn({
         token: response.data.token,
         expiresIn: 3600,
         tokenType: "Bearer",
-        authState: { email: values.email },
+        authState: { user: response.data.user, id: response.data.id },
       });
       navigate("/hola");
     } catch (err) {

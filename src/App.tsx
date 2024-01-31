@@ -4,10 +4,11 @@ import "./App.css";
 import styled from "styled-components";
 import { Route, Routes } from "react-router-dom";
 import { Login } from "./components/login/login";
-import { Home } from "./components/home";
+import { Home } from "./components/home/home";
 import { RequireAuth } from "react-auth-kit";
-import { Dashboard } from "./components/dashboard";
-import CatalogueList from "./components/catalogues";
+import { Dashboard } from "./components/dashboard/dashboard";
+import CatalogueList from "./components/catalogues/catalogues";
+import Menu from "./components/menu/menu";
 
 const AppContainer = styled.div`
   width: 100%;
@@ -22,7 +23,10 @@ function App() {
           path="/"
           element={
             <RequireAuth loginPath="/login">
-              <Home />
+              <>
+                <Menu />
+                <Home />
+              </>
             </RequireAuth>
           }
         ></Route>
@@ -30,7 +34,10 @@ function App() {
           path="/hola"
           element={
             <RequireAuth loginPath="/login">
-              <Dashboard />
+              <>
+                <Menu />
+                <Dashboard />
+              </>
             </RequireAuth>
           }
         ></Route>
@@ -38,7 +45,10 @@ function App() {
           path="/catalogues"
           element={
             <RequireAuth loginPath="/login">
-              <CatalogueList />
+              <>
+                <Menu />
+                <CatalogueList />
+              </>
             </RequireAuth>
           }
         ></Route>

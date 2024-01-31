@@ -164,13 +164,14 @@ function CatalogueList() {
     singOut();
     navigate("/login");
   };
+
   useEffect(() => {
     getCataloguesRequest(authHeader())
       .then((response) => response.json())
       .then((data) => {
         setCatalogues(data);
       });
-  }, []);
+  }, [catalogues]);
 
   if (!catalogues.length)
     return (
