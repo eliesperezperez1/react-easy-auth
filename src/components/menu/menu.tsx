@@ -2,7 +2,6 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { ReactComponent as Brand } from "../../assets/logowithname.svg";
 import MenuIcon from "@mui/icons-material/Menu";
-import LogoutIcon from "@mui/icons-material/Logout";
 import "./menu.css";
 import { useSignOut } from "react-auth-kit";
 

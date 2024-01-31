@@ -1,4 +1,4 @@
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { Box, Button, FormControl } from "@mui/material";
 import {
   GridToolbarColumnsButton,
@@ -15,7 +15,11 @@ import { Catalogue } from "../../interfaces/catalogue.interface";
 import { getCataloguesRequest } from "../../api/catalogues";
 import { useAuthHeader, useSignOut } from "react-auth-kit";
 import { useNavigate } from "react-router-dom";
+import Chip from "@mui/material/Chip";
+import { ReactComponent as Val } from "../../assets/val.svg";
+import { ReactComponent as Esp } from "../../assets/esp.svg";
 
+import "./catalogues.css";
 function CustomToolbar() {
   return (
     <div>
@@ -29,25 +33,11 @@ function CustomToolbar() {
               <Button
                 sx={{
                   "&:hover": {
-                    backgroundColor: "blue",
-                    color: "white",
-                  },
-                }}
-                id="demo-select-small"
-              ></Button>
-            </Box>
-            <Box
-              className="Tabla"
-              sx={{ display: "flex", alignItems: "center" }}
-            >
-              <Button
-                sx={{
-                  "&:hover": {
-                    backgroundColor: "blue",
+                    backgroundColor: "black",
                     color: "white",
                   },
                   "&:active": {
-                    backgroundColor: "blue",
+                    backgroundColor: "black",
                     color: "white",
                   },
                 }}
@@ -133,14 +123,22 @@ function CustomToolbar() {
 function paletaColores(color: string) {
   switch (color) {
     case "colorTextAlter":
-      return "#1976d2";
+      return "#787878";
     case "colorBgRowSelected":
       return "rgba(255, 202, 66, 0.62)";
     case "colorBgRowSelectedBorder":
-      return "rgba(104, 250, 255, 1)";
+      return "#333333";
     case "colorRowHover":
-      return "rgba(255,200,64, 0.2)";
+      return "rgba(212, 212, 212, 0.2)";
   }
+}
+
+function yesOrNo(p: string | undefined) {
+  return p === "NO" || undefined ? "error" : "success";
+}
+function valOrEsp(p: string | undefined) {
+  console.log(p);
+  return p === "VAL" || undefined ? <Val /> : <Esp />;
 }
 
 function CatalogueList() {
@@ -152,6 +150,34 @@ function CatalogueList() {
     { field: "_id", headerName: "ID", width: 200 },
     { field: "title", headerName: "Title", width: 200 },
     { field: "description", headerName: "Description", width: 200 },
+    { field: "territorialScope", headerName: "Territorial Scope", width: 200 },
+    { field: "contactPerson", headerName: "Contact Person", width: 200 },
+    {
+      field: "georreference",
+      headerName: "Georeference",
+      width: 70,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+    },
+    {
+      field: "language",
+      headerName: "Language",
+      width: 70,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>{valOrEsp(params.value)}</>
+      ),
+    },
+    {
+      field: "source",
+      headerName: "Source",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <a href={params.value}>{params.value}</a>
+      ),
+    },
     {
       field: "lastUpdate",
       headerName: "Last Update",
@@ -160,10 +186,6 @@ function CatalogueList() {
       valueGetter: ({ value }) => value && new Date(value),
     },
   ];
-  const logout = () => {
-    singOut();
-    navigate("/login");
-  };
 
   useEffect(() => {
     getCataloguesRequest(authHeader())
