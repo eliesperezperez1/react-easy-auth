@@ -18,7 +18,6 @@ function Home() {
     const response = await axios.get("http://localhost:9000/api/v1/payment", {
       withCredentials: true,
     });
-    console.log("Response: ", response);
   };
 
   return (

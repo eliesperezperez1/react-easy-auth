@@ -22,7 +22,7 @@ export interface Catalogue {
   timmingEffect: string;
   creationDate: Date;
   deleted: boolean;
-  deleteDate: Date;
+  deletedDate: Date;
   personalData: string;
   activeAds: string;
   source: string;

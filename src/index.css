@@ -10,9 +10,24 @@ body {
   font-family: 'Montserrat', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #F2F2F2!important;
+  color: #0D0D0D!important;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.light-text{
+  color: #F2F2F2 !important;
+}
+.dark-text{
+  color:#0D0D0D !important;
+}
+.light-background{
+  background-color: #F2F2F2 !important;
+}
+.dark-background{
+  background-color: #0D0D0D !important;
 }

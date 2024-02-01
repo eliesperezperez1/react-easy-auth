@@ -14,19 +14,17 @@ import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API } from "../../utils/constants";
-
+import "./login.css";
 function Login(props: any) {
   const [error, setError] = useState("");
   const signIn = useSignIn();
   const navigate = useNavigate();
 
   const onSubmit = async (values: any) => {
-    console.log("Values: ", values);
     setError("");
 
     try {
       const response = await axios.post(API + "/auth/login", values);
-      console.log(response.data);
       signIn({
         token: response.data.token,
         expiresIn: 3600,
@@ -53,9 +51,9 @@ function Login(props: any) {
 
   return (
     <Container>
-      <InnerContainer>
+      <InnerContainer className="inner-container">
         <form onSubmit={formik.handleSubmit}>
-          <HeadingXXLarge>Welcome Back!</HeadingXXLarge>
+          <HeadingXXLarge className="light-text">Welcome Back!</HeadingXXLarge>
           <ErrorText>{error}</ErrorText>
           <InputWrapper>
             <StyledInput
@@ -80,7 +78,12 @@ function Login(props: any) {
             />
           </InputWrapper>
           <InputWrapper>
-            <Button size="large" kind="primary" isLoading={formik.isSubmitting}>
+            <Button
+              className="light-background dark-text"
+              size="large"
+              kind="primary"
+              isLoading={formik.isSubmitting}
+            >
               Login
             </Button>
           </InputWrapper>

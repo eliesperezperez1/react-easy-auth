@@ -1,5 +1,16 @@
-import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import { Box, Button, FormControl } from "@mui/material";
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  esES,
+} from "@mui/x-data-grid";
+import {
+  Box,
+  Button,
+  FormControl,
+  ThemeProvider,
+  createTheme,
+} from "@mui/material";
 import {
   GridToolbarColumnsButton,
   GridToolbarContainer,
@@ -12,113 +23,35 @@ import RestoreIcon from "@mui/icons-material/Restore";
 import EditIcon from "@mui/icons-material/Edit";
 import { useEffect, useState } from "react";
 import { Catalogue } from "../../interfaces/catalogue.interface";
-import { getCataloguesRequest } from "../../api/catalogues";
-import { useAuthHeader, useSignOut } from "react-auth-kit";
-import { useNavigate } from "react-router-dom";
+import {
+  getCataloguesRequest,
+  updateCatalogueRequest,
+} from "../../api/catalogues";
+import { useAuthHeader } from "react-auth-kit";
 import Chip from "@mui/material/Chip";
 import { ReactComponent as Val } from "../../assets/val.svg";
 import { ReactComponent as Esp } from "../../assets/esp.svg";
 
 import "./catalogues.css";
-function CustomToolbar() {
-  return (
-    <div>
-      <GridToolbarContainer>
-        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-          <div>
-            <Box
-              className="Tabla"
-              sx={{ display: "flex", alignItems: "center" }}
-            >
-              <Button
-                sx={{
-                  "&:hover": {
-                    backgroundColor: "black",
-                    color: "white",
-                  },
-                  "&:active": {
-                    backgroundColor: "black",
-                    color: "white",
-                  },
-                }}
-                id="demo-select-small"
-              >
-                Deleted
-              </Button>
-            </Box>
-          </div>
-        </FormControl>
-        <GridToolbarColumnsButton
-          sx={{
-            padding: 1,
-            "&:hover": {
-              borderWidth: 1,
-              borderStyle: "solid",
-              borderColor: "#acacff",
-            },
-          }}
-        />
-        <GridToolbarFilterButton
-          sx={{
-            padding: 1,
-            "&:hover": {
-              borderWidth: 1,
-              borderStyle: "solid",
-              borderColor: "#acacff",
-            },
-          }}
-        />
-        <GridToolbarDensitySelector
-          sx={{
-            padding: 1,
-            "&:hover": {
-              borderWidth: 1,
-              borderStyle: "solid",
-              borderColor: "#acacff",
-            },
-          }}
-        />
-        <Button
-          variant="outlined"
-          startIcon={<EditIcon />}
-          sx={{
-            "&:hover": {
-              backgroundColor: "blue",
-              color: "white",
-            },
-          }}
-        >
-          Editar
-        </Button>
-        <Button
-          variant="outlined"
-          startIcon={<DeleteIcon />}
-          sx={{
-            "&:hover": {
-              backgroundColor: "blue",
-              color: "white",
-            },
-          }}
-        >
-          Eliminar
-        </Button>
-        <Button
-          variant="outlined"
-          startIcon={<RestoreIcon />}
-          sx={{
-            "&:hover": {
-              backgroundColor: "blue",
-              color: "white",
-            },
-          }}
-        >
-          Restaurar
-        </Button>
-        <GridToolbarQuickFilter />
-      </GridToolbarContainer>
-    </div>
-  );
-}
+
+const theme = createTheme(
+  {
+    typography: {
+      fontFamily: "Montserrat",
+    },
+    components: {
+      MuiCssBaseline: {
+        styleOverrides: `
+        @font-face {
+          font-family: 'Montserrat';
+          src: url(https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap);
+        }
+      `,
+      },
+    },
+  },
+  esES
+);
 
 function paletaColores(color: string) {
   switch (color) {
@@ -137,15 +70,16 @@ function yesOrNo(p: string | undefined) {
   return p === "NO" || undefined ? "error" : "success";
 }
 function valOrEsp(p: string | undefined) {
-  console.log(p);
   return p === "VAL" || undefined ? <Val /> : <Esp />;
 }
 
 function CatalogueList() {
   const authHeader = useAuthHeader();
-  const singOut = useSignOut();
-  const navigate = useNavigate();
   const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
+  const [deletedCatalogues, setDeletedCatalogues] = useState<Catalogue[]>([]);
+  const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>([]);
+  const [rows, setRows] = useState<Catalogue[]>([]);
+  let deletedTable = false;
   const columns: GridColDef[] = [
     { field: "_id", headerName: "ID", width: 200 },
     { field: "title", headerName: "Title", width: 200 },
@@ -187,13 +121,158 @@ function CatalogueList() {
     },
   ];
 
-  useEffect(() => {
+  function getAndSetCatalogues() {
     getCataloguesRequest(authHeader())
       .then((response) => response.json())
       .then((data) => {
-        setCatalogues(data);
+        let notDeleted = data.filter((d: Catalogue) => d.deleted !== true);
+        let deleted = data.filter((d: Catalogue) => d.deleted == true);
+        setCatalogues(notDeleted);
+        setDeletedCatalogues(deleted);
+        if (deletedTable) {
+          setRows(deleted);
+        } else {
+          setRows(notDeleted);
+        }
       });
-  }, [catalogues]);
+  }
+
+  function changeSelectedCatalogues(cat: any[]) {
+    cat.forEach((value) => {
+      let aux = value as string;
+      if (selectedCatalogues.includes(aux)) {
+        setSelectedCatalogues(selectedCatalogues.filter((c) => c !== aux));
+      } else {
+        setSelectedCatalogues([...selectedCatalogues, aux]);
+      }
+    });
+  }
+
+  function deleteRegisters() {
+    deletedTable = false;
+    selectedCatalogues.forEach((sc) => {
+      let cata = catalogues.find((v) => v._id === sc);
+      if (cata) {
+        updateCatalogueRequest(
+          cata._id,
+          { ...cata, deleted: true, deletedDate: new Date() },
+          authHeader()
+        );
+      }
+    });
+    getAndSetCatalogues();
+  }
+
+  useEffect(() => {
+    getAndSetCatalogues();
+  }, []);
+
+  function CustomToolbar() {
+    return (
+      <div>
+        <ThemeProvider theme={theme}>
+          <GridToolbarContainer>
+            <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+              <div>
+                <Box
+                  className="Tabla"
+                  sx={{ display: "flex", alignItems: "center" }}
+                >
+                  <Button
+                    sx={{
+                      "&:hover": {
+                        backgroundColor: "black",
+                        color: "white",
+                      },
+                      "&:active": {
+                        backgroundColor: "black",
+                        color: "white",
+                      },
+                    }}
+                    id="demo-select-small"
+                    onClick={() => {
+                      deletedTable = !deletedTable;
+                      getAndSetCatalogues();
+                    }}
+                  >
+                    Deleted
+                  </Button>
+                </Box>
+              </div>
+            </FormControl>
+            <GridToolbarColumnsButton
+              sx={{
+                padding: 1,
+                "&:hover": {
+                  borderWidth: 1,
+                  borderStyle: "solid",
+                  borderColor: "#acacff",
+                },
+              }}
+            />
+            <GridToolbarFilterButton
+              sx={{
+                padding: 1,
+                "&:hover": {
+                  borderWidth: 1,
+                  borderStyle: "solid",
+                  borderColor: "#acacff",
+                },
+              }}
+            />
+            <GridToolbarDensitySelector
+              sx={{
+                padding: 1,
+                "&:hover": {
+                  borderWidth: 1,
+                  borderStyle: "solid",
+                  borderColor: "#acacff",
+                },
+              }}
+            />
+            <Button
+              variant="outlined"
+              startIcon={<EditIcon />}
+              sx={{
+                "&:hover": {
+                  backgroundColor: "blue",
+                  color: "white",
+                },
+              }}
+            >
+              Editar
+            </Button>
+            <Button
+              variant="outlined"
+              startIcon={<DeleteIcon />}
+              sx={{
+                "&:hover": {
+                  backgroundColor: "blue",
+                  color: "white",
+                },
+              }}
+              onClick={deleteRegisters}
+            >
+              Eliminar
+            </Button>
+            <Button
+              variant="outlined"
+              startIcon={<RestoreIcon />}
+              sx={{
+                "&:hover": {
+                  backgroundColor: "blue",
+                  color: "white",
+                },
+              }}
+            >
+              Restaurar
+            </Button>
+            <GridToolbarQuickFilter />
+          </GridToolbarContainer>
+        </ThemeProvider>
+      </div>
+    );
+  }
 
   if (!catalogues.length)
     return (
@@ -201,45 +280,47 @@ function CatalogueList() {
     );
 
   return (
-    <div>
-      <DataGrid
-        rows={catalogues}
-        columns={columns}
-        sx={{
-          height: 700,
-          width: "100%",
-          "& .header-theme": {
-            backgroundColor: "lightblue",
-            border: "1px 1px 0px 0px solid black",
-          },
-          "& .MuiDataGrid-row:hover": {
-            color: paletaColores("colorTextAlter"),
-            bgcolor: paletaColores("colorRowHover"),
-            border: "1px solid " + paletaColores("colorBgRowSelectedBorder"),
-          },
-        }}
-        initialState={{
-          pagination: {
-            paginationModel: { pageSize: 10, page: 0 },
-          },
-          filter: {
-            filterModel: {
-              items: [],
-              quickFilterValues: [],
+    <ThemeProvider theme={theme}>
+      <div>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          sx={{
+            height: 700,
+            width: "100%",
+            "& .header-theme": {
+              backgroundColor: "lightblue",
+              border: "1px 1px 0px 0px solid black",
             },
-          },
-        }}
-        components={{
-          Toolbar: CustomToolbar,
-        }}
-        getRowId={(row) => row._id}
-        pageSizeOptions={[5, 10]}
-        checkboxSelection
-        onRowSelectionModelChange={(catalogue) => {
-          const c = catalogue.at(0)?.toString();
-        }}
-      />
-    </div>
+            "& .MuiDataGrid-row:hover": {
+              color: paletaColores("colorTextAlter"),
+              bgcolor: paletaColores("colorRowHover"),
+              border: "1px solid " + paletaColores("colorBgRowSelectedBorder"),
+            },
+          }}
+          initialState={{
+            pagination: {
+              paginationModel: { pageSize: 10, page: 0 },
+            },
+            filter: {
+              filterModel: {
+                items: [],
+                quickFilterValues: [],
+              },
+            },
+          }}
+          components={{
+            Toolbar: CustomToolbar,
+          }}
+          getRowId={(row) => row._id}
+          pageSizeOptions={[5, 10]}
+          checkboxSelection
+          onRowSelectionModelChange={(catalogues) =>
+            changeSelectedCatalogues(catalogues)
+          }
+        />
+      </div>
+    </ThemeProvider>
   );
 }
 
