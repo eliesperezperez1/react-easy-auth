@@ -18,9 +18,13 @@ import { useNavigate } from "react-router-dom";
 import Chip from "@mui/material/Chip";
 import { ReactComponent as Val } from "../../assets/val.svg";
 import { ReactComponent as Esp } from "../../assets/esp.svg";
+import { useTranslation } from "react-i18next";
+import { namespaces } from "../../@types/i18n.constants";
 
 import "./catalogues.css";
 function CustomToolbar() {
+  const [t, i18n] = useTranslation();
+
   return (
     <div>
       <GridToolbarContainer>
@@ -137,7 +141,7 @@ function yesOrNo(p: string | undefined) {
   return p === "NO" || undefined ? "error" : "success";
 }
 function valOrEsp(p: string | undefined) {
-  console.log(p);
+//console.log(p);
   return p === "VAL" || undefined ? <Val /> : <Esp />;
 }
 
@@ -145,16 +149,17 @@ function CatalogueList() {
   const authHeader = useAuthHeader();
   const singOut = useSignOut();
   const navigate = useNavigate();
+  const [t, i18n] = useTranslation();
   const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
   const columns: GridColDef[] = [
     { field: "_id", headerName: "ID", width: 200 },
-    { field: "title", headerName: "Title", width: 200 },
-    { field: "description", headerName: "Description", width: 200 },
-    { field: "territorialScope", headerName: "Territorial Scope", width: 200 },
-    { field: "contactPerson", headerName: "Contact Person", width: 200 },
+    { field: "title", headerName: t("columnsNames.title", { ns1: namespaces.global }), width: 200 },
+    { field: "description", headerName: t("columnsNames.description"), width: 200 },
+    { field: "territorialScope", headerName: t("columnsNames.territorialScope"), width: 200 },
+    { field: "contactPerson", headerName: t("columnsNames.contactPerson"), width: 200 },
     {
       field: "georreference",
-      headerName: "Georeference",
+      headerName: t("columnsNames.georreference"),
       width: 70,
       renderCell: (params: GridRenderCellParams<any, string>) => (
         <>
@@ -164,7 +169,7 @@ function CatalogueList() {
     },
     {
       field: "language",
-      headerName: "Language",
+      headerName: t("columnsNames.language"),
       width: 70,
       renderCell: (params: GridRenderCellParams<any, string>) => (
         <>{valOrEsp(params.value)}</>
@@ -172,7 +177,7 @@ function CatalogueList() {
     },
     {
       field: "source",
-      headerName: "Source",
+      headerName: t("columnsNames.source"),
       width: 200,
       renderCell: (params: GridRenderCellParams<any, string>) => (
         <a href={params.value}>{params.value}</a>
@@ -180,7 +185,7 @@ function CatalogueList() {
     },
     {
       field: "lastUpdate",
-      headerName: "Last Update",
+      headerName: t("columnsNames.lastUpdate"),
       type: "dateTime",
       width: 200,
       valueGetter: ({ value }) => value && new Date(value),
@@ -237,6 +242,11 @@ function CatalogueList() {
         checkboxSelection
         onRowSelectionModelChange={(catalogue) => {
           const c = catalogue.at(0)?.toString();
+        }}
+        localeText={{
+          toolbarColumns: t("dataTable.columns"),
+          toolbarFilters: t("dataTable.filters"),
+          toolbarDensity: t("dataTable.density"),
         }}
       />
     </div>

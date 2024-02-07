@@ -1,0 +1,43 @@
+{
+    "header":{
+        "inventory": "INVENTARIO",
+        "services": "SERVICIOS",
+        "charts": "GRÁFICAS",
+        "townHall": "AYUNTAMIENTO",
+        "townHallName": "DE VALENCIA",
+        "changeLanguage": "Cambiar idioma"
+    },
+    "dataTable":{
+        "columns":"COLUMNAS",
+        "filters":"FILTROS",
+        "density":"DENSIDAD",
+        "addDataset": "AÑADIR"
+    },
+    "columnsNames":{
+        "title":"Título",
+        "description":"Descripción",
+        "territorialScope":"Ámbito Territorial",
+        "contactPerson":"Persona de contacto",
+        "georreference":"Georeferencia",
+        "language":"Idioma",
+        "source":"URL de publicación",
+        "lastUpdate":"Última actualización"
+    },
+    "login":{
+        "password":"Contraseña",
+        "botonIniciar":"Iniciar sesión",
+        "botonRegistrar": "Registrarse"
+    },
+    "dialog":{
+        "delete":"Si elimina el registro no podrá recuperarlo.",
+        "deleteQuestion": "¿Quieres eliminar el registro?",
+        "restore":"Si restaura el registro, se hará visible de nuevo.",
+        "restoreQuestion": "¿Quieres restaurar el registro?",
+        "cancel": "Cancelar",
+        "updateButton":"Actualizar",
+        "addButton": "Añadir registro",
+        "titleEmpty": "Título vacío. Por favor, rellénalo para poder continuar. ",
+        "registerQuestion": "Crear cuenta",
+        "register": "Por favor, rellena todos los apartados."
+    }
+}

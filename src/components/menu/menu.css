@@ -106,3 +106,11 @@ body {
     margin-top: 22px;
   }
 }
+
+#buttonChangeLanguage {
+  border: none;
+  background-color: none;
+}
+#buttonChangeLanguage:hover{
+  cursor: pointer;
+}

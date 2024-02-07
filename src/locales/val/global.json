@@ -1,0 +1,43 @@
+{
+    "header":{
+        "inventory": "INVENTARI",
+        "services": "SERVEIS",
+        "charts": "GRÀFIQUES",
+        "townHall": "AJUNTAMENT",
+        "townHallName": "DE VALÈNCIA",
+        "changeLanguage": "Canviar idioma"
+    },
+    "dataTable":{
+        "columns":"COLUMNES",
+        "filters":"FILTRES",
+        "density":"DENSITAT",
+        "addDataset": "AFEGIR"
+    },
+    "columnsNames":{
+        "title":"Títol",
+        "description":"Descripció",
+        "territorialScope":"Àmbit Territorial",
+        "contactPerson":"Persona de contacte",
+        "georreference":"Georeferencia",
+        "language":"Idioma",
+        "source":"URL de publicació",
+        "lastUpdate":"Última actualització"
+    },
+    "login":{
+        "password":"Contrasenya",
+        "botonIniciar":"Iniciar sessió",
+        "botonRegistrar": "Registrar-se"
+    },
+    "dialog":{
+        "delete":"Si elimina el registre no podrà recuperar-lo.",
+        "deleteQuestion": "Vols eliminar el registre?",
+        "restore":"Si restaura el registre, es farà visible de nou.",
+        "restoreQuestion": "Vols restaurar el registre?",
+        "cancel": "Cancel·lar",
+        "updateButton":"Actualitzar",
+        "addButton": "Afegir registre",
+        "titleEmpty": "Títol buit. Per favor, emplena-ho per a poder continuar. ",
+        "registerQuestion": "Crear compte",
+        "register": "Per favor, emplena tots els apartats."
+    }
+}
