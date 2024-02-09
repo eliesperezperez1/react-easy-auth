@@ -4,10 +4,12 @@ import { HeadingXXLarge } from "baseui/typography";
 import { useSignOut } from "react-auth-kit";
 import { useNavigate } from "react-router-dom";
 import { Container } from "../commons";
+import { useTranslation } from "react-i18next";
 
 function Home() {
   const singOut = useSignOut();
   const navigate = useNavigate();
+  const [t, i18n] = useTranslation();
 
   const logout = () => {
     singOut();
@@ -23,12 +25,12 @@ function Home() {
 
   return (
     <Container>
-      <HeadingXXLarge color="secondary500">Welcome Home Bud!</HeadingXXLarge>
+      <HeadingXXLarge color="secondary500">{t("home.welcome")}</HeadingXXLarge>
       <Button kind="secondary" onClick={getPayment}>
-        Get Payment
+      {t("home.getPayment")}
       </Button>
       <Button kind="secondary" onClick={logout}>
-        Logout
+      {t("header.logout")}
       </Button>
     </Container>
   );

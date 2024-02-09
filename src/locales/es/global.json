@@ -1,17 +1,22 @@
 {
     "header":{
-        "inventory": "INVENTARIO",
-        "services": "SERVICIOS",
+        "inventory": "Inventario",
+        "services": "Servicios",
         "charts": "GRÁFICAS",
         "townHall": "AYUNTAMIENTO",
         "townHallName": "DE VALENCIA",
-        "changeLanguage": "Cambiar idioma"
+        "changeLanguage": "Cambiar idioma",
+        "users": "Usuarios",
+        "logout": "Cerrar sesión"
     },
     "dataTable":{
         "columns":"COLUMNAS",
         "filters":"FILTROS",
         "density":"DENSIDAD",
-        "addDataset": "AÑADIR"
+        "quickFilter": "Buscar",
+        "addDataset": "AÑADIR",
+        "delete": "ELIMINADOS",
+        "noCatalogues": "Todavía no hay catálogos"
     },
     "columnsNames":{
         "title":"Título",
@@ -24,6 +29,8 @@
         "lastUpdate":"Última actualización"
     },
     "login":{
+        "welcome": "Bienvenido de vuelta",
+        "email": "Correo electrónico",
         "password":"Contraseña",
         "botonIniciar":"Iniciar sesión",
         "botonRegistrar": "Registrarse"
@@ -39,5 +46,12 @@
         "titleEmpty": "Título vacío. Por favor, rellénalo para poder continuar. ",
         "registerQuestion": "Crear cuenta",
         "register": "Por favor, rellena todos los apartados."
+    },
+    "dashboard":{
+        "goToCatalogs": "Ir a los catálogos"
+    },
+    "home":{
+        "welcome": "Bienvenido a casa amigo",
+        "getPayment": "Recibir pago"
     }
 }

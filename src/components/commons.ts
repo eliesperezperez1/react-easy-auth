@@ -39,3 +39,9 @@ export const ErrorText = styled.span`
   font-size: 18px;
   margin: 7px 0;
 `;
+
+export const LanguageFlag = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+`;

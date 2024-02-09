@@ -1,17 +1,22 @@
 {
     "header":{
-        "inventory": "INVENTARI",
-        "services": "SERVEIS",
+        "inventory": "Inventari",
+        "services": "Serveis",
         "charts": "GRÀFIQUES",
         "townHall": "AJUNTAMENT",
         "townHallName": "DE VALÈNCIA",
-        "changeLanguage": "Canviar idioma"
+        "changeLanguage": "Canviar idioma",
+        "users": "Usuaris",
+        "logout": "Tancar sessió"
     },
     "dataTable":{
         "columns":"COLUMNES",
         "filters":"FILTRES",
         "density":"DENSITAT",
-        "addDataset": "AFEGIR"
+        "quickFilter": "Buscar",
+        "addDataset": "AFEGIR",
+        "delete": "ELIMINATS",
+        "noCatalogues": "Encara no hi ha catàlegs"
     },
     "columnsNames":{
         "title":"Títol",
@@ -24,6 +29,8 @@
         "lastUpdate":"Última actualització"
     },
     "login":{
+        "welcome": "Benvingut de tornada",
+        "email": "Correu electrònic",
         "password":"Contrasenya",
         "botonIniciar":"Iniciar sessió",
         "botonRegistrar": "Registrar-se"
@@ -39,5 +46,12 @@
         "titleEmpty": "Títol buit. Per favor, emplena-ho per a poder continuar. ",
         "registerQuestion": "Crear compte",
         "register": "Per favor, emplena tots els apartats."
+    },
+    "dashboard":{
+        "goToCatalogs": "Anar als catàlegs"
+    },
+    "home":{
+        "welcome": "Benvingut a casa amic",
+        "getPayment": "Rebre pagament"
     }
 }

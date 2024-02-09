@@ -47,7 +47,7 @@ function CustomToolbar() {
                 }}
                 id="demo-select-small"
               >
-                Deleted
+                {t("dataTable.delete")}
               </Button>
             </Box>
           </div>
@@ -153,7 +153,7 @@ function CatalogueList() {
   const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
   const columns: GridColDef[] = [
     { field: "_id", headerName: "ID", width: 200 },
-    { field: "title", headerName: t("columnsNames.title", { ns1: namespaces.global }), width: 200 },
+    { field: "title", headerName: t("columnsNames.title"), width: 200 },
     { field: "description", headerName: t("columnsNames.description"), width: 200 },
     { field: "territorialScope", headerName: t("columnsNames.territorialScope"), width: 200 },
     { field: "contactPerson", headerName: t("columnsNames.contactPerson"), width: 200 },
@@ -202,7 +202,7 @@ function CatalogueList() {
 
   if (!catalogues.length)
     return (
-      <p className="text-center text-xl font-bold my-4">No catalogues Yet</p>
+      <p className="text-center text-xl font-bold my-4">{t("dataTable.noCatalogues")}</p>
     );
 
   return (
@@ -247,6 +247,7 @@ function CatalogueList() {
           toolbarColumns: t("dataTable.columns"),
           toolbarFilters: t("dataTable.filters"),
           toolbarDensity: t("dataTable.density"),
+          toolbarQuickFilterPlaceholder: t("dataTable.quickFilter"),
         }}
       />
     </div>

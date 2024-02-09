@@ -6,6 +6,7 @@ import {
   InnerContainer,
   InputWrapper,
   StyledInput,
+  LanguageFlag,
 } from "../commons";
 
 import { useSignIn } from "react-auth-kit";
@@ -14,11 +15,14 @@ import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API } from "../../utils/constants";
+import { useTranslation } from "react-i18next";
+import ChangeLanguage from "../languageSwitch/languageSwitch";
 
 function Login(props: any) {
   const [error, setError] = useState("");
   const signIn = useSignIn();
   const navigate = useNavigate();
+  const [t, i18n] = useTranslation();
 
   const onSubmit = async (values: any) => {
     console.log("Values: ", values);
@@ -54,15 +58,19 @@ function Login(props: any) {
   return (
     <Container>
       <InnerContainer>
+        <LanguageFlag>
+          <ChangeLanguage />
+        </LanguageFlag>
+            
         <form onSubmit={formik.handleSubmit}>
-          <HeadingXXLarge>Welcome Back!</HeadingXXLarge>
+          <HeadingXXLarge>{t("login.welcome")}</HeadingXXLarge>
           <ErrorText>{error}</ErrorText>
           <InputWrapper>
             <StyledInput
               name="email"
               value={formik.values.email}
               onChange={formik.handleChange}
-              placeholder="Email"
+              placeholder={t("login.email")}
               clearOnEscape
               size="large"
               type="email"
@@ -73,7 +81,7 @@ function Login(props: any) {
               name="password"
               value={formik.values.password}
               onChange={formik.handleChange}
-              placeholder="Password"
+              placeholder={t("login.password")}
               clearOnEscape
               size="large"
               type="password"
@@ -81,7 +89,7 @@ function Login(props: any) {
           </InputWrapper>
           <InputWrapper>
             <Button size="large" kind="primary" isLoading={formik.isSubmitting}>
-              Login
+              {t("login.botonIniciar")}
             </Button>
           </InputWrapper>
         </form>

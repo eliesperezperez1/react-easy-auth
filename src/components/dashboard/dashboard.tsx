@@ -1,6 +1,7 @@
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import { useNavigate } from "react-router-dom";
 import { AuthUser } from "../../interfaces/user.interface";
+import { useTranslation } from "react-i18next";
 
 function Dashboard() {
   const authHeader = useAuthHeader();
@@ -8,6 +9,7 @@ function Dashboard() {
   const authUser = useAuthUser();
   const aux = authUser() as unknown as AuthUser;
   const { user, id } = aux;
+  const [t, i18n] = useTranslation();
 
   return (
     <>
@@ -17,7 +19,7 @@ function Dashboard() {
         {id}
       </h2>
       <h2>{authHeader()}</h2>
-      <button onClick={() => navigate("/catalogues")}>go to catalogues</button>
+      <button onClick={() => navigate("/catalogues")}>{t("dashboard.goToCatalogs")}</button>
     </>
   );
 }
