@@ -20,9 +20,10 @@ import {
 } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RestoreIcon from "@mui/icons-material/Restore";
+import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import { useEffect, useState } from "react";
-import { Catalogue } from "../../interfaces/catalogue.interface";
+import { Catalogue, CreateCatalogue } from "../../interfaces/catalogue.interface";
 import {
   getCataloguesRequest,
   updateCatalogueRequest,
@@ -33,6 +34,7 @@ import { ReactComponent as Val } from "../../assets/val.svg";
 import { ReactComponent as Esp } from "../../assets/esp.svg";
 
 import "./catalogues.css";
+import CreateCatalogueDialog, { DialogData } from "./create-catalogue.dialog";
 
 const theme = createTheme(
   {
@@ -79,7 +81,14 @@ function CatalogueList() {
   const [deletedCatalogues, setDeletedCatalogues] = useState<Catalogue[]>([]);
   const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>([]);
   const [rows, setRows] = useState<Catalogue[]>([]);
-  let deletedTable = false;
+  const [deletedTable, setDeletedTable] = useState<boolean>(false);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const datosDialog: DialogData = {
+    open: openDialog,
+    closeDialog: (close: boolean) => setOpenDialog(close),
+    getInfo: (s: any) => console.log(s)
+  };
+
   const columns: GridColDef[] = [
     { field: "_id", headerName: "ID", width: 200 },
     { field: "title", headerName: "Title", width: 200 },
@@ -122,9 +131,11 @@ function CatalogueList() {
   ];
 
   function getAndSetCatalogues() {
+    console.log(authHeader());
     getCataloguesRequest(authHeader())
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         let notDeleted = data.filter((d: Catalogue) => d.deleted !== true);
         let deleted = data.filter((d: Catalogue) => d.deleted == true);
         setCatalogues(notDeleted);
@@ -135,6 +146,10 @@ function CatalogueList() {
           setRows(notDeleted);
         }
       });
+  }
+
+  function handleCloseDialog() {
+    setOpenDialog(false);
   }
 
   function changeSelectedCatalogues(cat: any[]) {
@@ -149,7 +164,7 @@ function CatalogueList() {
   }
 
   function deleteRegisters() {
-    deletedTable = false;
+    setDeletedTable(false);
     selectedCatalogues.forEach((sc) => {
       let cata = catalogues.find((v) => v._id === sc);
       if (cata) {
@@ -167,6 +182,10 @@ function CatalogueList() {
     getAndSetCatalogues();
   }, []);
 
+  function createDialogOpen() {
+    setOpenDialog(true);
+  }
+
   function CustomToolbar() {
     return (
       <div>
@@ -180,18 +199,18 @@ function CatalogueList() {
                 >
                   <Button
                     sx={{
+                      backgroundColor: "#D9D9D9",
+                      color: "#404040",
+                      borderColor: "#404040",
                       "&:hover": {
-                        backgroundColor: "black",
-                        color: "white",
-                      },
-                      "&:active": {
-                        backgroundColor: "black",
-                        color: "white",
+                        borderColor: "#0D0D0D",
+                        backgroundColor: "#0D0D0D",
+                        color: "#f2f2f2",
                       },
                     }}
                     id="demo-select-small"
                     onClick={() => {
-                      deletedTable = !deletedTable;
+                      setDeletedTable(!deletedTable);
                       getAndSetCatalogues();
                     }}
                   >
@@ -202,53 +221,81 @@ function CatalogueList() {
             </FormControl>
             <GridToolbarColumnsButton
               sx={{
-                padding: 1,
+                backgroundColor: "#D9D9D9",
+                color: "#404040",
+                borderColor: "#404040",
                 "&:hover": {
-                  borderWidth: 1,
-                  borderStyle: "solid",
-                  borderColor: "#acacff",
+                  borderColor: "#0D0D0D",
+                  backgroundColor: "#0D0D0D",
+                  color: "#f2f2f2",
                 },
               }}
             />
             <GridToolbarFilterButton
               sx={{
-                padding: 1,
+                backgroundColor: "#D9D9D9",
+                color: "#404040",
+                borderColor: "#404040",
                 "&:hover": {
-                  borderWidth: 1,
-                  borderStyle: "solid",
-                  borderColor: "#acacff",
+                  borderColor: "#0D0D0D",
+                  backgroundColor: "#0D0D0D",
+                  color: "#f2f2f2",
                 },
               }}
             />
             <GridToolbarDensitySelector
               sx={{
-                padding: 1,
+                backgroundColor: "#D9D9D9",
+                color: "#404040",
+                borderColor: "#404040",
                 "&:hover": {
-                  borderWidth: 1,
-                  borderStyle: "solid",
-                  borderColor: "#acacff",
+                  borderColor: "#0D0D0D",
+                  backgroundColor: "#0D0D0D",
+                  color: "#f2f2f2",
                 },
               }}
             />
             <Button
-              variant="outlined"
+              startIcon={<AddIcon />}
+              onClick={createDialogOpen}
+              sx={{
+                backgroundColor: "#D9D9D9",
+                color: "#404040",
+                borderColor: "#404040",
+                "&:hover": {
+                  borderColor: "#0D0D0D",
+                  backgroundColor: "#0D0D0D",
+                  color: "#f2f2f2",
+                },
+              }}
+            >
+              Añadir
+            </Button>
+            <Button
               startIcon={<EditIcon />}
               sx={{
+                backgroundColor: "#D9D9D9",
+                color: "#404040",
+                borderColor: "#404040",
                 "&:hover": {
-                  backgroundColor: "blue",
-                  color: "white",
+                  borderColor: "#0D0D0D",
+                  backgroundColor: "#0D0D0D",
+                  color: "#f2f2f2",
                 },
               }}
             >
               Editar
             </Button>
             <Button
-              variant="outlined"
               startIcon={<DeleteIcon />}
               sx={{
+                backgroundColor: "#D9D9D9",
+                color: "#404040",
+                borderColor: "#404040",
                 "&:hover": {
-                  backgroundColor: "blue",
-                  color: "white",
+                  borderColor: "#0D0D0D",
+                  backgroundColor: "#0D0D0D",
+                  color: "#f2f2f2",
                 },
               }}
               onClick={deleteRegisters}
@@ -256,12 +303,15 @@ function CatalogueList() {
               Eliminar
             </Button>
             <Button
-              variant="outlined"
               startIcon={<RestoreIcon />}
               sx={{
+                backgroundColor: "#D9D9D9",
+                color: "#404040",
+                borderColor: "#404040",
                 "&:hover": {
-                  backgroundColor: "blue",
-                  color: "white",
+                  borderColor: "#0D0D0D",
+                  backgroundColor: "#0D0D0D",
+                  color: "#f2f2f2",
                 },
               }}
             >
@@ -320,6 +370,7 @@ function CatalogueList() {
           }
         />
       </div>
+      <CreateCatalogueDialog enviar={datosDialog}></CreateCatalogueDialog>
     </ThemeProvider>
   );
 }

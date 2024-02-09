@@ -4,14 +4,14 @@ import {
 } from "../interfaces/catalogue.interface";
 import { API } from "../utils/constants";
 
-export const getCataloguesRequest = async (refreshToken: string) =>
-  fetch(`${API}/catalogue`, {
+export const getCataloguesRequest = async (refreshToken: string) => 
+   fetch(`${API}/catalogue`, {
+    method: "GET",
     headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Content-Type": "application/json",
       Authorization: refreshToken,
     },
   });
+
 
 export const createCatalogueRequest = async (
   catalogue: CreateCatalogue,
