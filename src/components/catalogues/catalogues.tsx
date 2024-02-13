@@ -23,10 +23,7 @@ import RestoreIcon from "@mui/icons-material/Restore";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import { useEffect, useState } from "react";
-import {
-  Catalogue,
-  CreateCatalogue,
-} from "../../interfaces/catalogue.interface";
+import { Catalogue } from "../../interfaces/catalogue.interface";
 import {
   getCataloguesRequest,
   updateCatalogueRequest,
@@ -134,13 +131,12 @@ function CatalogueList() {
   ];
 
   function getAndSetCatalogues() {
-    console.log(authHeader());
     getCataloguesRequest(authHeader())
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         let notDeleted = data.filter((d: Catalogue) => d.deleted !== true);
-        let deleted = data.filter((d: Catalogue) => d.deleted == true);
+        let deleted = data.filter((d: Catalogue) => d.deleted === true);
+        console.log(deleted, notDeleted);
         setCatalogues(notDeleted);
         setDeletedCatalogues(deleted);
         if (deletedTable) {
@@ -151,14 +147,35 @@ function CatalogueList() {
       });
   }
 
+  function showDeleted() {
+    if (!deletedTable) {
+      setRows(deletedCatalogues);
+    } else {
+      setRows(catalogues);
+    }
+  }
+
   function deleteRegisters() {
-    setDeletedTable(false);
     selectedCatalogues.forEach((sc: string) => {
       let cata = catalogues.find((v) => v._id === sc);
       if (cata) {
         updateCatalogueRequest(
           cata._id,
           { ...cata, deleted: true, deletedDate: new Date() },
+          authHeader()
+        );
+      }
+    });
+    getAndSetCatalogues();
+  }
+
+  function restoreRegisters() {
+    selectedCatalogues.forEach((sc: string) => {
+      let cata = deletedCatalogues.find((v) => v._id === sc);
+      if (cata) {
+        updateCatalogueRequest(
+          cata._id,
+          { ...cata, deleted: false },
           authHeader()
         );
       }
@@ -199,10 +216,12 @@ function CatalogueList() {
                     id="demo-select-small"
                     onClick={() => {
                       setDeletedTable(!deletedTable);
-                      getAndSetCatalogues();
+                      showDeleted();
                     }}
                   >
-                    Deleted
+                    {deletedTable === true
+                      ? "Mostrar no eliminados"
+                      : "Mostrar eliminados"}
                   </Button>
                 </Box>
               </div>
@@ -243,71 +262,78 @@ function CatalogueList() {
                 },
               }}
             />
-            <Button
-              startIcon={<AddIcon />}
-              onClick={createDialogOpen}
-              sx={{
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                "&:hover": {
-                  borderColor: "#0D0D0D",
-                  backgroundColor: "#0D0D0D",
-                  color: "#f2f2f2",
-                },
-              }}
-            >
-              Añadir
-            </Button>
-            <Button
-              startIcon={<EditIcon />}
-              sx={{
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                "&:hover": {
-                  borderColor: "#0D0D0D",
-                  backgroundColor: "#0D0D0D",
-                  color: "#f2f2f2",
-                },
-              }}
-              onClick={() => {
-                console.log(selectedCatalogues);
-              }}
-            >
-              Editar
-            </Button>
-            <Button
-              startIcon={<DeleteIcon />}
-              sx={{
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                "&:hover": {
-                  borderColor: "#0D0D0D",
-                  backgroundColor: "#0D0D0D",
-                  color: "#f2f2f2",
-                },
-              }}
-              onClick={deleteRegisters}
-            >
-              Eliminar
-            </Button>
-            <Button
-              startIcon={<RestoreIcon />}
-              sx={{
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                "&:hover": {
-                  borderColor: "#0D0D0D",
-                  backgroundColor: "#0D0D0D",
-                  color: "#f2f2f2",
-                },
-              }}
-            >
-              Restaurar
-            </Button>
+            {deletedTable === true ? (
+              <Button
+                startIcon={<RestoreIcon />}
+                sx={{
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}
+                onClick={restoreRegisters}
+              >
+                Restaurar
+              </Button>
+            ) : (
+              <>
+                <Button
+                  startIcon={<AddIcon />}
+                  onClick={createDialogOpen}
+                  sx={{
+                    backgroundColor: "#D9D9D9",
+                    color: "#404040",
+                    borderColor: "#404040",
+                    "&:hover": {
+                      borderColor: "#0D0D0D",
+                      backgroundColor: "#0D0D0D",
+                      color: "#f2f2f2",
+                    },
+                  }}
+                >
+                  Añadir
+                </Button>
+                <Button
+                  startIcon={<EditIcon />}
+                  sx={{
+                    backgroundColor: "#D9D9D9",
+                    color: "#404040",
+                    borderColor: "#404040",
+                    "&:hover": {
+                      borderColor: "#0D0D0D",
+                      backgroundColor: "#0D0D0D",
+                      color: "#f2f2f2",
+                    },
+                  }}
+                  onClick={() => {
+                    console.log(selectedCatalogues);
+                  }}
+                >
+                  Editar
+                </Button>
+                <Button
+                  startIcon={<DeleteIcon />}
+                  sx={{
+                    backgroundColor: "#D9D9D9",
+                    color: "#404040",
+                    borderColor: "#404040",
+                    "&:hover": {
+                      borderColor: "#0D0D0D",
+                      backgroundColor: "#0D0D0D",
+                      color: "#f2f2f2",
+                    },
+                  }}
+                  onClick={deleteRegisters}
+                >
+                  Eliminar
+                </Button>
+              </>
+            )}
+
             <GridToolbarQuickFilter />
           </GridToolbarContainer>
         </ThemeProvider>
@@ -357,6 +383,7 @@ function CatalogueList() {
           pageSizeOptions={[5, 10]}
           checkboxSelection
           onRowSelectionModelChange={(catalogues) => {
+            console.log(catalogues);
             let aux = catalogues as string[];
             setSelectedCatalogues(aux);
           }}
