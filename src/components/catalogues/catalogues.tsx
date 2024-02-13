@@ -23,7 +23,10 @@ import RestoreIcon from "@mui/icons-material/Restore";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import { useEffect, useState } from "react";
-import { Catalogue, CreateCatalogue } from "../../interfaces/catalogue.interface";
+import {
+  Catalogue,
+  CreateCatalogue,
+} from "../../interfaces/catalogue.interface";
 import {
   getCataloguesRequest,
   updateCatalogueRequest,
@@ -86,7 +89,7 @@ function CatalogueList() {
   const datosDialog: DialogData = {
     open: openDialog,
     closeDialog: (close: boolean) => setOpenDialog(close),
-    getInfo: (s: any) => console.log(s)
+    getInfo: () => getAndSetCatalogues(),
   };
 
   const columns: GridColDef[] = [
@@ -148,24 +151,9 @@ function CatalogueList() {
       });
   }
 
-  function handleCloseDialog() {
-    setOpenDialog(false);
-  }
-
-  function changeSelectedCatalogues(cat: any[]) {
-    cat.forEach((value) => {
-      let aux = value as string;
-      if (selectedCatalogues.includes(aux)) {
-        setSelectedCatalogues(selectedCatalogues.filter((c) => c !== aux));
-      } else {
-        setSelectedCatalogues([...selectedCatalogues, aux]);
-      }
-    });
-  }
-
   function deleteRegisters() {
     setDeletedTable(false);
-    selectedCatalogues.forEach((sc) => {
+    selectedCatalogues.forEach((sc: string) => {
       let cata = catalogues.find((v) => v._id === sc);
       if (cata) {
         updateCatalogueRequest(
@@ -283,6 +271,9 @@ function CatalogueList() {
                   color: "#f2f2f2",
                 },
               }}
+              onClick={() => {
+                console.log(selectedCatalogues);
+              }}
             >
               Editar
             </Button>
@@ -365,9 +356,10 @@ function CatalogueList() {
           getRowId={(row) => row._id}
           pageSizeOptions={[5, 10]}
           checkboxSelection
-          onRowSelectionModelChange={(catalogues) =>
-            changeSelectedCatalogues(catalogues)
-          }
+          onRowSelectionModelChange={(catalogues) => {
+            let aux = catalogues as string[];
+            setSelectedCatalogues(aux);
+          }}
         />
       </div>
       <CreateCatalogueDialog enviar={datosDialog}></CreateCatalogueDialog>
