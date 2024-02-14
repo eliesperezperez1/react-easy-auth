@@ -25,6 +25,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useEffect, useState } from "react";
 import { Catalogue } from "../../interfaces/catalogue.interface";
 import {
+  getCatalogueRequest,
   getCataloguesRequest,
   updateCatalogueRequest,
 } from "../../api/catalogues";
@@ -35,6 +36,10 @@ import { ReactComponent as Esp } from "../../assets/esp.svg";
 
 import "./catalogues.css";
 import CreateCatalogueDialog, { DialogData } from "./create-catalogue.dialog";
+import UpdateCatalogueDialog, {
+  UpdateDialogData,
+} from "./update-catalogue.dialog";
+import { catalogueMock } from "../../utils/catalogue.mock";
 
 const theme = createTheme(
   {
@@ -83,10 +88,20 @@ function CatalogueList() {
   const [rows, setRows] = useState<Catalogue[]>([]);
   const [deletedTable, setDeletedTable] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
+  const [catalogueSelected, setCatalogueSelected] =
+    useState<Catalogue>(catalogueMock);
   const datosDialog: DialogData = {
     open: openDialog,
     closeDialog: (close: boolean) => setOpenDialog(close),
     getInfo: () => getAndSetCatalogues(),
+  };
+
+  const datosUpdateDialog: UpdateDialogData = {
+    open: openUpdateDialog,
+    closeDialog: (close: boolean) => setOpenUpdateDialog(close),
+    getInfo: () => getAndSetCatalogues(),
+    catalogue: catalogueSelected,
   };
 
   const columns: GridColDef[] = [
@@ -136,7 +151,6 @@ function CatalogueList() {
       .then((data) => {
         let notDeleted = data.filter((d: Catalogue) => d.deleted !== true);
         let deleted = data.filter((d: Catalogue) => d.deleted === true);
-        console.log(deleted, notDeleted);
         setCatalogues(notDeleted);
         setDeletedCatalogues(deleted);
         if (deletedTable) {
@@ -145,6 +159,16 @@ function CatalogueList() {
           setRows(notDeleted);
         }
       });
+  }
+  function getSelectedCatalogues() {
+    selectedCatalogues.forEach((sc) => {
+      getCatalogueRequest(authHeader(), sc)
+        .then((response) => response.json())
+        .then((data) => {
+          setCatalogueSelected(data);
+          setOpenUpdateDialog(true);
+        });
+    });
   }
 
   function showDeleted() {
@@ -309,9 +333,7 @@ function CatalogueList() {
                       color: "#f2f2f2",
                     },
                   }}
-                  onClick={() => {
-                    console.log(selectedCatalogues);
-                  }}
+                  onClick={getSelectedCatalogues}
                 >
                   Editar
                 </Button>
@@ -390,6 +412,7 @@ function CatalogueList() {
         />
       </div>
       <CreateCatalogueDialog enviar={datosDialog}></CreateCatalogueDialog>
+      <UpdateCatalogueDialog enviar={datosUpdateDialog}></UpdateCatalogueDialog>
     </ThemeProvider>
   );
 }

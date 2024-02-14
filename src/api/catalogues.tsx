@@ -67,11 +67,11 @@ export const updateCatalogueRequest = async (
     },
   });
 
-export const getCatalogueRequest = async (id: string, refreshToken: string) =>
+export const getCatalogueRequest = async (refreshToken: string, id: string) =>
   fetch(`${API}/catalogue/${id}`, {
+    method: "GET",
     headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Content-Type": "application/json",
       Authorization: refreshToken,
+      "Access-Control-Allow-Origin": "*",
     },
   });
