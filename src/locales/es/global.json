@@ -68,7 +68,10 @@
         "addButton": "Añadir registro",
         "titleEmpty": "Título vacío. Por favor, rellénalo para poder continuar. ",
         "registerQuestion": "Crear cuenta",
-        "register": "Por favor, rellena todos los apartados."
+        "register": "Por favor, rellena todos los apartados.",
+        "addRegister": "Añadir un conjunto de datos",
+        "updateRegister": "Modificar un conjunto de datos",
+        "fillInfo": "Por favor, rellena todos los apartados."
     },
     "dashboard":{
         "goToCatalogs": "Ir a los catálogos"

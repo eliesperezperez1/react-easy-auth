@@ -68,7 +68,10 @@
         "addButton": "Afegir registre",
         "titleEmpty": "Títol buit. Per favor, emplena-ho per a poder continuar. ",
         "registerQuestion": "Crear compte",
-        "register": "Per favor, emplena tots els apartats."
+        "register": "Per favor, emplena tots els apartats.",
+        "addRegister": "Afegir un conjunt de dades",
+        "updateRegister": "Modificar un conjunt de dades",
+        "fillInfo": "Per favor, emplena tots els apartats."
     },
     "dashboard":{
         "goToCatalogs": "Anar als catàlegs"
