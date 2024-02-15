@@ -294,6 +294,7 @@ function CatalogueList() {
             </FormControl>
             <GridToolbarColumnsButton
               sx={{
+                height: 37,
                 backgroundColor: "#D9D9D9",
                 color: "#404040",
                 borderColor: "#404040",
@@ -306,6 +307,7 @@ function CatalogueList() {
             />
             <GridToolbarFilterButton
               sx={{
+                height: 37,
                 backgroundColor: "#D9D9D9",
                 color: "#404040",
                 borderColor: "#404040",
@@ -318,6 +320,7 @@ function CatalogueList() {
             />
             <GridToolbarDensitySelector
               sx={{
+                height: 37,
                 backgroundColor: "#D9D9D9",
                 color: "#404040",
                 borderColor: "#404040",
@@ -331,7 +334,9 @@ function CatalogueList() {
             {deletedTable === true ? (
               <Button
                 startIcon={<RestoreIcon />}
+                disabled={selectedCatalogues.length <= 0}
                 sx={{
+                  height: 37,
                   backgroundColor: "#D9D9D9",
                   color: "#404040",
                   borderColor: "#404040",
@@ -351,6 +356,7 @@ function CatalogueList() {
                   startIcon={<AddIcon />}
                   onClick={createDialogOpen}
                   sx={{
+                    height: 37,
                     backgroundColor: "#D9D9D9",
                     color: "#404040",
                     borderColor: "#404040",
@@ -365,7 +371,9 @@ function CatalogueList() {
                 </Button>
                 <Button
                   startIcon={<EditIcon />}
+                  disabled={selectedCatalogues.length <= 0}
                   sx={{
+                    height: 37,
                     backgroundColor: "#D9D9D9",
                     color: "#404040",
                     borderColor: "#404040",
@@ -381,7 +389,9 @@ function CatalogueList() {
                 </Button>
                 <Button
                   startIcon={<DeleteIcon />}
+                  disabled={selectedCatalogues.length <= 0}
                   sx={{
+                    height: 37,
                     backgroundColor: "#D9D9D9",
                     color: "#404040",
                     borderColor: "#404040",
