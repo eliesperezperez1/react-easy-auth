@@ -18,6 +18,8 @@ import {
   createDarkTheme,
 } from "baseui";
 
+import "./i18n";
+
 const engine = new Styletron();
 
 const Centered = styled("div", {

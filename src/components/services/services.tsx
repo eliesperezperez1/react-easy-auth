@@ -1,4 +1,4 @@
-import {
+/*import {
     DataGrid,
     GridColDef,
     GridRenderCellParams,
@@ -80,7 +80,7 @@ import {
     return p === "VAL" || undefined ? <Val /> : <Esp />;
   }
   
-  function CatalogueList() {
+  function Services() {
     const authHeader = useAuthHeader();
     const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
     const [deletedCatalogues, setDeletedCatalogues] = useState<Catalogue[]>([]);
@@ -347,4 +347,11 @@ function CustomToolbar() {
   );
 }
 
-export default CatalogueList;
+export default Services;*/
+
+function Services(){
+
+}
+
+
+export default Services;
