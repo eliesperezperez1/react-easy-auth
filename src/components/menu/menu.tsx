@@ -4,11 +4,14 @@ import { ReactComponent as Brand } from "../../assets/logowithname.svg";
 import MenuIcon from "@mui/icons-material/Menu";
 import "./menu.css";
 import { useSignOut } from "react-auth-kit";
+import { useTranslation } from "react-i18next";
+import ChangeLanguage from "../languageSwitch/languageSwitch";
 
 const Menu = () => {
   const singOut = useSignOut();
   const navigate = useNavigate();
   const [showNavbar, setShowNavbar] = useState(false);
+  const [t, i18n] = useTranslation();
 
   const handleShowNavbar = () => {
     setShowNavbar(!showNavbar);
@@ -35,21 +38,24 @@ const Menu = () => {
                   navigate("/catalogues");
                 }}
               >
-                Inventari
+                {t("header.inventory")}
               </a>
             </li>
             <li>
-              <NavLink to="/blog">Serveis</NavLink>
+              <NavLink to="/blog">{t("header.services")}</NavLink>
             </li>
             <li>
-              <NavLink to="/projects">Usuaris</NavLink>
+              <NavLink to="/projects">{t("header.users")}</NavLink>
             </li>
             <li>
               <a onClick={logout}>
-                <div>Tancar sessió</div>
+                <div>{t("header.logout")}</div>
               </a>
             </li>
           </ul>
+        </div>
+        <div>
+          <ChangeLanguage />
         </div>
       </div>
     </nav>

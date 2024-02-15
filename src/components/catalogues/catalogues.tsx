@@ -33,6 +33,8 @@ import { useAuthHeader } from "react-auth-kit";
 import Chip from "@mui/material/Chip";
 import { ReactComponent as Val } from "../../assets/val.svg";
 import { ReactComponent as Esp } from "../../assets/esp.svg";
+import { useTranslation } from "react-i18next";
+import { namespaces } from "../../@types/i18n.constants";
 
 import "./catalogues.css";
 import CreateCatalogueDialog, { DialogData } from "./create-catalogue.dialog";
@@ -97,6 +99,7 @@ function CatalogueList() {
     getInfo: () => getAndSetCatalogues(),
   };
 
+  const [t, i18n] = useTranslation();
   const datosUpdateDialog: UpdateDialogData = {
     open: openUpdateDialog,
     closeDialog: (close: boolean) => setOpenUpdateDialog(close),
@@ -106,13 +109,52 @@ function CatalogueList() {
 
   const columns: GridColDef[] = [
     { field: "_id", headerName: "ID", width: 200 },
-    { field: "title", headerName: "Title", width: 200 },
-    { field: "description", headerName: "Description", width: 200 },
-    { field: "territorialScope", headerName: "Territorial Scope", width: 200 },
-    { field: "contactPerson", headerName: "Contact Person", width: 200 },
+    { field: "title", headerName: t("columnsNames.title"), width: 200 },
+    { field: "description", headerName: t("columnsNames.description"), width: 200 },
+    { field: "topic", headerName: t("columnsNames.topic"), width: 200 },
+    { field: "responsibleIdentity", headerName: t("columnsNames.responsibleIdentity"), width: 200 },
+    { field: "datasetsRelation", headerName: t("columnsNames.datasetsRelation"), width: 200 },
+    { field: "fieldList", headerName: t("columnsNames.fieldList"), width: 200 },
+    { field: "dataUnbundling", headerName: t("columnsNames.dataUnbundling"), width: 200 },
+    { field: "updateFrequency", headerName: t("columnsNames.updateFrequency"), width: 200 },
+    { field: "format", headerName: t("columnsNames.format"), width: 200 },
+    { field: "dataOrigin", headerName: t("columnsNames.dataOrigin"), width: 200 },
+    { field: "dataOriginURL", headerName: t("columnsNames.dataOriginURL"), width: 200 },
+    { field: "connection", headerName: t("columnsNames.connection"), width: 200 },
+    { field: "dataFiability", headerName: t("columnsNames.dataFiability"), width: 200 },
+    { field: "comments", headerName: t("columnsNames.comments"), width: 200 },
+    { field: "RAT", headerName: t("columnsNames.RAT"), width: 200 },
+    { field: "temporaryCoverage", headerName: t("columnsNames.temporaryCoverage"), width: 200 },
+    { field: "repositoryStorage", headerName: t("columnsNames.repositoryStorage"), width: 200 },
+    { field: "repositoryStorageURL", headerName: t("columnsNames.repositoryStorageURL"), width: 200 },
+    { field: "fieldSuppression", headerName: t("columnsNames.fieldSuppression"), width: 200 },
+    { field: "accessType", headerName: t("columnsNames.accessType"), width: 200 },
+    { field: "activeAds", headerName: t("columnsNames.activeAds"), width: 200 },
+    { field: "posts", headerName: t("columnsNames.posts"), width: 200 },
+    { field: "licence", headerName: t("columnsNames.licence"), width: 200 },
+    {
+      field: "sensitiveInformation",
+      headerName: t("columnsNames.sensitiveInformation"),
+      width: 70,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+    },
+    {
+      field: "personalData",
+      headerName: t("columnsNames.personalData"),
+      width: 70,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+    },
     {
       field: "georreference",
-      headerName: "Georeference",
+      headerName: t("columnsNames.georreference"),
       width: 70,
       renderCell: (params: GridRenderCellParams<any, string>) => (
         <>
@@ -122,7 +164,7 @@ function CatalogueList() {
     },
     {
       field: "language",
-      headerName: "Language",
+      headerName: t("columnsNames.language"),
       width: 70,
       renderCell: (params: GridRenderCellParams<any, string>) => (
         <>{valOrEsp(params.value)}</>
@@ -130,7 +172,7 @@ function CatalogueList() {
     },
     {
       field: "source",
-      headerName: "Source",
+      headerName: t("columnsNames.source"),
       width: 200,
       renderCell: (params: GridRenderCellParams<any, string>) => (
         <a href={params.value}>{params.value}</a>
@@ -138,7 +180,7 @@ function CatalogueList() {
     },
     {
       field: "lastUpdate",
-      headerName: "Last Update",
+      headerName: t("columnsNames.lastUpdate"),
       type: "dateTime",
       width: 200,
       valueGetter: ({ value }) => value && new Date(value),
@@ -319,7 +361,7 @@ function CatalogueList() {
                     },
                   }}
                 >
-                  Añadir
+                  {t("dataTable.addDataset")}
                 </Button>
                 <Button
                   startIcon={<EditIcon />}
@@ -365,7 +407,7 @@ function CatalogueList() {
 
   if (!catalogues.length)
     return (
-      <p className="text-center text-xl font-bold my-4">No catalogues Yet</p>
+      <p className="text-center text-xl font-bold my-4">{t("dataTable.noCatalogues")}</p>
     );
 
   return (
@@ -408,6 +450,12 @@ function CatalogueList() {
             console.log(catalogues);
             let aux = catalogues as string[];
             setSelectedCatalogues(aux);
+          }}
+          localeText={{
+            toolbarColumns: t("dataTable.columns"),
+            toolbarFilters: t("dataTable.filters"),
+            toolbarDensity: t("dataTable.density"),
+            toolbarQuickFilterPlaceholder: t("dataTable.quickFilter"),
           }}
         />
       </div>
