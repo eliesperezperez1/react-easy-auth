@@ -1,6 +1,6 @@
 #buttonChangeLanguage {
-    border: none;
     background-color: none;
+    border-radius: 50%;
 }
 
 #buttonChangeLanguage:hover{

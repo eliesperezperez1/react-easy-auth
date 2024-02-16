@@ -6,6 +6,7 @@ import { Home } from "./components/home/home";
 import { RequireAuth } from "react-auth-kit";
 import { Dashboard } from "./components/dashboard/dashboard";
 import CatalogueList from "./components/catalogues/catalogues";
+import EntitiesList from "./components/entities/entities";
 import Menu from "./components/menu/menu";
 
 const AppContainer = styled.div`
@@ -46,6 +47,17 @@ function App() {
               <>
                 <Menu />
                 <CatalogueList />
+              </>
+            </RequireAuth>
+          }
+        ></Route>
+        <Route
+          path="/entities"
+          element={
+            <RequireAuth loginPath="/login">
+              <>
+                <Menu />
+                <EntitiesList />
               </>
             </RequireAuth>
           }

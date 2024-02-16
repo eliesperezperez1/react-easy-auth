@@ -42,7 +42,13 @@ const Menu = () => {
               </a>
             </li>
             <li>
-              <NavLink to="/blog">{t("header.services")}</NavLink>
+            <a
+                onClick={() => {
+                  navigate("/entities");
+                }}
+              >
+                {t("header.services")}
+              </a>
             </li>
             <li>
               <NavLink to="/projects">{t("header.users")}</NavLink>

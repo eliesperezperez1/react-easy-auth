@@ -49,7 +49,9 @@
         "georreference":"Georeferencia",
         "language":"Idioma",
         "source":"URL de publicación",
-        "lastUpdate":"Última actualización"
+        "lastUpdate":"Última actualización",
+        "location":"Localización",
+        "phoneNumber":"Número de contacto"
     },
     "login":{
         "welcome": "Bienvenido de vuelta",
@@ -66,11 +68,13 @@
         "cancel": "Cancelar",
         "updateButton":"Actualizar",
         "addButton": "Añadir registro",
+        "addEntityButton": "Añadir servicio",
         "titleEmpty": "Título vacío. Por favor, rellénalo para poder continuar. ",
         "registerQuestion": "Crear cuenta",
         "register": "Por favor, rellena todos los apartados.",
         "addRegister": "Añadir un conjunto de datos",
-        "updateRegister": "Modificar un conjunto de datos",
+        "updateRegister": "Actualizar el conjunto de datos",
+        "updateEntity": "Actualizar el servicio",
         "fillInfo": "Por favor, rellena todos los apartados."
     },
     "dashboard":{

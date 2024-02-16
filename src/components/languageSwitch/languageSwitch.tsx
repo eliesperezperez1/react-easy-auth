@@ -2,6 +2,8 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { ReactComponent as CasImage } from "../../assets/esp.svg";
 import { ReactComponent as ValImage } from "../../assets/val.svg";
+import ValImagen from "../../assets/val.svg";
+import CasImagen from "../../assets/esp.svg";
 import "./languageSwitch.css";
 
 function ChangeLanguage() {
@@ -37,12 +39,32 @@ function ChangeLanguage() {
           onClick={switchVisibleSeleccion}
           style={{
             
-            height: '100%', 
+            height: '35px',
+            width: '35px',
             padding: 0,
-            border: 'none', 
-            background: 'transparent',
+            //border: 'none', 
+            backgroundImage: 'transparent',
+            borderRadius: 50,
+            overflow: 'hidden',
           }}>
-            <ImagenIdioma />
+            {/*<ImagenIdioma />*/}
+            {ImagenIdioma===ValImage ? (
+              <img src={ValImagen} 
+                alt="Image" 
+                style={{
+                  objectFit: 'cover',
+                  objectPosition: 'left', 
+                  width: '100%', 
+                  height: '100%',}}/>
+            ) : (
+              <img src={CasImagen} 
+                alt="Image" 
+                style={{
+                  objectFit: 'cover', 
+                  width: '100%', 
+                  height: '100%',}}/>
+            )}
+            
         </button>
     );
 
