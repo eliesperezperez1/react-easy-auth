@@ -10,12 +10,10 @@ import { CreateCatalogue } from "../../interfaces/catalogue.interface";
 import { createCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import {
-  DateTimePicker,
-  LocalizationProvider,
-  TimePicker,
-} from "@mui/x-date-pickers";
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { useTranslation } from 'react-i18next';
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
 export interface DialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
@@ -25,6 +23,7 @@ export interface DialogData {
 export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [open, setOpen] = useState<boolean>(false);
   const authHeader = useAuthHeader();
+  const [t, i18n] = useTranslation();
 
   useEffect(() => {
     setOpen(props.enviar.open);
@@ -83,10 +82,10 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
           },
         }}
       >
-        <DialogTitle>Añadir un conjunto de datos</DialogTitle>
+        <DialogTitle>{t("dialog.addRegister")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Rellena todos los campos para hacer cosas
+          {t("dialog.fillInfo")}
           </DialogContentText>
           <Box>
             <div>
@@ -96,7 +95,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 margin="dense"
                 id="title"
                 name="title"
-                label="Título"
+                label={t("columnsNames.title")}
                 type="string"
                 variant="standard"
               />
@@ -106,7 +105,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 margin="dense"
                 id="description"
                 name="description"
-                label="Descripción"
+                label={t("columnsNames.description")}
                 type="string"
                 variant="standard"
               />
@@ -131,7 +130,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 margin="dense"
                 id="language"
                 name="language"
-                label="Idioma"
+                label={t("columnsNames.language")}
                 type="string"
                 variant="standard"
               />
@@ -141,7 +140,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 margin="dense"
                 id="territorialScope"
                 name="territorialScope"
-                label="Territorial scope"
+                label={t("columnsNames.territorialScope")}
                 type="string"
                 variant="standard"
               />
@@ -151,7 +150,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 margin="dense"
                 id="temporaryCoverage"
                 name="temporaryCoverage"
-                label="Covertura temporal"
+                label={t("columnsNames.temporaryCoverage")}
                 type="string"
                 variant="standard"
               />
@@ -163,7 +162,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 margin="dense"
                 id="updateFrequency"
                 name="updateFrequency"
-                label="Frecuencia de actualización"
+                label={t("columnsNames.updateFrequency")}
                 type="string"
                 variant="standard"
               />
@@ -173,7 +172,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 margin="dense"
                 id="topic"
                 name="topic"
-                label="Tema"
+                label={t("columnsNames.topic")}
                 type="string"
                 variant="standard"
               />
@@ -192,7 +191,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 margin="dense"
                 id="format"
                 name="format"
-                label="Formato"
+                label={t("columnsNames.format")}
                 type="string"
                 variant="standard"
               />
@@ -208,37 +207,33 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
               />
             </div>
             <div>
-              <FormControl variant="standard">
-                <InputLabel>Información sensible</InputLabel>
-                <Select
-                  id="sensitiveInformation"
-                  name="sensitiveInformation"
-                  margin="dense"
-                  defaultValue={"SI"}
-                >
-                  <MenuItem value={"SI"}>SÍ</MenuItem>
-                  <MenuItem value={"NO"}>NO</MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl variant="standard">
-                <InputLabel>Se utiliza</InputLabel>
-                <Select
-                  id="isUsing"
-                  name="isUsing"
-                  margin="dense"
-                  defaultValue={"SI"}
-                >
-                  <MenuItem value={"SI"}>SÍ</MenuItem>
-                  <MenuItem value={"NO"}>NO</MenuItem>
-                </Select>
-              </FormControl>
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="sensitiveInformation"
+                name="sensitiveInformation"
+                label="Información sensible"
+                type="string"
+                variant="standard"
+              />
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="isUsing"
+                name="isUsing"
+                label="Se utiliza"
+                type="string"
+                variant="standard"
+              />
               <TextField
                 autoFocus
                 required
                 margin="dense"
                 id="accessType"
                 name="accessType"
-                label="Tipo de acceso"
+                label={t("columnsNames.accessType")}
                 type="string"
                 variant="standard"
               />
@@ -258,7 +253,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 margin="dense"
                 id="contactPerson"
                 name="contactPerson"
-                label="Persona de contacto"
+                label={t("columnsNames.contactPerson")}
                 type="string"
                 variant="standard"
               />
@@ -287,26 +282,23 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 type="string"
                 variant="standard"
               />
-              <FormControl variant="standard">
-                <InputLabel>Georreferenciado</InputLabel>
-                <Select
-                  id="georeference"
-                  name="georeference"
-                  margin="dense"
-                  defaultValue={"SI"}
-                  required
-                >
-                  <MenuItem value={"SI"}>SÍ</MenuItem>
-                  <MenuItem value={"NO"}>NO</MenuItem>
-                </Select>
-              </FormControl>
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="georeference"
+                name="georeference"
+                label="Georreferenciado"
+                type="string"
+                variant="standard"
+              />
               <TextField
                 autoFocus
                 required
                 margin="dense"
                 id="comments"
                 name="comments"
-                label="Comentarios"
+                label={t("columnsNames.comments")}
                 type="string"
                 variant="standard"
               />
@@ -340,7 +332,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 margin="dense"
                 id="personalData"
                 name="personalData"
-                label="Información personal"
+                label={t("columnsNames.personalData")}
                 type="string"
                 variant="standard"
               />
@@ -350,7 +342,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 margin="dense"
                 id="source"
                 name="source"
-                label="Recurso"
+                label={t("columnsNames.source")}
                 type="string"
                 variant="standard"
               />
@@ -360,29 +352,26 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 margin="dense"
                 id="responsibleIdentity"
                 name="responsibleIdentity"
-                label="Entidad responsable"
+                label={t("columnsNames.responsibleIdentity")}
                 type="string"
                 variant="standard"
               />
-              <FormControl variant="standard">
-                <InputLabel>Publicidad activa</InputLabel>
-                <Select
-                  id="activeAds"
-                  name="activeAds"
-                  margin="dense"
-                  defaultValue={"SI"}
-                  required
-                >
-                  <MenuItem value={"SI"}>SÍ</MenuItem>
-                  <MenuItem value={"NO"}>NO</MenuItem>
-                </Select>
-              </FormControl>
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="activeAds"
+                name="activeAds"
+                label="Publicidad activa"
+                type="string"
+                variant="standard"
+              />
             </div>
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit">Subscribe</Button>
+          <Button onClick={handleClose}>{t("dialog.cancel")}</Button>
+          <Button type="submit">{t("dialog.addButton")}</Button>
         </DialogActions>
       </Dialog>
     </>

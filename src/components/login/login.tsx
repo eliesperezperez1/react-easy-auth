@@ -4,6 +4,7 @@ import {
   InnerContainer,
   InputWrapper,
   StyledInput,
+  LanguageFlag,
 } from "../commons";
 
 import { useSignIn } from "react-auth-kit";
@@ -16,11 +17,14 @@ import "./login.css";
 import Snackbar from "@mui/material/Snackbar";
 import { ReactComponent as Logo } from "../../assets/logo70.svg";
 import { Alert } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import ChangeLanguage from "../languageSwitch/languageSwitch";
 
 function Login(props: any) {
   const [error, setError] = useState("");
   const signIn = useSignIn();
   const navigate = useNavigate();
+  const [t, i18n] = useTranslation();
   const [open, setOpen] = useState<boolean>(false);
   const handleClose = () => {
     setOpen(false);
@@ -70,6 +74,9 @@ function Login(props: any) {
   return (
     <Container>
       <InnerContainer className="inner-container">
+        <LanguageFlag>
+          <ChangeLanguage />
+        </LanguageFlag>
         <form onSubmit={formik.handleSubmit}>
           <div className="logo">
             <Logo />
@@ -79,7 +86,7 @@ function Login(props: any) {
               name="email"
               value={formik.values.email}
               onChange={formik.handleChange}
-              placeholder="Email"
+              placeholder={t("login.email")}
               clearOnEscape
               size="large"
               type="email"
@@ -90,7 +97,7 @@ function Login(props: any) {
               name="password"
               value={formik.values.password}
               onChange={formik.handleChange}
-              placeholder="Password"
+              placeholder={t("login.password")}
               clearOnEscape
               size="large"
               type="password"
@@ -103,7 +110,7 @@ function Login(props: any) {
               kind="primary"
               isLoading={formik.isSubmitting}
             >
-              Login
+              {t("login.botonIniciar")}
               <Snackbar open={open} onClose={handleClose}>
                 <Alert
                   onClose={handleClose}

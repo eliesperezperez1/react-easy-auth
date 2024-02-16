@@ -1,0 +1,83 @@
+{
+    "header":{
+        "inventory": "Inventari",
+        "services": "Serveis",
+        "charts": "GRÀFIQUES",
+        "townHall": "AJUNTAMENT",
+        "townHallName": "DE VALÈNCIA",
+        "changeLanguage": "Canviar idioma",
+        "users": "Usuaris",
+        "logout": "Tancar sessió"
+    },
+    "dataTable":{
+        "columns":"COLUMNES",
+        "filters":"FILTRES",
+        "density":"DENSITAT",
+        "quickFilter": "Buscar",
+        "addDataset": "AFEGIR",
+        "delete": "ELIMINATS",
+        "noCatalogues": "Encara no hi ha catàlegs"
+    },
+    "columnsNames":{
+        "title":"Títol",
+        "description":"Descripció",
+        "topic":"Àrea",
+        "responsibleIdentity":"Òrgan responsable",
+        "datasetsRelation":"Registres relacionats",
+        "fieldList":"Llista de camps",
+        "dataUnbundling":"Desagregació de dades",
+        "updateFrequency":"Freqüència d'actualització",
+        "format":"Format",
+        "dataOrigin":"Origen",
+        "dataOriginURL":"Enllaç origen",
+        "connection":"Connexió",
+        "dataFiability":"Fiabilitat",
+        "comments":"Comentaris",
+        "RAT":"RAT",
+        "temporaryCoverage":"Cobertura Temporal",
+        "repositoryStorage":"Repositori",
+        "repositoryStorageURL":"Enllaç a repositori",
+        "fieldSuppression":"Supressió de camps",
+        "accessType":"Tipus d'accés",
+        "activeAds":"Publicitat Activa",
+        "posts":"Lloc de publicació",
+        "licence":"Llicència",
+        "territorialScope":"Àmbit Territorial",
+        "contactPerson":"Persona de contacte",
+        "sensitiveInformation":"Informació sensible",
+        "personalData":"Informació personal",
+        "georreference":"Georeferencia",
+        "language":"Idioma",
+        "source":"URL de publicació",
+        "lastUpdate":"Última actualització"
+    },
+    "login":{
+        "welcome": "Benvingut de tornada",
+        "email": "Correu electrònic",
+        "password":"Contrasenya",
+        "botonIniciar":"Iniciar sessió",
+        "botonRegistrar": "Registrar-se"
+    },
+    "dialog":{
+        "delete":"Si elimina el registre no podrà recuperar-lo.",
+        "deleteQuestion": "Vols eliminar el registre?",
+        "restore":"Si restaura el registre, es farà visible de nou.",
+        "restoreQuestion": "Vols restaurar el registre?",
+        "cancel": "Cancel·lar",
+        "updateButton":"Actualitzar",
+        "addButton": "Afegir registre",
+        "titleEmpty": "Títol buit. Per favor, emplena-ho per a poder continuar. ",
+        "registerQuestion": "Crear compte",
+        "register": "Per favor, emplena tots els apartats.",
+        "addRegister": "Afegir un conjunt de dades",
+        "updateRegister": "Modificar un conjunt de dades",
+        "fillInfo": "Per favor, emplena tots els apartats."
+    },
+    "dashboard":{
+        "goToCatalogs": "Anar als catàlegs"
+    },
+    "home":{
+        "welcome": "Benvingut a casa amic",
+        "getPayment": "Rebre pagament"
+    }
+}

@@ -13,7 +13,8 @@ import {
 import { updateCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
 import { Box } from "@mui/material";
-
+import { useTranslation } from "react-i18next";
+import { namespaces } from "../../@types/i18n.constants";
 export interface UpdateDialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
@@ -27,6 +28,7 @@ export default function UpdateCatalogueDialog(props: {
   const [open, setOpen] = useState<boolean>(false);
   const authHeader = useAuthHeader();
   const [update, setUpdate] = useState<UpdateCatalogue>({});
+  const [t, i18n] = useTranslation();
 
   useEffect(() => {
     setUpdate(props.enviar.catalogue);
@@ -86,10 +88,10 @@ export default function UpdateCatalogueDialog(props: {
           },
         }}
       >
-        <DialogTitle>Añadir un conjunto de datos</DialogTitle>
+        <DialogTitle>{t("dialog.updateRegister")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Rellena todos los campos para hacer cosas
+          {t("dialog.fillInfo")}
           </DialogContentText>
           <Box>
             <div>
@@ -99,7 +101,7 @@ export default function UpdateCatalogueDialog(props: {
                 margin="dense"
                 id="title"
                 name="title"
-                label="Título"
+                label={t("columnsNames.title")}
                 type="string"
                 variant="standard"
                 value={update.title}
@@ -111,7 +113,7 @@ export default function UpdateCatalogueDialog(props: {
                 margin="dense"
                 id="description"
                 name="description"
-                label="Descripción"
+                label={t("columnsNames.description")}
                 type="string"
                 variant="standard"
                 value={update?.description}
@@ -123,7 +125,7 @@ export default function UpdateCatalogueDialog(props: {
                 margin="dense"
                 id="language"
                 name="language"
-                label="Idioma"
+                label={t("columnsNames.language")}
                 type="string"
                 variant="standard"
                 value={update?.language}
@@ -135,7 +137,7 @@ export default function UpdateCatalogueDialog(props: {
                 margin="dense"
                 id="territorialScope"
                 name="territorialScope"
-                label="Territorial scope"
+                label={t("columnsNames.territorialScope")}
                 type="string"
                 variant="standard"
                 value={update?.territorialScope}
@@ -147,7 +149,7 @@ export default function UpdateCatalogueDialog(props: {
                 margin="dense"
                 id="temporaryCoverage"
                 name="temporaryCoverage"
-                label="Covertura temporal"
+                label={t("columnsNames.temporaryCoverage")}
                 type="string"
                 variant="standard"
                 value={update?.temporaryCoverage}
@@ -161,7 +163,7 @@ export default function UpdateCatalogueDialog(props: {
                 margin="dense"
                 id="updateFrequency"
                 name="updateFrequency"
-                label="Frecuencia de actualización"
+                label={t("columnsNames.updateFrequency")}
                 type="string"
                 variant="standard"
                 value={update?.updateFrequency}
@@ -173,7 +175,7 @@ export default function UpdateCatalogueDialog(props: {
                 margin="dense"
                 id="topic"
                 name="topic"
-                label="Tema"
+                label={t("columnsNames.topic")}
                 type="string"
                 variant="standard"
                 value={update?.topic}
@@ -196,7 +198,7 @@ export default function UpdateCatalogueDialog(props: {
                 margin="dense"
                 id="format"
                 name="format"
-                label="Formato"
+                label={t("columnsNames.format")}
                 type="string"
                 variant="standard"
                 value={update?.format}
@@ -222,7 +224,7 @@ export default function UpdateCatalogueDialog(props: {
                 margin="dense"
                 id="sensitiveInformation"
                 name="sensitiveInformation"
-                label="Información sensible"
+                label={t("columnsNames.sensitiveInformation")}
                 type="string"
                 variant="standard"
                 value={update?.sensitiveInformation}
@@ -246,7 +248,7 @@ export default function UpdateCatalogueDialog(props: {
                 margin="dense"
                 id="accessType"
                 name="accessType"
-                label="Tipo de acceso"
+                label={t("columnsNames.accessType")}
                 type="string"
                 variant="standard"
                 value={update?.accessType}
@@ -270,7 +272,7 @@ export default function UpdateCatalogueDialog(props: {
                 margin="dense"
                 id="contactPerson"
                 name="contactPerson"
-                label="Persona de contacto"
+                label={t("columnsNames.contactPerson")}
                 type="string"
                 variant="standard"
                 value={update?.contactPerson}
@@ -308,7 +310,7 @@ export default function UpdateCatalogueDialog(props: {
                 margin="dense"
                 id="georeference"
                 name="georeference"
-                label="Georreferenciado"
+                label={t("columnsNames.georreference")}
                 type="string"
                 variant="standard"
                 value={update?.georeference}
@@ -320,7 +322,7 @@ export default function UpdateCatalogueDialog(props: {
                 margin="dense"
                 id="comments"
                 name="comments"
-                label="Comentarios"
+                label={t("columnsNames.comments")}
                 type="string"
                 variant="standard"
                 value={update?.comments}
@@ -357,7 +359,7 @@ export default function UpdateCatalogueDialog(props: {
                 margin="dense"
                 id="personalData"
                 name="personalData"
-                label="Información personal"
+                label={t("columnsNames.personalData")}
                 type="string"
                 variant="standard"
                 value={update?.personalData}
@@ -369,7 +371,7 @@ export default function UpdateCatalogueDialog(props: {
                 margin="dense"
                 id="source"
                 name="source"
-                label="Recurso"
+                label={t("columnsNames.source")}
                 type="string"
                 variant="standard"
                 value={update?.source}
@@ -381,7 +383,7 @@ export default function UpdateCatalogueDialog(props: {
                 margin="dense"
                 id="responsibleIdentity"
                 name="responsibleIdentity"
-                label="Entidad responsable"
+                label={t("columnsNames.responsibleIdentity")}
                 type="string"
                 variant="standard"
                 value={update?.responsibleIdentity}
@@ -393,7 +395,7 @@ export default function UpdateCatalogueDialog(props: {
                 margin="dense"
                 id="activeAds"
                 name="activeAds"
-                label="Publicidad activa"
+                label={t("columnsNames.activeAds")}
                 type="string"
                 variant="standard"
                 value={update?.activeAds}
@@ -403,8 +405,8 @@ export default function UpdateCatalogueDialog(props: {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit">Subscribe</Button>
+          <Button onClick={handleClose}>{t("dialog.cancel")}</Button>
+          <Button type="submit">{t("dialog.updateButton")}</Button>
         </DialogActions>
       </Dialog>
     </>
