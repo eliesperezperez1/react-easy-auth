@@ -35,7 +35,9 @@ import { ReactComponent as Val } from "../../assets/val.svg";
 import { ReactComponent as Esp } from "../../assets/esp.svg";
 import { useTranslation } from "react-i18next";
 import { namespaces } from "../../@types/i18n.constants";
-
+import FolderDeleteIcon from "@mui/icons-material/FolderDelete";
+import FolderIcon from "@mui/icons-material/Folder";
+import Tooltip from "@mui/material/Tooltip";
 import "./catalogues.css";
 import CreateCatalogueDialog, { DialogData } from "./create-catalogue.dialog";
 import UpdateCatalogueDialog, {
@@ -109,34 +111,99 @@ function CatalogueList() {
   };
 
   const columns: GridColDef[] = [
-    { field: "_id", headerName: "ID", width: 200 },
+    // { field: "_id", headerName: "ID", width: 200, hideable: true },
     { field: "title", headerName: t("columnsNames.title"), width: 200 },
-    { field: "description", headerName: t("columnsNames.description"), width: 200 },
+    {
+      field: "description",
+      headerName: t("columnsNames.description"),
+      width: 200,
+    },
     { field: "topic", headerName: t("columnsNames.topic"), width: 200 },
-    { field: "responsibleIdentity", headerName: t("columnsNames.responsibleIdentity"), width: 200 },
-    { field: "datasetsRelation", headerName: t("columnsNames.datasetsRelation"), width: 200 },
+    {
+      field: "responsibleIdentity",
+      headerName: t("columnsNames.responsibleIdentity"),
+      width: 200,
+    },
+    {
+      field: "datasetsRelation",
+      headerName: t("columnsNames.datasetsRelation"),
+      width: 200,
+    },
     { field: "fieldList", headerName: t("columnsNames.fieldList"), width: 200 },
-    { field: "dataUnbundling", headerName: t("columnsNames.dataUnbundling"), width: 200 },
-    { field: "updateFrequency", headerName: t("columnsNames.updateFrequency"), width: 200 },
+    {
+      field: "dataUnbundling",
+      headerName: t("columnsNames.dataUnbundling"),
+      width: 200,
+    },
+    {
+      field: "updateFrequency",
+      headerName: t("columnsNames.updateFrequency"),
+      width: 200,
+    },
     { field: "format", headerName: t("columnsNames.format"), width: 200 },
-    { field: "dataOrigin", headerName: t("columnsNames.dataOrigin"), width: 200 },
-    { field: "dataOriginURL", headerName: t("columnsNames.dataOriginURL"), width: 200 },
-    { field: "connection", headerName: t("columnsNames.connection"), width: 200 },
-    { field: "dataFiability", headerName: t("columnsNames.dataFiability"), width: 200 },
+    {
+      field: "dataOrigin",
+      headerName: t("columnsNames.dataOrigin"),
+      width: 200,
+    },
+    {
+      field: "dataOriginURL",
+      headerName: t("columnsNames.dataOriginURL"),
+      width: 200,
+    },
+    {
+      field: "connection",
+      headerName: t("columnsNames.connection"),
+      width: 200,
+    },
+    {
+      field: "dataFiability",
+      headerName: t("columnsNames.dataFiability"),
+      width: 200,
+    },
     { field: "comments", headerName: t("columnsNames.comments"), width: 200 },
     { field: "RAT", headerName: t("columnsNames.RAT"), width: 200 },
-    { field: "temporaryCoverage", headerName: t("columnsNames.temporaryCoverage"), width: 200 },
-    { field: "repositoryStorage", headerName: t("columnsNames.repositoryStorage"), width: 200 },
-    { field: "repositoryStorageURL", headerName: t("columnsNames.repositoryStorageURL"), width: 200 },
-    { field: "fieldSuppression", headerName: t("columnsNames.fieldSuppression"), width: 200 },
-    { field: "accessType", headerName: t("columnsNames.accessType"), width: 200 },
-    { field: "activeAds", headerName: t("columnsNames.activeAds"), width: 200 },
+    {
+      field: "temporaryCoverage",
+      headerName: t("columnsNames.temporaryCoverage"),
+      width: 200,
+    },
+    {
+      field: "repositoryStorage",
+      headerName: t("columnsNames.repositoryStorage"),
+      width: 200,
+    },
+    {
+      field: "repositoryStorageURL",
+      headerName: t("columnsNames.repositoryStorageURL"),
+      width: 200,
+    },
+    {
+      field: "fieldSuppression",
+      headerName: t("columnsNames.fieldSuppression"),
+      width: 200,
+    },
+    {
+      field: "accessType",
+      headerName: t("columnsNames.accessType"),
+      width: 200,
+    },
+    {
+      field: "activeAds",
+      headerName: t("columnsNames.activeAds"),
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+    },
     { field: "posts", headerName: t("columnsNames.posts"), width: 200 },
     { field: "licence", headerName: t("columnsNames.licence"), width: 200 },
     {
       field: "sensitiveInformation",
       headerName: t("columnsNames.sensitiveInformation"),
-      width: 70,
+      width: 200,
       renderCell: (params: GridRenderCellParams<any, string>) => (
         <>
           <Chip label={params.value} color={yesOrNo(params.value)} />
@@ -146,7 +213,7 @@ function CatalogueList() {
     {
       field: "personalData",
       headerName: t("columnsNames.personalData"),
-      width: 70,
+      width: 200,
       renderCell: (params: GridRenderCellParams<any, string>) => (
         <>
           <Chip label={params.value} color={yesOrNo(params.value)} />
@@ -156,7 +223,7 @@ function CatalogueList() {
     {
       field: "georreference",
       headerName: t("columnsNames.georreference"),
-      width: 70,
+      width: 200,
       renderCell: (params: GridRenderCellParams<any, string>) => (
         <>
           <Chip label={params.value} color={yesOrNo(params.value)} />
@@ -286,9 +353,15 @@ function CatalogueList() {
                       showDeleted();
                     }}
                   >
-                    {deletedTable === true
-                      ? "Mostrar no eliminados"
-                      : "Mostrar eliminados"}
+                    {deletedTable === true ? (
+                      <Tooltip title={t("dataTable.showNotDeleted")}>
+                        <FolderIcon></FolderIcon>
+                      </Tooltip>
+                    ) : (
+                      <Tooltip title={t("dataTable.showDeleted")}>
+                        <FolderDeleteIcon></FolderDeleteIcon>
+                      </Tooltip>
+                    )}
                   </Button>
                 </Box>
               </div>
@@ -418,7 +491,9 @@ function CatalogueList() {
 
   if (!catalogues.length)
     return (
-      <p className="text-center text-xl font-bold my-4">{t("dataTable.noCatalogues")}</p>
+      <p className="text-center text-xl font-bold my-4">
+        {t("dataTable.noCatalogues")}
+      </p>
     );
 
   return (

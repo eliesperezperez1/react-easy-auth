@@ -1,5 +1,5 @@
 {
-    "header":{
+    "header": {
         "inventory": "Inventario",
         "services": "Servicios",
         "charts": "GRÁFICAS",
@@ -9,62 +9,64 @@
         "users": "Usuarios",
         "logout": "Cerrar sesión"
     },
-    "dataTable":{
-        "columns":"COLUMNAS",
-        "filters":"FILTROS",
-        "density":"DENSIDAD",
+    "dataTable": {
+        "columns": "COLUMNAS",
+        "filters": "FILTROS",
+        "density": "DENSIDAD",
         "quickFilter": "Buscar",
         "addDataset": "AÑADIR",
         "delete": "ELIMINADOS",
-        "noCatalogues": "Todavía no hay catálogos"
+        "noCatalogues": "Todavía no hay catálogos",
+        "showDeleted": "Mostrar registros eliminados",
+        "showNotDeleted": "Mostrar registros no eliminados"
     },
-    "columnsNames":{
-        "title":"Título",
-        "description":"Descripción",
-        "topic":"Área",
-        "responsibleIdentity":"Órgano responsable",
-        "datasetsRelation":"Registros relacionados",
-        "fieldList":"Lista de campos",
-        "dataUnbundling":"Desagregación de datos",
-        "updateFrequency":"Frecuencia de actualización",
-        "format":"Formato",
-        "dataOrigin":"Origen",
-        "dataOriginURL":"Enlace origen",
-        "connection":"Conexión",
-        "dataFiability":"Fiabilidad",
-        "comments":"Comentarios",
-        "RAT":"RAT",
-        "temporaryCoverage":"Cobertura Temporal",
-        "repositoryStorage":"Repositorio",
-        "repositoryStorageURL":"Enlace a repositorio",
-        "fieldSuppression":"Supresión de campos",
-        "accessType":"Tipo de acceso",
-        "activeAds":"Publicidad Activa",
-        "posts":"Lugar de publicación",
-        "licence":"Licencia",
-        "territorialScope":"Ámbito Territorial",
-        "contactPerson":"Persona de contacto",
-        "sensitiveInformation":"Información sensible",
-        "personalData":"Información personal",
-        "georreference":"Georeferencia",
-        "language":"Idioma",
-        "source":"URL de publicación",
-        "lastUpdate":"Última actualización"
+    "columnsNames": {
+        "title": "Título",
+        "description": "Descripción",
+        "topic": "Área",
+        "responsibleIdentity": "Órgano responsable",
+        "datasetsRelation": "Registros relacionados",
+        "fieldList": "Lista de campos",
+        "dataUnbundling": "Desagregación de datos",
+        "updateFrequency": "Frecuencia de actualización",
+        "format": "Formato",
+        "dataOrigin": "Origen",
+        "dataOriginURL": "Enlace origen",
+        "connection": "Conexión",
+        "dataFiability": "Fiabilidad",
+        "comments": "Comentarios",
+        "RAT": "RAT",
+        "temporaryCoverage": "Cobertura Temporal",
+        "repositoryStorage": "Repositorio",
+        "repositoryStorageURL": "Enlace a repositorio",
+        "fieldSuppression": "Supresión de campos",
+        "accessType": "Tipo de acceso",
+        "activeAds": "Publicidad Activa",
+        "posts": "Lugar de publicación",
+        "licence": "Licencia",
+        "territorialScope": "Ámbito Territorial",
+        "contactPerson": "Persona de contacto",
+        "sensitiveInformation": "Información sensible",
+        "personalData": "Información personal",
+        "georreference": "Georeferencia",
+        "language": "Idioma",
+        "source": "URL de publicación",
+        "lastUpdate": "Última actualización"
     },
-    "login":{
+    "login": {
         "welcome": "Bienvenido de vuelta",
         "email": "Correo electrónico",
-        "password":"Contraseña",
-        "botonIniciar":"Iniciar sesión",
+        "password": "Contraseña",
+        "botonIniciar": "Iniciar sesión",
         "botonRegistrar": "Registrarse"
     },
-    "dialog":{
-        "delete":"Si elimina el registro no podrá recuperarlo.",
+    "dialog": {
+        "delete": "Si elimina el registro no podrá recuperarlo.",
         "deleteQuestion": "¿Quieres eliminar el registro?",
-        "restore":"Si restaura el registro, se hará visible de nuevo.",
+        "restore": "Si restaura el registro, se hará visible de nuevo.",
         "restoreQuestion": "¿Quieres restaurar el registro?",
         "cancel": "Cancelar",
-        "updateButton":"Actualizar",
+        "updateButton": "Actualizar",
         "addButton": "Añadir registro",
         "titleEmpty": "Título vacío. Por favor, rellénalo para poder continuar. ",
         "registerQuestion": "Crear cuenta",
@@ -73,10 +75,10 @@
         "updateRegister": "Modificar un conjunto de datos",
         "fillInfo": "Por favor, rellena todos los apartados."
     },
-    "dashboard":{
+    "dashboard": {
         "goToCatalogs": "Ir a los catálogos"
     },
-    "home":{
+    "home": {
         "welcome": "Bienvenido a casa amigo",
         "getPayment": "Recibir pago"
     }
