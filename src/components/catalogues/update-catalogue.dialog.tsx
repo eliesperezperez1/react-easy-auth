@@ -13,6 +13,7 @@ import {
 import { updateCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
 import { Box } from "@mui/material";
+
 export interface UpdateDialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;

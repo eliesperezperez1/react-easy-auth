@@ -9,7 +9,13 @@ import { useEffect, useState } from "react";
 import { CreateCatalogue } from "../../interfaces/catalogue.interface";
 import { createCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
-import { Box } from "@mui/material";
+import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  DateTimePicker,
+  LocalizationProvider,
+  TimePicker,
+} from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 export interface DialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
@@ -33,22 +39,17 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     const a = formJson.lastUpdate;
     const b = formJson.creationDate;
     const deletedDate = new Date();
-    const deletedDateISO = deletedDate.toISOString();
     const deleted = false;
     const lastUpdate = new Date(a);
-    const lastUpdateISO = lastUpdate.toISOString();
     const creationDate = new Date(b);
-    const creationDateISO = creationDate.toISOString();
     const prueba = formJson as CreateCatalogue;
+    console.log(prueba.sensitiveInformation);
     const create: CreateCatalogue = {
       ...prueba,
       deleted,
       deletedDate,
       lastUpdate,
-      creationDate
-     /*  deletedDate: deletedDateISO,
-      lastUpdate: lastUpdateISO,
-      creationDate: creationDateISO, */
+      creationDate,
     };
     console.log(create);
     props.enviar.getInfo();
@@ -68,6 +69,8 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
         open={open}
         sx={{
           "& .MuiTextField-root": { m: 1, width: "20ch" },
+          "& .MuiFormControl-root": { m: 1, width: "20ch" },
+          "&. MuiInputBase-root": { m: 1, width: "20ch" },
         }}
         onClose={handleClose}
         PaperProps={{
@@ -107,6 +110,21 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 type="string"
                 variant="standard"
               />
+              {/* <FormControl variant="standard">
+                <InputLabel>Idioma</InputLabel>
+                <Select
+                  id="language"
+                  name="language"
+                  margin="dense"
+                  defaultValue={"VAL"}
+                  multiple
+                  renderValue={(selected) => selected.concat(", ")}
+                >
+                  <MenuItem value={"VAL"}>VALENCIÀ</MenuItem>
+                  <MenuItem value={"ESP"}>CASTELLANO</MenuItem>
+                  <MenuItem value={"ENG"}>ENGLISH</MenuItem>
+                </Select>
+              </FormControl> */}
               <TextField
                 autoFocus
                 required
@@ -190,26 +208,30 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
               />
             </div>
             <div>
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="sensitiveInformation"
-                name="sensitiveInformation"
-                label="Información sensible"
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="isUsing"
-                name="isUsing"
-                label="Se utiliza"
-                type="string"
-                variant="standard"
-              />
+              <FormControl variant="standard">
+                <InputLabel>Información sensible</InputLabel>
+                <Select
+                  id="sensitiveInformation"
+                  name="sensitiveInformation"
+                  margin="dense"
+                  defaultValue={"SI"}
+                >
+                  <MenuItem value={"SI"}>SÍ</MenuItem>
+                  <MenuItem value={"NO"}>NO</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl variant="standard">
+                <InputLabel>Se utiliza</InputLabel>
+                <Select
+                  id="isUsing"
+                  name="isUsing"
+                  margin="dense"
+                  defaultValue={"SI"}
+                >
+                  <MenuItem value={"SI"}>SÍ</MenuItem>
+                  <MenuItem value={"NO"}>NO</MenuItem>
+                </Select>
+              </FormControl>
               <TextField
                 autoFocus
                 required
@@ -242,16 +264,19 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
               />
             </div>
             <div>
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="structured"
-                name="structured"
-                label="Estructurado"
-                type="string"
-                variant="standard"
-              />
+              <FormControl variant="standard">
+                <InputLabel>Estructurado</InputLabel>
+                <Select
+                  id="structured"
+                  name="structured"
+                  margin="dense"
+                  defaultValue={"SI"}
+                  required
+                >
+                  <MenuItem value={"SI"}>SÍ</MenuItem>
+                  <MenuItem value={"NO"}>NO</MenuItem>
+                </Select>
+              </FormControl>
               <TextField
                 autoFocus
                 required
@@ -262,16 +287,19 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 type="string"
                 variant="standard"
               />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="georeference"
-                name="georeference"
-                label="Georreferenciado"
-                type="string"
-                variant="standard"
-              />
+              <FormControl variant="standard">
+                <InputLabel>Georreferenciado</InputLabel>
+                <Select
+                  id="georeference"
+                  name="georeference"
+                  margin="dense"
+                  defaultValue={"SI"}
+                  required
+                >
+                  <MenuItem value={"SI"}>SÍ</MenuItem>
+                  <MenuItem value={"NO"}>NO</MenuItem>
+                </Select>
+              </FormControl>
               <TextField
                 autoFocus
                 required
@@ -293,6 +321,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 variant="standard"
               />
             </div>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker name="creationDate" />
+            </LocalizationProvider>
             <div>
               <TextField
                 autoFocus
@@ -333,16 +364,19 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 type="string"
                 variant="standard"
               />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="activeAds"
-                name="activeAds"
-                label="Publicidad activa"
-                type="string"
-                variant="standard"
-              />
+              <FormControl variant="standard">
+                <InputLabel>Publicidad activa</InputLabel>
+                <Select
+                  id="activeAds"
+                  name="activeAds"
+                  margin="dense"
+                  defaultValue={"SI"}
+                  required
+                >
+                  <MenuItem value={"SI"}>SÍ</MenuItem>
+                  <MenuItem value={"NO"}>NO</MenuItem>
+                </Select>
+              </FormControl>
             </div>
           </Box>
         </DialogContent>

@@ -91,6 +91,7 @@ function CatalogueList() {
   const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
   const [catalogueSelected, setCatalogueSelected] =
     useState<Catalogue>(catalogueMock);
+
   const datosDialog: DialogData = {
     open: openDialog,
     closeDialog: (close: boolean) => setOpenDialog(close),
@@ -288,6 +289,7 @@ function CatalogueList() {
             />
             {deletedTable === true ? (
               <Button
+                disabled={selectedCatalogues.length <= 0}
                 startIcon={<RestoreIcon />}
                 sx={{
                   backgroundColor: "#D9D9D9",
@@ -322,6 +324,7 @@ function CatalogueList() {
                   Añadir
                 </Button>
                 <Button
+                  disabled={selectedCatalogues.length <= 0}
                   startIcon={<EditIcon />}
                   sx={{
                     backgroundColor: "#D9D9D9",
@@ -338,6 +341,7 @@ function CatalogueList() {
                   Editar
                 </Button>
                 <Button
+                  disabled={selectedCatalogues.length <= 0}
                   startIcon={<DeleteIcon />}
                   sx={{
                     backgroundColor: "#D9D9D9",
@@ -405,7 +409,6 @@ function CatalogueList() {
           pageSizeOptions={[5, 10]}
           checkboxSelection
           onRowSelectionModelChange={(catalogues) => {
-            console.log(catalogues);
             let aux = catalogues as string[];
             setSelectedCatalogues(aux);
           }}
