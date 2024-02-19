@@ -13,6 +13,8 @@ import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { useTranslation } from 'react-i18next';
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { display } from "@mui/system";
+import "./createCatalogues.css";
 
 export interface DialogData {
   open: boolean;
@@ -24,6 +26,8 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [open, setOpen] = useState<boolean>(false);
   const authHeader = useAuthHeader();
   const [t, i18n] = useTranslation();
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({});
 
   useEffect(() => {
     setOpen(props.enviar.open);
@@ -60,19 +64,40 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       });
   };
 
+  const handleNext = (event: any) => {
+    event.preventDefault();
+    // Collect form data for the current step
+    const currentStepData = new FormData(event.currentTarget);
+    const currentStepJson = Object.fromEntries(currentStepData.entries());
+
+    // Merge current step data with existing form data
+    setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
+
+    // Move to the next step
+    console.log("Step antes de cambiar: " + step);
+    setStep(step + 1);
+    console.log("Step tras cambiar: " + step);
+  };
+
+  const handleSubmit = () => {
+    // Submit the entire form data (all steps) to your API or function
+    //createCatalogue(formData);
+    console.log("CreateCatalogue");
+  };
+
   return (
     <>
       <Dialog
         fullWidth={true}
-        maxWidth="lg"
+        //maxWidth={'xs'}
         open={open}
-        sx={{
+        /*sx={{
           "& .MuiTextField-root": { m: 1, width: "20ch" },
           "& .MuiFormControl-root": { m: 1, width: "20ch" },
           "&. MuiInputBase-root": { m: 1, width: "20ch" },
-        }}
+        }}*/
         onClose={handleClose}
-        PaperProps={{
+        /*PaperProps={{
           component: "form",
           onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
             event.preventDefault();
@@ -80,15 +105,20 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
             const formJson = Object.fromEntries((formData as any).entries());
             createCatalogue(formJson);
           },
-        }}
+        }}*/
       >
         <DialogTitle>{t("dialog.addRegister")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-          {t("dialog.fillInfo")}
+          <div className="dialogContentText">
+            <p>{t("dialog.fillInfo")}</p>
+            <p><b>{step}/5</b></p>
+          </div>
           </DialogContentText>
           <Box>
-            <div>
+          {step === 1 && (
+            <form onSubmit={handleNext}>
+              <div className="verticalForm">
               <TextField
                 autoFocus
                 required
@@ -109,21 +139,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 type="string"
                 variant="standard"
               />
-              {/* <FormControl variant="standard">
-                <InputLabel>Idioma</InputLabel>
-                <Select
-                  id="language"
-                  name="language"
-                  margin="dense"
-                  defaultValue={"VAL"}
-                  multiple
-                  renderValue={(selected) => selected.concat(", ")}
-                >
-                  <MenuItem value={"VAL"}>VALENCIÀ</MenuItem>
-                  <MenuItem value={"ESP"}>CASTELLANO</MenuItem>
-                  <MenuItem value={"ENG"}>ENGLISH</MenuItem>
-                </Select>
-              </FormControl> */}
               <TextField
                 autoFocus
                 required
@@ -155,7 +170,40 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 variant="standard"
               />
             </div>
-            <div>
+            <div className="buttonsForm">
+              <Button 
+                onClick={handleClose} 
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.cancel")}</Button>
+              <Button 
+                type="submit"
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.next")}</Button>
+            </div>
+            </form>
+            
+          )}
+          {step === 2 && (
+            <form onSubmit={handleNext}>
+            <div className="verticalForm">
               <TextField
                 autoFocus
                 required
@@ -206,7 +254,39 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 variant="standard"
               />
             </div>
-            <div>
+            <div className="buttonsForm">
+              <Button 
+                onClick={handleClose} 
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.cancel")}</Button>
+              <Button 
+                type="submit"
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.next")}</Button>
+            </div>
+            </form>
+          )}
+          {step === 3 && (
+            <form onSubmit={handleNext}>
+            <div className="verticalForm">
               <TextField
                 autoFocus
                 required
@@ -258,7 +338,39 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 variant="standard"
               />
             </div>
-            <div>
+            <div className="buttonsForm">
+              <Button 
+                onClick={handleClose} 
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.cancel")}</Button>
+              <Button 
+                type="submit"
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.next")}</Button>
+            </div>
+            </form>
+          )}
+          {step === 4 && (
+            <form onSubmit={handleNext}>
+            <div className="verticalForm">
               <FormControl variant="standard">
                 <InputLabel>Estructurado</InputLabel>
                 <Select
@@ -313,10 +425,42 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 variant="standard"
               />
             </div>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker name="creationDate" />
-            </LocalizationProvider>
-            <div>
+            <div className="buttonsForm">
+              <Button 
+                onClick={handleClose} 
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.cancel")}</Button>
+              <Button 
+                type="submit"
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.next")}</Button>
+            </div>
+            </form>
+          )}
+          {step === 5 && (
+            <form onSubmit={handleSubmit}>
+            <div className="verticalForm">
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateTimePicker name="creationDate" />
+              </LocalizationProvider>
               <TextField
                 autoFocus
                 required
@@ -367,11 +511,48 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 variant="standard"
               />
             </div>
+            <div className="buttonsForm">
+              <Button 
+                onClick={handleClose} 
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.cancel")}</Button>
+              <Button 
+                type="submit"
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.addButton")}</Button>
+            </div>
+            </form>
+            
+              
+          )}
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>{t("dialog.cancel")}</Button>
-          <Button type="submit">{t("dialog.addButton")}</Button>
+          {/*<Button onClick={handleClose}>{t("dialog.cancel")}</Button>
+          {step === 5 && (
+            <Button onClick={handleSubmit}>{t("dialog.addButton")}</Button>
+           )}  
+          {step < 5 &&( 
+            <Button onClick={handleNext}>Siguiente</Button>
+          )}*/}
         </DialogActions>
       </Dialog>
     </>
