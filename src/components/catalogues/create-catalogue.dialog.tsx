@@ -362,7 +362,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 margin="dense"
                 id="activeAds"
                 name="activeAds"
-                label="Publicidad activa"
+                label={t("columnsNames.activeAds")}
                 type="string"
                 variant="standard"
               />
