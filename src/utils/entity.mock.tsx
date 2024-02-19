@@ -1,15 +1,14 @@
-import { Entity } from "../interfaces/entities.interface";
+import { Entity } from "../interfaces/entity.interface";
 
 export const entityMock: Entity = {
-    _id:"",
-    responsibleIdentity: "",
-    contactPerson: "",
-    location: "",
-    telephone: "",
-    email: "",
-    topic: "",
-    deleted: false,
-    deletedDate: new Date(),
-    lastUpdate: new Date(),
-    creationDate: new Date(),
+  _id: "",
+  responsibleIdentity: "",
+  contactPerson: "",
+  location: "",
+  telephone: "",
+  email: "",
+  topic: "",
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  deleted: false,
 };

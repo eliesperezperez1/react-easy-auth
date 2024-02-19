@@ -6,10 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
-import {
-  Entity,
-  UpdateEntity,
-} from "../../interfaces/entities.interface";
+import { Entity, UpdateEntity } from "../../interfaces/entity.interface";
 import { updateCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
 import { Box } from "@mui/material";
@@ -47,25 +44,8 @@ export default function UpdateEntityDialog(props: {
   };
 
   const updateEntity = (formJson: any) => {
-    const a = formJson.lastUpdate;
-    const b = formJson.creationDate;
-    const deletedDate = new Date();
-    const deleted = false;
-    const lastUpdate = new Date(a);
-    const creationDate = new Date(b);
     const prueba = formJson as UpdateEntity;
-    setUpdate({
-      ...prueba,
-      deleted,
-      deletedDate,
-      lastUpdate,
-      creationDate,
-    });
-    /*updateCatalogueRequest(
-      props.enviar.catalogue._id,
-      update,
-      authHeader()
-    ).then((response) => response.json());*/
+    setUpdate(prueba);
     props.enviar.getInfo();
     handleClose();
   };
@@ -92,11 +72,9 @@ export default function UpdateEntityDialog(props: {
       >
         <DialogTitle>{t("dialog.updateRegister")}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-          {t("dialog.fillInfo")}
-          </DialogContentText>
+          <DialogContentText>{t("dialog.fillInfo")}</DialogContentText>
           <Box>
-          <div>
+            <div>
               <TextField
                 autoFocus
                 required

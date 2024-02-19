@@ -23,24 +23,16 @@ import RestoreIcon from "@mui/icons-material/Restore";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import { useEffect, useState } from "react";
-import { Entity } from "../../interfaces/entities.interface";
-import {
-  getCatalogueRequest,
-  getCataloguesRequest,
-  updateCatalogueRequest,
-} from "../../api/catalogues";
+import { Entity } from "../../interfaces/entity.interface";
+import { updateCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
-import Chip from "@mui/material/Chip";
 import { ReactComponent as Val } from "../../assets/val.svg";
 import { ReactComponent as Esp } from "../../assets/esp.svg";
 import { useTranslation } from "react-i18next";
 
 import "./entities.css";
-/*import CreateCatalogueDialog, { DialogData } from "./create-catalogue.dialog";
-import UpdateCatalogueDialog, {
-  UpdateDialogData,
-} from "./update-catalogue.dialog";*/
 import { entityMock } from "../../utils/entity.mock";
+import { getEntitiesRequest, getEntityRequest } from "../../api/entities";
 
 const theme = createTheme(
   {
@@ -90,8 +82,7 @@ function EntitiesList() {
   const [deletedTable, setDeletedTable] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
-  const [entitySelected, setEntitySelected] =
-    useState<Entity>(entityMock);
+  const [entitySelected, setEntitySelected] = useState<Entity>(entityMock);
 
   /*const datosDialog: DialogData = {
     open: openDialog,
@@ -109,17 +100,38 @@ function EntitiesList() {
   };*/
 
   const columns: GridColDef[] = [
-    { field: "_id", headerName: "ID", width: 200 },
-    { field: "contactPerson", headerName: t("columnsNames.contactPerson"), width: 200 },
+    {
+      field: "contactPerson",
+      headerName: t("columnsNames.contactPerson"),
+      width: 200,
+    },
     { field: "location", headerName: t("columnsNames.location"), width: 200 },
     { field: "topic", headerName: t("columnsNames.topic"), width: 200 },
-    { field: "responsibleIdentity", headerName: t("columnsNames.responsibleIdentity"), width: 200 },
-    { field: "phoneNumber", headerName: t("columnsNames.phoneNumber"), width: 200 },
-    { field: "email", headerName: t("login.email"), width: 200 },
+    {
+      field: "responsibleIdentity",
+      headerName: t("columnsNames.responsibleIdentity"),
+      width: 200,
+    },
+    {
+      field: "telephone",
+      headerName: t("columnsNames.phoneNumber"),
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <a href={"tel:+34" + params.value}>{params.value}</a>
+      ),
+    },
+    {
+      field: "email",
+      headerName: t("login.email"),
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <a href={"mailto:" + params.value}>{params.value}</a>
+      ),
+    },
   ];
 
   function getAndSetCatalogues() {
-    getCataloguesRequest(authHeader())
+    getEntitiesRequest(authHeader())
       .then((response) => response.json())
       .then((data) => {
         let notDeleted = data.filter((d: Entity) => d.deleted !== true);
@@ -135,7 +147,7 @@ function EntitiesList() {
   }
   function getSelectedCatalogues() {
     selectedEntities.forEach((sc) => {
-      getCatalogueRequest(authHeader(), sc)
+      getEntityRequest(authHeader(), sc)
         .then((response) => response.json())
         .then((data) => {
           setEntitySelected(data);
@@ -340,7 +352,7 @@ function EntitiesList() {
               </>
             )}
 
-            <GridToolbarQuickFilter 
+            <GridToolbarQuickFilter
               sx={{
                 height: 33,
                 backgroundColor: "#D9D9D9",
@@ -362,7 +374,9 @@ function EntitiesList() {
 
   if (!entities.length)
     return (
-      <p className="text-center text-xl font-bold my-4">{t("dataTable.noCatalogues")}</p>
+      <p className="text-center text-xl font-bold my-4">
+        {t("dataTable.noCatalogues")}
+      </p>
     );
 
   return (

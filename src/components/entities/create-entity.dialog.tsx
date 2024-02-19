@@ -6,12 +6,11 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
-import { CreateEntity } from "../../interfaces/entities.interface";
-import { createCatalogueRequest } from "../../api/catalogues";
+import { CreateEntity } from "../../interfaces/entity.interface";
 import { useAuthHeader } from "react-auth-kit";
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Box } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 export interface DialogData {
@@ -35,28 +34,10 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
   };
 
   const createEntity = (formJson: any) => {
-    const a = formJson.lastUpdate;
-    const b = formJson.creationDate;
-    const deletedDate = new Date();
-    const deleted = false;
-    const lastUpdate = new Date(a);
-    const creationDate = new Date(b);
     const prueba = formJson as CreateEntity;
-    const create: CreateEntity = {
-      ...prueba,
-      deleted,
-      deletedDate,
-      lastUpdate,
-      creationDate,
-    };
-    console.log(create);
+    console.log(prueba);
     props.enviar.getInfo();
     handleClose();
-    /*createEntityRequest(create, authHeader())
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      });*/
   };
 
   return (
@@ -83,9 +64,7 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
       >
         <DialogTitle>{t("dialog.addRegister")}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-          {t("dialog.fillInfo")}
-          </DialogContentText>
+          <DialogContentText>{t("dialog.fillInfo")}</DialogContentText>
           <Box>
             <div>
               <TextField
