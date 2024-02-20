@@ -491,9 +491,9 @@ function CatalogueList() {
 
   if (!catalogues.length)
     return (
-      <p className="text-center text-xl font-bold my-4">
+      <span className="text-center text-xl font-bold my-4">
         {t("dataTable.noCatalogues")}
-      </p>
+      </span>
     );
 
   return (

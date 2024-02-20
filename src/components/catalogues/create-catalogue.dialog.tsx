@@ -59,7 +59,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       .then((data) => {
         console.log(data);
       });
-      
+
     setFormData({});
     setStep(1);
     handleClose();
@@ -67,7 +67,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
 
   const handleNext = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+
     // Collect form data for the current step
     const currentStepData = new FormData(event.currentTarget);
     const currentStepJson = Object.fromEntries(currentStepData.entries());
@@ -82,471 +82,478 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     const currentStepData = new FormData(event.currentTarget);
     const currentStepJson = Object.fromEntries(currentStepData.entries());
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
-    const mergedFormData = {...formData, ...currentStepJson};
+    const mergedFormData = { ...formData, ...currentStepJson };
     createCatalogue(mergedFormData);
   };
   return (
     <>
-      <Dialog
-        fullWidth={true}
-        //maxWidth={'xs'}
-        open={open}
-        /*sx={{
-          "& .MuiTextField-root": { m: 1, width: "20ch" },
-          "& .MuiFormControl-root": { m: 1, width: "20ch" },
-          "&. MuiInputBase-root": { m: 1, width: "20ch" },
-        }}*/
-        onClose={handleClose}
-        /*PaperProps={{
-          component: "form",
-          onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-            event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries((formData as any).entries());
-            createCatalogue(formJson);
-          },
-        }}*/
-      >
+      <Dialog fullWidth={true} open={open} onClose={handleClose}>
         <DialogTitle>{t("dialog.addRegister")}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
           <div className="dialogContentText">
-            <p>{t("dialog.fillInfo")}</p>
-            <p><b>{step}/5</b></p>
+            <span>{t("dialog.fillInfo")}</span>
+            <span>
+              <strong>{step}/5</strong>
+            </span>
           </div>
-          </DialogContentText>
           <Box>
-          {step === 1 && (
-            <form onSubmit={handleNext}>
-              <div className="verticalForm">
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="title"
-                name="title"
-                label={t("columnsNames.title")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="description"
-                name="description"
-                label={t("columnsNames.description")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="language"
-                name="language"
-                label={t("columnsNames.language")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="territorialScope"
-                name="territorialScope"
-                label={t("columnsNames.territorialScope")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="temporaryCoverage"
-                name="temporaryCoverage"
-                label={t("columnsNames.temporaryCoverage")}
-                type="string"
-                variant="standard"
-              />
-            </div>
-            <div className="buttonsForm">
-              <Button 
-                onClick={handleClose} 
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}>{t("dialog.cancel")}</Button>
-              <Button 
-                type="submit"
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}>{t("dialog.next")}</Button>
-            </div>
-            </form>
-            
-          )}
-          {step === 2 && (
-            <form onSubmit={handleNext}>
-            <div className="verticalForm">
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="updateFrequency"
-                name="updateFrequency"
-                label={t("columnsNames.updateFrequency")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="topic"
-                name="topic"
-                label={t("columnsNames.topic")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="lastUpdate"
-                name="lastUpdate"
-                type="date"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="format"
-                name="format"
-                label={t("columnsNames.format")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="distribution"
-                name="distribution"
-                label="Distribución"
-                type="string"
-                variant="standard"
-              />
-            </div>
-            <div className="buttonsForm">
-              <Button 
-                onClick={handleClose} 
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}>{t("dialog.cancel")}</Button>
-              <Button 
-                type="submit"
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}>{t("dialog.next")}</Button>
-            </div>
-            </form>
-          )}
-          {step === 3 && (
-            <form onSubmit={handleNext}>
-            <div className="verticalForm">
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="sensitiveInformation"
-                name="sensitiveInformation"
-                label="Información sensible"
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="isUsing"
-                name="isUsing"
-                label="Se utiliza"
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="accessType"
-                name="accessType"
-                label={t("columnsNames.accessType")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="internalRelationship"
-                name="internalRelationship"
-                label="Relación interna"
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="contactPerson"
-                name="contactPerson"
-                label={t("columnsNames.contactPerson")}
-                type="string"
-                variant="standard"
-              />
-            </div>
-            <div className="buttonsForm">
-              <Button 
-                onClick={handleClose} 
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}>{t("dialog.cancel")}</Button>
-              <Button 
-                type="submit"
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}>{t("dialog.next")}</Button>
-            </div>
-            </form>
-          )}
-          {step === 4 && (
-            <form onSubmit={handleNext}>
-            <div className="verticalForm">
-              <FormControl variant="standard">
-                <InputLabel>Estructurado</InputLabel>
-                <Select
-                  id="structured"
-                  name="structured"
-                  margin="dense"
-                  defaultValue={"SI"}
-                  required
-                >
-                  <MenuItem value={"SI"}>SÍ</MenuItem>
-                  <MenuItem value={"NO"}>NO</MenuItem>
-                </Select>
-              </FormControl>
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="associatedApplication"
-                name="associatedApplication"
-                label="Aplicación asociada"
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="georeference"
-                name="georeference"
-                label="Georreferenciado"
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="comments"
-                name="comments"
-                label={t("columnsNames.comments")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="timmingEffect"
-                name="timmingEffect"
-                label="Efecto temporal"
-                type="string"
-                variant="standard"
-              />
-            </div>
-            <div className="buttonsForm">
-              <Button 
-                onClick={handleClose} 
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}>{t("dialog.cancel")}</Button>
-              <Button 
-                type="submit"
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}>{t("dialog.next")}</Button>
-            </div>
-            </form>
-          )}
-          {step === 5 && (
-            <form onSubmit={handleSubmit}>
-            <div className="verticalForm">
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateTimePicker name="creationDate" />
-              </LocalizationProvider>
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="creationDate"
-                name="creationDate"
-                type="date"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="personalData"
-                name="personalData"
-                label={t("columnsNames.personalData")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="source"
-                name="source"
-                label={t("columnsNames.source")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="responsibleIdentity"
-                name="responsibleIdentity"
-                label={t("columnsNames.responsibleIdentity")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="activeAds"
-                name="activeAds"
-                label={t("columnsNames.activeAds")}
-                type="string"
-                variant="standard"
-              />
-            </div>
-            <div className="buttonsForm">
-              <Button 
-                onClick={handleClose} 
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}>{t("dialog.cancel")}</Button>
-              <Button 
-                type="submit"
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}>{t("dialog.addButton")}</Button>
-            </div>
-            </form>
-            
-              
-          )}
+            {step === 1 && (
+              <form onSubmit={handleNext}>
+                <div className="verticalForm">
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="title"
+                    name="title"
+                    label={t("columnsNames.title")}
+                    type="string"
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="description"
+                    name="description"
+                    label={t("columnsNames.description")}
+                    type="string"
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="language"
+                    name="language"
+                    label={t("columnsNames.language")}
+                    type="string"
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="territorialScope"
+                    name="territorialScope"
+                    label={t("columnsNames.territorialScope")}
+                    type="string"
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="temporaryCoverage"
+                    name="temporaryCoverage"
+                    label={t("columnsNames.temporaryCoverage")}
+                    type="string"
+                    variant="standard"
+                  />
+                </div>
+                <div className="buttonsForm">
+                  <Button
+                    onClick={handleClose}
+                    sx={{
+                      height: 37,
+                      backgroundColor: "#D9D9D9",
+                      color: "#404040",
+                      borderColor: "#404040",
+                      "&:hover": {
+                        borderColor: "#0D0D0D",
+                        backgroundColor: "#0D0D0D",
+                        color: "#f2f2f2",
+                      },
+                    }}
+                  >
+                    {t("dialog.cancel")}
+                  </Button>
+                  <Button
+                    type="submit"
+                    sx={{
+                      height: 37,
+                      backgroundColor: "#D9D9D9",
+                      color: "#404040",
+                      borderColor: "#404040",
+                      "&:hover": {
+                        borderColor: "#0D0D0D",
+                        backgroundColor: "#0D0D0D",
+                        color: "#f2f2f2",
+                      },
+                    }}
+                  >
+                    {t("dialog.next")}
+                  </Button>
+                </div>
+              </form>
+            )}
+            {step === 2 && (
+              <form onSubmit={handleNext}>
+                <div className="verticalForm">
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="updateFrequency"
+                    name="updateFrequency"
+                    label={t("columnsNames.updateFrequency")}
+                    type="string"
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="topic"
+                    name="topic"
+                    label={t("columnsNames.topic")}
+                    type="string"
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="lastUpdate"
+                    name="lastUpdate"
+                    type="date"
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="format"
+                    name="format"
+                    label={t("columnsNames.format")}
+                    type="string"
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="distribution"
+                    name="distribution"
+                    label="Distribución"
+                    type="string"
+                    variant="standard"
+                  />
+                </div>
+                <div className="buttonsForm">
+                  <Button
+                    onClick={handleClose}
+                    sx={{
+                      height: 37,
+                      backgroundColor: "#D9D9D9",
+                      color: "#404040",
+                      borderColor: "#404040",
+                      "&:hover": {
+                        borderColor: "#0D0D0D",
+                        backgroundColor: "#0D0D0D",
+                        color: "#f2f2f2",
+                      },
+                    }}
+                  >
+                    {t("dialog.cancel")}
+                  </Button>
+                  <Button
+                    type="submit"
+                    sx={{
+                      height: 37,
+                      backgroundColor: "#D9D9D9",
+                      color: "#404040",
+                      borderColor: "#404040",
+                      "&:hover": {
+                        borderColor: "#0D0D0D",
+                        backgroundColor: "#0D0D0D",
+                        color: "#f2f2f2",
+                      },
+                    }}
+                  >
+                    {t("dialog.next")}
+                  </Button>
+                </div>
+              </form>
+            )}
+            {step === 3 && (
+              <form onSubmit={handleNext}>
+                <div className="verticalForm">
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="sensitiveInformation"
+                    name="sensitiveInformation"
+                    label="Información sensible"
+                    type="string"
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="isUsing"
+                    name="isUsing"
+                    label="Se utiliza"
+                    type="string"
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="accessType"
+                    name="accessType"
+                    label={t("columnsNames.accessType")}
+                    type="string"
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="internalRelationship"
+                    name="internalRelationship"
+                    label="Relación interna"
+                    type="string"
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="contactPerson"
+                    name="contactPerson"
+                    label={t("columnsNames.contactPerson")}
+                    type="string"
+                    variant="standard"
+                  />
+                </div>
+                <div className="buttonsForm">
+                  <Button
+                    onClick={handleClose}
+                    sx={{
+                      height: 37,
+                      backgroundColor: "#D9D9D9",
+                      color: "#404040",
+                      borderColor: "#404040",
+                      "&:hover": {
+                        borderColor: "#0D0D0D",
+                        backgroundColor: "#0D0D0D",
+                        color: "#f2f2f2",
+                      },
+                    }}
+                  >
+                    {t("dialog.cancel")}
+                  </Button>
+                  <Button
+                    type="submit"
+                    sx={{
+                      height: 37,
+                      backgroundColor: "#D9D9D9",
+                      color: "#404040",
+                      borderColor: "#404040",
+                      "&:hover": {
+                        borderColor: "#0D0D0D",
+                        backgroundColor: "#0D0D0D",
+                        color: "#f2f2f2",
+                      },
+                    }}
+                  >
+                    {t("dialog.next")}
+                  </Button>
+                </div>
+              </form>
+            )}
+            {step === 4 && (
+              <form onSubmit={handleNext}>
+                <div className="verticalForm">
+                  <FormControl variant="standard">
+                    <InputLabel>Estructurado</InputLabel>
+                    <Select
+                      id="structured"
+                      name="structured"
+                      margin="dense"
+                      defaultValue={"SI"}
+                      required
+                    >
+                      <MenuItem value={"SI"}>SÍ</MenuItem>
+                      <MenuItem value={"NO"}>NO</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="associatedApplication"
+                    name="associatedApplication"
+                    label="Aplicación asociada"
+                    type="string"
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="georeference"
+                    name="georeference"
+                    label="Georreferenciado"
+                    type="string"
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="comments"
+                    name="comments"
+                    label={t("columnsNames.comments")}
+                    type="string"
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="timmingEffect"
+                    name="timmingEffect"
+                    label="Efecto temporal"
+                    type="string"
+                    variant="standard"
+                  />
+                </div>
+                <div className="buttonsForm">
+                  <Button
+                    onClick={handleClose}
+                    sx={{
+                      height: 37,
+                      backgroundColor: "#D9D9D9",
+                      color: "#404040",
+                      borderColor: "#404040",
+                      "&:hover": {
+                        borderColor: "#0D0D0D",
+                        backgroundColor: "#0D0D0D",
+                        color: "#f2f2f2",
+                      },
+                    }}
+                  >
+                    {t("dialog.cancel")}
+                  </Button>
+                  <Button
+                    type="submit"
+                    sx={{
+                      height: 37,
+                      backgroundColor: "#D9D9D9",
+                      color: "#404040",
+                      borderColor: "#404040",
+                      "&:hover": {
+                        borderColor: "#0D0D0D",
+                        backgroundColor: "#0D0D0D",
+                        color: "#f2f2f2",
+                      },
+                    }}
+                  >
+                    {t("dialog.next")}
+                  </Button>
+                </div>
+              </form>
+            )}
+            {step === 5 && (
+              <form onSubmit={handleSubmit}>
+                <div className="verticalForm">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateTimePicker name="creationDate" />
+                  </LocalizationProvider>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="creationDate"
+                    name="creationDate"
+                    type="date"
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="personalData"
+                    name="personalData"
+                    label={t("columnsNames.personalData")}
+                    type="string"
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="source"
+                    name="source"
+                    label={t("columnsNames.source")}
+                    type="string"
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="responsibleIdentity"
+                    name="responsibleIdentity"
+                    label={t("columnsNames.responsibleIdentity")}
+                    type="string"
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="activeAds"
+                    name="activeAds"
+                    label={t("columnsNames.activeAds")}
+                    type="string"
+                    variant="standard"
+                  />
+                </div>
+                <div className="buttonsForm">
+                  <Button
+                    onClick={handleClose}
+                    sx={{
+                      height: 37,
+                      backgroundColor: "#D9D9D9",
+                      color: "#404040",
+                      borderColor: "#404040",
+                      "&:hover": {
+                        borderColor: "#0D0D0D",
+                        backgroundColor: "#0D0D0D",
+                        color: "#f2f2f2",
+                      },
+                    }}
+                  >
+                    {t("dialog.cancel")}
+                  </Button>
+                  <Button
+                    type="submit"
+                    sx={{
+                      height: 37,
+                      backgroundColor: "#D9D9D9",
+                      color: "#404040",
+                      borderColor: "#404040",
+                      "&:hover": {
+                        borderColor: "#0D0D0D",
+                        backgroundColor: "#0D0D0D",
+                        color: "#f2f2f2",
+                      },
+                    }}
+                  >
+                    {t("dialog.addButton")}
+                  </Button>
+                </div>
+              </form>
+            )}
           </Box>
         </DialogContent>
-        <DialogActions>
-        </DialogActions>
+        <DialogActions></DialogActions>
       </Dialog>
     </>
   );
