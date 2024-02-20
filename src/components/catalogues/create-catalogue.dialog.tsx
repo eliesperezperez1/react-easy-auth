@@ -54,35 +54,37 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       creationDate,
     };
     props.enviar.getInfo();
-    handleClose();
     createCatalogueRequest(create, authHeader())
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
       });
+      
+    setFormData({});
+    setStep(1);
+    handleClose();
   };
 
-  const handleNext = (event: any) => {
+  const handleNext = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    
     // Collect form data for the current step
     const currentStepData = new FormData(event.currentTarget);
     const currentStepJson = Object.fromEntries(currentStepData.entries());
 
     // Merge current step data with existing form data
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
-
-    // Move to the next step
-    console.log("Step antes de cambiar: " + step);
+    console.log(formData);
     setStep(step + 1);
-    console.log("Step tras cambiar: " + step);
   };
 
-  const handleSubmit = () => {
-    // Submit the entire form data (all steps) to your API or function
-    //createCatalogue(formData);
-    console.log("CreateCatalogue");
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const currentStepData = new FormData(event.currentTarget);
+    const currentStepJson = Object.fromEntries(currentStepData.entries());
+    setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
+    const mergedFormData = {...formData, ...currentStepJson};
+    createCatalogue(mergedFormData);
   };
-
   return (
     <>
       <Dialog
@@ -544,13 +546,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
           </Box>
         </DialogContent>
         <DialogActions>
-          {/*<Button onClick={handleClose}>{t("dialog.cancel")}</Button>
-          {step === 5 && (
-            <Button onClick={handleSubmit}>{t("dialog.addButton")}</Button>
-           )}  
-          {step < 5 &&( 
-            <Button onClick={handleNext}>Siguiente</Button>
-          )}*/}
         </DialogActions>
       </Dialog>
     </>
