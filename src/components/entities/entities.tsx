@@ -10,6 +10,7 @@ import {
   Chip,
   FormControl,
   ThemeProvider,
+  Tooltip,
   createTheme,
 } from "@mui/material";
 import {
@@ -23,6 +24,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import RestoreIcon from "@mui/icons-material/Restore";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
+import FolderDeleteIcon from "@mui/icons-material/FolderDelete";
+import FolderIcon from "@mui/icons-material/Folder";
 import { useEffect, useState } from "react";
 import { Entity } from "../../interfaces/entity.interface";
 import { updateCatalogueRequest } from "../../api/catalogues";
@@ -293,9 +296,15 @@ function EntitiesList() {
                       showDeleted();
                     }}
                   >
-                    {deletedTable === true
-                      ? "Mostrar no eliminados"
-                      : "Mostrar eliminados"}
+                    {deletedTable === true ? (
+                      <Tooltip title={t("dataTable.showNotDeleted")}>
+                        <FolderIcon></FolderIcon>
+                      </Tooltip>
+                    ) : (
+                      <Tooltip title={t("dataTable.showDeleted")}>
+                        <FolderDeleteIcon></FolderDeleteIcon>
+                      </Tooltip>
+                    )}
                   </Button>
                 </Box>
               </div>

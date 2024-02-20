@@ -70,6 +70,7 @@
         "cancel": "Cancelar",
         "updateButton": "Actualizar",
         "addButton": "Añadir registro",
+        "next":"Siguiente",
         "addEntityButton": "Añadir servicio",
         "titleEmpty": "Título vacío. Por favor, rellénalo para poder continuar. ",
         "registerQuestion": "Crear cuenta",
