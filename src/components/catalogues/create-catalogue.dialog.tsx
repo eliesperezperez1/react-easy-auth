@@ -11,7 +11,7 @@ import { createCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 export interface DialogData {
@@ -42,7 +42,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     const lastUpdate = new Date(a);
     const creationDate = new Date(b);
     const prueba = formJson as CreateCatalogue;
-    console.log(prueba.sensitiveInformation);
     const create: CreateCatalogue = {
       ...prueba,
       deleted,
@@ -50,7 +49,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       lastUpdate,
       creationDate,
     };
-    console.log(create);
     props.enviar.getInfo();
     handleClose();
     createCatalogueRequest(create, authHeader())
@@ -84,9 +82,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       >
         <DialogTitle>{t("dialog.addRegister")}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-          {t("dialog.fillInfo")}
-          </DialogContentText>
+          <DialogContentText>{t("dialog.fillInfo")}</DialogContentText>
           <Box>
             <div>
               <TextField

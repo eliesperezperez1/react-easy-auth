@@ -26,7 +26,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useEffect, useState } from "react";
 import { Entity } from "../../interfaces/entity.interface";
 import { updateCatalogueRequest } from "../../api/catalogues";
-import { useAuthHeader } from "react-auth-kit";
+import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import { ReactComponent as Val } from "../../assets/val.svg";
 import { ReactComponent as Esp } from "../../assets/esp.svg";
 import { useTranslation } from "react-i18next";
@@ -76,6 +76,7 @@ function valOrEsp(p: string | undefined) {
 
 function EntitiesList() {
   const authHeader = useAuthHeader();
+  const user = useAuthUser();
   const [entities, setEntities] = useState<Entity[]>([]);
   const [deletedEntities, setDeletedEntities] = useState<Entity[]>([]);
   const [selectedEntities, setSelectedEntities] = useState<string[]>([]);
@@ -84,6 +85,8 @@ function EntitiesList() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
   const [entitySelected, setEntitySelected] = useState<Entity>(entityMock);
+  const [userService, setUserService] = useState<string>("");
+  const [userRole, setUserRole] = useState<string>("");
 
   /*const datosDialog: DialogData = {
     open: openDialog,
@@ -99,6 +102,13 @@ function EntitiesList() {
     getInfo: () => getAndSetCatalogues(),
     catalogue: catalogueSelected,
   };*/
+  function isDisabled(): boolean {
+    return !(
+      selectedEntities.length > 0 &&
+      (userService === "general" || userRole === "admin")
+    );
+  }
+
   function getLocationUrl(location: string | undefined) {
     return !!location
       ? "https://www.google.com/maps/search/?api=1&query=" +
@@ -246,6 +256,8 @@ function EntitiesList() {
   }
 
   useEffect(() => {
+    setUserRole(user()?.user.role);
+    setUserService(user()?.user.service);
     getAndSetCatalogues();
   }, []);
 
@@ -329,7 +341,7 @@ function EntitiesList() {
             />
             {deletedTable === true ? (
               <Button
-                disabled
+                disabled={isDisabled()}
                 startIcon={<RestoreIcon />}
                 sx={{
                   height: 37,
@@ -367,7 +379,7 @@ function EntitiesList() {
                   {t("dataTable.addDataset")}
                 </Button>
                 <Button
-                  disabled
+                  disabled={isDisabled()}
                   startIcon={<EditIcon />}
                   sx={{
                     height: 37,
