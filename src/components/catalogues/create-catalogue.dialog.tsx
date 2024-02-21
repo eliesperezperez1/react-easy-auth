@@ -3,18 +3,23 @@ import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
 import { CreateCatalogue } from "../../interfaces/catalogue.interface";
 import { createCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  ThemeProvider,
+} from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { useTranslation } from "react-i18next";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { display } from "@mui/system";
-import "./createCatalogues.css";
+import "./create-catalogue.dialog.css";
 
 export interface DialogData {
   open: boolean;
@@ -31,7 +36,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
 
   useEffect(() => {
     setOpen(props.enviar.open);
-  });
+  }, [props]);
 
   const handleClose = () => {
     setOpen(false);
@@ -53,13 +58,12 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       lastUpdate,
       creationDate,
     };
-    props.enviar.getInfo();
     createCatalogueRequest(create, authHeader())
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
       });
-
+    props.enviar.getInfo();
     setFormData({});
     setStep(1);
     handleClose();
@@ -87,7 +91,14 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   };
   return (
     <>
-      <Dialog fullWidth={true} open={open} onClose={handleClose}>
+      <Dialog
+        fullWidth={true}
+        open={open}
+        onClose={handleClose}
+        sx={{
+          "& .MuiInputBase-root": { border: "none" },
+        }}
+      >
         <DialogTitle>{t("dialog.addRegister")}</DialogTitle>
         <DialogContent>
           <div className="dialogContentText">
@@ -210,15 +221,10 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                     type="string"
                     variant="standard"
                   />
-                  <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="lastUpdate"
-                    name="lastUpdate"
-                    type="date"
-                    variant="standard"
-                  />
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <label>{t("columnsNames.lastUpdate")}</label>
+                    <DateTimePicker name="lastUpdate" />
+                  </LocalizationProvider>
                   <TextField
                     autoFocus
                     required
@@ -465,7 +471,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DateTimePicker name="creationDate" />
                   </LocalizationProvider>
-                  <TextField
+                  {/* <TextField
                     autoFocus
                     required
                     margin="dense"
@@ -473,7 +479,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                     name="creationDate"
                     type="date"
                     variant="standard"
-                  />
+                  /> */}
                   <TextField
                     autoFocus
                     required

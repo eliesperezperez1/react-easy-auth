@@ -34,7 +34,6 @@ import Chip from "@mui/material/Chip";
 import { ReactComponent as Val } from "../../assets/val.svg";
 import { ReactComponent as Esp } from "../../assets/esp.svg";
 import { useTranslation } from "react-i18next";
-import { namespaces } from "../../@types/i18n.constants";
 import FolderDeleteIcon from "@mui/icons-material/FolderDelete";
 import FolderIcon from "@mui/icons-material/Folder";
 import Tooltip from "@mui/material/Tooltip";
@@ -45,7 +44,7 @@ import UpdateCatalogueDialog, {
 } from "./update-catalogue.dialog";
 import { catalogueMock } from "../../utils/catalogue.mock";
 
-const theme = createTheme(
+const baseTheme = createTheme(
   {
     typography: {
       fontFamily: "Montserrat",
@@ -95,6 +94,7 @@ function CatalogueList() {
   const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
   const [catalogueSelected, setCatalogueSelected] =
     useState<Catalogue>(catalogueMock);
+  const [theme, setTheme] = useState<any>({});
 
   const datosDialog: DialogData = {
     open: openDialog,
@@ -318,6 +318,8 @@ function CatalogueList() {
   }
 
   useEffect(() => {
+    console.log(t);
+    setTheme({ ...baseTheme, t });
     getAndSetCatalogues();
   }, []);
 
