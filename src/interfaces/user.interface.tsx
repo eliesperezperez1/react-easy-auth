@@ -17,8 +17,8 @@ export interface User {
   role: ROLE;
   service?: RESPONSIBLE_IDENTITY;
   deleted: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 export type SentUser = Omit<
   User,

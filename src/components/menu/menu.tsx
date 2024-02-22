@@ -42,7 +42,7 @@ const Menu = () => {
               </a>
             </li>
             <li>
-            <a
+              <a
                 onClick={() => {
                   navigate("/entities");
                 }}
@@ -51,7 +51,13 @@ const Menu = () => {
               </a>
             </li>
             <li>
-              <NavLink to="/projects">{t("header.users")}</NavLink>
+              <a
+                onClick={() => {
+                  navigate("/users");
+                }}
+              >
+                {t("header.users")}
+              </a>
             </li>
             <li>
               <a onClick={logout}>

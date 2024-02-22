@@ -1,0 +1,23 @@
+.verticalForm{
+    display: flex;
+    flex-direction: column;
+}
+
+.buttonsForm, .dialogContentText{
+    display: flex;
+    justify-content: space-between;
+}
+
+.buttonsForm Button{
+    height: 37;
+    background-color: "#D9D9D9";
+    color: "#404040";
+    border-color: "#404040";
+    margin-top: 15px;
+}
+
+.buttonsForm Button:hover{
+    border-color: "#0D0D0D";
+    background-color: "#0D0D0D";
+    color: "#f2f2f2",
+}

@@ -53,7 +53,13 @@
         "source":"URL de publicación",
         "lastUpdate":"Última actualización",
         "location":"Localización",
-        "phoneNumber":"Número de contacto"
+        "phoneNumber":"Número de contacto",
+        "name": "Nombre",
+        "surname": "Apellido",
+        "username": "Apodo de cuenta",
+        "role": "Rol",
+        "deleted": "Eliminado"
+
     },
     "login": {
         "welcome": "Bienvenido de vuelta",

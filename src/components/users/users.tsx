@@ -23,28 +23,29 @@ import RestoreIcon from "@mui/icons-material/Restore";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import { useEffect, useState } from "react";
-import { Catalogue } from "../../interfaces/catalogue.interface";
+import { User } from "../../interfaces/user.interface";
 import {
-  getCatalogueRequest,
-  getCataloguesRequest,
-  updateCatalogueRequest,
-} from "../../api/catalogues";
+  getUserRequest,
+  getUsersRequest,
+  updateUserRequest,
+} from "../../api/users";
 import { useAuthHeader } from "react-auth-kit";
 import Chip from "@mui/material/Chip";
 import { ReactComponent as Val } from "../../assets/val.svg";
 import { ReactComponent as Esp } from "../../assets/esp.svg";
 import { useTranslation } from "react-i18next";
+import { namespaces } from "../../@types/i18n.constants";
 import FolderDeleteIcon from "@mui/icons-material/FolderDelete";
 import FolderIcon from "@mui/icons-material/Folder";
 import Tooltip from "@mui/material/Tooltip";
-import "./catalogues.css";
-import CreateCatalogueDialog, { DialogData } from "./create-catalogue.dialog";
-import UpdateCatalogueDialog, {
+import "./users.css";
+import CreateUserDialog, { DialogData } from "./create-user.dialog";
+import UpdateUserDialog, {
   UpdateDialogData,
-} from "./update-catalogue.dialog";
-import { catalogueMock } from "../../utils/catalogue.mock";
+} from "./update-user.dialog";
+import { userMock } from "../../utils/user.mock";
 
-const baseTheme = createTheme(
+const theme = createTheme(
   {
     typography: {
       fontFamily: "Montserrat",
@@ -77,158 +78,51 @@ function paletaColores(color: string) {
 }
 
 function yesOrNo(p: string | undefined) {
-  return p === "NO" || undefined ? "error" : "success";
+  return p === "YES" || undefined ? "success" : "error";
 }
 function valOrEsp(p: string | undefined) {
   return p === "VAL" || undefined ? <Val /> : <Esp />;
 }
 
-function CatalogueList() {
+function UserList() {
   const authHeader = useAuthHeader();
-  const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
-  const [deletedCatalogues, setDeletedCatalogues] = useState<Catalogue[]>([]);
-  const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>([]);
-  const [rows, setRows] = useState<Catalogue[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [deletedUsers, setDeletedUsers] = useState<User[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+  const [rows, setRows] = useState<User[]>([]);
   const [deletedTable, setDeletedTable] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
-  const [catalogueSelected, setCatalogueSelected] =
-    useState<Catalogue>(catalogueMock);
-  const [theme, setTheme] = useState<any>({});
+  const [userSelected, setUserSelected] =
+    useState<User>(userMock);
 
   const datosDialog: DialogData = {
     open: openDialog,
     closeDialog: (close: boolean) => setOpenDialog(close),
-    getInfo: () => getAndSetCatalogues(),
+    getInfo: () => getAndSetUsers(),
   };
 
   const [t, i18n] = useTranslation();
   const datosUpdateDialog: UpdateDialogData = {
     open: openUpdateDialog,
     closeDialog: (close: boolean) => setOpenUpdateDialog(close),
-    getInfo: () => getAndSetCatalogues(),
-    catalogue: catalogueSelected,
+    getInfo: () => getAndSetUsers(),
+    user: userSelected,
   };
 
   const columns: GridColDef[] = [
     // { field: "_id", headerName: "ID", width: 200, hideable: true },
-    { field: "title", headerName: t("columnsNames.title"), width: 200 },
+    { field: "name", headerName: t("columnsNames.name"), width: 200 },
     {
-      field: "description",
-      headerName: t("columnsNames.description"),
+      field: "surname",
+      headerName: t("columnsNames.surname"),
       width: 200,
     },
-    { field: "topic", headerName: t("columnsNames.topic"), width: 200 },
+    { field: "email", headerName: t("login.email"), width: 200 },
     {
-      field: "responsibleIdentity",
-      headerName: t("columnsNames.responsibleIdentity"),
+      field: "username",
+      headerName: t("columnsNames.username"),
       width: 200,
-    },
-    {
-      field: "datasetsRelation",
-      headerName: t("columnsNames.datasetsRelation"),
-      width: 200,
-    },
-    { field: "fieldList", headerName: t("columnsNames.fieldList"), width: 200 },
-    {
-      field: "dataUnbundling",
-      headerName: t("columnsNames.dataUnbundling"),
-      width: 200,
-    },
-    {
-      field: "updateFrequency",
-      headerName: t("columnsNames.updateFrequency"),
-      width: 200,
-    },
-    { field: "format", headerName: t("columnsNames.format"), width: 200 },
-    {
-      field: "dataOrigin",
-      headerName: t("columnsNames.dataOrigin"),
-      width: 200,
-    },
-    {
-      field: "dataOriginURL",
-      headerName: t("columnsNames.dataOriginURL"),
-      width: 200,
-    },
-    {
-      field: "connection",
-      headerName: t("columnsNames.connection"),
-      width: 200,
-    },
-    {
-      field: "dataFiability",
-      headerName: t("columnsNames.dataFiability"),
-      width: 200,
-    },
-    { field: "comments", headerName: t("columnsNames.comments"), width: 200 },
-    { field: "RAT", headerName: t("columnsNames.RAT"), width: 200 },
-    {
-      field: "temporaryCoverage",
-      headerName: t("columnsNames.temporaryCoverage"),
-      width: 200,
-    },
-    {
-      field: "repositoryStorage",
-      headerName: t("columnsNames.repositoryStorage"),
-      width: 200,
-    },
-    {
-      field: "repositoryStorageURL",
-      headerName: t("columnsNames.repositoryStorageURL"),
-      width: 200,
-    },
-    {
-      field: "fieldSuppression",
-      headerName: t("columnsNames.fieldSuppression"),
-      width: 200,
-    },
-    {
-      field: "accessType",
-      headerName: t("columnsNames.accessType"),
-      width: 200,
-    },
-    {
-      field: "activeAds",
-      headerName: t("columnsNames.activeAds"),
-      width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
-    },
-    { field: "posts", headerName: t("columnsNames.posts"), width: 200 },
-    { field: "licence", headerName: t("columnsNames.licence"), width: 200 },
-    {
-      field: "sensitiveInformation",
-      headerName: t("columnsNames.sensitiveInformation"),
-      width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
-    },
-    {
-      field: "personalData",
-      headerName: t("columnsNames.personalData"),
-      width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
-    },
-    {
-      field: "georreference",
-      headerName: t("columnsNames.georreference"),
-      width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
     },
     {
       field: "language",
@@ -239,30 +133,35 @@ function CatalogueList() {
       ),
     },
     {
-      field: "source",
-      headerName: t("columnsNames.source"),
+      field: "role",
+      headerName: t("columnsNames.role"),
       width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <a href={params.value}>{params.value}</a>
-      ),
     },
     {
-      field: "lastUpdate",
-      headerName: t("columnsNames.lastUpdate"),
-      type: "dateTime",
+      field: "service",
+      headerName: t("columnsNames.responsibleIdentity"),
       width: 200,
-      valueGetter: ({ value }) => value && new Date(value),
+    },
+    {
+      field: "deleted",
+      headerName: t("columnsNames.deleted"),
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
     },
   ];
 
-  function getAndSetCatalogues() {
-    getCataloguesRequest(authHeader())
+  function getAndSetUsers() {
+    getUsersRequest(authHeader())
       .then((response) => response.json())
       .then((data) => {
-        let notDeleted = data.filter((d: Catalogue) => d.deleted !== true);
-        let deleted = data.filter((d: Catalogue) => d.deleted === true);
-        setCatalogues(notDeleted);
-        setDeletedCatalogues(deleted);
+        let notDeleted = data.filter((d: User) => d.deleted !== true);
+        let deleted = data.filter((d: User) => d.deleted === true);
+        setUsers(notDeleted);
+        setDeletedUsers(deleted);
         if (deletedTable) {
           setRows(deleted);
         } else {
@@ -270,12 +169,12 @@ function CatalogueList() {
         }
       });
   }
-  function getSelectedCatalogues() {
-    selectedCatalogues.forEach((sc) => {
-      getCatalogueRequest(authHeader(), sc)
+  function getSelectedUsers() {
+    selectedUsers.forEach((sc) => {
+      getUserRequest(authHeader(), sc)
         .then((response) => response.json())
         .then((data) => {
-          setCatalogueSelected(data);
+          setUserSelected(data);
           setOpenUpdateDialog(true);
         });
     });
@@ -283,44 +182,42 @@ function CatalogueList() {
 
   function showDeleted() {
     if (!deletedTable) {
-      setRows(deletedCatalogues);
+      setRows(deletedUsers);
     } else {
-      setRows(catalogues);
+      setRows(users);
     }
   }
 
   function deleteRegisters() {
-    selectedCatalogues.forEach((sc: string) => {
-      let cata = catalogues.find((v) => v._id === sc);
+    selectedUsers.forEach((sc: string) => {
+      let cata = users.find((v) => v._id === sc);
       if (cata) {
-        updateCatalogueRequest(
+        updateUserRequest(
           cata._id,
-          { ...cata, deleted: true, deletedDate: new Date() },
+          { ...cata, deleted: true},
           authHeader()
         );
       }
     });
-    getAndSetCatalogues();
+    getAndSetUsers();
   }
 
   function restoreRegisters() {
-    selectedCatalogues.forEach((sc: string) => {
-      let cata = deletedCatalogues.find((v) => v._id === sc);
+    selectedUsers.forEach((sc: string) => {
+      let cata = deletedUsers.find((v) => v._id === sc);
       if (cata) {
-        updateCatalogueRequest(
+        updateUserRequest(
           cata._id,
           { ...cata, deleted: false },
           authHeader()
         );
       }
     });
-    getAndSetCatalogues();
+    getAndSetUsers();
   }
 
   useEffect(() => {
-    console.log(t);
-    setTheme({ ...baseTheme, t });
-    getAndSetCatalogues();
+    getAndSetUsers();
   }, []);
 
   function createDialogOpen() {
@@ -409,7 +306,7 @@ function CatalogueList() {
             />
             {deletedTable === true ? (
               <Button
-                disabled={selectedCatalogues.length <= 0}
+                disabled={selectedUsers.length <= 0}
                 startIcon={<RestoreIcon />}
                 sx={{
                   height: 37,
@@ -446,7 +343,7 @@ function CatalogueList() {
                   {t("dataTable.addDataset")}
                 </Button>
                 <Button
-                  disabled={selectedCatalogues.length <= 0}
+                  disabled={selectedUsers.length <= 0}
                   startIcon={<EditIcon />}
                   sx={{
                     height: 37,
@@ -459,12 +356,12 @@ function CatalogueList() {
                       color: "#f2f2f2",
                     },
                   }}
-                  onClick={getSelectedCatalogues}
+                  onClick={getSelectedUsers}
                 >
                   Editar
                 </Button>
                 <Button
-                  disabled={selectedCatalogues.length <= 0}
+                  disabled={selectedUsers.length <= 0}
                   startIcon={<DeleteIcon />}
                   sx={{
                     height: 37,
@@ -504,7 +401,7 @@ function CatalogueList() {
     );
   }
 
-  if (!catalogues.length)
+  if (!users.length)
     return (
       <span className="text-center text-xl font-bold my-4">
         {t("dataTable.noCatalogues")}
@@ -547,9 +444,9 @@ function CatalogueList() {
           getRowId={(row) => row._id}
           pageSizeOptions={[5, 10]}
           checkboxSelection
-          onRowSelectionModelChange={(catalogues) => {
-            let aux = catalogues as string[];
-            setSelectedCatalogues(aux);
+          onRowSelectionModelChange={(users) => {
+            let aux = users as string[];
+            setSelectedUsers(aux);
           }}
           localeText={{
             toolbarColumns: t("dataTable.columns"),
@@ -559,10 +456,10 @@ function CatalogueList() {
           }}
         />
       </div>
-      <CreateCatalogueDialog enviar={datosDialog}></CreateCatalogueDialog>
-      <UpdateCatalogueDialog enviar={datosUpdateDialog}></UpdateCatalogueDialog>
+      <CreateUserDialog enviar={datosDialog}></CreateUserDialog>
+      <UpdateUserDialog enviar={datosUpdateDialog}></UpdateUserDialog>
     </ThemeProvider>
   );
 }
 
-export default CatalogueList;
+export default UserList;
