@@ -29,7 +29,7 @@ function App() {
             </RequireAuth>
           }
         ></Route>
-        <Route
+        {/* <Route
           path="/hola"
           element={
             <RequireAuth loginPath="/login">
@@ -39,7 +39,7 @@ function App() {
               </>
             </RequireAuth>
           }
-        ></Route>
+        ></Route> */}
         <Route
           path="/catalogues"
           element={

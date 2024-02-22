@@ -1,0 +1,15 @@
+export enum TOPIC {
+  PUBLIC = "Sector públic",
+  CULTURA = "Cultura i oci",
+  URBANISME = "Urbanisme i infrastructura",
+  CIENCIA = "Ciència i tecnologia",
+  AMBIENT = "Medi ambient",
+  ECONOMIA = "Economia",
+  HISENDA = "Hisenda",
+  SEGURITAT = "Seguritat",
+  TURISME = "Turisme",
+  SALUT = "Salut",
+  BENESTAR = "Societat i benestar",
+  EDUCACIO = "Educació",
+  TRANSPORT = "Transport",
+}

@@ -1,12 +1,16 @@
+import { LANGUAGE } from "../utils/enums/language.enum";
+import { RESPONSIBLE_IDENTITY } from "../utils/enums/responsible-identity.enum";
+import { TOPIC } from "../utils/enums/topic.enum";
+
 export interface Catalogue {
   _id: string;
   title: string;
   description: string;
-  language: string;
+  language: LANGUAGE;
   territorialScope: string;
   temporaryCoverage: string;
   updateFrequency: string;
-  topic: string;
+  topic: TOPIC;
   lastUpdate: Date;
   format: string;
   distribution: string;
@@ -26,7 +30,7 @@ export interface Catalogue {
   personalData: string;
   activeAds: string;
   source: string;
-  responsibleIdentity: string;
+  responsibleIdentity: RESPONSIBLE_IDENTITY;
   createdAt?: Date;
   updatedAt?: Date;
 }

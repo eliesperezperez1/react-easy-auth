@@ -37,6 +37,8 @@ import { useTranslation } from "react-i18next";
 import "./entities.css";
 import { entityMock } from "../../utils/entity.mock";
 import { getEntitiesRequest, getEntityRequest } from "../../api/entities";
+import CreateEntityDialog, { DialogData } from "./create-entity.dialog";
+import UpdateEntityDialog, { UpdateDialogData } from "./update-entity.dialog";
 
 const theme = createTheme(
   {
@@ -91,20 +93,20 @@ function EntitiesList() {
   const [userService, setUserService] = useState<string>("");
   const [userRole, setUserRole] = useState<string>("");
 
-  /*const datosDialog: DialogData = {
+  const datosDialog: DialogData = {
     open: openDialog,
     closeDialog: (close: boolean) => setOpenDialog(close),
     getInfo: () => getAndSetCatalogues(),
-  };*/
+  };
 
   const [t, i18n] = useTranslation();
 
-  /*const datosUpdateDialog: UpdateDialogData = {
+  const datosUpdateDialog: UpdateDialogData = {
     open: openUpdateDialog,
     closeDialog: (close: boolean) => setOpenUpdateDialog(close),
     getInfo: () => getAndSetCatalogues(),
-    catalogue: catalogueSelected,
-  };*/
+    entity: entitySelected,
+  };
   function isDisabled(): boolean {
     return !(
       selectedEntities.length > 0 &&
@@ -176,7 +178,7 @@ function EntitiesList() {
     {
       field: "responsibleIdentity",
       headerName: t("columnsNames.responsibleIdentity"),
-      width: 200,
+      width: 300,
     },
     {
       field: "telephone",
@@ -211,7 +213,7 @@ function EntitiesList() {
         }
       });
   }
-  function getSelectedCatalogues() {
+  function getSelectedEntities() {
     selectedEntities.forEach((sc) => {
       getEntityRequest(authHeader(), sc)
         .then((response) => response.json())
@@ -259,8 +261,8 @@ function EntitiesList() {
   }
 
   useEffect(() => {
-    setUserRole(user()?.user.role);
-    setUserService(user()?.user.service);
+    setUserRole(user().user.role);
+    setUserService(user().user.service);
     getAndSetCatalogues();
   }, []);
 
@@ -401,7 +403,7 @@ function EntitiesList() {
                       color: "#f2f2f2",
                     },
                   }}
-                  onClick={getSelectedCatalogues}
+                  onClick={getSelectedEntities}
                 >
                   Editar
                 </Button>
@@ -501,10 +503,8 @@ function EntitiesList() {
           }}
         />
       </div>
-      {/*
-      <CreateCatalogueDialog enviar={datosDialog}></CreateCatalogueDialog>
-      <UpdateCatalogueDialog enviar={datosUpdateDialog}></UpdateCatalogueDialog>
-      */}
+      <CreateEntityDialog enviar={datosDialog}></CreateEntityDialog>
+      <UpdateEntityDialog enviar={datosUpdateDialog}></UpdateEntityDialog>
     </ThemeProvider>
   );
 }

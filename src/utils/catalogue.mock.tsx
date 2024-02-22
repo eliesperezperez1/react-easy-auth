@@ -1,14 +1,17 @@
 import { Catalogue } from "../interfaces/catalogue.interface";
+import { LANGUAGE } from "./enums/language.enum";
+import { RESPONSIBLE_IDENTITY } from "./enums/responsible-identity.enum";
+import { TOPIC } from "./enums/topic.enum";
 
 export const catalogueMock: Catalogue = {
   _id: "",
   title: "",
   description: "",
-  language: "",
+  language: LANGUAGE.ES,
   territorialScope: "",
   temporaryCoverage: "",
   updateFrequency: "",
-  topic: "",
+  topic: TOPIC.AMBIENT,
   lastUpdate: new Date(),
   format: "",
   distribution: "",
@@ -28,5 +31,5 @@ export const catalogueMock: Catalogue = {
   personalData: "",
   activeAds: "",
   source: "",
-  responsibleIdentity: "",
+  responsibleIdentity: RESPONSIBLE_IDENTITY.GENERAL,
 };

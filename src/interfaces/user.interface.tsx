@@ -1,3 +1,7 @@
+import { LANGUAGE } from "../utils/enums/language.enum";
+import { RESPONSIBLE_IDENTITY } from "../utils/enums/responsible-identity.enum";
+import { ROLE } from "../utils/enums/role.enum";
+
 export interface AuthUser {
   user: SentUser;
   id: string;
@@ -9,9 +13,9 @@ export interface User {
   email: string;
   username: string;
   password: string;
-  language: string;
-  role: string;
-  service?: string;
+  language: LANGUAGE;
+  role: ROLE;
+  service?: RESPONSIBLE_IDENTITY;
   deleted: boolean;
   createdAt: Date;
   updatedAt: Date;

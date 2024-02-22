@@ -7,18 +7,16 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
 import { Entity, UpdateEntity } from "../../interfaces/entity.interface";
-import { updateCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
 import { Box } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useTranslation } from "react-i18next";
-import { namespaces } from "../../@types/i18n.constants";
 export interface UpdateDialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
   getInfo: () => void;
-  catalogue: Entity;
+  entity: Entity;
 }
 
 export default function UpdateEntityDialog(props: {
@@ -30,9 +28,9 @@ export default function UpdateEntityDialog(props: {
   const [t, i18n] = useTranslation();
 
   useEffect(() => {
-    setUpdate(props.enviar.catalogue);
+    setUpdate(props.enviar.entity);
     setOpen(props.enviar.open);
-  }, [props.enviar.open, props.enviar.catalogue]);
+  }, [props.enviar.open, props.enviar.entity]);
 
   const handleClose = () => {
     setOpen(false);
