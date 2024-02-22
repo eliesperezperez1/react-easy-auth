@@ -11,7 +11,7 @@ export interface User {
   password: string;
   language: string;
   role: string;
-  service: string;
+  service?: string;
   deleted: boolean;
   createdAt?: Date;
   updatedAt?: Date;

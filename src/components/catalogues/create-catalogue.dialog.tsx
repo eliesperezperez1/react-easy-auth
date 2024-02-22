@@ -31,7 +31,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
 
   useEffect(() => {
     setOpen(props.enviar.open);
-  });
+  }, [props]);
 
   const handleClose = () => {
     setOpen(false);
@@ -46,7 +46,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     const lastUpdate = new Date(a);
     const creationDate = new Date(b);
     const prueba = formJson as CreateCatalogue;
-    console.log(prueba.sensitiveInformation);
     const create: CreateCatalogue = {
       ...prueba,
       deleted,
@@ -54,14 +53,12 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       lastUpdate,
       creationDate,
     };
-    console.log(create);
-    props.enviar.getInfo();
     createCatalogueRequest(create, authHeader())
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
       });
-      
+    props.enviar.getInfo();
     setFormData({});
     setStep(1);
     handleClose();
@@ -69,7 +66,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
 
   const handleNext = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+
     // Collect form data for the current step
     const currentStepData = new FormData(event.currentTarget);
     const currentStepJson = Object.fromEntries(currentStepData.entries());
@@ -84,7 +81,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     const currentStepData = new FormData(event.currentTarget);
     const currentStepJson = Object.fromEntries(currentStepData.entries());
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
-    const mergedFormData = {...formData, ...currentStepJson};
+    const mergedFormData = { ...formData, ...currentStepJson };
     createCatalogue(mergedFormData);
   };
 
@@ -94,15 +91,18 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
         fullWidth={true}
         open={open}
         onClose={handleClose}
+        sx={{
+          "& .MuiInputBase-root": { border: "none" },
+        }}
       >
         <DialogTitle>{t("dialog.addRegister")}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
           <div className="dialogContentText">
             <span>{t("dialog.fillInfo")}</span>
-            <span><b>{step}/5</b></span>
+            <span>
+              <strong>{step}/5</strong>
+            </span>
           </div>
-          </DialogContentText>
           <Box>
           {step === 1 && (
             <form onSubmit={handleNext}>
@@ -577,8 +577,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
           )}
           </Box>
         </DialogContent>
-        <DialogActions>
-        </DialogActions>
+        <DialogActions></DialogActions>
       </Dialog>
     </>
   );
