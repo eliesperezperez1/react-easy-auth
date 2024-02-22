@@ -23,6 +23,7 @@ export const createUserRequest = async (
       Authorization: refreshToken,
     },
   });
+  
 
 export const deletePermamentUserRequest = async (
   id: string,
@@ -72,5 +73,15 @@ export const getUserRequest = async (id: string, refreshToken: string) =>
       "Access-Control-Allow-Origin": "*",
       "Content-Type": "application/json",
       Authorization: refreshToken,
+    },
+  });
+
+export const registerUser = async (User: CreateUser) =>
+  fetch(`${API}/auth/register`, {
+    method: "POST",
+    body: JSON.stringify(User),
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/json",
     },
   });

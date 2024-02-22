@@ -1,0 +1,46 @@
+.verticalForm{
+    display: flex;
+    flex-direction: column;
+}
+
+.buttonsForm, .dialogContentText{
+    display: flex;
+    justify-content: space-between;
+}
+
+.buttonsForm Button{
+    height: 37;
+    background-color: "#D9D9D9";
+    color: "#404040";
+    border-color: "#404040";
+    margin-top: 15px;
+}
+
+.buttonsForm Button:hover{
+    border-color: "#0D0D0D";
+    background-color: "#0D0D0D";
+    color: "#f2f2f2",
+}
+
+.date-picker {
+    width: 100%; /* Make it full width */
+    /*padding: 8px; /* Add padding for spacing */
+    border: none;
+    /*border: 1px solid #ccc; /* Add a border */
+    /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional box shadow */
+    font-family: 'Roboto', sans-serif; /* Use MUI font family */
+    font-size: 14px; /* Use MUI font size */
+    color: #020202; /* Adjust font color */
+    /*transition: border-color 0.3s ease; /* Add hover/focus transition */
+  }
+
+  .date-picker:hover,
+  .date-picker:focus {
+    /*border-color: #007bff; /* Change border color on hover/focus */
+    outline: none; /* Remove default focus outline */
+  }
+
+  .date-picker:disabled {
+    opacity: 0.6; /* Style for disabled state */
+    background-color: #f9f9f9; /* Adjust background color */
+  }

@@ -12,9 +12,10 @@ import {
 } from "../../interfaces/catalogue.interface";
 import { updateCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
-import { Box } from "@mui/material";
+import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { namespaces } from "../../@types/i18n.constants";
+import moment from 'moment';
 export interface UpdateDialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
@@ -29,6 +30,8 @@ export default function UpdateCatalogueDialog(props: {
   const authHeader = useAuthHeader();
   const [update, setUpdate] = useState<UpdateCatalogue>({});
   const [t, i18n] = useTranslation();
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({});
 
   useEffect(() => {
     setUpdate(props.enviar.catalogue);
@@ -68,33 +71,68 @@ export default function UpdateCatalogueDialog(props: {
     handleClose();
   };
 
+  const handleNext = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    
+    // Collect form data for the current step
+    const currentStepData = new FormData(event.currentTarget);
+    const currentStepJson = Object.fromEntries(currentStepData.entries());
+
+    // Merge current step data with existing form data
+    setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
+    console.log(formData);
+    setStep(step + 1);
+    if(step===1) {
+      //const myInputElement = document.getElementById("lastUpdate") as HTMLInputElement;
+      //myInputElement.value = lastUpdateFecha;
+      //console.log("Last update: " + myInputElement.value);
+    }
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const currentStepData = new FormData(event.currentTarget);
+    const currentStepJson = Object.fromEntries(currentStepData.entries());
+    setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
+    const mergedFormData = {...formData, ...currentStepJson};
+    updateCatalogue(mergedFormData);
+  };
+
+  const handleValuePicker = (picker: any) => {
+    if(picker==="lastUpdate"){
+      if(update.lastUpdate !== undefined) {
+        const dateObject = new Date(update.lastUpdate);
+        const formattedDate = dateObject.toISOString().slice(0, 16);
+        return formattedDate;
+      }
+    }
+    else if (picker==="creationDate"){
+      if(update.creationDate !== undefined) {
+        const dateObject = new Date(update.creationDate);
+        const formattedDate = dateObject.toISOString().slice(0, 16);
+        return formattedDate;
+      }
+    }
+  }
+
   return (
     <>
       <Dialog
         fullWidth={true}
-        maxWidth="lg"
         open={open}
-        sx={{
-          "& .MuiTextField-root": { m: 1, width: "20ch" },
-        }}
         onClose={handleClose}
-        PaperProps={{
-          component: "form",
-          onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-            event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries((formData as any).entries());
-            updateCatalogue(formJson);
-          },
-        }}
       >
         <DialogTitle>{t("dialog.updateRegister")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-          {t("dialog.fillInfo")}
+          <div className="dialogContentText">
+            <span>{t("dialog.fillInfo")}</span>
+            <span><b>{step}/5</b></span>
+          </div>
           </DialogContentText>
           <Box>
-            <div>
+          {step === 1 && (
+            <form onSubmit={handleNext}>
+              <div className="verticalForm">
               <TextField
                 autoFocus
                 required
@@ -116,7 +154,7 @@ export default function UpdateCatalogueDialog(props: {
                 label={t("columnsNames.description")}
                 type="string"
                 variant="standard"
-                value={update?.description}
+                value={update.description}
                 onChange={handleChange}
               />
               <TextField
@@ -128,7 +166,7 @@ export default function UpdateCatalogueDialog(props: {
                 label={t("columnsNames.language")}
                 type="string"
                 variant="standard"
-                value={update?.language}
+                value={update.language}
                 onChange={handleChange}
               />
               <TextField
@@ -140,7 +178,7 @@ export default function UpdateCatalogueDialog(props: {
                 label={t("columnsNames.territorialScope")}
                 type="string"
                 variant="standard"
-                value={update?.territorialScope}
+                value={update.territorialScope}
                 onChange={handleChange}
               />
               <TextField
@@ -152,11 +190,44 @@ export default function UpdateCatalogueDialog(props: {
                 label={t("columnsNames.temporaryCoverage")}
                 type="string"
                 variant="standard"
-                value={update?.temporaryCoverage}
+                value={update.temporaryCoverage}
                 onChange={handleChange}
               />
             </div>
-            <div>
+            <div className="buttonsForm">
+              <Button 
+                onClick={handleClose} 
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.cancel")}</Button>
+              <Button 
+                type="submit"
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.next")}</Button>
+            </div>
+            </form>
+            
+          )}
+          {step === 2 && (
+            <form onSubmit={handleNext}>
+            <div className="verticalForm">
               <TextField
                 autoFocus
                 required
@@ -166,7 +237,7 @@ export default function UpdateCatalogueDialog(props: {
                 label={t("columnsNames.updateFrequency")}
                 type="string"
                 variant="standard"
-                value={update?.updateFrequency}
+                value={update.updateFrequency}
                 onChange={handleChange}
               />
               <TextField
@@ -178,19 +249,42 @@ export default function UpdateCatalogueDialog(props: {
                 label={t("columnsNames.topic")}
                 type="string"
                 variant="standard"
-                value={update?.topic}
+                value={update.topic}
                 onChange={handleChange}
               />
               <TextField
                 autoFocus
                 required
-                margin="dense"
                 id="lastUpdate"
+                margin="dense"
                 name="lastUpdate"
-                type="string"
+                type="datetime-local"
                 variant="standard"
-                value={update?.lastUpdate}
+                value={handleValuePicker("lastUpdate")}
                 onChange={handleChange}
+
+                sx= {{
+                  backgroundColor: 'none',
+                  width: '100%',
+                  border: 'none',
+                  borderBottom: '1px solid lightgrey',
+                  '& input': {
+                    backgroundColor: 'none',
+                    border: 'none',
+                    
+                  },
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                inputProps={{
+                  style:{
+                    backgroundColor: 'none',
+                    width: '100%',
+                    border: 'none',
+                    borderBottom: '1px solid lightgrey',
+                  }
+                }}
               />
               <TextField
                 autoFocus
@@ -201,7 +295,7 @@ export default function UpdateCatalogueDialog(props: {
                 label={t("columnsNames.format")}
                 type="string"
                 variant="standard"
-                value={update?.format}
+                value={update.format}
                 onChange={handleChange}
               />
               <TextField
@@ -213,21 +307,53 @@ export default function UpdateCatalogueDialog(props: {
                 label="Distribución"
                 type="string"
                 variant="standard"
-                value={update?.distribution}
+                value={update.distribution}
                 onChange={handleChange}
               />
             </div>
-            <div>
+            <div className="buttonsForm">
+              <Button 
+                onClick={handleClose} 
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.cancel")}</Button>
+              <Button 
+                type="submit"
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.next")}</Button>
+            </div>
+            </form>
+          )}
+          {step === 3 && (
+            <form onSubmit={handleNext}>
+            <div className="verticalForm">
               <TextField
                 autoFocus
                 required
                 margin="dense"
                 id="sensitiveInformation"
                 name="sensitiveInformation"
-                label={t("columnsNames.sensitiveInformation")}
+                label="Información sensible"
                 type="string"
                 variant="standard"
-                value={update?.sensitiveInformation}
+                value={update.sensitiveInformation}
                 onChange={handleChange}
               />
               <TextField
@@ -239,7 +365,7 @@ export default function UpdateCatalogueDialog(props: {
                 label="Se utiliza"
                 type="string"
                 variant="standard"
-                value={update?.isUsing}
+                value={update.isUsing}
                 onChange={handleChange}
               />
               <TextField
@@ -251,7 +377,7 @@ export default function UpdateCatalogueDialog(props: {
                 label={t("columnsNames.accessType")}
                 type="string"
                 variant="standard"
-                value={update?.accessType}
+                value={update.accessType}
                 onChange={handleChange}
               />
               <TextField
@@ -263,7 +389,7 @@ export default function UpdateCatalogueDialog(props: {
                 label="Relación interna"
                 type="string"
                 variant="standard"
-                value={update?.internalRelationship}
+                value={update.internalRelationship}
                 onChange={handleChange}
               />
               <TextField
@@ -275,23 +401,56 @@ export default function UpdateCatalogueDialog(props: {
                 label={t("columnsNames.contactPerson")}
                 type="string"
                 variant="standard"
-                value={update?.contactPerson}
+                value={update.contactPerson}
                 onChange={handleChange}
               />
             </div>
-            <div>
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="structured"
-                name="structured"
-                label="Estructurado"
-                type="string"
-                variant="standard"
-                value={update?.structured}
-                onChange={handleChange}
-              />
+            <div className="buttonsForm">
+              <Button 
+                onClick={handleClose} 
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.cancel")}</Button>
+              <Button 
+                type="submit"
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.next")}</Button>
+            </div>
+            </form>
+          )}
+          {step === 4 && (
+            <form onSubmit={handleNext}>
+            <div className="verticalForm">
+              <FormControl variant="standard">
+                <InputLabel>Estructurado</InputLabel>
+                <Select
+                  id="structured"
+                  name="structured"
+                  margin="dense"
+                  value={update.structured}
+                  required
+                >
+                  <MenuItem value={"SI"}>SÍ</MenuItem>
+                  <MenuItem value={"NO"}>NO</MenuItem>
+                </Select>
+              </FormControl>
               <TextField
                 autoFocus
                 required
@@ -301,7 +460,7 @@ export default function UpdateCatalogueDialog(props: {
                 label="Aplicación asociada"
                 type="string"
                 variant="standard"
-                value={update?.associatedApplication}
+                value={update.associatedApplication}
                 onChange={handleChange}
               />
               <TextField
@@ -310,10 +469,10 @@ export default function UpdateCatalogueDialog(props: {
                 margin="dense"
                 id="georeference"
                 name="georeference"
-                label={t("columnsNames.georreference")}
+                label="Georreferenciado"
                 type="string"
                 variant="standard"
-                value={update?.georeference}
+                value={update.georeference}
                 onChange={handleChange}
               />
               <TextField
@@ -325,7 +484,7 @@ export default function UpdateCatalogueDialog(props: {
                 label={t("columnsNames.comments")}
                 type="string"
                 variant="standard"
-                value={update?.comments}
+                value={update.comments}
                 onChange={handleChange}
               />
               <TextField
@@ -337,21 +496,76 @@ export default function UpdateCatalogueDialog(props: {
                 label="Efecto temporal"
                 type="string"
                 variant="standard"
-                value={update?.timmingEffect}
+                value={update.timmingEffect}
                 onChange={handleChange}
               />
             </div>
-            <div>
-              <TextField
+            <div className="buttonsForm">
+              <Button 
+                onClick={handleClose} 
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.cancel")}</Button>
+              <Button 
+                type="submit"
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.next")}</Button>
+            </div>
+            </form>
+          )}
+          {step === 5 && (
+            <form onSubmit={handleSubmit}>
+            <div className="verticalForm">
+            <TextField
                 autoFocus
                 required
-                margin="dense"
                 id="creationDate"
+                margin="dense"
                 name="creationDate"
-                type="string"
+                type="datetime-local"
                 variant="standard"
-                value={update?.creationDate}
+                value={handleValuePicker("creationDate")}
                 onChange={handleChange}
+
+                sx= {{
+                  backgroundColor: 'none',
+                  width: '100%',
+                  border: 'none',
+                  borderBottom: '1px solid lightgrey',
+                  '& input': {
+                    backgroundColor: 'none',
+                    border: 'none',
+                    
+                  },
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                inputProps={{
+                  style:{
+                    backgroundColor: 'none',
+                    width: '100%',
+                    border: 'none',
+                    borderBottom: '1px solid lightgrey',
+                  }
+                }}
               />
               <TextField
                 autoFocus
@@ -362,7 +576,7 @@ export default function UpdateCatalogueDialog(props: {
                 label={t("columnsNames.personalData")}
                 type="string"
                 variant="standard"
-                value={update?.personalData}
+                value={update.personalData}
                 onChange={handleChange}
               />
               <TextField
@@ -374,7 +588,7 @@ export default function UpdateCatalogueDialog(props: {
                 label={t("columnsNames.source")}
                 type="string"
                 variant="standard"
-                value={update?.source}
+                value={update.source}
                 onChange={handleChange}
               />
               <TextField
@@ -386,7 +600,7 @@ export default function UpdateCatalogueDialog(props: {
                 label={t("columnsNames.responsibleIdentity")}
                 type="string"
                 variant="standard"
-                value={update?.responsibleIdentity}
+                value={update.responsibleIdentity}
                 onChange={handleChange}
               />
               <TextField
@@ -398,15 +612,45 @@ export default function UpdateCatalogueDialog(props: {
                 label={t("columnsNames.activeAds")}
                 type="string"
                 variant="standard"
-                value={update?.activeAds}
+                value={update.activeAds}
                 onChange={handleChange}
               />
             </div>
+            <div className="buttonsForm">
+              <Button 
+                onClick={handleClose} 
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.cancel")}</Button>
+              <Button 
+                type="submit"
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.addButton")}</Button>
+            </div>
+            </form>
+            
+              
+          )}
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>{t("dialog.cancel")}</Button>
-          <Button type="submit">{t("dialog.updateButton")}</Button>
         </DialogActions>
       </Dialog>
     </>

@@ -9,12 +9,12 @@ import { useEffect, useState } from "react";
 import { CreateCatalogue } from "../../interfaces/catalogue.interface";
 import { createCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { Box, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
+import { DatePicker, DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { useTranslation } from 'react-i18next';
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { display } from "@mui/system";
-import "./createCatalogues.css";
+import "./create-catalogue.dialog.css";
 
 export interface DialogData {
   open: boolean;
@@ -87,34 +87,20 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     const mergedFormData = {...formData, ...currentStepJson};
     createCatalogue(mergedFormData);
   };
+
   return (
     <>
       <Dialog
         fullWidth={true}
-        //maxWidth={'xs'}
         open={open}
-        /*sx={{
-          "& .MuiTextField-root": { m: 1, width: "20ch" },
-          "& .MuiFormControl-root": { m: 1, width: "20ch" },
-          "&. MuiInputBase-root": { m: 1, width: "20ch" },
-        }}*/
         onClose={handleClose}
-        /*PaperProps={{
-          component: "form",
-          onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-            event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries((formData as any).entries());
-            createCatalogue(formJson);
-          },
-        }}*/
       >
         <DialogTitle>{t("dialog.addRegister")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
           <div className="dialogContentText">
-            <p>{t("dialog.fillInfo")}</p>
-            <p><b>{step}/5</b></p>
+            <span>{t("dialog.fillInfo")}</span>
+            <span><b>{step}/5</b></span>
           </div>
           </DialogContentText>
           <Box>
@@ -229,11 +215,34 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
               <TextField
                 autoFocus
                 required
-                margin="dense"
                 id="lastUpdate"
+                margin="dense"
                 name="lastUpdate"
-                type="date"
+                type="datetime-local"
                 variant="standard"
+
+                sx= {{
+                  backgroundColor: 'none',
+                  width: '100%',
+                  border: 'none',
+                  borderBottom: '1px solid lightgrey',
+                  '& input': {
+                    backgroundColor: 'none',
+                    border: 'none',
+                    
+                  },
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                inputProps={{
+                  style:{
+                    backgroundColor: 'none',
+                    width: '100%',
+                    border: 'none',
+                    borderBottom: '1px solid lightgrey',
+                  }
+                }}
               />
               <TextField
                 autoFocus
@@ -460,17 +469,38 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
           {step === 5 && (
             <form onSubmit={handleSubmit}>
             <div className="verticalForm">
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateTimePicker name="creationDate" />
-              </LocalizationProvider>
+
               <TextField
                 autoFocus
                 required
-                margin="dense"
                 id="creationDate"
+                margin="dense"
                 name="creationDate"
-                type="date"
+                type="datetime-local"
                 variant="standard"
+
+                sx= {{
+                  backgroundColor: 'none',
+                  width: '100%',
+                  border: 'none',
+                  borderBottom: '1px solid lightgrey',
+                  '& input': {
+                    backgroundColor: 'none',
+                    border: 'none',
+                    
+                  },
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                inputProps={{
+                  style:{
+                    backgroundColor: 'none',
+                    width: '100%',
+                    border: 'none',
+                    borderBottom: '1px solid lightgrey',
+                  }
+                }}
               />
               <TextField
                 autoFocus

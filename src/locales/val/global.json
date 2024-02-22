@@ -53,7 +53,12 @@
         "source": "URL de publicació",
         "lastUpdate": "Última actualització",
         "location": "Localització",
-        "phoneNumber": "Número de contacte"
+        "phoneNumber": "Número de contacte",
+        "name": "Nom",
+        "surname": "Cognom",
+        "username": "Sobrenom de compte",
+        "role": "Rol",
+        "deleted": "Eliminat"
     },
     "login": {
         "welcome": "Benvingut de tornada",

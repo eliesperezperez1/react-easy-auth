@@ -13,8 +13,8 @@ export interface User {
   role: string;
   service: string;
   deleted: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 export type SentUser = Omit<
   User,
