@@ -9,12 +9,14 @@ import { useEffect, useState } from "react";
 import { CreateCatalogue } from "../../interfaces/catalogue.interface";
 import { createCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
-import { Box, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
+import { Box, FormControl, InputLabel, MenuItem, Select, Switch, ListItemText, Checkbox, OutlinedInput, FormGroup, Autocomplete, FormControlLabel } from "@mui/material";
 import { DatePicker, DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { useTranslation } from 'react-i18next';
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "./create-catalogue.dialog.css";
+import React from "react";
+import Value from "baseui/select/value";
 
 export interface DialogData {
   open: boolean;
@@ -22,12 +24,35 @@ export interface DialogData {
   getInfo: () => void;
 }
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+const formatOptions = [
+  'PDF',
+  'EXCEL',
+  'CSV',
+];
+
 export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [open, setOpen] = useState<boolean>(false);
   const authHeader = useAuthHeader();
   const [t, i18n] = useTranslation();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
+  const [sensitiveInformation, setSensitiveInformation] = useState("SI");
+  const [isUsing, setIsUsing] = useState("SI");
+  const [structured, setStructured] = useState("SI");
+  const [georeference, setGeoreference] = useState("SI");
+  const [personalData, setPersonalData] = useState("SI");
+  const [activeAds, setActiveAds] = useState("SI");
+  const [format, setFormat] = React.useState<string[]>([]);
 
   useEffect(() => {
     setOpen(props.enviar.open);
@@ -36,6 +61,15 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const handleClose = () => {
     setOpen(false);
     props.enviar.closeDialog(false);
+    setFormData({});
+    setStep(1);
+    setSensitiveInformation("SI");
+    setIsUsing("SI");
+    setStructured("SI");
+    setGeoreference("SI");
+    setPersonalData("SI");
+    setActiveAds("SI");
+    setFormat([]);
   };
 
   const createCatalogue = (formJson: any) => {
@@ -59,8 +93,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
         console.log(data);
       });
     props.enviar.getInfo();
-    setFormData({});
-    setStep(1);
     handleClose();
   };
 
@@ -69,6 +101,48 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
 
     // Collect form data for the current step
     const currentStepData = new FormData(event.currentTarget);
+    if(currentStepData.get("sensitiveInformation")!=="on"){
+      currentStepData.set("sensitiveInformation", "NO");
+    } else {
+      currentStepData.set("sensitiveInformation", "SI");
+    }
+
+    if(currentStepData.get("isUsing")!=="on"){
+      currentStepData.set("isUsing", "NO");
+    } else {
+      currentStepData.set("isUsing", "SI");
+    }
+
+    if(currentStepData.get("structured")!=="on"){
+      currentStepData.set("structured", "NO");
+    } else {
+      currentStepData.set("structured", "SI");
+    }
+
+    if(currentStepData.get("georeference")!=="on"){
+      currentStepData.set("georeference", "NO");
+    } else {
+      currentStepData.set("georeference", "SI");
+    }
+
+    if(currentStepData.get("personalData")!=="on"){
+      currentStepData.set("personalData", "NO");
+    } else {
+      currentStepData.set("personalData", "SI");
+    }
+
+    if(currentStepData.get("activeAds")!=="on"){
+      currentStepData.set("activeAds", "NO");
+    } else {
+      currentStepData.set("activeAds", "SI");
+    }
+
+    if( (format!==undefined || format !== null) && (currentStepData.get("format")!==null || currentStepData.get("format")!==undefined)){
+      const formatosDatos = format.toString();
+      const formatosDatosMod = formatosDatos.replace(/,/g, " / ");
+      currentStepData.set("format", formatosDatosMod);
+    }
+    //--------------------------------------------------------------------
     const currentStepJson = Object.fromEntries(currentStepData.entries());
 
     // Merge current step data with existing form data
@@ -83,6 +157,40 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
     const mergedFormData = { ...formData, ...currentStepJson };
     createCatalogue(mergedFormData);
+  };
+
+  const handleSwitch = (nameSwitch: any, event: any) => {
+    switch(nameSwitch){
+      case "sensitiveInformation":
+        if(sensitiveInformation==="SI") {setSensitiveInformation("NO"); console.log(sensitiveInformation);}
+        else {setSensitiveInformation("SI");console.log(sensitiveInformation);}
+        break;
+      case "isUsing":
+        if(isUsing==="SI") setIsUsing("NO");
+        else setIsUsing("SI");
+        break;
+      case "structured":
+        if(structured==="SI") setStructured("NO");
+        else setStructured("SI");
+        break;
+      case "georeference":
+        if(georeference==="SI") setGeoreference("NO");
+        else setGeoreference("SI");
+        break;
+      case "personalData":
+        if(personalData==="SI") setPersonalData("NO");
+        else setPersonalData("SI");
+        break;
+      case "activeAds":
+        if(activeAds==="SI") setActiveAds("NO");
+        else setActiveAds("SI");
+        break;
+    }
+  };
+
+  const handleFormat = (event: any, newValue: any) => {
+    setFormat(newValue);
+    console.log(newValue);
   };
 
   return (
@@ -107,56 +215,81 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
           {step === 1 && (
             <form onSubmit={handleNext}>
               <div className="verticalForm">
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="title"
-                name="title"
-                label={t("columnsNames.title")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="description"
-                name="description"
-                label={t("columnsNames.description")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="language"
-                name="language"
-                label={t("columnsNames.language")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="territorialScope"
-                name="territorialScope"
-                label={t("columnsNames.territorialScope")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="temporaryCoverage"
-                name="temporaryCoverage"
-                label={t("columnsNames.temporaryCoverage")}
-                type="string"
-                variant="standard"
-              />
+                <div className="horizontalForm">
+                <p>
+                {t("columnsNames.title")}
+                </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="title"
+                    name="title"
+                    type="string"
+                    variant="standard"
+                  />
+                </div>
+                <div className="horizontalForm">
+                <p>
+                {t("columnsNames.description")}
+                </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="description"
+                    name="description"
+                    type="string"
+                    variant="standard"
+                  />
+                </div>
+                <div className="horizontalForm">
+                <p>
+                {t("columnsNames.language")}
+                </p>
+                  <FormControl variant="standard">
+                    <Select
+                      id="language"
+                      name="language"
+                      margin="dense"
+                      defaultValue={i18n.language}
+                      required
+                    >
+                      <MenuItem value={"es"}>ES</MenuItem>
+                      <MenuItem value={"val"}>VAL</MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
+                <div className="horizontalForm">
+                <p>
+                {t("columnsNames.territorialScope")}
+                </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="territorialScope"
+                    name="territorialScope"
+                    type="string"
+                    variant="standard"
+                  />
+                </div>
+                <div className="horizontalForm">
+                <p>
+                {t("columnsNames.temporaryCoverage")}
+                </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="temporaryCoverage"
+                    name="temporaryCoverage"
+                    type="string"
+                    variant="standard"
+                  />
+                </div>
+              
+              
             </div>
             <div className="buttonsForm">
               <Button 
@@ -192,78 +325,119 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
           {step === 2 && (
             <form onSubmit={handleNext}>
             <div className="verticalForm">
+              <div className="horizontalForm">
+                <p>
+                {t("columnsNames.updateFrequency")}
+                </p>
               <TextField
                 autoFocus
                 required
                 margin="dense"
                 id="updateFrequency"
                 name="updateFrequency"
-                label={t("columnsNames.updateFrequency")}
                 type="string"
                 variant="standard"
               />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="topic"
-                name="topic"
-                label={t("columnsNames.topic")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                id="lastUpdate"
-                margin="dense"
-                name="lastUpdate"
-                type="datetime-local"
-                variant="standard"
+              </div>
+              <div className="horizontalForm">
+                <p>
+                {t("columnsNames.topic")}
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="topic"
+                  name="topic"
+                  type="string"
+                  variant="standard"
+                />
+              </div>
+              <div className="horizontalForm">
+                <p>
+                {t("columnsNames.lastUpdate")}
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  id="lastUpdate"
+                  margin="dense"
+                  name="lastUpdate"
+                  type="datetime-local"
+                  variant="standard"
 
-                sx= {{
-                  backgroundColor: 'none',
-                  width: '100%',
-                  border: 'none',
-                  borderBottom: '1px solid lightgrey',
-                  '& input': {
-                    backgroundColor: 'none',
-                    border: 'none',
-                    
-                  },
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                inputProps={{
-                  style:{
+                  sx= {{
                     backgroundColor: 'none',
                     width: '100%',
                     border: 'none',
                     borderBottom: '1px solid lightgrey',
-                  }
-                }}
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="format"
-                name="format"
-                label={t("columnsNames.format")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="distribution"
-                name="distribution"
-                label="Distribución"
-                type="string"
-                variant="standard"
-              />
+                    '& input': {
+                      backgroundColor: 'none',
+                      border: 'none',
+                      
+                    },
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  inputProps={{
+                    style:{
+                      backgroundColor: 'none',
+                      width: '100%',
+                      border: 'none',
+                      borderBottom: '1px solid lightgrey',
+                    }
+                  }}
+                />
+              </div>
+              <div className="horizontalForm">
+                <p>
+                {t("columnsNames.format")}
+                </p>
+                <FormControl variant="standard">
+                  <FormGroup>
+                    <Autocomplete
+                      multiple
+                      id="format"
+                      options={['PDF', 'EXCEL', 'CSV', 'JSON']}
+                      value={format}
+                      onChange={handleFormat}
+                      disableCloseOnSelect={true}
+                      renderOption={(props, option, { selected }) => (
+                        <li {...props}>
+                          <FormControlLabel
+                            control={<Checkbox checked={selected} />}
+                            label={option}
+                          />
+                        </li>
+                      )}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          name="format"
+                          variant="standard"
+                          placeholder="Select formats"
+                        />
+                      )}
+                    />
+                  </FormGroup>
+                </FormControl>
+              </div>
+              <div className="horizontalForm">
+                <p>
+                Distribución
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="distribution"
+                  name="distribution"
+                  type="string"
+                  variant="standard"
+                />
+              </div>
+              
             </div>
             <div className="buttonsForm">
               <Button 
@@ -298,56 +472,83 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
           {step === 3 && (
             <form onSubmit={handleNext}>
             <div className="verticalForm">
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="sensitiveInformation"
-                name="sensitiveInformation"
-                label="Información sensible"
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="isUsing"
-                name="isUsing"
-                label="Se utiliza"
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="accessType"
-                name="accessType"
-                label={t("columnsNames.accessType")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="internalRelationship"
-                name="internalRelationship"
-                label="Relación interna"
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="contactPerson"
-                name="contactPerson"
-                label={t("columnsNames.contactPerson")}
-                type="string"
-                variant="standard"
-              />
+              <div className="horizontalFormSwitch">
+                <p>
+                {t("columnsNames.sensitiveInformation")}
+                </p>
+                <FormControl variant="standard">
+                    <Switch
+                    id="sensitiveInformation"
+                    name="sensitiveInformation"
+                    value={sensitiveInformation}
+                    checked={sensitiveInformation === "SI"}
+                    onChange={(event) => handleSwitch("sensitiveInformation", event.target.checked)} 
+                    color="primary" // Opcional: ajusta el color del switch
+                  />  
+                </FormControl>
+              </div>
+              <div className="horizontalFormSwitch">
+                <p>
+                  Se está usando
+                </p>
+                <FormControl variant="standard">
+                  <Switch
+                    id="isUsing"
+                    name="isUsing"
+                    value={isUsing}
+                    checked={isUsing === "SI"}
+                    onChange={(event) => handleSwitch("isUsing", event.target.checked)} 
+                    color="primary" // Opcional: ajusta el color del switch
+                  />  
+                </FormControl>
+              </div>
+              <div className="horizontalForm">
+                <p>
+                {t("columnsNames.accessType")}
+                </p>
+                <FormControl variant="standard">
+                  <Select
+                    id="accessType"
+                    name="accessType"
+                    margin="dense"
+                    defaultValue={"Público"}
+                    required
+                  >
+                    <MenuItem value={"Públic/Público"}>Público</MenuItem>
+                    <MenuItem value={"Restringit/Restringido"}>Restringido</MenuItem>
+                    <MenuItem value={"Privat/Privado"}>Privado</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="horizontalForm">
+                <p>
+                Relación interna
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="internalRelationship"
+                  name="internalRelationship"
+                  type="string"
+                  variant="standard"
+                />
+              </div>
+              <div className="horizontalForm">
+                <p>
+                {t("columnsNames.contactPerson")}
+                </p>
+                
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="contactPerson"
+                  name="contactPerson"
+                  type="string"
+                  variant="standard"
+                />
+              </div>
             </div>
             <div className="buttonsForm">
               <Button 
@@ -382,59 +583,79 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
           {step === 4 && (
             <form onSubmit={handleNext}>
             <div className="verticalForm">
-              <FormControl variant="standard">
-                <InputLabel>Estructurado</InputLabel>
-                <Select
-                  id="structured"
-                  name="structured"
-                  margin="dense"
-                  defaultValue={"SI"}
+              <div className="horizontalFormSwitch">
+                <p>
+                Estructurado
+                </p>
+                <FormControl variant="standard">
+                  <Switch
+                    id="structured"
+                    name="structured"
+                    value={structured}
+                    checked={structured === "SI"}
+                    onChange={(event) => handleSwitch("structured", event.target.checked)} 
+                    color="primary" // Opcional: ajusta el color del switch
+                  />  
+                </FormControl>
+              </div>
+              <div className="horizontalForm">
+                <p>
+                Aplicación asociada
+                </p>
+                <TextField
+                  autoFocus
                   required
-                >
-                  <MenuItem value={"SI"}>SÍ</MenuItem>
-                  <MenuItem value={"NO"}>NO</MenuItem>
-                </Select>
-              </FormControl>
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="associatedApplication"
-                name="associatedApplication"
-                label="Aplicación asociada"
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="georeference"
-                name="georeference"
-                label="Georreferenciado"
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="comments"
-                name="comments"
-                label={t("columnsNames.comments")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="timmingEffect"
-                name="timmingEffect"
-                label="Efecto temporal"
-                type="string"
-                variant="standard"
-              />
+                  margin="dense"
+                  id="associatedApplication"
+                  name="associatedApplication"
+                  type="string"
+                  variant="standard"
+                />
+              </div>
+              <div className="horizontalFormSwitch">
+                <p>
+                {t("columnsNames.georreference")}
+                </p>
+                <FormControl variant="standard">
+                  <Switch
+                    id="georeference"
+                    name="georeference"
+                    value={georeference}
+                    checked={georeference === "SI"}
+                    onChange={(event) => handleSwitch("georeference", event.target.checked)} 
+                    color="primary" // Opcional: ajusta el color del switch
+                  />  
+                </FormControl>
+
+              </div>
+              <div className="horizontalForm">
+                <p>
+                {t("columnsNames.comments")}
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="comments"
+                  name="comments"
+                  type="string"
+                  variant="standard"
+                />
+              </div>
+              <div className="horizontalForm">
+                <p>
+                Efecto temporal
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="timmingEffect"
+                  name="timmingEffect"
+                  type="string"
+                  variant="standard"
+                />
+              </div>
             </div>
             <div className="buttonsForm">
               <Button 
@@ -469,79 +690,101 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
           {step === 5 && (
             <form onSubmit={handleSubmit}>
             <div className="verticalForm">
+              <div className="horizontalForm">
+                <p>
+                Fecha de creación
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  id="creationDate"
+                  margin="dense"
+                  name="creationDate"
+                  type="datetime-local"
+                  variant="standard"
 
-              <TextField
-                autoFocus
-                required
-                id="creationDate"
-                margin="dense"
-                name="creationDate"
-                type="datetime-local"
-                variant="standard"
-
-                sx= {{
-                  backgroundColor: 'none',
-                  width: '100%',
-                  border: 'none',
-                  borderBottom: '1px solid lightgrey',
-                  '& input': {
-                    backgroundColor: 'none',
-                    border: 'none',
-                    
-                  },
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                inputProps={{
-                  style:{
+                  sx= {{
                     backgroundColor: 'none',
                     width: '100%',
                     border: 'none',
                     borderBottom: '1px solid lightgrey',
-                  }
-                }}
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="personalData"
-                name="personalData"
-                label={t("columnsNames.personalData")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="source"
-                name="source"
-                label={t("columnsNames.source")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="responsibleIdentity"
-                name="responsibleIdentity"
-                label={t("columnsNames.responsibleIdentity")}
-                type="string"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="activeAds"
-                name="activeAds"
-                label={t("columnsNames.activeAds")}
-                type="string"
-                variant="standard"
-              />
+                    '& input': {
+                      backgroundColor: 'none',
+                      border: 'none',
+                      
+                    },
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  inputProps={{
+                    style:{
+                      backgroundColor: 'none',
+                      width: '100%',
+                      border: 'none',
+                      borderBottom: '1px solid lightgrey',
+                    }
+                  }}
+                />
+              </div>
+              <div className="horizontalFormSwitch">
+                <p>
+                {t("columnsNames.personalData")}
+                </p>
+                <FormControl variant="standard">
+                  <Switch
+                    id="personalData"
+                    name="personalData"
+                    value={personalData}
+                    checked={personalData === "SI"}
+                    onChange={(event) => handleSwitch("personalData", event.target.checked)} 
+                    color="primary" // Opcional: ajusta el color del switch
+                  />  
+                </FormControl>
+              </div>
+              <div className="horizontalForm">
+                <p>
+                {t("columnsNames.source")}
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="source"
+                  name="source"
+                  type="string"
+                  variant="standard"
+                />
+              </div>
+              <div className="horizontalForm">
+                <p>
+                {t("columnsNames.responsibleIdentity")}
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="responsibleIdentity"
+                  name="responsibleIdentity"
+                  type="string"
+                  variant="standard"
+                />
+              </div>
+              <div className="horizontalFormSwitch">
+                <p>
+                {t("columnsNames.activeAds")}
+                </p>
+                <FormControl variant="standard">
+                  <Switch
+                    id="activeAds"
+                    name="activeAds"
+                    value={activeAds}
+                    checked={activeAds === "SI"}
+                    onChange={(event) => handleSwitch("activeAds", event.target.checked)} 
+                    color="primary" // Opcional: ajusta el color del switch
+                  />  
+                </FormControl>
+              </div>
             </div>
             <div className="buttonsForm">
               <Button 

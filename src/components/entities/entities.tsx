@@ -37,6 +37,8 @@ import { useTranslation } from "react-i18next";
 import "./entities.css";
 import { entityMock } from "../../utils/entity.mock";
 import { getEntitiesRequest, getEntityRequest } from "../../api/entities";
+import CreateEntityDialog, { DialogData } from "./create-entity.dialog";
+import UpdateEntityDialog, { UpdateDialogData } from "./update-entity.dialog";
 
 const theme = createTheme(
   {
@@ -91,20 +93,20 @@ function EntitiesList() {
   const [userService, setUserService] = useState<string>("");
   const [userRole, setUserRole] = useState<string>("");
 
-  /*const datosDialog: DialogData = {
+  const datosDialog: DialogData = {
     open: openDialog,
     closeDialog: (close: boolean) => setOpenDialog(close),
-    getInfo: () => getAndSetCatalogues(),
-  };*/
+    getInfo: () => getAndSetEntities(),
+  };
 
   const [t, i18n] = useTranslation();
 
-  /*const datosUpdateDialog: UpdateDialogData = {
+  const datosUpdateDialog: UpdateDialogData = {
     open: openUpdateDialog,
     closeDialog: (close: boolean) => setOpenUpdateDialog(close),
-    getInfo: () => getAndSetCatalogues(),
-    catalogue: catalogueSelected,
-  };*/
+    getInfo: () => getAndSetEntities(),
+    entity: entitySelected,
+  };
   function isDisabled(): boolean {
     return !(
       selectedEntities.length > 0 &&
@@ -196,7 +198,7 @@ function EntitiesList() {
     },
   ];
 
-  function getAndSetCatalogues() {
+  function getAndSetEntities() {
     getEntitiesRequest(authHeader())
       .then((response) => response.json())
       .then((data) => {
@@ -211,7 +213,7 @@ function EntitiesList() {
         }
       });
   }
-  function getSelectedCatalogues() {
+  function getSelectedEntities() {
     selectedEntities.forEach((sc) => {
       getEntityRequest(authHeader(), sc)
         .then((response) => response.json())
@@ -241,7 +243,7 @@ function EntitiesList() {
         );
       }
     });
-    getAndSetCatalogues();
+    getAndSetEntities();
   }
 
   function restoreRegisters() {
@@ -255,13 +257,13 @@ function EntitiesList() {
         );
       }
     });
-    getAndSetCatalogues();
+    getAndSetEntities();
   }
 
   useEffect(() => {
     setUserRole(user()?.user.role);
     setUserService(user()?.user.service);
-    getAndSetCatalogues();
+    getAndSetEntities();
   }, []);
 
   function createDialogOpen() {
@@ -370,7 +372,7 @@ function EntitiesList() {
             ) : (
               <>
                 <Button
-                  disabled
+                  //disabled
                   startIcon={<AddIcon />}
                   onClick={createDialogOpen}
                   sx={{
@@ -401,7 +403,7 @@ function EntitiesList() {
                       color: "#f2f2f2",
                     },
                   }}
-                  onClick={getSelectedCatalogues}
+                  onClick={getSelectedEntities}
                 >
                   Editar
                 </Button>
@@ -501,10 +503,8 @@ function EntitiesList() {
           }}
         />
       </div>
-      {/*
-      <CreateCatalogueDialog enviar={datosDialog}></CreateCatalogueDialog>
-      <UpdateCatalogueDialog enviar={datosUpdateDialog}></UpdateCatalogueDialog>
-      */}
+      <CreateEntityDialog enviar={datosDialog}></CreateEntityDialog>
+      <UpdateEntityDialog enviar={datosUpdateDialog}></UpdateEntityDialog>
     </ThemeProvider>
   );
 }
