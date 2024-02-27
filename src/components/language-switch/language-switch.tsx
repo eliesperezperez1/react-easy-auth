@@ -4,7 +4,7 @@ import { ReactComponent as CasImage } from "../../assets/esp.svg";
 import { ReactComponent as ValImage } from "../../assets/val.svg";
 import ValImagen from "../../assets/val.svg";
 import CasImagen from "../../assets/esp.svg";
-import "./languageSwitch.css";
+import "./language-switch.css";
 
 function ChangeLanguage() {
     const [t, i18n] = useTranslation();

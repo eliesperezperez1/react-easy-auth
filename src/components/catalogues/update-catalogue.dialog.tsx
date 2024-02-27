@@ -14,8 +14,6 @@ import { updateCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { namespaces } from "../../@types/i18n.constants";
-import moment from 'moment';
 export interface UpdateDialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;

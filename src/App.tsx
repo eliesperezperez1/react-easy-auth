@@ -4,7 +4,6 @@ import { Route, Routes } from "react-router-dom";
 import { Login } from "./components/login/login";
 import { Home } from "./components/home/home";
 import { RequireAuth } from "react-auth-kit";
-import { Dashboard } from "./components/dashboard/dashboard";
 import CatalogueList from "./components/catalogues/catalogues";
 import EntitiesList from "./components/entities/entities";
 import UserList from "./components/users/users";

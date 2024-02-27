@@ -1,17 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { ReactComponent as Brand } from "../../assets/logowithname.svg";
 import MenuIcon from "@mui/icons-material/Menu";
 import "./menu.css";
-import { useSignOut } from "react-auth-kit";
+import { useAuthUser, useSignOut } from "react-auth-kit";
 import { useTranslation } from "react-i18next";
-import ChangeLanguage from "../languageSwitch/languageSwitch";
-
+import ChangeLanguage from "../language-switch/language-switch";
+import { ROLE } from "../../utils/enums/role.enum";
+import { userMock } from "../../utils/user.mock";
+import { User } from "../../interfaces/user.interface";
 const Menu = () => {
   const singOut = useSignOut();
   const navigate = useNavigate();
   const [showNavbar, setShowNavbar] = useState(false);
   const [t, i18n] = useTranslation();
+  const user = useAuthUser();
+  const [userData, setUserData] = useState<User>(userMock);
 
   const handleShowNavbar = () => {
     setShowNavbar(!showNavbar);
@@ -20,7 +24,9 @@ const Menu = () => {
     singOut();
     navigate("/login");
   };
-
+  useEffect(() => {
+    setUserData(user().user);
+  });
   return (
     <nav className="navbar">
       <div className="container">
@@ -50,15 +56,22 @@ const Menu = () => {
                 {t("header.services")}
               </a>
             </li>
-            <li>
-              <a
-                onClick={() => {
-                  navigate("/users");
-                }}
-              >
-                {t("header.users")}
-              </a>
-            </li>
+            {userData.role !== ROLE.VIEWER ? (
+              <>
+                <li>
+                  <a
+                    onClick={() => {
+                      navigate("/users");
+                    }}
+                  >
+                    {t("header.users")}
+                  </a>
+                </li>
+              </>
+            ) : (
+              <></>
+            )}
+
             <li>
               <a onClick={logout}>
                 <div>{t("header.logout")}</div>

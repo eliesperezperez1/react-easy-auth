@@ -18,7 +18,7 @@ import Snackbar from "@mui/material/Snackbar";
 import { ReactComponent as Logo } from "../../assets/logo70.svg";
 import { Alert } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import ChangeLanguage from "../languageSwitch/languageSwitch";
+import ChangeLanguage from "../language-switch/language-switch";
 
 function Login(props: any) {
   const [error, setError] = useState("");

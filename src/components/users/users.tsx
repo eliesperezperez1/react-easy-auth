@@ -2,6 +2,7 @@ import {
   DataGrid,
   GridColDef,
   GridRenderCellParams,
+  GridToolbarExport,
   esES,
 } from "@mui/x-data-grid";
 import {
@@ -29,21 +30,19 @@ import {
   getUsersRequest,
   updateUserRequest,
 } from "../../api/users";
-import { useAuthHeader } from "react-auth-kit";
+import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import Chip from "@mui/material/Chip";
 import { ReactComponent as Val } from "../../assets/val.svg";
 import { ReactComponent as Esp } from "../../assets/esp.svg";
 import { useTranslation } from "react-i18next";
-import { namespaces } from "../../@types/i18n.constants";
 import FolderDeleteIcon from "@mui/icons-material/FolderDelete";
 import FolderIcon from "@mui/icons-material/Folder";
 import Tooltip from "@mui/material/Tooltip";
 import "./users.css";
 import CreateUserDialog, { DialogData } from "./create-user.dialog";
-import UpdateUserDialog, {
-  UpdateDialogData,
-} from "./update-user.dialog";
+import UpdateUserDialog, { UpdateDialogData } from "./update-user.dialog";
 import { userMock } from "../../utils/user.mock";
+import { ROLE } from "../../utils/enums/role.enum";
 
 const theme = createTheme(
   {
@@ -86,6 +85,7 @@ function valOrEsp(p: string | undefined) {
 
 function UserList() {
   const authHeader = useAuthHeader();
+  const user = useAuthUser();
   const [users, setUsers] = useState<User[]>([]);
   const [deletedUsers, setDeletedUsers] = useState<User[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
@@ -93,8 +93,8 @@ function UserList() {
   const [deletedTable, setDeletedTable] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
-  const [userSelected, setUserSelected] =
-    useState<User>(userMock);
+  const [userSelected, setUserSelected] = useState<User>(userMock);
+  const [userData, setUserData] = useState<User>(userMock);
 
   const datosDialog: DialogData = {
     open: openDialog,
@@ -111,7 +111,6 @@ function UserList() {
   };
 
   const columns: GridColDef[] = [
-    // { field: "_id", headerName: "ID", width: 200, hideable: true },
     { field: "name", headerName: t("columnsNames.name"), width: 200 },
     {
       field: "surname",
@@ -192,11 +191,7 @@ function UserList() {
     selectedUsers.forEach((sc: string) => {
       let cata = users.find((v) => v._id === sc);
       if (cata) {
-        updateUserRequest(
-          cata._id,
-          { ...cata, deleted: true},
-          authHeader()
-        );
+        updateUserRequest(cata._id, { ...cata, deleted: true }, authHeader());
       }
     });
     getAndSetUsers();
@@ -206,20 +201,27 @@ function UserList() {
     selectedUsers.forEach((sc: string) => {
       let cata = deletedUsers.find((v) => v._id === sc);
       if (cata) {
-        updateUserRequest(
-          cata._id,
-          { ...cata, deleted: false },
-          authHeader()
-        );
+        updateUserRequest(cata._id, { ...cata, deleted: false }, authHeader());
       }
     });
     getAndSetUsers();
   }
 
   useEffect(() => {
+    setUserData(user().user);
     getAndSetUsers();
   }, []);
 
+  function itCouldBeSelectable() {
+    return userData.role === ROLE.ADMIN || userData.role === ROLE.SUPER_ADMIN;
+  }
+  function rowCouldBeSelectable(params: any) {
+    return (
+      (userData.role === ROLE.ADMIN &&
+        params.row.responsibleIdentity === userData.service) ||
+      userData.role === ROLE.SUPER_ADMIN
+    );
+  }
   function createDialogOpen() {
     setOpenDialog(true);
   }
@@ -235,33 +237,39 @@ function UserList() {
                   className="Tabla"
                   sx={{ display: "flex", alignItems: "center" }}
                 >
-                  <Button
-                    sx={{
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                    id="demo-select-small"
-                    onClick={() => {
-                      setDeletedTable(!deletedTable);
-                      showDeleted();
-                    }}
-                  >
-                    {deletedTable === true ? (
-                      <Tooltip title={t("dataTable.showNotDeleted")}>
-                        <FolderIcon></FolderIcon>
-                      </Tooltip>
-                    ) : (
-                      <Tooltip title={t("dataTable.showDeleted")}>
-                        <FolderDeleteIcon></FolderDeleteIcon>
-                      </Tooltip>
-                    )}
-                  </Button>
+                  {userData.role !== ROLE.VIEWER ? (
+                    <>
+                      <Button
+                        sx={{
+                          backgroundColor: "#D9D9D9",
+                          color: "#404040",
+                          borderColor: "#404040",
+                          "&:hover": {
+                            borderColor: "#0D0D0D",
+                            backgroundColor: "#0D0D0D",
+                            color: "#f2f2f2",
+                          },
+                        }}
+                        id="demo-select-small"
+                        onClick={() => {
+                          setDeletedTable(!deletedTable);
+                          showDeleted();
+                        }}
+                      >
+                        {deletedTable === true ? (
+                          <Tooltip title={t("dataTable.showNotDeleted")}>
+                            <FolderIcon></FolderIcon>
+                          </Tooltip>
+                        ) : (
+                          <Tooltip title={t("dataTable.showDeleted")}>
+                            <FolderDeleteIcon></FolderDeleteIcon>
+                          </Tooltip>
+                        )}
+                      </Button>
+                    </>
+                  ) : (
+                    <></>
+                  )}
                 </Box>
               </div>
             </FormControl>
@@ -304,97 +312,109 @@ function UserList() {
                 },
               }}
             />
-            {deletedTable === true ? (
-              <Button
-                disabled={selectedUsers.length <= 0}
-                startIcon={<RestoreIcon />}
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}
-                onClick={restoreRegisters}
-              >
-                Restaurar
-              </Button>
+      <GridToolbarExport
+              sx={{
+                height: 37,
+                backgroundColor: "#D9D9D9",
+                color: "#404040",
+                borderColor: "#404040",
+                "&:hover": {
+                  borderColor: "#0D0D0D",
+                  backgroundColor: "#0D0D0D",
+                  color: "#f2f2f2",
+                },
+              }}
+            />
+            {userData.role === ROLE.ADMIN ||
+            userData.role === ROLE.SUPER_ADMIN ? (
+              deletedTable === true ? (
+                <Button
+                  disabled={selectedUsers.length <= 0}
+                  startIcon={<RestoreIcon />}
+                  sx={{
+                    height: 37,
+                    backgroundColor: "#D9D9D9",
+                    color: "#404040",
+                    borderColor: "#404040",
+                    "&:hover": {
+                      borderColor: "#0D0D0D",
+                      backgroundColor: "#0D0D0D",
+                      color: "#f2f2f2",
+                    },
+                  }}
+                  onClick={restoreRegisters}
+                >
+                  Restaurar
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    startIcon={<AddIcon />}
+                    onClick={createDialogOpen}
+                    sx={{
+                      height: 37,
+                      backgroundColor: "#D9D9D9",
+                      color: "#404040",
+                      borderColor: "#404040",
+                      "&:hover": {
+                        borderColor: "#0D0D0D",
+                        backgroundColor: "#0D0D0D",
+                        color: "#f2f2f2",
+                      },
+                    }}
+                  >
+                    {t("dataTable.addDataset")}
+                  </Button>
+                  <Button
+                    disabled={selectedUsers.length <= 0}
+                    startIcon={<EditIcon />}
+                    sx={{
+                      height: 37,
+                      backgroundColor: "#D9D9D9",
+                      color: "#404040",
+                      borderColor: "#404040",
+                      "&:hover": {
+                        borderColor: "#0D0D0D",
+                        backgroundColor: "#0D0D0D",
+                        color: "#f2f2f2",
+                      },
+                    }}
+                    onClick={getSelectedUsers}
+                  >
+                    Editar
+                  </Button>
+                  <Button
+                    disabled={selectedUsers.length <= 0}
+                    startIcon={<DeleteIcon />}
+                    sx={{
+                      height: 37,
+                      backgroundColor: "#D9D9D9",
+                      color: "#404040",
+                      borderColor: "#404040",
+                      "&:hover": {
+                        borderColor: "#0D0D0D",
+                        backgroundColor: "#0D0D0D",
+                        color: "#f2f2f2",
+                      },
+                    }}
+                    onClick={deleteRegisters}
+                  >
+                    Eliminar
+                  </Button>
+                </>
+              )
             ) : (
-              <>
-                <Button
-                  startIcon={<AddIcon />}
-                  onClick={createDialogOpen}
-                  sx={{
-                    height: 37,
-                    backgroundColor: "#D9D9D9",
-                    color: "#404040",
-                    borderColor: "#404040",
-                    "&:hover": {
-                      borderColor: "#0D0D0D",
-                      backgroundColor: "#0D0D0D",
-                      color: "#f2f2f2",
-                    },
-                  }}
-                >
-                  {t("dataTable.addDataset")}
-                </Button>
-                <Button
-                  disabled={selectedUsers.length <= 0}
-                  startIcon={<EditIcon />}
-                  sx={{
-                    height: 37,
-                    backgroundColor: "#D9D9D9",
-                    color: "#404040",
-                    borderColor: "#404040",
-                    "&:hover": {
-                      borderColor: "#0D0D0D",
-                      backgroundColor: "#0D0D0D",
-                      color: "#f2f2f2",
-                    },
-                  }}
-                  onClick={getSelectedUsers}
-                >
-                  Editar
-                </Button>
-                <Button
-                  disabled={selectedUsers.length <= 0}
-                  startIcon={<DeleteIcon />}
-                  sx={{
-                    height: 37,
-                    backgroundColor: "#D9D9D9",
-                    color: "#404040",
-                    borderColor: "#404040",
-                    "&:hover": {
-                      borderColor: "#0D0D0D",
-                      backgroundColor: "#0D0D0D",
-                      color: "#f2f2f2",
-                    },
-                  }}
-                  onClick={deleteRegisters}
-                >
-                  Eliminar
-                </Button>
-              </>
+              <></>
             )}
-
-            <GridToolbarQuickFilter 
+        <GridToolbarQuickFilter
               sx={{
                 height: 33,
                 backgroundColor: "#D9D9D9",
                 color: "#404040",
                 borderColor: "#404040",
                 borderRadius: 1,
-                "&:hover": {
-                  //borderColor: "#0D0D0D",
-                  //backgroundColor: "#0D0D0D",
-                  //color: "#f2f2f2",
-                },
               }}
-              />
+            />
           </GridToolbarContainer>
         </ThemeProvider>
       </div>
@@ -443,7 +463,8 @@ function UserList() {
           }}
           getRowId={(row) => row._id}
           pageSizeOptions={[5, 10]}
-          checkboxSelection
+          checkboxSelection={itCouldBeSelectable()}
+          isRowSelectable={(params) => rowCouldBeSelectable(params)}
           onRowSelectionModelChange={(users) => {
             let aux = users as string[];
             setSelectedUsers(aux);

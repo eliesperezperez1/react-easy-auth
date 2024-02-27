@@ -14,7 +14,6 @@ import { updateUserRequest } from "../../api/users";
 import { useAuthHeader } from "react-auth-kit";
 import { Box } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { namespaces } from "../../@types/i18n.constants";
 export interface UpdateDialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
@@ -39,18 +38,13 @@ export default function UpdateUserDialog(props: {
     setOpen(false);
     props.enviar.closeDialog(false);
   };
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+/*   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setUpdate((prevState) => ({ ...prevState, [name]: value }));
-  };
+  }; */
 
   const updateUser = (formJson: any) => {
-    const a = formJson.lastUpdate;
-    const b = formJson.creationDate;
-    const deletedDate = new Date();
     const deleted = false;
-    const lastUpdate = new Date(a);
-    const creationDate = new Date(b);
     const prueba = formJson as UpdateUser;
     setUpdate({
       ...prueba,
