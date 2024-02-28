@@ -3,6 +3,36 @@
     flex-direction: column;
 }
 
+.horizontalForm{
+  display: flex;
+  flex-direction: row;
+  flex: 3;
+  width: 100%;
+  /*justify-content: space-between;*/
+}
+
+.horizontalFormSwitch{
+  display: flex;
+  flex-direction: row;
+  flex: 3;
+  width: 100%;
+  position: relative;
+  /*justify-content: space-between;*/
+}
+
+.horizontalForm p, .horizontalFormSwitch p{
+  flex: 1;
+}
+
+.horizontalForm > :last-child{
+  flex: 2;
+}
+
+.horizontalFormSwitch > :last-child{ 
+  position: absolute;
+  right: 0;
+}
+
 .buttonsForm, .dialogContentText{
     display: flex;
     justify-content: space-between;

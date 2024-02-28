@@ -35,12 +35,11 @@ import { useTranslation } from "react-i18next";
 import "./entities.css";
 import { entityMock } from "../../utils/entity.mock";
 import { getEntitiesRequest, getEntityRequest } from "../../api/entities";
-import CreateEntityDialog, { DialogData } from "./create-entity.dialog";
-import UpdateEntityDialog, { UpdateDialogData } from "./update-entity.dialog";
-import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
-import { ROLE } from "../../utils/enums/role.enum";
-import { userMock } from "../../utils/user.mock";
 import { User } from "../../interfaces/user.interface";
+import UpdateEntityDialog, { UpdateDialogData } from "./update-entity.dialog";
+import { userMock } from "../../utils/user.mock";
+import CreateEntityDialog, { DialogData } from "./create-entity.dialog";
+import { ROLE } from "../../utils/enums/role.enum";
 
 const theme = createTheme(
   {
@@ -87,28 +86,20 @@ function EntitiesList() {
   const [entitySelected, setEntitySelected] = useState<Entity>(entityMock);
   const [userData, setUserData] = useState<User>(userMock);
 
-  const datosDialog: DialogData = {
-    open: openDialog,
-    closeDialog: (close: boolean) => setOpenDialog(close),
-    getInfo: () => getAndSetCatalogues(),
-  };
-
   const [t, i18n] = useTranslation();
 
   const datosUpdateDialog: UpdateDialogData = {
     open: openUpdateDialog,
     closeDialog: (close: boolean) => setOpenUpdateDialog(close),
-    getInfo: () => getAndSetCatalogues(),
+    getInfo: () => getAndSetEntities(),
     entity: entitySelected,
   };
-  function isDisabled(): boolean {
-    return !(
-      selectedEntities.length > 0 &&
-      (userData.service === RESPONSIBLE_IDENTITY.GENERAL ||
-        userData.role === ROLE.SUPER_ADMIN ||
-        userData.role === ROLE.ADMIN)
-    );
-  }
+
+  const dialogData: DialogData = {
+    open: openDialog,
+    closeDialog: (a: boolean) => setOpenDialog(a),
+    getInfo: () => getAndSetEntities(),
+  };
 
   function getLocationUrl(location: string | undefined) {
     return !!location
@@ -202,7 +193,7 @@ function EntitiesList() {
     );
   }
 
-  function getAndSetCatalogues() {
+  function getAndSetEntities() {
     getEntitiesRequest(authHeader())
       .then((response) => response.json())
       .then((data) => {
@@ -252,7 +243,7 @@ function EntitiesList() {
         );
       }
     });
-    getAndSetCatalogues();
+    getAndSetEntities();
   }
 
   function restoreRegisters() {
@@ -266,12 +257,11 @@ function EntitiesList() {
         );
       }
     });
-    getAndSetCatalogues();
+    getAndSetEntities();
   }
 
   useEffect(() => {
-    setUserData(user().user);
-    getAndSetCatalogues();
+    getAndSetEntities();
   }, []);
 
   function createDialogOpen() {
@@ -381,7 +371,7 @@ function EntitiesList() {
             userData.role === ROLE.SUPER_ADMIN ? (
               deletedTable === true ? (
                 <Button
-                  disabled={selectedCatalogues.length <= 0}
+                  disabled={selectedEntities.length <= 0}
                   startIcon={<RestoreIcon />}
                   sx={{
                     height: 37,
@@ -529,7 +519,7 @@ function EntitiesList() {
           }}
         />
       </div>
-      <CreateEntityDialog enviar={datosDialog}></CreateEntityDialog>
+      <CreateEntityDialog enviar={dialogData}></CreateEntityDialog>
       <UpdateEntityDialog enviar={datosUpdateDialog}></UpdateEntityDialog>
     </ThemeProvider>
   );
