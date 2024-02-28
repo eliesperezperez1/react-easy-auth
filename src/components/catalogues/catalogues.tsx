@@ -335,7 +335,7 @@ function CatalogueList() {
   }
 
   useEffect(() => {
-    setUserData(user().user);
+    setUserData(user()?.user);
     setTheme({ ...baseTheme, t });
     getAndSetCatalogues();
   }, []);
