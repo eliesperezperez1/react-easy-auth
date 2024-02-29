@@ -20,6 +20,7 @@ import {
   GridToolbarDensitySelector,
   GridToolbarFilterButton,
   GridToolbarQuickFilter,
+  GridPagination,
 } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RestoreIcon from "@mui/icons-material/Restore";
@@ -59,6 +60,17 @@ const theme = createTheme(
   },
   esES
 );
+
+const CustomPagination = (props:any) => {
+  const { t } = useTranslation();
+
+  return (
+    <GridPagination
+      {...props}
+      labelRowsPerPage={t('tooltipText.rowsPage')} // Use your translation key here
+    />
+  );
+};
 
 function paletaColores(color: string) {
   switch (color) {
@@ -143,6 +155,7 @@ function EntitiesList() {
       field: "contactPerson",
       headerName: t("columnsNames.contactPerson"),
       width: 200,
+      description:t("tooltipText.contactPersonService")
     },
     {
       field: "location",
@@ -151,6 +164,7 @@ function EntitiesList() {
       renderCell: (params: GridRenderCellParams<any, string>) => (
         <a href={getLocationUrl(params.value)}>{params.value}</a>
       ),
+      description:t("tooltipText.locationService")
     },
     {
       field: "topic",
@@ -161,11 +175,13 @@ function EntitiesList() {
           <Chip label={params.value} style={getTopicColor(params.value)} />
         </>
       ),
+      description:t("tooltipText.topicService")
     },
     {
       field: "responsibleIdentity",
       headerName: t("columnsNames.responsibleIdentity"),
       width: 300,
+      description:t("tooltipText.responsibleIdentityService")
     },
     {
       field: "telephone",
@@ -174,6 +190,7 @@ function EntitiesList() {
       renderCell: (params: GridRenderCellParams<any, string>) => (
         <a href={"tel:+34" + params.value}>{params.value}</a>
       ),
+      description:t("tooltipText.phoneNumberService")
     },
     {
       field: "email",
@@ -182,6 +199,7 @@ function EntitiesList() {
       renderCell: (params: GridRenderCellParams<any, string>) => (
         <a href={"mailto:" + params.value}>{params.value}</a>
       ),
+      description:t("tooltipText.emailService")
     },
   ];
 
@@ -315,58 +333,69 @@ function EntitiesList() {
                 </Box>
               </div>
             </FormControl>
-            <GridToolbarColumnsButton
-              sx={{
-                height: 37,
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                "&:hover": {
-                  borderColor: "#0D0D0D",
-                  backgroundColor: "#0D0D0D",
-                  color: "#f2f2f2",
-                },
-              }}
-            />
-            <GridToolbarFilterButton
-              sx={{
-                height: 37,
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                "&:hover": {
-                  borderColor: "#0D0D0D",
-                  backgroundColor: "#0D0D0D",
-                  color: "#f2f2f2",
-                },
-              }}
-            />
-            <GridToolbarDensitySelector
-              sx={{
-                height: 37,
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                "&:hover": {
-                  borderColor: "#0D0D0D",
-                  backgroundColor: "#0D0D0D",
-                  color: "#f2f2f2",
-                },
-              }}
-            />
-            <GridToolbarExport
-              sx={{
-                height: 37,
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                "&:hover": {
-                  borderColor: "#0D0D0D",
-                  backgroundColor: "#0D0D0D",
-                  color: "#f2f2f2",
-                },
-              }}
-            />
+            <Tooltip title={t("tooltipText.column")}>
+              <GridToolbarColumnsButton
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}
+              />
+            </Tooltip>
+            
+            <Tooltip title={t("tooltipText.filter")}>
+              <GridToolbarFilterButton
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}
+              />
+            </Tooltip>
+            <Tooltip title={t("tooltipText.density")}>
+              <GridToolbarDensitySelector
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}
+              />
+            </Tooltip>
+            
+            <Tooltip title={t("tooltipText.export")}>
+              <GridToolbarExport
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}
+              />
+            </Tooltip>
+
             {userData.role === ROLE.ADMIN ||
             userData.role === ROLE.SUPER_ADMIN ? (
               deletedTable === true ? (
@@ -502,6 +531,7 @@ function EntitiesList() {
           }}
           components={{
             Toolbar: CustomToolbar,
+            Pagination: CustomPagination,
           }}
           getRowId={(row) => row._id}
           pageSizeOptions={[5, 10]}
@@ -513,8 +543,37 @@ function EntitiesList() {
           }}
           localeText={{
             toolbarColumns: t("dataTable.columns"),
+            filterPanelColumns: t("localtext.columnsTexts.filterPanelColumns"),
+            columnMenuLabel: t("localtext.columnsTexts.columnMenuLabel"),
+            columnsPanelShowAllButton: t("localtext.columnsTexts.columnsPanelShowAllButton"),
+            columnsPanelHideAllButton: t("localtext.columnsTexts.columnsPanelHideAllButton"),
+            columnsPanelTextFieldLabel: t("localtext.columnsTexts.columnsPanelTextFieldLabel"),
+            columnsPanelTextFieldPlaceholder: t("localtext.columnsTexts.columnsPanelTextFieldPlaceholder"),
+
+
             toolbarFilters: t("dataTable.filters"),
+            filterPanelInputLabel: t("localtext.filterTexts.filterPanelInputLabel"),
+            filterPanelInputPlaceholder: t("localtext.filterTexts.filterPanelInputPlaceholder"),
+            filterPanelOperator: t("localtext.filterTexts.filterPanelOperator"),
+            filterOperatorContains: t("localtext.filterTexts.filterOperatorContains"),
+            filterOperatorEquals: t("localtext.filterTexts.filterOperatorEquals"),
+            filterOperatorStartsWith: t("localtext.filterTexts.filterOperatorStartsWith"),
+            filterOperatorEndsWith: t("localtext.filterTexts.filterOperatorEndsWith"),
+            filterOperatorIs: t("localtext.filterTexts.filterOperatorIs"),
+            filterOperatorNot: t("localtext.filterTexts.filterOperatorNot"),
+            filterOperatorAfter: t("localtext.filterTexts.filterOperatorAfter"),
+            filterOperatorOnOrAfter: t("localtext.filterTexts.filterOperatorOnOrAfter"),
+            filterOperatorBefore: t("localtext.filterTexts.filterOperatorBefore"),
+            filterOperatorOnOrBefore: t("localtext.filterTexts.filterOperatorOnOrBefore"),
+            filterOperatorIsEmpty: t("localtext.filterTexts.filterOperatorIsEmpty"),
+            filterOperatorIsNotEmpty: t("localtext.filterTexts.filterOperatorIsNotEmpty"),
+            filterOperatorIsAnyOf: t("localtext.filterTexts.filterOperatorIsAnyOf"),
+
             toolbarDensity: t("dataTable.density"),
+            toolbarDensityCompact: t("localtext.densityTexts.toolbarDensityCompact"),
+            toolbarDensityStandard: t("localtext.densityTexts.toolbarDensityStandard"),
+            toolbarDensityComfortable: t("localtext.densityTexts.toolbarDensityComfortable"),
+          
             toolbarQuickFilterPlaceholder: t("dataTable.quickFilter"),
           }}
         />

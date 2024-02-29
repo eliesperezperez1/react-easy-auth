@@ -159,6 +159,13 @@
         "georreference":"Georeferencia",
         "language":"Idioma en que se encuentra el conjunto de datos",
         "source":"Enlace a donde se encuentra publicado el conjunto de datos",
-        "lastUpdate":"Fecha de la última vez que se actualizó el conjunto de datos"
+        "lastUpdate":"Fecha de la última vez que se actualizó el conjunto de datos",
+        "locationService":"Lugar donde se encuentra el servicio",
+        "phoneNumberService":"Número de contacto con el servicio",
+        "responsibleIdentityService": "Nombre del servicio",
+        "contactPersonService": "Persona de contacto del servicio",
+        "topicService": "Área a la que corresponde el servicio",
+        "emailService": "Correo electrónico del servicio"
+
     }
 }
