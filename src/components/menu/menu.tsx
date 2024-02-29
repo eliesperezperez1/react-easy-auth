@@ -25,7 +25,7 @@ const Menu = () => {
     navigate("/login");
   };
   useEffect(() => {
-    setUserData(user().user);
+    setUserData(user()?.user);
   });
   return (
     <nav className="navbar">
