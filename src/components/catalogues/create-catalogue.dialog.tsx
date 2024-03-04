@@ -151,7 +151,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
 
     if( (format!==undefined || format !== null) && (currentStepData.get("format")!==null || currentStepData.get("format")!==undefined)){
       const formatosDatos = format.toString();
-      const formatosDatosMod = formatosDatos.replace(/,/g, " / ");
+      const formatosDatosMod: string = formatosDatos.replace(/,/g, " / ");
       currentStepData.set("format", formatosDatosMod);
     }
     //--------------------------------------------------------------------
@@ -951,7 +951,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       color: "#f2f2f2",
                     },
                   }}>{t("dialog.addButton")}</Button>
-                  </div>
+              </div>
             </div>
             </form>
             
