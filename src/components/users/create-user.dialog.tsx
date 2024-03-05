@@ -25,6 +25,11 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
   const [t, i18n] = useTranslation();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
+  const [formDataSteps, setFormDataSteps] = useState({
+    name: "", surname:"", email: "", username: "", 
+    password: "", language: "", role: "", responsibleIdentity: "" 
+    }
+  );
 
   useEffect(() => {
     setOpen(props.enviar.open);
@@ -77,6 +82,18 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
     const mergedFormData = { ...formData, ...currentStepJson };
     createUser(mergedFormData);
   };
+
+  const handleGoBack = () => {
+    setStep(step - 1);
+  }
+
+  const handleChange = (field: string, value: string) => {
+    // Update the form data
+    setFormDataSteps((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
   return (
     <>
       <Dialog fullWidth={true} open={open} onClose={handleClose}>
@@ -94,56 +111,71 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
             {step === 1 && (
               <form onSubmit={handleNext}>
                 <div className="verticalForm">
-                  <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="name"
-                    name="name"
-                    label={t("columnsNames.name")}
-                    type="string"
-                    variant="standard"
-                  />
-                  <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="surname"
-                    name="surname"
-                    label={t("columnsNames.surname")}
-                    type="string"
-                    variant="standard"
-                  />
-                  <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="email"
-                    name="email"
-                    label={t("login.email")}
-                    type="string"
-                    variant="standard"
-                  />
-                  <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="username"
-                    name="username"
-                    label={t("columnsNames.username")}
-                    type="string"
-                    variant="standard"
-                  />
-                  <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="password"
-                    name="password"
-                    label={t("login.password")}
-                    type="string"
-                    variant="standard"
-                  />
+                  <div className="horizontalForm">
+                    <p>
+                    {t("columnsNames.name")}
+                    </p>
+                    <TextField
+                      autoFocus
+                      required
+                      margin="dense"
+                      id="name"
+                      name="name"
+                      type="string"
+                      variant="standard"
+                      value={formDataSteps.name}
+                      onChange={(e) => handleChange('name', e.target.value)}
+                    />
+                  </div>
+                  <div className="horizontalForm">
+                    <p>
+                    {t("columnsNames.surname")}
+                    </p>
+                    <TextField
+                      autoFocus
+                      required
+                      margin="dense"
+                      id="surname"
+                      name="surname"
+                      type="string"
+                      variant="standard"
+                      value={formDataSteps.surname}
+                      onChange={(e) => handleChange('surname', e.target.value)}
+                    />
+                  </div>
+                  
+                  <div className="horizontalForm">
+                    <p>
+                    {t("login.email")}
+                    </p>
+                    <TextField
+                      autoFocus
+                      required
+                      margin="dense"
+                      id="email"
+                      name="email"
+                      type="string"
+                      variant="standard"
+                      value={formDataSteps.email}
+                      onChange={(e) => handleChange('email', e.target.value)}
+                    />
+                  </div>
+                  <div className="horizontalForm">
+                    <p>
+                    {t("login.password")}
+                    </p>
+                    <TextField
+                      autoFocus
+                      required
+                      margin="dense"
+                      id="password"
+                      name="password"
+                      type="string"
+                      variant="standard"
+                      value={formDataSteps.password}
+                      onChange={(e) => handleChange('password', e.target.value)}
+                    />
+                  </div>
                 </div>
                 <div className="buttonsForm">
                   <Button
@@ -184,36 +216,71 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
             {step === 2 && (
               <form onSubmit={handleSubmit}>
                 <div className="verticalForm">
-                  <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="language"
-                    name="language"
-                    label={t("columnsNames.language")}
-                    type="string"
-                    variant="standard"
-                  />
-                  <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="role"
-                    name="role"
-                    label={t("columnsNames.role")}
-                    type="string"
-                    variant="standard"
-                  />
-                  <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="service"
-                    name="service"
-                    label={t("columnsNames.responsibleIdentity")}
-                    type="string"
-                    variant="standard"
-                  />
+                  
+                  <div className="horizontalForm">
+                    <p>
+                    {t("columnsNames.username")}
+                    </p>
+                    <TextField
+                      autoFocus
+                      required
+                      margin="dense"
+                      id="username"
+                      name="username"
+                      type="string"
+                      variant="standard"
+                      value={formDataSteps.username}
+                      onChange={(e) => handleChange('username', e.target.value)}
+                    />
+                  </div>
+                  <div className="horizontalForm">
+                    <p>
+                    {t("columnsNames.language")}
+                    </p>
+                    <TextField
+                      autoFocus
+                      required
+                      margin="dense"
+                      id="language"
+                      name="language"
+                      type="string"
+                      variant="standard"
+                      value={formDataSteps.language}
+                      onChange={(e) => handleChange('language', e.target.value)}
+                    />
+                  </div>
+                  <div className="horizontalForm">
+                    <p>
+                    {t("columnsNames.role")}
+                    </p>
+                    <TextField
+                      autoFocus
+                      required
+                      margin="dense"
+                      id="role"
+                      name="role"
+                      type="string"
+                      variant="standard"
+                      value={formDataSteps.role}
+                      onChange={(e) => handleChange('role', e.target.value)}
+                    />
+                  </div>
+                  <div className="horizontalForm">
+                    <p>
+                    {t("columnsNames.responsibleIdentity")}
+                    </p>
+                    <TextField
+                      autoFocus
+                      required
+                      margin="dense"
+                      id="service"
+                      name="service"
+                      type="string"
+                      variant="standard"
+                      value={formDataSteps.responsibleIdentity}
+                      onChange={(e) => handleChange('responsibleIdentity', e.target.value)}
+                    />
+                  </div>
                 </div>
                 <div className="buttonsForm">
                   <Button
@@ -232,22 +299,42 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                   >
                     {t("dialog.cancel")}
                   </Button>
-                  <Button
-                    type="submit"
-                    sx={{
-                      height: 37,
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                  >
-                    {t("dialog.next")}
-                  </Button>
+                  <div>
+                    <Button
+                      onClick={handleGoBack}
+                      sx={{
+                        height: 37,
+                        backgroundColor: "#D9D9D9",
+                        color: "#404040",
+                        borderColor: "#404040",
+                        marginRight: 1,
+                        "&:hover": {
+                          borderColor: "#0D0D0D",
+                          backgroundColor: "#0D0D0D",
+                          color: "#f2f2f2",
+                        },
+                      }}
+                    >
+                      Atrás
+                    </Button>
+                    <Button
+                      type="submit"
+                      sx={{
+                        height: 37,
+                        backgroundColor: "#D9D9D9",
+                        color: "#404040",
+                        borderColor: "#404040",
+                        "&:hover": {
+                          borderColor: "#0D0D0D",
+                          backgroundColor: "#0D0D0D",
+                          color: "#f2f2f2",
+                        },
+                      }}
+                    >
+                      {t("dialog.addButton")}
+                    </Button>
+                  </div>
+                  
                 </div>
               </form>
             )}
