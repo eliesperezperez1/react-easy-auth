@@ -3,15 +3,8 @@ import {
   GridColDef,
   GridRenderCellParams,
   GridToolbarExport,
-  esES,
 } from "@mui/x-data-grid";
-import {
-  Box,
-  Button,
-  FormControl,
-  ThemeProvider,
-  createTheme,
-} from "@mui/material";
+import { Box, Button, FormControl } from "@mui/material";
 import {
   GridToolbarColumnsButton,
   GridToolbarContainer,
@@ -47,24 +40,6 @@ import { catalogueMock } from "../../utils/catalogue.mock";
 import { ROLE } from "../../utils/enums/role.enum";
 import { User } from "../../interfaces/user.interface";
 import { userMock } from "../../utils/user.mock";
-const baseTheme = createTheme(
-  {
-    typography: {
-      fontFamily: "Montserrat",
-    },
-    components: {
-      MuiCssBaseline: {
-        styleOverrides: `
-        @font-face {
-          font-family: 'Montserrat';
-          src: url(https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap);
-        }
-      `,
-      },
-    },
-  },
-  esES
-);
 
 function paletaColores(color: string) {
   switch (color) {
@@ -315,9 +290,7 @@ function CatalogueList() {
   }
 
   function itCouldBeSelectable() {
-    return (
-      userData.role === ROLE.ADMIN || userData.role === ROLE.SUPER_ADMIN
-    );
+    return userData.role === ROLE.ADMIN || userData.role === ROLE.SUPER_ADMIN;
   }
 
   function restoreRegisters() {
@@ -336,7 +309,6 @@ function CatalogueList() {
 
   useEffect(() => {
     setUserData(user().user);
-    setTheme({ ...baseTheme, t });
     getAndSetCatalogues();
   }, []);
 
@@ -347,108 +319,127 @@ function CatalogueList() {
   function CustomToolbar() {
     return (
       <div>
-        <ThemeProvider theme={theme}>
-          <GridToolbarContainer>
-            <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-              <div>
-                <Box
-                  className="Tabla"
-                  sx={{ display: "flex", alignItems: "center" }}
-                >
-                  {userData.role !== ROLE.VIEWER ? (
-                    <>
-                      <Button
-                        sx={{
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
-                        id="demo-select-small"
-                        onClick={() => {
-                          setDeletedTable(!deletedTable);
-                          showDeleted();
-                        }}
-                      >
-                        {deletedTable === true ? (
-                          <Tooltip title={t("dataTable.showNotDeleted")}>
-                            <FolderIcon></FolderIcon>
-                          </Tooltip>
-                        ) : (
-                          <Tooltip title={t("dataTable.showDeleted")}>
-                            <FolderDeleteIcon></FolderDeleteIcon>
-                          </Tooltip>
-                        )}
-                      </Button>
-                    </>
-                  ) : (
-                    <></>
-                  )}
-                </Box>
-              </div>
-            </FormControl>
-            <GridToolbarColumnsButton
-              sx={{
-                height: 37,
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                "&:hover": {
-                  borderColor: "#0D0D0D",
-                  backgroundColor: "#0D0D0D",
-                  color: "#f2f2f2",
-                },
-              }}
-            />
-            <GridToolbarFilterButton
-              sx={{
-                height: 37,
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                "&:hover": {
-                  borderColor: "#0D0D0D",
-                  backgroundColor: "#0D0D0D",
-                  color: "#f2f2f2",
-                },
-              }}
-            />
-            <GridToolbarDensitySelector
-              sx={{
-                height: 37,
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                "&:hover": {
-                  borderColor: "#0D0D0D",
-                  backgroundColor: "#0D0D0D",
-                  color: "#f2f2f2",
-                },
-              }}
-            />
-            <GridToolbarExport
-              sx={{
-                height: 37,
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                "&:hover": {
-                  borderColor: "#0D0D0D",
-                  backgroundColor: "#0D0D0D",
-                  color: "#f2f2f2",
-                },
-              }}
-            />
-            {userData.role === ROLE.ADMIN ||
-            userData.role === ROLE.SUPER_ADMIN ? (
-              deletedTable === true ? (
+        <GridToolbarContainer>
+          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+            <div>
+              <Box
+                className="Tabla"
+                sx={{ display: "flex", alignItems: "center" }}
+              >
+                {userData.role !== ROLE.VIEWER ? (
+                  <>
+                    <Button
+                      sx={{
+                        backgroundColor: "#D9D9D9",
+                        color: "#404040",
+                        borderColor: "#404040",
+                        "&:hover": {
+                          borderColor: "#0D0D0D",
+                          backgroundColor: "#0D0D0D",
+                          color: "#f2f2f2",
+                        },
+                      }}
+                      id="demo-select-small"
+                      onClick={() => {
+                        setDeletedTable(!deletedTable);
+                        showDeleted();
+                      }}
+                    >
+                      {deletedTable === true ? (
+                        <Tooltip title={t("dataTable.showNotDeleted")}>
+                          <FolderIcon></FolderIcon>
+                        </Tooltip>
+                      ) : (
+                        <Tooltip title={t("dataTable.showDeleted")}>
+                          <FolderDeleteIcon></FolderDeleteIcon>
+                        </Tooltip>
+                      )}
+                    </Button>
+                  </>
+                ) : (
+                  <></>
+                )}
+              </Box>
+            </div>
+          </FormControl>
+          <GridToolbarColumnsButton
+            sx={{
+              height: 37,
+              backgroundColor: "#D9D9D9",
+              color: "#404040",
+              borderColor: "#404040",
+              "&:hover": {
+                borderColor: "#0D0D0D",
+                backgroundColor: "#0D0D0D",
+                color: "#f2f2f2",
+              },
+            }}
+          />
+          <GridToolbarFilterButton
+            sx={{
+              height: 37,
+              backgroundColor: "#D9D9D9",
+              color: "#404040",
+              borderColor: "#404040",
+              "&:hover": {
+                borderColor: "#0D0D0D",
+                backgroundColor: "#0D0D0D",
+                color: "#f2f2f2",
+              },
+            }}
+          />
+          <GridToolbarDensitySelector
+            sx={{
+              height: 37,
+              backgroundColor: "#D9D9D9",
+              color: "#404040",
+              borderColor: "#404040",
+              "&:hover": {
+                borderColor: "#0D0D0D",
+                backgroundColor: "#0D0D0D",
+                color: "#f2f2f2",
+              },
+            }}
+          />
+          <GridToolbarExport
+            sx={{
+              height: 37,
+              backgroundColor: "#D9D9D9",
+              color: "#404040",
+              borderColor: "#404040",
+              "&:hover": {
+                borderColor: "#0D0D0D",
+                backgroundColor: "#0D0D0D",
+                color: "#f2f2f2",
+              },
+            }}
+          />
+          {userData.role === ROLE.ADMIN ||
+          userData.role === ROLE.SUPER_ADMIN ? (
+            deletedTable === true ? (
+              <Button
+                disabled={selectedCatalogues.length <= 0}
+                startIcon={<RestoreIcon />}
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}
+                onClick={restoreRegisters}
+              >
+                Restaurar
+              </Button>
+            ) : (
+              <>
                 <Button
-                  disabled={selectedCatalogues.length <= 0}
-                  startIcon={<RestoreIcon />}
+                  startIcon={<AddIcon />}
+                  onClick={createDialogOpen}
                   sx={{
                     height: 37,
                     backgroundColor: "#D9D9D9",
@@ -460,81 +451,60 @@ function CatalogueList() {
                       color: "#f2f2f2",
                     },
                   }}
-                  onClick={restoreRegisters}
                 >
-                  Restaurar
+                  {t("dataTable.addDataset")}
                 </Button>
-              ) : (
-                <>
-                  <Button
-                    startIcon={<AddIcon />}
-                    onClick={createDialogOpen}
-                    sx={{
-                      height: 37,
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                  >
-                    {t("dataTable.addDataset")}
-                  </Button>
-                  <Button
-                    disabled={selectedCatalogues.length <= 0}
-                    startIcon={<EditIcon />}
-                    sx={{
-                      height: 37,
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                    onClick={getSelectedCatalogues}
-                  >
-                    Editar
-                  </Button>
-                  <Button
-                    disabled={selectedCatalogues.length <= 0}
-                    startIcon={<DeleteIcon />}
-                    sx={{
-                      height: 37,
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                    onClick={deleteRegisters}
-                  >
-                    Eliminar
-                  </Button>
-                </>
-              )
-            ) : (
-              <></>
-            )}
-            <GridToolbarQuickFilter
-              sx={{
-                height: 33,
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                borderRadius: 1,
-              }}
-            />
-          </GridToolbarContainer>
-        </ThemeProvider>
+                <Button
+                  disabled={selectedCatalogues.length <= 0}
+                  startIcon={<EditIcon />}
+                  sx={{
+                    height: 37,
+                    backgroundColor: "#D9D9D9",
+                    color: "#404040",
+                    borderColor: "#404040",
+                    "&:hover": {
+                      borderColor: "#0D0D0D",
+                      backgroundColor: "#0D0D0D",
+                      color: "#f2f2f2",
+                    },
+                  }}
+                  onClick={getSelectedCatalogues}
+                >
+                  Editar
+                </Button>
+                <Button
+                  disabled={selectedCatalogues.length <= 0}
+                  startIcon={<DeleteIcon />}
+                  sx={{
+                    height: 37,
+                    backgroundColor: "#D9D9D9",
+                    color: "#404040",
+                    borderColor: "#404040",
+                    "&:hover": {
+                      borderColor: "#0D0D0D",
+                      backgroundColor: "#0D0D0D",
+                      color: "#f2f2f2",
+                    },
+                  }}
+                  onClick={deleteRegisters}
+                >
+                  Eliminar
+                </Button>
+              </>
+            )
+          ) : (
+            <></>
+          )}
+          <GridToolbarQuickFilter
+            sx={{
+              height: 33,
+              backgroundColor: "#D9D9D9",
+              color: "#404040",
+              borderColor: "#404040",
+              borderRadius: 1,
+            }}
+          />
+        </GridToolbarContainer>
       </div>
     );
   }
@@ -547,7 +517,7 @@ function CatalogueList() {
     );
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <div>
         <DataGrid
           rows={rows}
@@ -597,7 +567,7 @@ function CatalogueList() {
       </div>
       <CreateCatalogueDialog enviar={datosDialog}></CreateCatalogueDialog>
       <UpdateCatalogueDialog enviar={datosUpdateDialog}></UpdateCatalogueDialog>
-    </ThemeProvider>
+    </>
   );
 }
 

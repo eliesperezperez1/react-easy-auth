@@ -1,28 +1,39 @@
 import { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { ReactComponent as Brand } from "../../assets/logowithname.svg";
 import MenuIcon from "@mui/icons-material/Menu";
 import "./menu.css";
 import { useAuthUser, useSignOut } from "react-auth-kit";
 import { useTranslation } from "react-i18next";
-import ChangeLanguage from "../language-switch/language-switch";
+import ChangeLanguage, {
+  ChangeLanguageProps,
+} from "../language-switch/language-switch";
 import { ROLE } from "../../utils/enums/role.enum";
 import { userMock } from "../../utils/user.mock";
 import { User } from "../../interfaces/user.interface";
-const Menu = () => {
+export interface ChangeLanguageEvent {
+  change: () => void;
+}
+const Menu = (props: { change: ChangeLanguageEvent }) => {
   const singOut = useSignOut();
   const navigate = useNavigate();
   const [showNavbar, setShowNavbar] = useState(false);
   const [t, i18n] = useTranslation();
   const user = useAuthUser();
   const [userData, setUserData] = useState<User>(userMock);
-
+  const change: ChangeLanguageProps = {
+    changeComponentsLanguage: () => sendToApp(),
+  };
   const handleShowNavbar = () => {
     setShowNavbar(!showNavbar);
   };
   const logout = () => {
     singOut();
     navigate("/login");
+  };
+
+  const sendToApp = () => {
+    props.change.change();
   };
   useEffect(() => {
     setUserData(user().user);
@@ -80,7 +91,7 @@ const Menu = () => {
           </ul>
         </div>
         <div>
-          <ChangeLanguage />
+          <ChangeLanguage change={change} />
         </div>
       </div>
     </nav>

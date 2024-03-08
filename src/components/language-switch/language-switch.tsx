@@ -5,69 +5,101 @@ import { ReactComponent as ValImage } from "../../assets/val.svg";
 import ValImagen from "../../assets/val.svg";
 import CasImagen from "../../assets/esp.svg";
 import "./language-switch.css";
+import { useAuthHeader, useAuthUser, useSignIn } from "react-auth-kit";
+import { userMock } from "../../utils/user.mock";
+import { User } from "../../interfaces/user.interface";
+import { updateUserLanguage } from "../../api/users";
+import { LANGUAGE } from "../../utils/enums/language.enum";
+export interface ChangeLanguageProps {
+  changeComponentsLanguage: () => void;
+}
 
-function ChangeLanguage() {
-    const [t, i18n] = useTranslation();
-    const [idioma, setIdioma] = useState("es");
-    const [imageIndex, setImageIndex] = useState(1);
-    const [primerClick, setPrimerClick] = useState(0);
-    const imagenes = [ValImage, CasImage];
-    const ImagenIdioma = imagenes[imageIndex];
+function ChangeLanguage(props: {change: ChangeLanguageProps}) {
+  const user = useAuthUser();
+  const authHeader = useAuthHeader();
+  const singIn = useSignIn();
+  const [t, i18n] = useTranslation();
+  const [idioma, setIdioma] = useState("es");
+  const imagenes = [ValImage, CasImage];
+  const [userData, setUserData] = useState<User>(userMock);
 
+  useEffect(() => {
+    console.log("hola");
+    if (user() && user().user) {
+      setUserData(user().user);
+      setIdioma(user().user.language === "caES" ? "val" : "es");
+    } else {
+      setIdioma("es");
+    }
+  }, [user()]);
 
-    const switchVisibleSeleccion = () => {
-        if(idioma==="es"){
-          setIdioma("val");
-          
-        } 
-        else {
-          setIdioma("es");
-        }
-        i18n.changeLanguage(idioma);
-        console.log("Idioma al cambiar: "+idioma);
-        if(primerClick===0){
-          setPrimerClick(1);
-        } else {
-          setImageIndex((imageIndex + 1) % 2);
-        }
-        
+  async function switchVisibleSeleccion() {
+    if (idioma === "es") {
+      setIdioma("val");
+      if (userData !== null || userData !== userMock) {
+        updateUserLanguage({ ...userData, language: LANGUAGE.CA }, authHeader())
+          .then((response) => response.json())
+          .then((data: User) => {
+            const authDivided = authHeader().split(" ");
+            const tokenType = authDivided[0];
+            const token = authDivided[1];
+            singIn({
+              token,
+              expiresIn: 3600,
+              tokenType,
+              authState: { user: data, id: data._id },
+            });
+          });
       }
-
-    return(
-        <button 
-          id="buttonChangeLanguage" 
-          onClick={switchVisibleSeleccion}
-          style={{
-            
-            height: '35px',
-            width: '35px',
-            padding: 0,
-            //border: 'none', 
-            backgroundImage: 'transparent',
-            borderRadius: 50,
-            overflow: 'hidden',
-          }}>
-            {/*<ImagenIdioma />*/}
-            {ImagenIdioma===ValImage ? (
-              <img src={ValImagen} 
-                alt="Image" 
-                style={{
-                  objectFit: 'cover',
-                  objectPosition: 'left', 
-                  width: '100%', 
-                  height: '100%',}}/>
-            ) : (
-              <img src={CasImagen} 
-                alt="Image" 
-                style={{
-                  objectFit: 'cover', 
-                  width: '100%', 
-                  height: '100%',}}/>
-            )}
-            
-        </button>
-    );
-
+    } else {
+      setIdioma("es");
+      if (userData !== userMock) {
+        updateUserLanguage({ ...userData, language: LANGUAGE.ES }, authHeader())
+          .then((response) => response.json())
+          .then((data: User) => {
+            const authDivided = authHeader().split(" ");
+            const tokenType = authDivided[0];
+            const token = authDivided[1];
+            singIn({
+              token,
+              expiresIn: 3600,
+              tokenType,
+              authState: { user: data, id: data._id },
+            });
+          });
+      }
+    }
+    await changeI18();
+    props.change.changeComponentsLanguage();
+  }
+  async function changeI18() {
+    await i18n.changeLanguage(idioma);
+  }
+  return (
+    <button
+      id="buttonChangeLanguage"
+      onClick={switchVisibleSeleccion}
+      style={{
+        height: "35px",
+        width: "35px",
+        padding: 0,
+        backgroundImage: "transparent",
+        borderRadius: 50,
+        overflow: "hidden",
+      }}
+    >
+      <img
+        src={idioma === "val" ? CasImagen : ValImagen}
+        alt="Image"
+        style={{
+          objectFit: "cover",
+          objectPosition: "left",
+          width: "100%",
+          height: "100%",
+        }}
+      />
+    </button>
+  );
 }
 
 export default ChangeLanguage;
