@@ -4,14 +4,19 @@ import {
   GridRenderCellParams,
   GridToolbarExport,
   esES,
+  useGridApiRef,
 } from "@mui/x-data-grid";
 import {
   Box,
   Button,
+  ClickAwayListener,
+  Fade,
   FormControl,
   ThemeProvider,
   createTheme,
+  styled,
 } from "@mui/material";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import {
   GridToolbarColumnsButton,
   GridToolbarContainer,
@@ -38,7 +43,6 @@ import { ReactComponent as Esp } from "../../assets/esp.svg";
 import { useTranslation } from "react-i18next";
 import FolderDeleteIcon from "@mui/icons-material/FolderDelete";
 import FolderIcon from "@mui/icons-material/Folder";
-import Tooltip from "@mui/material/Tooltip";
 import "./catalogues.css";
 import CreateCatalogueDialog, { DialogData } from "./create-catalogue.dialog";
 import UpdateCatalogueDialog, {
@@ -48,6 +52,10 @@ import { catalogueMock } from "../../utils/catalogue.mock";
 import { ROLE } from "../../utils/enums/role.enum";
 import { User } from "../../interfaces/user.interface";
 import { userMock } from "../../utils/user.mock";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+
 const baseTheme = createTheme(
   {
     typography: {
@@ -109,10 +117,13 @@ function CatalogueList() {
   const [deletedTable, setDeletedTable] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
+  const [openMenuExportar, setOpenMenuExportar] = useState<boolean>(false);
   const [catalogueSelected, setCatalogueSelected] =
     useState<Catalogue>(catalogueMock);
   const [theme, setTheme] = useState<any>({});
   const [userData, setUserData] = useState<User>(userMock);
+  const gridApiRef = useGridApiRef();
+
   const datosDialog: DialogData = {
     open: openDialog,
     closeDialog: (close: boolean) => setOpenDialog(close),
@@ -392,7 +403,9 @@ function CatalogueList() {
   }
 
   useEffect(() => {
-    setUserData(user()?.user);
+    const userdata = user().user?user:userMock;
+    setUserData(userdata);
+    
     setTheme({ ...baseTheme, t });
     getAndSetCatalogues();
   }, []);
@@ -496,7 +509,7 @@ function CatalogueList() {
               />
             </Tooltip>
             
-            <Tooltip title={t("tooltipText.export")}>
+            {/* <Tooltip title={t("tooltipText.export")}>
               <GridToolbarExport
                 sx={{
                   height: 37,
@@ -510,7 +523,9 @@ function CatalogueList() {
                   },
                 }}
               />
-            </Tooltip>
+            </Tooltip> */}
+            
+            <ExportButton />
             
             {userData.role === ROLE.ADMIN ||
             userData.role === ROLE.SUPER_ADMIN ? (
@@ -610,6 +625,140 @@ function CatalogueList() {
       </div>
     );
   }
+  function exportButtonOption() {
+    return (
+      <div className="menuExportar">
+        <Button
+          variant="text"
+          className="menu-item-exportar"
+          onClick={() => handleExportExcel()}
+          sx={{
+            backgroundColor: "#D9D9D9",
+            color: "#404040",
+            borderColor: "#404040",
+            marginRight: "5px",
+            marginTop: "5px",
+            marginBottom: "5px",
+            "&:hover": {
+              borderColor: "#0D0D0D",
+              backgroundColor: "#0D0D0D",
+              color: "#f2f2f2",
+            },
+          }}
+        >
+          EXCEL
+        </Button>
+        <Button
+          variant="text"
+          className="menu-item-exportar"
+          onClick={() => handleExportJSON()}
+          sx={{
+            backgroundColor: "#D9D9D9",
+            color: "#404040",
+            borderColor: "#404040",
+            marginTop: "5px",
+            marginBottom: "5px",
+            "&:hover": {
+              borderColor: "#0D0D0D",
+              backgroundColor: "#0D0D0D",
+              color: "#f2f2f2",
+            },
+          }}
+        >
+          JSON
+        </Button>
+      </div>
+    );
+  }
+  const handleCloseExportMenu = () => {
+    setOpenMenuExportar(false);
+  };
+
+  const handleSwitchExportMenu = () => {
+    setOpenMenuExportar(!openMenuExportar);
+  };
+
+  function ExportButton() {
+    return (
+      <ClickAwayListener onClickAway={handleCloseExportMenu}>
+        <Tooltip
+          open={openMenuExportar}
+          title={exportButtonOption()}
+          TransitionComponent={Fade}
+          TransitionProps={{ timeout: 600 }}
+          disableHoverListener
+        >
+          <Button
+            className="botonExportar"
+            variant="text"
+            onClick={handleSwitchExportMenu}
+            startIcon={<FileDownloadIcon />}
+            sx={{
+              backgroundColor: "#D9D9D9",
+              color: "#404040",
+              borderColor: "#404040",
+              "&:hover": {
+                borderColor: "#0D0D0D",
+                backgroundColor: "#0D0D0D",
+                color: "#f2f2f2",
+              },
+            }}
+          >
+            Exportar
+          </Button>
+        </Tooltip>
+      </ClickAwayListener>
+    );
+  }
+
+  function getVisibleData(){
+    const rowModels = Array.from(gridApiRef.current.getRowModels().values());
+    var saveDataRow:any = [];
+    saveDataRow = rowModels.map(obj => {
+      const clonedObj = JSON.parse(JSON.stringify(obj));
+      delete clonedObj._id;
+      return clonedObj;
+    });
+    const visibleColumns = gridApiRef.current.getVisibleColumns();
+    const saveDataColumn = visibleColumns.map(obj => JSON.parse(JSON.stringify({ field: obj.field })));
+    
+    const dataShowed = saveDataRow.map((obj:any) => {
+      const nuevoObjeto: { [key: string]: any } = {};
+      saveDataColumn.forEach(columna => {
+        const clave = columna.field;
+        nuevoObjeto[clave] = obj[clave];
+      });
+      return nuevoObjeto;
+    });
+
+    return dataShowed;
+  }
+
+  //-----------------------------------------------------------------------
+  // EXPORT AS EXCEL
+  //-----------------------------------------------------------------------
+  function handleExportExcel() {
+    
+    var dataShowed = getVisibleData();
+
+    const worksheet = XLSX.utils.json_to_sheet(dataShowed);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'catalogues');
+    XLSX.writeFile(workbook, document.title + ".xlsx", { compression: true });
+    
+  }
+
+  //-----------------------------------------------------------------------
+  // EXPORT AS JSON
+  //-----------------------------------------------------------------------
+  const handleExportJSON = () => {
+    
+    var dataShowed = getVisibleData();
+    
+    const json = JSON.stringify(dataShowed);
+    const blob = new Blob([json], { type: "application/json" });
+    saveAs(blob, "data.json");
+  };
 
   if (!catalogues.length)
     return (
@@ -622,6 +771,7 @@ function CatalogueList() {
     <ThemeProvider theme={theme}>
       <div>
         <DataGrid
+          apiRef={gridApiRef}
           rows={rows}
           columns={columns}
           sx={{
