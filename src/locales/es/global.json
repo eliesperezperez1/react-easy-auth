@@ -92,5 +92,80 @@
     "home": {
         "welcome": "Bienvenido a casa amigo",
         "getPayment": "Recibir pago"
+    },
+    "localtext":{
+        "columnsTexts":{
+            "filterPanelColumns": "Columnas",
+            "columnMenuLabel": "Columna",
+            "columnsPanelShowAllButton": "Mostrar",
+            "columnsPanelHideAllButton": "Ocultar",
+            "columnsPanelTextFieldLabel": "Encontrar columna",
+            "columnsPanelTextFieldPlaceholder": "Nombre de columna"
+        },
+        "filterTexts":{
+            "filterPanelInputLabel": "Valor",
+            "filterPanelInputPlaceholder": "Valor de filtro",
+            "filterPanelOperator": "Operador",
+            "filterOperatorContains": "contiene",
+            "filterOperatorEquals": "es igual",
+            "filterOperatorStartsWith": "empieza con",
+            "filterOperatorEndsWith": "termina con",
+            "filterOperatorIs": "es",
+            "filterOperatorNot": "no es",
+            "filterOperatorAfter": "está después",
+            "filterOperatorOnOrAfter": "está en o después",
+            "filterOperatorBefore": "está antes",
+            "filterOperatorOnOrBefore": "está en o antes",
+            "filterOperatorIsEmpty": "está vacío",
+            "filterOperatorIsNotEmpty": "no está vacío",
+            "filterOperatorIsAnyOf": "es cualquiera de"
+        },
+        "densityTexts":{
+            "toolbarDensityCompact": "Compacto",
+            "toolbarDensityStandard": "Estándar",
+            "toolbarDensityComfortable": "Amplio"
+        }
+
+    },
+    "tooltipText":{
+        "rowsPage":"Filas por página",
+        "column": "Columnas",
+        "filter": "Filtros",
+        "density": "Densidad",
+        "export": "exportar",
+        "title":"Título completo del conjunto de datos",
+        "description":"Descripción detallada del conjunto de datos",
+        "topic":"Área que engloba el conjunto de datos",
+        "responsibleIdentity":"Unidad administrativa u órgano responsable del conjunto de datos",
+        "datasetsRelation":"Relación interna con otros conjuntos de datos",
+        "fieldList":"Lista de campos que tiene el conjunto de datos",
+        "dataUnbundling":"¿Cuál es el nivel de desagregación de los datos?",
+        "updateFrequency":"Frecuencia con la que se actualizan los datos",
+        "format":"Formato de los datos",
+        "dataOrigin":"¿De dónde proviene originalmente la información?",
+        "dataOriginURL":"Enlace al lugar de dónde proviene originalmente la información",
+        "connection":"Tipo de conexión con el origen de datos",
+        "dataFiability":"¿Cómo de fiables son estos datos?",
+        "comments":"Comentarios sobre cualquier aspecto del conjunto de datos",
+        "RAT":"Vínculo a la información disponible del Registro de actividades de tratamiento",
+        "temporaryCoverage":"¿Desde cuándo se recoge está información?",
+        "repositoryStorage":"El repositorio donde se guarda la información",
+        "repositoryStorageURL":"Enlace al repositorio donde se guarda la información",
+        "fieldSuppression":"Lista de campos que se han suprimido",
+        "accessType":"Tipo de acceso al conjunto de datos",
+        "activeAds":"¿Se encuentra publicado el conjunto de datos en Publicidad Activa?",
+        "posts":"Lugar donde se encuentra publicado el conjunto de datos",
+        "licence":"Tipo de licencia",
+        "georreference":"Georeferencia",
+        "language":"Idioma en que se encuentra el conjunto de datos",
+        "source":"Enlace a donde se encuentra publicado el conjunto de datos",
+        "lastUpdate":"Fecha de la última vez que se actualizó el conjunto de datos",
+        "locationService":"Lugar donde se encuentra el servicio",
+        "phoneNumberService":"Número de contacto con el servicio",
+        "responsibleIdentityService": "Nombre del servicio",
+        "contactPersonService": "Persona de contacto del servicio",
+        "topicService": "Área a la que corresponde el servicio",
+        "emailService": "Correo electrónico del servicio"
+
     }
 }

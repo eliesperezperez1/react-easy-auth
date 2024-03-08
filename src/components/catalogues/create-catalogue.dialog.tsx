@@ -9,15 +9,15 @@ import { CreateCatalogue } from "../../interfaces/catalogue.interface";
 import { createCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
 import {
+  Autocomplete,
   Box,
+  Checkbox,
   FormControl,
+  FormControlLabel,
+  FormGroup,
   MenuItem,
   Select,
   Switch,
-  Checkbox,
-  FormGroup,
-  Autocomplete,
-  FormControlLabel,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import "./create-catalogue.dialog.css";
@@ -47,6 +47,33 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [t, i18n] = useTranslation();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
+  const [formDataSteps, setFormDataSteps] = useState({
+    title: "",
+    description: "",
+    language: "",
+    territorialScope: "",
+    temporaryCoverage: "",
+    updateFrequency: "",
+    topic: "",
+    lastUpdate: "",
+    format: "",
+    distribution: "",
+    sensitiveInformation: "",
+    isUsing: "",
+    accessType: "",
+    internalRelationship: "",
+    contactPerson: "",
+    structured: "",
+    associatedApplication: "",
+    georreference: "",
+    comments: "",
+    timmingEffect: "",
+    creationDate: "",
+    personalData: "",
+    source: "",
+    responsibleIdentity: "",
+    activeAds: "",
+  });
   const [sensitiveInformation, setSensitiveInformation] = useState("SI");
   const [isUsing, setIsUsing] = useState("SI");
   const [structured, setStructured] = useState("SI");
@@ -73,6 +100,11 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     setFormat([]);
   };
 
+  const handleFormat = (event: any, newValue: any) => {
+    setFormat(newValue);
+    console.log(newValue);
+  };
+
   const createCatalogue = (formJson: any) => {
     const a = formJson.lastUpdate;
     const b = formJson.creationDate;
@@ -95,6 +127,10 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       });
     props.enviar.getInfo();
     handleClose();
+  };
+
+  const handleGoBack = () => {
+    setStep(step - 1);
   };
 
   const handleNext = (event: React.FormEvent<HTMLFormElement>) => {
@@ -144,11 +180,13 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
         currentStepData.get("format") !== undefined)
     ) {
       const formatosDatos = format.toString();
-      const formatosDatosMod = formatosDatos.replace(/,/g, " / ");
+      const formatosDatosMod: string = formatosDatos.replace(/,/g, " / ");
       currentStepData.set("format", formatosDatosMod);
     }
     //--------------------------------------------------------------------
     const currentStepJson = Object.fromEntries(currentStepData.entries());
+
+    setFormDataSteps((prevData) => ({ ...prevData, ...currentStepJson }));
 
     // Merge current step data with existing form data
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
@@ -161,6 +199,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     const currentStepJson = Object.fromEntries(currentStepData.entries());
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
     const mergedFormData = { ...formData, ...currentStepJson };
+    console.log(mergedFormData);
     createCatalogue(mergedFormData);
   };
 
@@ -198,9 +237,12 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     }
   };
 
-  const handleFormat = (event: any, newValue: any) => {
-    setFormat(newValue);
-    console.log(newValue);
+  const handleChange = (field: string, value: string) => {
+    // Update the form data
+    setFormDataSteps((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
   };
 
   return (
@@ -235,6 +277,8 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       name="title"
                       type="string"
                       variant="standard"
+                      value={formDataSteps.title}
+                      onChange={(e) => handleChange("title", e.target.value)}
                     />
                   </div>
                   <div className="horizontalForm">
@@ -247,6 +291,10 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       name="description"
                       type="string"
                       variant="standard"
+                      value={formDataSteps.description}
+                      onChange={(e) =>
+                        handleChange("description", e.target.value)
+                      }
                     />
                   </div>
                   <div className="horizontalForm">
@@ -256,7 +304,8 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                         id="language"
                         name="language"
                         margin="dense"
-                        defaultValue={i18n.language}
+                        defaultValue={formDataSteps.language}
+                        //onChange={(e) => handleChange('language', e.target.value)}
                         required
                       >
                         <MenuItem value={"es"}>ES</MenuItem>
@@ -274,6 +323,10 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       name="territorialScope"
                       type="string"
                       variant="standard"
+                      value={formDataSteps.territorialScope}
+                      onChange={(e) =>
+                        handleChange("territorialScope", e.target.value)
+                      }
                     />
                   </div>
                   <div className="horizontalForm">
@@ -286,6 +339,10 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       name="temporaryCoverage"
                       type="string"
                       variant="standard"
+                      value={formDataSteps.temporaryCoverage}
+                      onChange={(e) =>
+                        handleChange("temporaryCoverage", e.target.value)
+                      }
                     />
                   </div>
                 </div>
@@ -338,6 +395,10 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       name="updateFrequency"
                       type="string"
                       variant="standard"
+                      value={formDataSteps.updateFrequency}
+                      onChange={(e) =>
+                        handleChange("updateFrequency", e.target.value)
+                      }
                     />
                   </div>
                   <div className="horizontalForm">
@@ -350,6 +411,8 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       name="topic"
                       type="string"
                       variant="standard"
+                      value={formDataSteps.topic}
+                      onChange={(e) => handleChange("topic", e.target.value)}
                     />
                   </div>
                   <div className="horizontalForm">
@@ -362,6 +425,10 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       name="lastUpdate"
                       type="datetime-local"
                       variant="standard"
+                      value={formDataSteps.lastUpdate}
+                      onChange={(e) =>
+                        handleChange("lastUpdate", e.target.value)
+                      }
                       sx={{
                         backgroundColor: "none",
                         width: "100%",
@@ -426,6 +493,10 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       name="distribution"
                       type="string"
                       variant="standard"
+                      value={formDataSteps.distribution}
+                      onChange={(e) =>
+                        handleChange("distribution", e.target.value)
+                      }
                     />
                   </div>
                 </div>
@@ -446,22 +517,42 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                   >
                     {t("dialog.cancel")}
                   </Button>
-                  <Button
-                    type="submit"
-                    sx={{
-                      height: 37,
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                  >
-                    {t("dialog.next")}
-                  </Button>
+                  <div>
+                    <Button
+                      onClick={handleGoBack}
+                      sx={{
+                        height: 37,
+                        backgroundColor: "#D9D9D9",
+                        color: "#404040",
+                        borderColor: "#404040",
+                        marginRight: 1,
+                        "&:hover": {
+                          borderColor: "#0D0D0D",
+                          backgroundColor: "#0D0D0D",
+                          color: "#f2f2f2",
+                        },
+                      }}
+                    >
+                      Atrás
+                    </Button>
+
+                    <Button
+                      type="submit"
+                      sx={{
+                        height: 37,
+                        backgroundColor: "#D9D9D9",
+                        color: "#404040",
+                        borderColor: "#404040",
+                        "&:hover": {
+                          borderColor: "#0D0D0D",
+                          backgroundColor: "#0D0D0D",
+                          color: "#f2f2f2",
+                        },
+                      }}
+                    >
+                      {t("dialog.next")}
+                    </Button>
+                  </div>
                 </div>
               </form>
             )}
@@ -508,7 +599,10 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                         id="accessType"
                         name="accessType"
                         margin="dense"
-                        defaultValue={"Público"}
+                        defaultValue={formDataSteps.accessType}
+                        onChange={(e) =>
+                          handleChange("accessType", e.target.value)
+                        }
                         required
                       >
                         <MenuItem value={"Públic/Público"}>Público</MenuItem>
@@ -529,6 +623,10 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       name="internalRelationship"
                       type="string"
                       variant="standard"
+                      value={formDataSteps.internalRelationship}
+                      onChange={(e) =>
+                        handleChange("internalRelationship", e.target.value)
+                      }
                     />
                   </div>
                   <div className="horizontalForm">
@@ -542,6 +640,10 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       name="contactPerson"
                       type="string"
                       variant="standard"
+                      value={formDataSteps.contactPerson}
+                      onChange={(e) =>
+                        handleChange("contactPerson", e.target.value)
+                      }
                     />
                   </div>
                 </div>
@@ -562,22 +664,42 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                   >
                     {t("dialog.cancel")}
                   </Button>
-                  <Button
-                    type="submit"
-                    sx={{
-                      height: 37,
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                  >
-                    {t("dialog.next")}
-                  </Button>
+                  <div>
+                    <Button
+                      onClick={handleGoBack}
+                      sx={{
+                        height: 37,
+                        backgroundColor: "#D9D9D9",
+                        color: "#404040",
+                        borderColor: "#404040",
+                        marginRight: 1,
+                        "&:hover": {
+                          borderColor: "#0D0D0D",
+                          backgroundColor: "#0D0D0D",
+                          color: "#f2f2f2",
+                        },
+                      }}
+                    >
+                      Atrás
+                    </Button>
+
+                    <Button
+                      type="submit"
+                      sx={{
+                        height: 37,
+                        backgroundColor: "#D9D9D9",
+                        color: "#404040",
+                        borderColor: "#404040",
+                        "&:hover": {
+                          borderColor: "#0D0D0D",
+                          backgroundColor: "#0D0D0D",
+                          color: "#f2f2f2",
+                        },
+                      }}
+                    >
+                      {t("dialog.next")}
+                    </Button>
+                  </div>
                 </div>
               </form>
             )}
@@ -609,6 +731,10 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       name="associatedApplication"
                       type="string"
                       variant="standard"
+                      value={formDataSteps.associatedApplication}
+                      onChange={(e) =>
+                        handleChange("associatedApplication", e.target.value)
+                      }
                     />
                   </div>
                   <div className="horizontalFormSwitch">
@@ -636,6 +762,8 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       name="comments"
                       type="string"
                       variant="standard"
+                      value={formDataSteps.comments}
+                      onChange={(e) => handleChange("comments", e.target.value)}
                     />
                   </div>
                   <div className="horizontalForm">
@@ -648,6 +776,10 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       name="timmingEffect"
                       type="string"
                       variant="standard"
+                      value={formDataSteps.timmingEffect}
+                      onChange={(e) =>
+                        handleChange("timmingEffect", e.target.value)
+                      }
                     />
                   </div>
                 </div>
@@ -668,22 +800,42 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                   >
                     {t("dialog.cancel")}
                   </Button>
-                  <Button
-                    type="submit"
-                    sx={{
-                      height: 37,
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                  >
-                    {t("dialog.next")}
-                  </Button>
+                  <div>
+                    <Button
+                      onClick={handleGoBack}
+                      sx={{
+                        height: 37,
+                        backgroundColor: "#D9D9D9",
+                        color: "#404040",
+                        borderColor: "#404040",
+                        marginRight: 1,
+                        "&:hover": {
+                          borderColor: "#0D0D0D",
+                          backgroundColor: "#0D0D0D",
+                          color: "#f2f2f2",
+                        },
+                      }}
+                    >
+                      Atrás
+                    </Button>
+
+                    <Button
+                      type="submit"
+                      sx={{
+                        height: 37,
+                        backgroundColor: "#D9D9D9",
+                        color: "#404040",
+                        borderColor: "#404040",
+                        "&:hover": {
+                          borderColor: "#0D0D0D",
+                          backgroundColor: "#0D0D0D",
+                          color: "#f2f2f2",
+                        },
+                      }}
+                    >
+                      {t("dialog.next")}
+                    </Button>
+                  </div>
                 </div>
               </form>
             )}
@@ -700,6 +852,10 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       name="creationDate"
                       type="datetime-local"
                       variant="standard"
+                      value={formDataSteps.creationDate}
+                      onChange={(e) =>
+                        handleChange("creationDate", e.target.value)
+                      }
                       sx={{
                         backgroundColor: "none",
                         width: "100%",
@@ -748,6 +904,8 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       name="source"
                       type="string"
                       variant="standard"
+                      value={formDataSteps.source}
+                      onChange={(e) => handleChange("source", e.target.value)}
                     />
                   </div>
                   <div className="horizontalForm">
@@ -760,6 +918,10 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       name="responsibleIdentity"
                       type="string"
                       variant="standard"
+                      value={formDataSteps.responsibleIdentity}
+                      onChange={(e) =>
+                        handleChange("responsibleIdentity", e.target.value)
+                      }
                     />
                   </div>
                   <div className="horizontalFormSwitch">
@@ -795,22 +957,43 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                   >
                     {t("dialog.cancel")}
                   </Button>
-                  <Button
-                    type="submit"
-                    sx={{
-                      height: 37,
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                  >
-                    {t("dialog.addButton")}
-                  </Button>
+
+                  <div>
+                    <Button
+                      onClick={handleGoBack}
+                      sx={{
+                        height: 37,
+                        backgroundColor: "#D9D9D9",
+                        color: "#404040",
+                        borderColor: "#404040",
+                        marginRight: 1,
+                        "&:hover": {
+                          borderColor: "#0D0D0D",
+                          backgroundColor: "#0D0D0D",
+                          color: "#f2f2f2",
+                        },
+                      }}
+                    >
+                      Atrás
+                    </Button>
+
+                    <Button
+                      type="submit"
+                      sx={{
+                        height: 37,
+                        backgroundColor: "#D9D9D9",
+                        color: "#404040",
+                        borderColor: "#404040",
+                        "&:hover": {
+                          borderColor: "#0D0D0D",
+                          backgroundColor: "#0D0D0D",
+                          color: "#f2f2f2",
+                        },
+                      }}
+                    >
+                      {t("dialog.addButton")}
+                    </Button>
+                  </div>
                 </div>
               </form>
             )}

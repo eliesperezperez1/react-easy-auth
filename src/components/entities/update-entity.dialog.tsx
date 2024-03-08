@@ -96,6 +96,10 @@ export default function UpdateEntityDialog(props: {
     }
   } */
 
+  
+  const handleGoBack = () => {
+    setStep(step - 1);
+  }
   return (
     <>
       <Dialog
@@ -219,19 +223,39 @@ export default function UpdateEntityDialog(props: {
                     color: "#f2f2f2",
                   },
                 }}>{t("dialog.cancel")}</Button>
-              <Button 
-                type="submit"
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}>{t("dialog.next")}</Button>
+                <div>
+                  <Button
+                    onClick={handleGoBack}
+                    sx={{
+                      height: 37,
+                      backgroundColor: "#D9D9D9",
+                      color: "#404040",
+                      borderColor: "#404040",
+                      marginRight: 1,
+                      "&:hover": {
+                        borderColor: "#0D0D0D",
+                        backgroundColor: "#0D0D0D",
+                        color: "#f2f2f2",
+                      },
+                    }}
+                  >
+                    Atrás
+                  </Button>
+                  <Button 
+                  type="submit"
+                  sx={{
+                    height: 37,
+                    backgroundColor: "#D9D9D9",
+                    color: "#404040",
+                    borderColor: "#404040",
+                    "&:hover": {
+                      borderColor: "#0D0D0D",
+                      backgroundColor: "#0D0D0D",
+                      color: "#f2f2f2",
+                    },
+                  }}>{t("dialog.next")}</Button>
+                </div>
+              
               </div>
             </form>
           )}
@@ -330,33 +354,53 @@ export default function UpdateEntityDialog(props: {
             </div>
 
             <div className="buttonsForm">
-            <Button 
-              onClick={handleClose} 
-              sx={{
-                height: 37,
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                "&:hover": {
-                  borderColor: "#0D0D0D",
-                  backgroundColor: "#0D0D0D",
-                  color: "#f2f2f2",
-                },
-              }}>{t("dialog.cancel")}</Button>
-            <Button 
-              type="submit"
-              sx={{
-                height: 37,
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                "&:hover": {
-                  borderColor: "#0D0D0D",
-                  backgroundColor: "#0D0D0D",
-                  color: "#f2f2f2",
-                },
-              }}>{t("dialog.updateEntity")}</Button>
+              <Button 
+                onClick={handleClose} 
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.cancel")}</Button>
+              <div>
+                <Button
+                onClick={handleGoBack}
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  marginRight: 1,
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}
+              >
+                Atrás
+              </Button>
+              <Button 
+                type="submit"
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.updateEntity")}</Button>
+              </div>
             </div>
+            
           </form>
           )}
           </Box>

@@ -187,7 +187,7 @@ function UserList() {
   }
 
   useEffect(() => {
-    setUserData(user().user);
+    setUserData(user()?.user);
     getAndSetUsers();
   }, []);
 

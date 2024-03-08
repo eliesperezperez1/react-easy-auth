@@ -11,6 +11,7 @@ import {
   GridToolbarDensitySelector,
   GridToolbarFilterButton,
   GridToolbarQuickFilter,
+  GridPagination,
 } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RestoreIcon from "@mui/icons-material/Restore";
@@ -40,6 +41,17 @@ import { catalogueMock } from "../../utils/catalogue.mock";
 import { ROLE } from "../../utils/enums/role.enum";
 import { User } from "../../interfaces/user.interface";
 import { userMock } from "../../utils/user.mock";
+
+const CustomPagination = (props: any) => {
+  const { t } = useTranslation();
+
+  return (
+    <GridPagination
+      {...props}
+      labelRowsPerPage={t("tooltipText.rowsPage")} // Use your translation key here
+    />
+  );
+};
 
 function paletaColores(color: string) {
   switch (color) {
@@ -73,7 +85,6 @@ function CatalogueList() {
   const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
   const [catalogueSelected, setCatalogueSelected] =
     useState<Catalogue>(catalogueMock);
-  const [theme, setTheme] = useState<any>({});
   const [userData, setUserData] = useState<User>(userMock);
   const datosDialog: DialogData = {
     open: openDialog,
@@ -90,81 +101,119 @@ function CatalogueList() {
   };
 
   const columns: GridColDef[] = [
-    { field: "title", headerName: t("columnsNames.title"), width: 200 },
+    {
+      field: "title",
+      headerName: t("columnsNames.title"),
+      width: 200,
+      description: t("tooltipText.title"),
+    },
     {
       field: "description",
       headerName: t("columnsNames.description"),
       width: 200,
+      description: t("tooltipText.description"),
     },
-    { field: "topic", headerName: t("columnsNames.topic"), width: 200 },
+    {
+      field: "topic",
+      headerName: t("columnsNames.topic"),
+      width: 200,
+      description: t("tooltipText.topic"),
+    },
     {
       field: "responsibleIdentity",
       headerName: t("columnsNames.responsibleIdentity"),
       width: 200,
+      description: t("tooltipText.responsibleIdentity"),
     },
     {
       field: "datasetsRelation",
       headerName: t("columnsNames.datasetsRelation"),
       width: 200,
+      description: t("tooltipText.datasetsRelation"),
     },
-    { field: "fieldList", headerName: t("columnsNames.fieldList"), width: 200 },
+    {
+      field: "fieldList",
+      headerName: t("columnsNames.fieldList"),
+      width: 200,
+      description: t("tooltipText.fieldList"),
+    },
     {
       field: "dataUnbundling",
       headerName: t("columnsNames.dataUnbundling"),
       width: 200,
+      description: t("tooltipText.dataUnbundling"),
     },
     {
       field: "updateFrequency",
       headerName: t("columnsNames.updateFrequency"),
       width: 200,
+      description: t("tooltipText.updateFrequency"),
     },
-    { field: "format", headerName: t("columnsNames.format"), width: 200 },
+    {
+      field: "format",
+      headerName: t("columnsNames.format"),
+      width: 200,
+      description: t("tooltipText.format"),
+    },
     {
       field: "dataOrigin",
       headerName: t("columnsNames.dataOrigin"),
       width: 200,
+      description: t("tooltipText.dataOrigin"),
     },
     {
       field: "dataOriginURL",
       headerName: t("columnsNames.dataOriginURL"),
       width: 200,
+      description: t("tooltipText.dataOriginURL"),
     },
     {
       field: "connection",
       headerName: t("columnsNames.connection"),
       width: 200,
+      description: t("tooltipText.connection"),
     },
     {
       field: "dataFiability",
       headerName: t("columnsNames.dataFiability"),
       width: 200,
+      description: t("tooltipText.dataFiability"),
     },
-    { field: "comments", headerName: t("columnsNames.comments"), width: 200 },
-    { field: "RAT", headerName: t("columnsNames.RAT"), width: 200 },
+    {
+      field: "comments",
+      headerName: t("columnsNames.comments"),
+      width: 200,
+      description: t("tooltipText.comments"),
+    },
     {
       field: "temporaryCoverage",
       headerName: t("columnsNames.temporaryCoverage"),
       width: 200,
+      description: t("tooltipText.temporaryCoverage"),
     },
     {
       field: "repositoryStorage",
       headerName: t("columnsNames.repositoryStorage"),
       width: 200,
+      description: t("tooltipText.repositoryStorage"),
     },
     {
       field: "repositoryStorageURL",
       headerName: t("columnsNames.repositoryStorageURL"),
       width: 200,
+      description: t("tooltipText.repositoryStorageURL"),
     },
     {
       field: "fieldSuppression",
       headerName: t("columnsNames.fieldSuppression"),
       width: 200,
+      description: t("tooltipText.fieldSuppression"),
     },
     {
       field: "accessType",
       headerName: t("columnsNames.accessType"),
       width: 200,
+      description: t("tooltipText.accessType"),
     },
     {
       field: "activeAds",
@@ -175,28 +224,30 @@ function CatalogueList() {
           <Chip label={params.value} color={yesOrNo(params.value)} />
         </>
       ),
+      description: t("tooltipText.activeAds"),
     },
-    { field: "posts", headerName: t("columnsNames.posts"), width: 200 },
-    { field: "licence", headerName: t("columnsNames.licence"), width: 200 },
     {
-      field: "sensitiveInformation",
-      headerName: t("columnsNames.sensitiveInformation"),
+      field: "posts",
+      headerName: t("columnsNames.posts"),
+      width: 200,
+      description: t("tooltipText.posts"),
+    },
+    {
+      field: "licence",
+      headerName: t("columnsNames.licence"),
+      width: 200,
+      description: t("tooltipText.licence"),
+    },
+    {
+      field: "RAT",
+      headerName: t("columnsNames.RAT"),
       width: 200,
       renderCell: (params: GridRenderCellParams<any, string>) => (
         <>
           <Chip label={params.value} color={yesOrNo(params.value)} />
         </>
       ),
-    },
-    {
-      field: "personalData",
-      headerName: t("columnsNames.personalData"),
-      width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
+      description: t("tooltipText.RAT"),
     },
     {
       field: "georreference",
@@ -207,6 +258,7 @@ function CatalogueList() {
           <Chip label={params.value} color={yesOrNo(params.value)} />
         </>
       ),
+      description: t("tooltipText.georreference"),
     },
     {
       field: "language",
@@ -215,6 +267,7 @@ function CatalogueList() {
       renderCell: (params: GridRenderCellParams<any, string>) => (
         <>{valOrEsp(params.value)}</>
       ),
+      description: t("tooltipText.language"),
     },
     {
       field: "source",
@@ -223,6 +276,7 @@ function CatalogueList() {
       renderCell: (params: GridRenderCellParams<any, string>) => (
         <a href={params.value}>{params.value}</a>
       ),
+      description: t("tooltipText.source"),
     },
     {
       field: "lastUpdate",
@@ -230,6 +284,7 @@ function CatalogueList() {
       type: "dateTime",
       width: 200,
       valueGetter: ({ value }) => value && new Date(value),
+      description: t("tooltipText.lastUpdate"),
     },
   ];
 
@@ -308,7 +363,12 @@ function CatalogueList() {
   }
 
   useEffect(() => {
-    setUserData(user().user);
+    if (user() !== null) {
+      let a = user().user;
+      if (a) {
+        setUserData(a);
+      }
+    }
     getAndSetCatalogues();
   }, []);
 
@@ -318,108 +378,116 @@ function CatalogueList() {
 
   function CustomToolbar() {
     return (
-      <div>
+      <>
         <GridToolbarContainer>
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-            <div>
+          {userData.role !== ROLE.VIEWER ? (
+            <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
               <Box
                 className="Tabla"
                 sx={{ display: "flex", alignItems: "center" }}
               >
-                {userData.role !== ROLE.VIEWER ? (
-                  <>
-                    <Button
-                      sx={{
-                        backgroundColor: "#D9D9D9",
-                        color: "#404040",
-                        borderColor: "#404040",
-                        "&:hover": {
-                          borderColor: "#0D0D0D",
-                          backgroundColor: "#0D0D0D",
-                          color: "#f2f2f2",
-                        },
-                      }}
-                      id="demo-select-small"
-                      onClick={() => {
-                        setDeletedTable(!deletedTable);
-                        showDeleted();
-                      }}
-                    >
-                      {deletedTable === true ? (
-                        <Tooltip title={t("dataTable.showNotDeleted")}>
-                          <FolderIcon></FolderIcon>
-                        </Tooltip>
-                      ) : (
-                        <Tooltip title={t("dataTable.showDeleted")}>
-                          <FolderDeleteIcon></FolderDeleteIcon>
-                        </Tooltip>
-                      )}
-                    </Button>
-                  </>
-                ) : (
-                  <></>
-                )}
+                <Button
+                  sx={{
+                    backgroundColor: "#D9D9D9",
+                    color: "#404040",
+                    borderColor: "#404040",
+                    "&:hover": {
+                      borderColor: "#0D0D0D",
+                      backgroundColor: "#0D0D0D",
+                      color: "#f2f2f2",
+                    },
+                  }}
+                  id="demo-select-small"
+                  onClick={() => {
+                    setDeletedTable(!deletedTable);
+                    showDeleted();
+                  }}
+                >
+                  {deletedTable === true ? (
+                    <Tooltip title={t("dataTable.showNotDeleted")}>
+                      <FolderIcon></FolderIcon>
+                    </Tooltip>
+                  ) : (
+                    <Tooltip title={t("dataTable.showDeleted")}>
+                      <FolderDeleteIcon></FolderDeleteIcon>
+                    </Tooltip>
+                  )}
+                </Button>
               </Box>
-            </div>
-          </FormControl>
-          <GridToolbarColumnsButton
-            sx={{
-              height: 37,
-              backgroundColor: "#D9D9D9",
-              color: "#404040",
-              borderColor: "#404040",
-              "&:hover": {
-                borderColor: "#0D0D0D",
-                backgroundColor: "#0D0D0D",
-                color: "#f2f2f2",
-              },
-            }}
-          />
-          <GridToolbarFilterButton
-            sx={{
-              height: 37,
-              backgroundColor: "#D9D9D9",
-              color: "#404040",
-              borderColor: "#404040",
-              "&:hover": {
-                borderColor: "#0D0D0D",
-                backgroundColor: "#0D0D0D",
-                color: "#f2f2f2",
-              },
-            }}
-          />
-          <GridToolbarDensitySelector
-            sx={{
-              height: 37,
-              backgroundColor: "#D9D9D9",
-              color: "#404040",
-              borderColor: "#404040",
-              "&:hover": {
-                borderColor: "#0D0D0D",
-                backgroundColor: "#0D0D0D",
-                color: "#f2f2f2",
-              },
-            }}
-          />
-          <GridToolbarExport
-            sx={{
-              height: 37,
-              backgroundColor: "#D9D9D9",
-              color: "#404040",
-              borderColor: "#404040",
-              "&:hover": {
-                borderColor: "#0D0D0D",
-                backgroundColor: "#0D0D0D",
-                color: "#f2f2f2",
-              },
-            }}
-          />
+            </FormControl>
+          ) : (
+            <></>
+          )}
+          <Tooltip title={t("tooltipText.column")}>
+            <GridToolbarColumnsButton
+              sx={{
+                height: 37,
+                backgroundColor: "#D9D9D9",
+                color: "#404040",
+                borderColor: "#404040",
+                "&:hover": {
+                  borderColor: "#0D0D0D",
+                  backgroundColor: "#0D0D0D",
+                  color: "#f2f2f2",
+                },
+              }}
+            />
+          </Tooltip>
+
+          <Tooltip title={t("tooltipText.filter")}>
+            <GridToolbarFilterButton
+              sx={{
+                height: 37,
+                backgroundColor: "#D9D9D9",
+                color: "#404040",
+                borderColor: "#404040",
+                "&:hover": {
+                  borderColor: "#0D0D0D",
+                  backgroundColor: "#0D0D0D",
+                  color: "#f2f2f2",
+                },
+              }}
+            />
+          </Tooltip>
+
+          <Tooltip title={t("tooltipText.density")}>
+            <GridToolbarDensitySelector
+              sx={{
+                height: 37,
+                backgroundColor: "#D9D9D9",
+                color: "#404040",
+                borderColor: "#404040",
+                "&:hover": {
+                  borderColor: "#0D0D0D",
+                  backgroundColor: "#0D0D0D",
+                  color: "#f2f2f2",
+                },
+              }}
+            />
+          </Tooltip>
+
+          <Tooltip title={t("tooltipText.export")}>
+            <GridToolbarExport
+              sx={{
+                height: 37,
+                backgroundColor: "#D9D9D9",
+                color: "#404040",
+                borderColor: "#404040",
+                "&:hover": {
+                  borderColor: "#0D0D0D",
+                  backgroundColor: "#0D0D0D",
+                  color: "#f2f2f2",
+                },
+              }}
+            />
+          </Tooltip>
+
           {userData.role === ROLE.ADMIN ||
           userData.role === ROLE.SUPER_ADMIN ? (
             deletedTable === true ? (
               <Button
                 disabled={selectedCatalogues.length <= 0}
-                startIcon={<RestoreIcon />}
+                startIcon={<EditIcon />}
                 sx={{
                   height: 37,
                   backgroundColor: "#D9D9D9",
@@ -431,9 +499,9 @@ function CatalogueList() {
                     color: "#f2f2f2",
                   },
                 }}
-                onClick={restoreRegisters}
+                onClick={getSelectedCatalogues}
               >
-                Restaurar
+                Editar
               </Button>
             ) : (
               <>
@@ -495,17 +563,19 @@ function CatalogueList() {
           ) : (
             <></>
           )}
-          <GridToolbarQuickFilter
-            sx={{
-              height: 33,
-              backgroundColor: "#D9D9D9",
-              color: "#404040",
-              borderColor: "#404040",
-              borderRadius: 1,
-            }}
-          />
+          <Tooltip title="Búsqueda rápida">
+            <GridToolbarQuickFilter
+              sx={{
+                height: 33,
+                backgroundColor: "#D9D9D9",
+                color: "#404040",
+                borderColor: "#404040",
+                borderRadius: 1,
+              }}
+            />
+          </Tooltip>
         </GridToolbarContainer>
-      </div>
+      </>
     );
   }
 
@@ -548,6 +618,7 @@ function CatalogueList() {
           }}
           components={{
             Toolbar: CustomToolbar,
+            Pagination: CustomPagination,
           }}
           getRowId={(row) => row._id}
           pageSizeOptions={[5, 10]}
@@ -559,8 +630,74 @@ function CatalogueList() {
           }}
           localeText={{
             toolbarColumns: t("dataTable.columns"),
+            filterPanelColumns: t("localtext.columnsTexts.filterPanelColumns"),
+            columnMenuLabel: t("localtext.columnsTexts.columnMenuLabel"),
+            columnsPanelShowAllButton: t(
+              "localtext.columnsTexts.columnsPanelShowAllButton"
+            ),
+            columnsPanelHideAllButton: t(
+              "localtext.columnsTexts.columnsPanelHideAllButton"
+            ),
+            columnsPanelTextFieldLabel: t(
+              "localtext.columnsTexts.columnsPanelTextFieldLabel"
+            ),
+            columnsPanelTextFieldPlaceholder: t(
+              "localtext.columnsTexts.columnsPanelTextFieldPlaceholder"
+            ),
+
             toolbarFilters: t("dataTable.filters"),
+            filterPanelInputLabel: t(
+              "localtext.filterTexts.filterPanelInputLabel"
+            ),
+            filterPanelInputPlaceholder: t(
+              "localtext.filterTexts.filterPanelInputPlaceholder"
+            ),
+            filterPanelOperator: t("localtext.filterTexts.filterPanelOperator"),
+            filterOperatorContains: t(
+              "localtext.filterTexts.filterOperatorContains"
+            ),
+            filterOperatorEquals: t(
+              "localtext.filterTexts.filterOperatorEquals"
+            ),
+            filterOperatorStartsWith: t(
+              "localtext.filterTexts.filterOperatorStartsWith"
+            ),
+            filterOperatorEndsWith: t(
+              "localtext.filterTexts.filterOperatorEndsWith"
+            ),
+            filterOperatorIs: t("localtext.filterTexts.filterOperatorIs"),
+            filterOperatorNot: t("localtext.filterTexts.filterOperatorNot"),
+            filterOperatorAfter: t("localtext.filterTexts.filterOperatorAfter"),
+            filterOperatorOnOrAfter: t(
+              "localtext.filterTexts.filterOperatorOnOrAfter"
+            ),
+            filterOperatorBefore: t(
+              "localtext.filterTexts.filterOperatorBefore"
+            ),
+            filterOperatorOnOrBefore: t(
+              "localtext.filterTexts.filterOperatorOnOrBefore"
+            ),
+            filterOperatorIsEmpty: t(
+              "localtext.filterTexts.filterOperatorIsEmpty"
+            ),
+            filterOperatorIsNotEmpty: t(
+              "localtext.filterTexts.filterOperatorIsNotEmpty"
+            ),
+            filterOperatorIsAnyOf: t(
+              "localtext.filterTexts.filterOperatorIsAnyOf"
+            ),
+
             toolbarDensity: t("dataTable.density"),
+            toolbarDensityCompact: t(
+              "localtext.densityTexts.toolbarDensityCompact"
+            ),
+            toolbarDensityStandard: t(
+              "localtext.densityTexts.toolbarDensityStandard"
+            ),
+            toolbarDensityComfortable: t(
+              "localtext.densityTexts.toolbarDensityComfortable"
+            ),
+
             toolbarQuickFilterPlaceholder: t("dataTable.quickFilter"),
           }}
         />

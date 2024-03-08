@@ -1,7 +1,7 @@
 import { User } from "../interfaces/user.interface";
-import { LANGUAGE } from "./enums/language.enum";
-import { RESPONSIBLE_IDENTITY } from "./enums/responsible-identity.enum";
-import { ROLE } from "./enums/role.enum";
+import { LANGUAGE } from "../utils/enums/language.enum";
+import { RESPONSIBLE_IDENTITY } from "../utils/enums/responsible-identity.enum";
+import { ROLE } from "../utils/enums/role.enum";
 
 export const userMock: User = {
   _id: "",

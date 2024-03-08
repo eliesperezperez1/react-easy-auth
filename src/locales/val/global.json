@@ -48,7 +48,7 @@
         "contactPerson": "Persona de contacte",
         "sensitiveInformation": "Informació sensible",
         "personalData": "Informació personal",
-        "georreference": "Georeferencia",
+        "georreference": "Georeferència",
         "language": "Idioma",
         "source": "URL de publicació",
         "lastUpdate": "Última actualització",
@@ -91,5 +91,79 @@
     "home": {
         "welcome": "Benvingut a casa amic",
         "getPayment": "Rebre pagament"
+    },
+    "localtext":{
+        "columnsTexts":{
+            "filterPanelColumns": "Columnes",
+            "columnMenuLabel": "Columna",
+            "columnsPanelShowAllButton": "Mostrar",
+            "columnsPanelHideAllButton": "Ocultar",
+            "columnsPanelTextFieldLabel": "Trobar columna",
+            "columnsPanelTextFieldPlaceholder": "Nom de columna"
+        },
+        "filterTexts":{
+            "filterPanelInputLabel": "Valor",
+            "filterPanelInputPlaceholder": "Valor de filtre",
+            "filterPanelOperator": "Operador",
+            "filterOperatorContains": "conté",
+            "filterOperatorEquals": "és igual",
+            "filterOperatorStartsWith": "comença amb",
+            "filterOperatorEndsWith": "finalitza amb",
+            "filterOperatorIs": "és",
+            "filterOperatorNot": "no és",
+            "filterOperatorAfter": "està després",
+            "filterOperatorOnOrAfter": "està en o després",
+            "filterOperatorBefore": "està abans",
+            "filterOperatorOnOrBefore": "està en o abans",
+            "filterOperatorIsEmpty": "està buit",
+            "filterOperatorIsNotEmpty": "no està buit",
+            "filterOperatorIsAnyOf": "és qualsevol de"
+        },
+        "densityTexts":{
+            "toolbarDensityCompact": "Compacte",
+            "toolbarDensityStandard": "Estàndard",
+            "toolbarDensityComfortable": "Ample"
+        }
+
+    },
+    "tooltipText":{
+        "rowsPage":"Files per pàgina",
+        "column": "Columnes",
+        "filter": "Filtres",
+        "density": "Densitat",
+        "export": "Exportar",
+        "title":"Títol complet del conjunt de dades",
+        "description":"Descripció detallada del conjunt de dades",
+        "topic":"Àrea que engloba al conjunt de dades",
+        "responsibleIdentity":"Unitat administrativa u órgan responsable del conjunt de dades",
+        "datasetsRelation":"Relació interna amb altres conjunts de dades",
+        "fieldList":"LLista de camps que té el conjunt de dades",
+        "dataUnbundling":"¿Quin és el nivell de desagregació de les dades?",
+        "updateFrequency":"Freqüència amb la que s'actualitzen les dades",
+        "format":"Format de les dades",
+        "dataOrigin":"¿D'on provè originalment la informació?",
+        "dataOriginURL":"Enllaç al lloc d'on provè originalment la informació",
+        "connection":"Tipus de conexió amb l'origen de dades",
+        "dataFiability":"¿Com de fiables son aquestes dades?",
+        "comments":"Comentaris de qualsevol aspecte del conjunt de dades",
+        "RAT":"Víncul a la informació disponible del Registre de activitats de tratament",
+        "temporaryCoverage":"¿Desde quan es recollix aquesta informació?",
+        "repositoryStorage":"El repositori on es guarda la informació",
+        "repositoryStorageURL":"Enllaç al repositori on es guarda la informació",
+        "fieldSuppression":"LLista de camps que s'han suprimit",
+        "accessType":"Tipus d'acces al conjunt de dades",
+        "activeAds":"¿Es troba publicat el conjunt de dades en Publicitat Activa?",
+        "posts":"Lloc on es troba publicat el conjunt de dades",
+        "licence":"Tipus de llicencia",
+        "georreference":"Georeferència",
+        "language":"Idioma en que es troba el conjunt de dades",
+        "source":"Enllaç a on es troba publicat el conjunt de dades",
+        "lastUpdate":"Data de la última vegada que es va actualitzar el conjunt de dades",
+        "locationService":"Lloc on es troba el servici",
+        "phoneNumberService":"Número de contacte amb el servici",
+        "responsibleIdentityService": "Nom del servici",
+        "contactPersonService": "Persona de contacte del servici",
+        "topicService": "Àrea a la que correspon el servici",
+        "emailService": "Correu electrònic del servici"
     }
 }

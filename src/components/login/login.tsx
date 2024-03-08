@@ -52,7 +52,7 @@ function Login(props: any) {
     } catch (err) {
       setOpen(true);
       if (err && err instanceof AxiosError) {
-        let allErrors = err.response.data.message.map((word: any) => {
+        let allErrors = err.response?.data.message.map((word: any) => {
           if (!word) return word;
           return word[0].toUpperCase() + word.substr(1).toLowerCase() + "\n";
         });

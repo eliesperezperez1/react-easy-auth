@@ -36,7 +36,7 @@ const Menu = (props: { change: ChangeLanguageEvent }) => {
     props.change.change();
   };
   useEffect(() => {
-    setUserData(user().user);
+    setUserData(user()?.user);
   });
   return (
     <nav className="navbar">

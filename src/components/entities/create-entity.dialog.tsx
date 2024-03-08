@@ -27,6 +27,11 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
   const [t, i18n] = useTranslation();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
+  const [formDataSteps, setFormDataSteps] = useState({
+    responsibleIdentity: "", topic:"", contactPerson: "", location: "", 
+    telephone: "", email: "" 
+    }
+  );
   //const [creationDate, setCreationDate] = useState(getCurrentDateTime());
 
   useEffect(() => {
@@ -83,6 +88,18 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
     createEntity(mergedFormData);
   };
 
+  const handleGoBack = () => {
+    setStep(step - 1);
+  }
+
+  const handleChange = (field: string, value: string) => {
+    // Update the form data
+    setFormDataSteps((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+
   return (
     <>
       <Dialog
@@ -114,6 +131,8 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
                     name="responsibleIdentity"
                     type="string"
                     variant="standard"
+                    value={formDataSteps.responsibleIdentity}
+                    onChange={(e) => handleChange('responsibleIdentity', e.target.value)}
                   />
                 </div>
                 <div className="horizontalForm">
@@ -128,6 +147,8 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
                     name="topic"
                     type="string"
                     variant="standard"
+                    value={formDataSteps.topic}
+                    onChange={(e) => handleChange('topic', e.target.value)}
                   />
                 </div>
                 {/* <div className="horizontalForm">
@@ -181,6 +202,8 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
                     name="contactPerson"
                     type="string"
                     variant="standard"
+                    value={formDataSteps.contactPerson}
+                    onChange={(e) => handleChange('contactPerson', e.target.value)}
                   />
                 </div>
               </div>
@@ -230,6 +253,8 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
                   name="location"
                   type="string"
                   variant="standard"
+                  value={formDataSteps.location}
+                  onChange={(e) => handleChange('location', e.target.value)}
                 />
               </div>
               <div className="horizontalForm">
@@ -244,6 +269,8 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
                   name="telephone"
                   type="string"
                   variant="standard"
+                  value={formDataSteps.telephone}
+                  onChange={(e) => handleChange('telephone', e.target.value)}
                 />
               </div>
               {/* <div className="horizontalForm">
@@ -298,12 +325,14 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
                   name="email"
                   type="email"
                   variant="standard"
+                  value={formDataSteps.email}
+                  onChange={(e) => handleChange('email', e.target.value)}
                 />
               </div>
             </div>
 
             <div className="buttonsForm">
-            <Button 
+              <Button 
               onClick={handleClose} 
               sx={{
                 height: 37,
@@ -316,20 +345,40 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
                   color: "#f2f2f2",
                 },
               }}>{t("dialog.cancel")}</Button>
-            <Button 
-              type="submit"
-              sx={{
-                height: 37,
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                "&:hover": {
-                  borderColor: "#0D0D0D",
-                  backgroundColor: "#0D0D0D",
-                  color: "#f2f2f2",
-                },
-              }}>{t("dialog.addEntityButton")}</Button>
+              <div>
+                <Button
+                  onClick={handleGoBack}
+                  sx={{
+                    height: 37,
+                    backgroundColor: "#D9D9D9",
+                    color: "#404040",
+                    borderColor: "#404040",
+                    marginRight: 1,
+                    "&:hover": {
+                      borderColor: "#0D0D0D",
+                      backgroundColor: "#0D0D0D",
+                      color: "#f2f2f2",
+                    },
+                  }}
+                >
+                  Atrás
+                </Button>
+                <Button 
+                  type="submit"
+                  sx={{
+                    height: 37,
+                    backgroundColor: "#D9D9D9",
+                    color: "#404040",
+                    borderColor: "#404040",
+                    "&:hover": {
+                      borderColor: "#0D0D0D",
+                      backgroundColor: "#0D0D0D",
+                      color: "#f2f2f2",
+                    },
+                  }}>{t("dialog.addEntityButton")}</Button>
+              </div>
             </div>
+            
           </form>
           )}
           </Box>
