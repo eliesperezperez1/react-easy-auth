@@ -10,11 +10,8 @@ import { userMock } from "../../utils/user.mock";
 import { User } from "../../interfaces/user.interface";
 import { updateUserLanguage } from "../../api/users";
 import { LANGUAGE } from "../../utils/enums/language.enum";
-export interface ChangeLanguageProps {
-  changeComponentsLanguage: () => void;
-}
 
-function ChangeLanguage(props: {change: ChangeLanguageProps}) {
+function ChangeLanguage(props: {change: any}) {
   const user = useAuthUser();
   const authHeader = useAuthHeader();
   const singIn = useSignIn();
@@ -30,13 +27,18 @@ function ChangeLanguage(props: {change: ChangeLanguageProps}) {
       setIdioma(user().user.language === "caES" ? "val" : "es");
     } else {
       setIdioma("es");
+      console.log("sin user");
     }
   }, [user()]);
 
   async function switchVisibleSeleccion() {
+    if(userData === userMock)
+      console.log("igualesss");
+
     if (idioma === "es") {
       setIdioma("val");
-      if (userData !== null || userData !== userMock) {
+      console.log("Idioma es: Es");
+      if (userData !== null && userData !== userMock) {
         updateUserLanguage({ ...userData, language: LANGUAGE.CA }, authHeader())
           .then((response) => response.json())
           .then((data: User) => {
@@ -53,6 +55,7 @@ function ChangeLanguage(props: {change: ChangeLanguageProps}) {
       }
     } else {
       setIdioma("es");
+      console.log("Idioma es: val");
       if (userData !== userMock) {
         updateUserLanguage({ ...userData, language: LANGUAGE.ES }, authHeader())
           .then((response) => response.json())
@@ -70,7 +73,7 @@ function ChangeLanguage(props: {change: ChangeLanguageProps}) {
       }
     }
     await changeI18();
-    props.change.changeComponentsLanguage();
+    //props.change.changeComponentsLanguage();
   }
   async function changeI18() {
     await i18n.changeLanguage(idioma);
