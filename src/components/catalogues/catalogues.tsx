@@ -399,7 +399,7 @@ function CatalogueList() {
 
   useEffect(() => {
     if (user() !== null) {
-      let a = user()?.user;
+      const a = user() ? user().user : userMock;
       if (a) {
         setUserData(a);
       }
