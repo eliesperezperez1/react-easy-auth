@@ -79,23 +79,6 @@ export default function UpdateEntityDialog(props: {
     updateEntity(mergedFormData);
   };
 
-  /* const handleValuePicker = (picker: any) => {
-    if(picker==="lastUpdate"){
-      if(update.lastUpdate !== undefined) {
-        const dateObject = new Date(update.lastUpdate);
-        const formattedDate = dateObject.toISOString().slice(0, 16);
-        return formattedDate;
-      }
-    }
-    else if (picker==="creationDate"){
-      if(update.creationDate !== undefined) {
-        const dateObject = new Date(update.creationDate);
-        const formattedDate = dateObject.toISOString().slice(0, 16);
-        return formattedDate;
-      }
-    }
-  } */
-
   
   const handleGoBack = () => {
     setStep(step - 1);
@@ -151,46 +134,6 @@ export default function UpdateEntityDialog(props: {
                     onChange={handleChange}
                   />
                 </div>
-                {/* <div className="horizontalForm">
-                  <p>
-                  {t("columnsNames.lastUpdate")}
-                  </p>
-                  <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="lastUpdate"
-                    name="lastUpdate"
-                    type="datetime-local"
-                    variant="standard"
-                    value={creationDate}
-
-                    sx= {{
-                      backgroundColor: 'none',
-                      width: '100%',
-                      border: 'none',
-                      borderBottom: '1px solid lightgrey',
-                      '& input': {
-                        backgroundColor: 'none',
-                        border: 'none',
-                        
-                      },
-                    }}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      style:{
-                        backgroundColor: 'none',
-                        width: '100%',
-                        border: 'none',
-                        borderBottom: '1px solid lightgrey',
-                      },
-                      readOnly: true,
-                    }}
-                  />
-                  
-                </div> */}
                 <div className="horizontalForm">
                   <p>
                   {t("columnsNames.contactPerson")}
@@ -294,47 +237,6 @@ export default function UpdateEntityDialog(props: {
                   onChange={handleChange}
                 />
               </div>
-              {/* <div className="horizontalForm">
-                <p>
-                  Fecha de creación
-                </p>
-                <TextField
-                  autoFocus
-                  required
-                  margin="dense"
-                  id="creationDate"
-                  name="creationDate"
-                  type="datetime-local"
-                  variant="standard"
-                  value={creationDate}
-              
-
-                  sx= {{
-                    backgroundColor: 'none',
-                    width: '100%',
-                    border: 'none',
-                    borderBottom: '1px solid lightgrey',
-                    '& input': {
-                      backgroundColor: 'none',
-                      border: 'none',
-                      
-                    },
-                  }}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  inputProps={{
-                    style:{
-                      backgroundColor: 'none',
-                      width: '100%',
-                      border: 'none',
-                      borderBottom: '1px solid lightgrey',
-                    },
-                    readOnly: true,
-                  }}
-                />
-                
-              </div> */}
               <div className="horizontalForm">
                 <p>
                 {t("login.email")}

@@ -14,7 +14,6 @@ import {
   GridPagination,
 } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
-import RestoreIcon from "@mui/icons-material/Restore";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import { useEffect, useState } from "react";
@@ -41,6 +40,7 @@ import { catalogueMock } from "../../utils/catalogue.mock";
 import { ROLE } from "../../utils/enums/role.enum";
 import { User } from "../../interfaces/user.interface";
 import { userMock } from "../../utils/user.mock";
+import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
 
 const CustomPagination = (props: any) => {
   const { t } = useTranslation();
@@ -300,6 +300,7 @@ function CatalogueList() {
     getCataloguesRequest(authHeader())
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         let notDeleted = data.filter((d: Catalogue) => d.deleted !== true);
         let deleted = data.filter((d: Catalogue) => d.deleted === true);
         setCatalogues(notDeleted);
@@ -611,7 +612,16 @@ function CatalogueList() {
             },
             filter: {
               filterModel: {
-                items: [],
+                items:
+                  userData.service === RESPONSIBLE_IDENTITY.GENERAL
+                    ? []
+                    : [
+                        {
+                          field: "responsibleIdentity",
+                          operator: "contains",
+                          value: userData.service,
+                        },
+                      ],
                 quickFilterValues: [],
               },
             },

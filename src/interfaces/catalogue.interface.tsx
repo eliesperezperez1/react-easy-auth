@@ -30,7 +30,7 @@ export interface Catalogue {
   personalData: string;
   activeAds: string;
   source: string;
-  responsibleIdentity: RESPONSIBLE_IDENTITY;
+  responsibleIdentity: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

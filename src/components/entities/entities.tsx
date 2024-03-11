@@ -4,6 +4,12 @@ import {
   GridRenderCellParams,
   GridToolbarExport,
 } from "@mui/x-data-grid";
+import {
+  DataGridPro,
+  GridToolbar,
+  FilterColumnsArgs,
+  GetColumnForNewFilterArgs,
+} from "@mui/x-data-grid-pro";
 import { Box, Button, Chip, FormControl, Tooltip } from "@mui/material";
 import {
   GridToolbarColumnsButton,
@@ -14,8 +20,6 @@ import {
   GridPagination,
 } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
-import RestoreIcon from "@mui/icons-material/Restore";
-import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import FolderDeleteIcon from "@mui/icons-material/FolderDelete";
 import FolderIcon from "@mui/icons-material/Folder";
@@ -33,6 +37,7 @@ import { userMock } from "../../utils/user.mock";
 import CreateEntityDialog, { DialogData } from "./create-entity.dialog";
 import { ROLE } from "../../utils/enums/role.enum";
 import { LANGUAGE } from "../../utils/enums/language.enum";
+import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
 
 const CustomPagination = (props: any) => {
   const { t } = useTranslation();
@@ -191,6 +196,7 @@ function EntitiesList() {
     getEntitiesRequest(authHeader())
       .then((response) => response.json())
       .then((data) => {
+        console.log(userData);
         let notDeleted = data.filter((d: Entity) => d.deleted !== true);
         let deleted = data.filter((d: Entity) => d.deleted === true);
         setEntities(notDeleted);
@@ -460,7 +466,16 @@ function EntitiesList() {
             },
             filter: {
               filterModel: {
-                items: [],
+                items:
+                  userData.service === RESPONSIBLE_IDENTITY.GENERAL
+                    ? []
+                    : [
+                        {
+                          field: "responsibleIdentity",
+                          operator: "contains",
+                          value: userData.service,
+                        },
+                      ],
                 quickFilterValues: [],
               },
             },
@@ -493,7 +508,6 @@ function EntitiesList() {
             columnsPanelTextFieldPlaceholder: t(
               "localtext.columnsTexts.columnsPanelTextFieldPlaceholder"
             ),
-
             toolbarFilters: t("dataTable.filters"),
             filterPanelInputLabel: t(
               "localtext.filterTexts.filterPanelInputLabel"
