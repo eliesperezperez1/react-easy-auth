@@ -22,7 +22,6 @@ export const createUserRequest = async (
       Authorization: refreshToken,
     },
   });
-  
 
 export const deletePermamentUserRequest = async (
   id: string,
@@ -82,5 +81,19 @@ export const registerUser = async (User: CreateUser) =>
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Content-Type": "application/json",
+    },
+  });
+
+export const updateUserLanguage = async (
+  User: UpdateUser,
+  refreshToken: string
+) =>
+  fetch(`${API}/user/language`, {
+    method: "POST",
+    body: JSON.stringify(User),
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/json",
+      Authorization: refreshToken,
     },
   });

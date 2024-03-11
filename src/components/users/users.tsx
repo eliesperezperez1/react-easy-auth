@@ -3,14 +3,11 @@ import {
   GridColDef,
   GridRenderCellParams,
   GridToolbarExport,
-  esES,
 } from "@mui/x-data-grid";
 import {
   Box,
   Button,
   FormControl,
-  ThemeProvider,
-  createTheme,
 } from "@mui/material";
 import {
   GridToolbarColumnsButton,
@@ -44,24 +41,6 @@ import UpdateUserDialog, { UpdateDialogData } from "./update-user.dialog";
 import { userMock } from "../../utils/user.mock";
 import { ROLE } from "../../utils/enums/role.enum";
 
-const theme = createTheme(
-  {
-    typography: {
-      fontFamily: "Montserrat",
-    },
-    components: {
-      MuiCssBaseline: {
-        styleOverrides: `
-        @font-face {
-          font-family: 'Montserrat';
-          src: url(https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap);
-        }
-      `,
-      },
-    },
-  },
-  esES
-);
 
 function paletaColores(color: string) {
   switch (color) {
@@ -229,7 +208,6 @@ function UserList() {
   function CustomToolbar() {
     return (
       <div>
-        <ThemeProvider theme={theme}>
           <GridToolbarContainer>
             <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
               <div>
@@ -416,7 +394,6 @@ function UserList() {
               }}
             />
           </GridToolbarContainer>
-        </ThemeProvider>
       </div>
     );
   }
@@ -429,7 +406,7 @@ function UserList() {
     );
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <div>
         <DataGrid
           rows={rows}
@@ -479,7 +456,7 @@ function UserList() {
       </div>
       <CreateUserDialog enviar={datosDialog}></CreateUserDialog>
       <UpdateUserDialog enviar={datosUpdateDialog}></UpdateUserDialog>
-    </ThemeProvider>
+    </>
   );
 }
 

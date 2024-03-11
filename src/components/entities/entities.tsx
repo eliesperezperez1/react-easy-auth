@@ -47,33 +47,15 @@ import CreateEntityDialog, { DialogData } from "./create-entity.dialog";
 import { ROLE } from "../../utils/enums/role.enum";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import { LANGUAGE } from "../../utils/enums/language.enum";
 
-const theme = createTheme(
-  {
-    typography: {
-      fontFamily: "Montserrat",
-    },
-    components: {
-      MuiCssBaseline: {
-        styleOverrides: `
-        @font-face {
-          font-family: 'Montserrat';
-          src: url(https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap);
-        }
-      `,
-      },
-    },
-  },
-  esES
-);
-
-const CustomPagination = (props:any) => {
+const CustomPagination = (props: any) => {
   const { t } = useTranslation();
 
   return (
     <GridPagination
       {...props}
-      labelRowsPerPage={t('tooltipText.rowsPage')} // Use your translation key here
+      labelRowsPerPage={t("tooltipText.rowsPage")} // Use your translation key here
     />
   );
 };
@@ -163,7 +145,7 @@ function EntitiesList() {
       field: "contactPerson",
       headerName: t("columnsNames.contactPerson"),
       width: 200,
-      description:t("tooltipText.contactPersonService")
+      description: t("tooltipText.contactPersonService"),
     },
     {
       field: "location",
@@ -172,7 +154,7 @@ function EntitiesList() {
       renderCell: (params: GridRenderCellParams<any, string>) => (
         <a href={getLocationUrl(params.value)}>{params.value}</a>
       ),
-      description:t("tooltipText.locationService")
+      description: t("tooltipText.locationService"),
     },
     {
       field: "topic",
@@ -183,13 +165,16 @@ function EntitiesList() {
           <Chip label={params.value} style={getTopicColor(params.value)} />
         </>
       ),
-      description:t("tooltipText.topicService")
+      description: t("tooltipText.topicService"),
     },
     {
-      field: "responsibleIdentity",
+      field:
+        userData.language === LANGUAGE.ES
+          ? "responsibleIdentityES"
+          : "responsibleIdentityVAL",
       headerName: t("columnsNames.responsibleIdentity"),
       width: 300,
-      description:t("tooltipText.responsibleIdentityService")
+      description: t("tooltipText.responsibleIdentityService"),
     },
     {
       field: "telephone",
@@ -198,7 +183,7 @@ function EntitiesList() {
       renderCell: (params: GridRenderCellParams<any, string>) => (
         <a href={"tel:+34" + params.value}>{params.value}</a>
       ),
-      description:t("tooltipText.phoneNumberService")
+      description: t("tooltipText.phoneNumberService"),
     },
     {
       field: "email",
@@ -207,7 +192,7 @@ function EntitiesList() {
       renderCell: (params: GridRenderCellParams<any, string>) => (
         <a href={"mailto:" + params.value}>{params.value}</a>
       ),
-      description:t("tooltipText.emailService")
+      description: t("tooltipText.emailService"),
     },
   ];
 
@@ -254,7 +239,6 @@ function EntitiesList() {
   }
 
   function itCouldBeSelectable() {
-    console.log(userData, userData.role === ROLE.ADMIN);
     return userData.role === ROLE.ADMIN || userData.role === ROLE.SUPER_ADMIN;
   }
 
@@ -287,8 +271,12 @@ function EntitiesList() {
   }
 
   useEffect(() => {
-    const userdata = user().user?user:userMock;
-    setUserData(userdata);
+    if (user() !== null) {
+      let a = user()?.user;
+      if (a) {
+        setUserData(a);
+      }
+    }
     getAndSetEntities();
   }, []);
 
@@ -298,8 +286,6 @@ function EntitiesList() {
 
   function CustomToolbar() {
     return (
-      <div>
-        <ThemeProvider theme={theme}>
           <GridToolbarContainer>
             <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
               <div>
@@ -408,99 +394,62 @@ function EntitiesList() {
             
             <ExportButton />
 
-            {userData.role === ROLE.ADMIN ||
-            userData.role === ROLE.SUPER_ADMIN ? (
-              deletedTable === true ? (
-                <Button
-                  disabled={selectedEntities.length <= 0}
-                  startIcon={<RestoreIcon />}
-                  sx={{
-                    height: 37,
-                    backgroundColor: "#D9D9D9",
-                    color: "#404040",
-                    borderColor: "#404040",
-                    "&:hover": {
-                      borderColor: "#0D0D0D",
-                      backgroundColor: "#0D0D0D",
-                      color: "#f2f2f2",
-                    },
-                  }}
-                  onClick={restoreRegisters}
-                >
-                  Restaurar
-                </Button>
-              ) : (
-                <>
-                  <Button
-                    startIcon={<AddIcon />}
-                    onClick={createDialogOpen}
-                    sx={{
-                      height: 37,
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                  >
-                    {t("dataTable.addDataset")}
-                  </Button>
-                  <Button
-                    disabled={selectedEntities.length <= 0}
-                    startIcon={<EditIcon />}
-                    sx={{
-                      height: 37,
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                    onClick={getSelectedEntities}
-                  >
-                    Editar
-                  </Button>
-                  <Button
-                    disabled={selectedEntities.length <= 0}
-                    startIcon={<DeleteIcon />}
-                    sx={{
-                      height: 37,
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                    onClick={deleteRegisters}
-                  >
-                    Eliminar
-                  </Button>
-                </>
-              )
-            ) : (
-              <></>
-            )}
-            <GridToolbarQuickFilter
-              sx={{
-                height: 33,
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                borderRadius: 1,
-              }}
-            />
-          </GridToolbarContainer>
-        </ThemeProvider>
-      </div>
+        {userData.role === ROLE.ADMIN || userData.role === ROLE.SUPER_ADMIN ? (
+          deletedTable === true ? (
+            <>
+              <Button
+                disabled={selectedEntities.length <= 0}
+                startIcon={<EditIcon />}
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}
+                onClick={getSelectedEntities}
+              >
+                Editar
+              </Button>
+              <Button
+                disabled={selectedEntities.length <= 0}
+                startIcon={<DeleteIcon />}
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}
+                onClick={deleteRegisters}
+              >
+                Eliminar
+              </Button>
+            </>
+          ) : (
+            <></>
+          )
+        ) : (
+          <></>
+        )}
+        <GridToolbarQuickFilter
+          sx={{
+            height: 33,
+            backgroundColor: "#D9D9D9",
+            color: "#404040",
+            borderColor: "#404040",
+            borderRadius: 1,
+          }}
+        />
+      </GridToolbarContainer>
     );
   }
   function exportButtonOption() {
@@ -646,7 +595,7 @@ function EntitiesList() {
     );
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <div>
         <DataGrid
           apiRef={gridApiRef}
@@ -692,42 +641,79 @@ function EntitiesList() {
             toolbarColumns: t("dataTable.columns"),
             filterPanelColumns: t("localtext.columnsTexts.filterPanelColumns"),
             columnMenuLabel: t("localtext.columnsTexts.columnMenuLabel"),
-            columnsPanelShowAllButton: t("localtext.columnsTexts.columnsPanelShowAllButton"),
-            columnsPanelHideAllButton: t("localtext.columnsTexts.columnsPanelHideAllButton"),
-            columnsPanelTextFieldLabel: t("localtext.columnsTexts.columnsPanelTextFieldLabel"),
-            columnsPanelTextFieldPlaceholder: t("localtext.columnsTexts.columnsPanelTextFieldPlaceholder"),
-
+            columnsPanelShowAllButton: t(
+              "localtext.columnsTexts.columnsPanelShowAllButton"
+            ),
+            columnsPanelHideAllButton: t(
+              "localtext.columnsTexts.columnsPanelHideAllButton"
+            ),
+            columnsPanelTextFieldLabel: t(
+              "localtext.columnsTexts.columnsPanelTextFieldLabel"
+            ),
+            columnsPanelTextFieldPlaceholder: t(
+              "localtext.columnsTexts.columnsPanelTextFieldPlaceholder"
+            ),
 
             toolbarFilters: t("dataTable.filters"),
-            filterPanelInputLabel: t("localtext.filterTexts.filterPanelInputLabel"),
-            filterPanelInputPlaceholder: t("localtext.filterTexts.filterPanelInputPlaceholder"),
+            filterPanelInputLabel: t(
+              "localtext.filterTexts.filterPanelInputLabel"
+            ),
+            filterPanelInputPlaceholder: t(
+              "localtext.filterTexts.filterPanelInputPlaceholder"
+            ),
             filterPanelOperator: t("localtext.filterTexts.filterPanelOperator"),
-            filterOperatorContains: t("localtext.filterTexts.filterOperatorContains"),
-            filterOperatorEquals: t("localtext.filterTexts.filterOperatorEquals"),
-            filterOperatorStartsWith: t("localtext.filterTexts.filterOperatorStartsWith"),
-            filterOperatorEndsWith: t("localtext.filterTexts.filterOperatorEndsWith"),
+            filterOperatorContains: t(
+              "localtext.filterTexts.filterOperatorContains"
+            ),
+            filterOperatorEquals: t(
+              "localtext.filterTexts.filterOperatorEquals"
+            ),
+            filterOperatorStartsWith: t(
+              "localtext.filterTexts.filterOperatorStartsWith"
+            ),
+            filterOperatorEndsWith: t(
+              "localtext.filterTexts.filterOperatorEndsWith"
+            ),
             filterOperatorIs: t("localtext.filterTexts.filterOperatorIs"),
             filterOperatorNot: t("localtext.filterTexts.filterOperatorNot"),
             filterOperatorAfter: t("localtext.filterTexts.filterOperatorAfter"),
-            filterOperatorOnOrAfter: t("localtext.filterTexts.filterOperatorOnOrAfter"),
-            filterOperatorBefore: t("localtext.filterTexts.filterOperatorBefore"),
-            filterOperatorOnOrBefore: t("localtext.filterTexts.filterOperatorOnOrBefore"),
-            filterOperatorIsEmpty: t("localtext.filterTexts.filterOperatorIsEmpty"),
-            filterOperatorIsNotEmpty: t("localtext.filterTexts.filterOperatorIsNotEmpty"),
-            filterOperatorIsAnyOf: t("localtext.filterTexts.filterOperatorIsAnyOf"),
+            filterOperatorOnOrAfter: t(
+              "localtext.filterTexts.filterOperatorOnOrAfter"
+            ),
+            filterOperatorBefore: t(
+              "localtext.filterTexts.filterOperatorBefore"
+            ),
+            filterOperatorOnOrBefore: t(
+              "localtext.filterTexts.filterOperatorOnOrBefore"
+            ),
+            filterOperatorIsEmpty: t(
+              "localtext.filterTexts.filterOperatorIsEmpty"
+            ),
+            filterOperatorIsNotEmpty: t(
+              "localtext.filterTexts.filterOperatorIsNotEmpty"
+            ),
+            filterOperatorIsAnyOf: t(
+              "localtext.filterTexts.filterOperatorIsAnyOf"
+            ),
 
             toolbarDensity: t("dataTable.density"),
-            toolbarDensityCompact: t("localtext.densityTexts.toolbarDensityCompact"),
-            toolbarDensityStandard: t("localtext.densityTexts.toolbarDensityStandard"),
-            toolbarDensityComfortable: t("localtext.densityTexts.toolbarDensityComfortable"),
-          
+            toolbarDensityCompact: t(
+              "localtext.densityTexts.toolbarDensityCompact"
+            ),
+            toolbarDensityStandard: t(
+              "localtext.densityTexts.toolbarDensityStandard"
+            ),
+            toolbarDensityComfortable: t(
+              "localtext.densityTexts.toolbarDensityComfortable"
+            ),
+
             toolbarQuickFilterPlaceholder: t("dataTable.quickFilter"),
           }}
         />
       </div>
       <CreateEntityDialog enviar={dialogData}></CreateEntityDialog>
       <UpdateEntityDialog enviar={datosUpdateDialog}></UpdateEntityDialog>
-    </ThemeProvider>
+    </>
   );
 }
 

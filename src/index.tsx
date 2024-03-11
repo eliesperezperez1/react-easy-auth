@@ -5,17 +5,15 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 
-import { AuthProvider } from "react-auth-kit";
+import { AuthProvider, useAuthUser } from "react-auth-kit";
 
 import { Provider as StyletronProvider } from "styletron-react";
 import { Client as Styletron } from "styletron-engine-atomic";
 
 import {
-  LightTheme,
   BaseProvider,
   styled,
   DarkTheme,
-  createDarkTheme,
 } from "baseui";
 
 import "./i18n";
