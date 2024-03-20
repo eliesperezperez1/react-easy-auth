@@ -22,6 +22,7 @@
     "axios": "^0.27.2",
     "baseui": "^12.1.2",
     "dayjs": "^1.11.10",
+    "file-saver": "^2.0.5",
     "formik": "^2.2.9",
     "i18next-http-backend": "^2.4.3",
     "instead": "^1.0.3",
@@ -36,7 +37,8 @@
     "styletron-engine-atomic": "^1.5.0",
     "styletron-react": "^6.1.0",
     "typescript": "3.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -63,6 +65,8 @@
     ]
   },
   "devDependencies": {
-    "@types/styled-components": "^5.1.26"
+    "@types/file-saver": "^2.0.7",
+    "@types/styled-components": "^5.1.26",
+    "@types/xlsx": "^0.0.36"
   }
 }

@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ReactComponent as Brand } from "../../assets/logowithname.svg";
 import MenuIcon from "@mui/icons-material/Menu";
 import "./menu.css";
 import { useAuthUser, useSignOut } from "react-auth-kit";
 import { useTranslation } from "react-i18next";
-import ChangeLanguage, {
-  ChangeLanguageProps,
-} from "../language-switch/language-switch";
+import ChangeLanguage from "../language-switch/language-switch";
 import { ROLE } from "../../utils/enums/role.enum";
 import { userMock } from "../../utils/user.mock";
 import { User } from "../../interfaces/user.interface";
@@ -21,9 +19,6 @@ const Menu = (props: { change: ChangeLanguageEvent }) => {
   const [t, i18n] = useTranslation();
   const user = useAuthUser();
   const [userData, setUserData] = useState<User>(userMock);
-  const change: ChangeLanguageProps = {
-    changeComponentsLanguage: () => sendToApp(),
-  };
   const handleShowNavbar = () => {
     setShowNavbar(!showNavbar);
   };
@@ -36,7 +31,7 @@ const Menu = (props: { change: ChangeLanguageEvent }) => {
     props.change.change();
   };
   useEffect(() => {
-    setUserData(user()?.user);
+    setUserData(user().user);
   });
   return (
     <nav className="navbar">
@@ -91,7 +86,7 @@ const Menu = (props: { change: ChangeLanguageEvent }) => {
           </ul>
         </div>
         <div>
-          <ChangeLanguage change={change} />
+          <ChangeLanguage />
         </div>
       </div>
     </nav>

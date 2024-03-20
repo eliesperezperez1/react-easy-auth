@@ -13,3 +13,13 @@
      width: 25px;
     height: 25px;
 }
+
+.customToolbarRightButtons{
+    width: 40%;
+    display: flex;
+    justify-content: flex-end;
+    right: 0;
+}
+.customToolbarRightButtons button{
+    margin-left: 10px;
+}
