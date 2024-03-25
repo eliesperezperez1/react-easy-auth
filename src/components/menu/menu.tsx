@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {  useNavigate } from "react-router-dom";
 import { ReactComponent as Brand } from "../../assets/logowithname.svg";
+import { ReactComponent as BrandWhite } from "../../assets/logowhitewithname.svg";
 import MenuIcon from "@mui/icons-material/Menu";
 import "./menu.css";
 import { useAuthUser, useSignOut } from "react-auth-kit";
@@ -11,6 +12,8 @@ import ChangeLanguage, {
 import { ROLE } from "../../utils/enums/role.enum";
 import { userMock } from "../../utils/user.mock";
 import { User } from "../../interfaces/user.interface";
+import DarkModeSwitch from "../darkModeSwitch/darkModeSwitch";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 export interface ChangeLanguageEvent {
   change: () => void;
 }
@@ -20,6 +23,7 @@ const Menu = (props: { change: ChangeLanguageEvent }) => {
   const [showNavbar, setShowNavbar] = useState(false);
   const [t, i18n] = useTranslation();
   const user = useAuthUser();
+  const {actualTheme} = useAlternateTheme();
   const [userData, setUserData] = useState<User>(userMock);
   const change: ChangeLanguageProps = {
     changeComponentsLanguage: () => sendToApp(),
@@ -31,26 +35,44 @@ const Menu = (props: { change: ChangeLanguageEvent }) => {
     singOut();
     navigate("/login");
   };
-
   const sendToApp = () => {
     props.change.change();
   };
+  const dynamicStyle = {
+    //backgroundColor: userData.themeApp === 'light' ? 'white' : 'black',
+    //color: userData.themeApp === 'light' ? 'black' : 'white',
+    backgroundColor: actualTheme === 'light' ? 'white' : '#252525',
+    color: actualTheme === 'light' ? '#252525' : 'white',
+  };
+
+
   useEffect(() => {
-    setUserData(user()?.user);
+    if (user() !== null) {
+    const a = user() ? user().user : userMock;
+    if (a) {
+      setUserData(a);
+    }
+  }
   });
   return (
-    <nav className="navbar">
+    <nav className="navbar" style={dynamicStyle}>
       <div className="container">
         <div className="logo">
+          { userData.themeApp === "light" ? 
           <Brand />
+          :
+          <BrandWhite />
+          }
+          
         </div>
         <div className="menu-icon" onClick={handleShowNavbar}>
           <MenuIcon />
         </div>
-        <div className={`nav-elements  ${showNavbar && "active"}`}>
-          <ul>
+        <div className={`nav-elements  ${showNavbar && "active"}`} style={dynamicStyle}>
+          <ul style={dynamicStyle}>
             <li>
               <a
+                style={dynamicStyle}
                 onClick={() => {
                   navigate("/catalogues");
                 }}
@@ -60,6 +82,7 @@ const Menu = (props: { change: ChangeLanguageEvent }) => {
             </li>
             <li>
               <a
+                style={dynamicStyle}
                 onClick={() => {
                   navigate("/entities");
                 }}
@@ -71,6 +94,7 @@ const Menu = (props: { change: ChangeLanguageEvent }) => {
               <>
                 <li>
                   <a
+                    style={dynamicStyle}
                     onClick={() => {
                       navigate("/users");
                     }}
@@ -84,13 +108,16 @@ const Menu = (props: { change: ChangeLanguageEvent }) => {
             )}
 
             <li>
-              <a onClick={logout}>
-                <div>{t("header.logout")}</div>
+              <a 
+                style={dynamicStyle}
+                onClick={logout}>
+                {t("header.logout")}
               </a>
             </li>
           </ul>
         </div>
         <div>
+          <DarkModeSwitch />
           <ChangeLanguage change={change} />
         </div>
       </div>

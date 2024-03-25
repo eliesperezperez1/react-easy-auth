@@ -12,6 +12,7 @@ import {
   ClickAwayListener,
   Fade,
   FormControl,
+  PaginationItem,
   ThemeProvider,
   Tooltip,
   createTheme,
@@ -25,8 +26,8 @@ import {
   GridPagination,
 } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
-import RestoreIcon from "@mui/icons-material/Restore";
 import AddIcon from "@mui/icons-material/Add";
+import RestoreIcon from "@mui/icons-material/Restore";
 import EditIcon from "@mui/icons-material/Edit";
 import { useEffect, useState } from "react";
 import { Catalogue } from "../../interfaces/catalogue.interface";
@@ -51,12 +52,15 @@ import { catalogueMock } from "../../utils/catalogue.mock";
 import { ROLE } from "../../utils/enums/role.enum";
 import { User } from "../../interfaces/user.interface";
 import { userMock } from "../../utils/user.mock";
+import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import CustomMultiColumnFilter from '../CustomMultiColumnFilter/CustomMultiColumnFilter';
+import { grey } from "@mui/material/colors";
 
-const baseTheme = createTheme(
+const baseTheme = (actualTheme:any) => createTheme(
   {
     typography: {
       fontFamily: "Montserrat",
@@ -71,17 +75,75 @@ const baseTheme = createTheme(
       `,
       },
     },
+    palette:{
+      mode: actualTheme==="light" ? "light" : "dark",
+      ...(actualTheme === 'light'
+      ? {
+          // palette values for light mode
+          primary: grey,
+          divider: grey[800],
+          text: {
+            primary: grey[900],
+            secondary: grey[800],
+          },
+        }
+      : {
+          // palette values for dark mode
+          primary: grey,
+          divider: grey[800],
+          background: {
+            default: grey[800],
+            paper: grey[800],
+          },
+          text: {
+            primary: grey[900],
+            secondary: grey[800],
+          },
+        }),
+    },
   },
   esES
 );
 
 const CustomPagination = (props:any) => {
   const { t } = useTranslation();
+  const {actualTheme} = useAlternateTheme();
 
   return (
-    <GridPagination
+    
+    /*<GridPagination
       {...props}
       labelRowsPerPage={t("tooltipText.rowsPage")} // Use your translation key here
+      sx={{
+        color: actualTheme==="light" ? "black" : "white",
+      }}
+      renderItem={(item: any) => (
+        <PaginationItem
+            sx={{
+                color: actualTheme==="light" ? "black" : "white",
+            }}
+            components={{previous: KeyboardArrowRightIcon, next: KeyboardArrowLeftIcon}}
+            {...item}
+        />
+      )}
+    />*/
+    <GridPagination
+      labelRowsPerPage={t("tooltipText.rowsPage")}
+      sx={{
+        color: actualTheme==="light" ? "black" : "white",
+      }}
+      showFirstButton
+      showLastButton
+      /*sx={{
+        color: actualTheme==="light" ? "black" : "white",
+      }}*/
+      // @ts-expect-error
+      renderItem={props2 => 
+      <PaginationItem {...props2} disableRipple 
+        sx={{
+          color: actualTheme==="light" ? "black" : "white",
+        }} 
+      />}
     />
   );
 };
@@ -96,6 +158,8 @@ function paletaColores(color: string) {
       return "#333333";
     case "colorRowHover":
       return "rgba(212, 212, 212, 0.2)";
+    case "colorRowHoverDark":
+      return "rgba(212, 212, 212, 1)";
   }
 }
 
@@ -121,6 +185,7 @@ function CatalogueList() {
     useState<Catalogue>(catalogueMock);
   const [userData, setUserData] = useState<User>(userMock);
   const gridApiRef = useGridApiRef();
+  const {actualTheme} = useAlternateTheme();
 
   const datosDialog: DialogData = {
     open: openDialog,
@@ -342,6 +407,7 @@ function CatalogueList() {
     getCataloguesRequest(authHeader())
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         let notDeleted = data.filter((d: Catalogue) => d.deleted !== true);
         let deleted = data.filter((d: Catalogue) => d.deleted === true);
         setCatalogues(notDeleted);
@@ -526,12 +592,17 @@ function CatalogueList() {
           </Tooltip> */}
           <ExportButton />
           
-          <Tooltip title="Búsqueda rápida">
+          <Tooltip 
+            title="Búsqueda rápida"
+            sx={{
+              color: actualTheme==="light" ? 'darkgrey' : 'darkgrey',
+            }}
+            >
             <GridToolbarQuickFilter
               sx={{
                 height: 33,
                 backgroundColor: "#D9D9D9",
-                color: "#404040",
+                color: actualTheme==="light" ? 'darkgrey' : 'darkgrey',
                 borderColor: "#404040",
                 borderRadius: 1,
               }}
@@ -555,8 +626,11 @@ function CatalogueList() {
                       backgroundColor: "#0D0D0D",
                       color: "#f2f2f2",
                     },
+                    "&.Mui-disabled": {
+                      color: 'darkgrey',
+                    },
                   }}
-                  onClick={getSelectedCatalogues}
+                  onClick={restoreRegisters}
                 >
                   Restaurar
                 </Button>
@@ -575,6 +649,9 @@ function CatalogueList() {
                         backgroundColor: "#0D0D0D",
                         color: "#f2f2f2",
                       },
+                      "&.Mui-disabled": {
+                        color: 'darkgrey',
+                      },
                     }}
                   >
                     {t("dataTable.addDataset")}
@@ -591,6 +668,9 @@ function CatalogueList() {
                         borderColor: "#0D0D0D",
                         backgroundColor: "#0D0D0D",
                         color: "#f2f2f2",
+                      },
+                      "&.Mui-disabled": {
+                        color: 'darkgrey',
                       },
                     }}
                     onClick={getSelectedCatalogues}
@@ -609,6 +689,9 @@ function CatalogueList() {
                         borderColor: "#0D0D0D",
                         backgroundColor: "#0D0D0D",
                         color: "#f2f2f2",
+                      },
+                      "&.Mui-disabled": {
+                        color: 'darkgrey',
                       },
                     }}
                     onClick={deleteRegisters}
@@ -774,6 +857,7 @@ function CatalogueList() {
   return (
     <>
       <div>
+        <ThemeProvider theme={baseTheme(actualTheme)}>
         <DataGrid
           apiRef={gridApiRef}
           rows={rows}
@@ -781,13 +865,16 @@ function CatalogueList() {
           sx={{
             height: 700,
             width: "100%",
+            backgroundColor: actualTheme==="light" ? "white" : "#252525",
+            color: actualTheme==="light" ? "#252525" : "white",
             "& .header-theme": {
               backgroundColor: "lightblue",
               border: "1px 1px 0px 0px solid black",
             },
             "& .MuiDataGrid-row:hover": {
-              color: paletaColores("colorTextAlter"),
-              bgcolor: paletaColores("colorRowHover"),
+              //color: paletaColores("colorTextAlter"),
+              color: actualTheme==='light' ? paletaColores("colorTextAlter") : paletaColores("colorBgRowSelectedBorder"),
+              bgcolor: actualTheme==='light' ? paletaColores("colorRowHover") : paletaColores("colorRowHoverDark"),
               border: "1px solid " + paletaColores("colorBgRowSelectedBorder"),
             },
           }}
@@ -797,7 +884,16 @@ function CatalogueList() {
             },
             filter: {
               filterModel: {
-                items: [],
+                items:
+                  userData.service === RESPONSIBLE_IDENTITY.GENERAL
+                    ? []
+                    : [
+                        {
+                          field: "responsibleIdentity",
+                          operator: "contains",
+                          value: userData.service,
+                        },
+                      ],
                 quickFilterValues: [],
               },
             },
@@ -806,6 +902,7 @@ function CatalogueList() {
             Toolbar: CustomToolbar,
             Pagination: CustomPagination,
           }}
+          
           getRowId={(row) => row._id}
           pageSizeOptions={[5, 10]}
           isRowSelectable={(params) => rowCouldBeSelectable(params)}
@@ -887,6 +984,7 @@ function CatalogueList() {
             toolbarQuickFilterPlaceholder: t("dataTable.quickFilter"),
           }}
         />
+        </ThemeProvider>
       </div>
       <CreateCatalogueDialog enviar={datosDialog}></CreateCatalogueDialog>
       <UpdateCatalogueDialog enviar={datosUpdateDialog}></UpdateCatalogueDialog>

@@ -305,7 +305,7 @@ export default function UpdateCatalogueDialog(props: {
                       margin="dense"
                       defaultValue={update.language}
                       //onChange={(e) => handleChange('language', e.target.value)}
-                      required
+                      
                     >
                       <MenuItem value={"es"}>ES</MenuItem>
                       <MenuItem value={"val"}>VAL</MenuItem>
@@ -318,7 +318,6 @@ export default function UpdateCatalogueDialog(props: {
                 </p>
                 <TextField
                   autoFocus
-                  required
                   margin="dense"
                   id="territorialScope"
                   name="territorialScope"
@@ -335,7 +334,6 @@ export default function UpdateCatalogueDialog(props: {
                 </p>
                 <TextField
                   autoFocus
-                  required
                   margin="dense"
                   id="temporaryCoverage"
                   name="temporaryCoverage"
@@ -387,7 +385,6 @@ export default function UpdateCatalogueDialog(props: {
                 </p>
                 <TextField
                   autoFocus
-                  required
                   margin="dense"
                   id="updateFrequency"
                   name="updateFrequency"
@@ -404,7 +401,6 @@ export default function UpdateCatalogueDialog(props: {
                 </p>
                 <TextField
                   autoFocus
-                  required
                   margin="dense"
                   id="topic"
                   name="topic"
@@ -421,7 +417,6 @@ export default function UpdateCatalogueDialog(props: {
                 </p>
                 <TextField
                   autoFocus
-                  required
                   id="lastUpdate"
                   margin="dense"
                   name="lastUpdate"
@@ -493,7 +488,6 @@ export default function UpdateCatalogueDialog(props: {
                 </p>
                 <TextField
                   autoFocus
-                  required
                   margin="dense"
                   id="distribution"
                   name="distribution"
@@ -600,7 +594,6 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     defaultValue={update.accessType}
                     onChange={(e) => handleChange}
-                    required
                   >
                     <MenuItem value={"Públic/Público"}>Público</MenuItem>
                     <MenuItem value={"Restringit/Restringido"}>Restringido</MenuItem>
@@ -614,7 +607,6 @@ export default function UpdateCatalogueDialog(props: {
                 </p>
                 <TextField
                   autoFocus
-                  required
                   margin="dense"
                   id="internalRelationship"
                   name="internalRelationship"
@@ -631,7 +623,6 @@ export default function UpdateCatalogueDialog(props: {
                 </p>
                 <TextField
                   autoFocus
-                  required
                   margin="dense"
                   id="contactPerson"
                   name="contactPerson"
@@ -718,7 +709,6 @@ export default function UpdateCatalogueDialog(props: {
                 </p>
                 <TextField
                   autoFocus
-                  required
                   margin="dense"
                   id="associatedApplication"
                   name="associatedApplication"
@@ -750,7 +740,6 @@ export default function UpdateCatalogueDialog(props: {
                 </p>
                 <TextField
                   autoFocus
-                  required
                   margin="dense"
                   id="comments"
                   name="comments"
@@ -767,7 +756,6 @@ export default function UpdateCatalogueDialog(props: {
                 </p>
                 <TextField
                   autoFocus
-                  required
                   margin="dense"
                   id="timmingEffect"
                   name="timmingEffect"
@@ -839,7 +827,6 @@ export default function UpdateCatalogueDialog(props: {
                 </p>
               <TextField
                   autoFocus
-                  required
                   id="creationDate"
                   margin="dense"
                   name="creationDate"
@@ -893,7 +880,6 @@ export default function UpdateCatalogueDialog(props: {
                 </p>
                 <TextField
                   autoFocus
-                  required
                   margin="dense"
                   id="source"
                   name="source"

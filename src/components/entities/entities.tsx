@@ -6,17 +6,7 @@ import {
   esES,
   useGridApiRef,
 } from "@mui/x-data-grid";
-import {
-  Box,
-  Button,
-  Chip,
-  ClickAwayListener,
-  Fade,
-  FormControl,
-  ThemeProvider,
-  Tooltip,
-  createTheme,
-} from "@mui/material";
+import { Box, Button, Chip, ClickAwayListener, Fade, FormControl, PaginationItem, ThemeProvider, Tooltip, createTheme } from "@mui/material";
 import {
   GridToolbarColumnsButton,
   GridToolbarContainer,
@@ -26,8 +16,6 @@ import {
   GridPagination,
 } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
-import RestoreIcon from "@mui/icons-material/Restore";
-import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import FolderDeleteIcon from "@mui/icons-material/FolderDelete";
 import FolderIcon from "@mui/icons-material/Folder";
@@ -48,14 +36,78 @@ import { ROLE } from "../../utils/enums/role.enum";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { LANGUAGE } from "../../utils/enums/language.enum";
+import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
+import { grey } from "@mui/material/colors";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+
+
+const baseTheme = (actualTheme:any) => createTheme(
+  {
+    typography: {
+      fontFamily: "Montserrat",
+    },
+    components: {
+      MuiCssBaseline: {
+        styleOverrides: `
+        @font-face {
+          font-family: 'Montserrat';
+          src: url(https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap);
+        }
+      `,
+      },
+    },
+    palette:{
+      mode: actualTheme==="light" ? "light" : "dark",
+      ...(actualTheme === 'light'
+      ? {
+          // palette values for light mode
+          primary: grey,
+          divider: grey[800],
+          text: {
+            primary: grey[900],
+            secondary: grey[800],
+          },
+        }
+      : {
+          // palette values for dark mode
+          primary: grey,
+          divider: grey[800],
+          background: {
+            default: grey[800],
+            paper: grey[800],
+          },
+          text: {
+            primary: grey[900],
+            secondary: grey[800],
+          },
+        }),
+    },
+  },
+  esES
+);
 
 const CustomPagination = (props: any) => {
   const { t } = useTranslation();
+  const {actualTheme} = useAlternateTheme();
 
   return (
     <GridPagination
-      {...props}
-      labelRowsPerPage={t("tooltipText.rowsPage")} // Use your translation key here
+      labelRowsPerPage={t("tooltipText.rowsPage")}
+      sx={{
+        color: actualTheme==="light" ? "black" : "white",
+      }}
+      showFirstButton
+      showLastButton
+      /*sx={{
+        color: actualTheme==="light" ? "black" : "white",
+      }}*/
+      // @ts-expect-error
+      renderItem={props2 => 
+      <PaginationItem {...props2} disableRipple 
+        sx={{
+          color: actualTheme==="light" ? "black" : "white",
+        }} 
+      />}
     />
   );
 };
@@ -70,6 +122,8 @@ function paletaColores(color: string) {
       return "#333333";
     case "colorRowHover":
       return "rgba(212, 212, 212, 0.2)";
+      case "colorRowHoverDark":
+        return "rgba(212, 212, 212, 1)";
   }
 }
 
@@ -87,6 +141,7 @@ function EntitiesList() {
   const [entitySelected, setEntitySelected] = useState<Entity>(entityMock);
   const [userData, setUserData] = useState<User>(userMock);
   const gridApiRef = useGridApiRef();
+  const {actualTheme} = useAlternateTheme();
 
   const [t, i18n] = useTranslation();
 
@@ -152,7 +207,15 @@ function EntitiesList() {
       headerName: t("columnsNames.location"),
       width: 200,
       renderCell: (params: GridRenderCellParams<any, string>) => (
-        <a href={getLocationUrl(params.value)}>{params.value}</a>
+        <a 
+        href={getLocationUrl(params.value)}
+        style={{
+          color: actualTheme==="light" ? "darkblue" : "lightblue", // Set your desired color here
+          // Add any other styling properties you need
+        }}
+        >
+          {params.value}
+        </a>
       ),
       description: t("tooltipText.locationService"),
     },
@@ -181,7 +244,15 @@ function EntitiesList() {
       headerName: t("columnsNames.phoneNumber"),
       width: 200,
       renderCell: (params: GridRenderCellParams<any, string>) => (
-        <a href={"tel:+34" + params.value}>{params.value}</a>
+        <a 
+        href={"tel:+34" + params.value}
+        style={{
+          color: actualTheme==="light" ? "darkblue" : "lightblue", // Set your desired color here
+          // Add any other styling properties you need
+        }}
+        >
+          {params.value}
+        </a>
       ),
       description: t("tooltipText.phoneNumberService"),
     },
@@ -190,7 +261,15 @@ function EntitiesList() {
       headerName: t("login.email"),
       width: 200,
       renderCell: (params: GridRenderCellParams<any, string>) => (
-        <a href={"mailto:" + params.value}>{params.value}</a>
+        <a 
+        href={"mailto:" + params.value}
+        style={{
+          color: actualTheme==="light" ? "darkblue" : "lightblue", // Set your desired color here
+          // Add any other styling properties you need
+        }}
+        >
+          {params.value}
+        </a>
       ),
       description: t("tooltipText.emailService"),
     },
@@ -208,6 +287,7 @@ function EntitiesList() {
     getEntitiesRequest(authHeader())
       .then((response) => response.json())
       .then((data) => {
+        console.log(userData);
         let notDeleted = data.filter((d: Entity) => d.deleted !== true);
         let deleted = data.filter((d: Entity) => d.deleted === true);
         setEntities(notDeleted);
@@ -394,61 +474,79 @@ function EntitiesList() {
             
             <ExportButton />
 
-        {userData.role === ROLE.ADMIN || userData.role === ROLE.SUPER_ADMIN ? (
-          deletedTable === true ? (
-            <>
-              <Button
-                disabled={selectedEntities.length <= 0}
-                startIcon={<EditIcon />}
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}
-                onClick={getSelectedEntities}
-              >
-                Editar
-              </Button>
-              <Button
-                disabled={selectedEntities.length <= 0}
-                startIcon={<DeleteIcon />}
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}
-                onClick={deleteRegisters}
-              >
-                Eliminar
-              </Button>
-            </>
+            <Tooltip 
+            title="Búsqueda rápida"
+            sx={{
+              color: actualTheme==="light" ? 'darkgrey' : 'darkgrey',
+            }}
+            >
+            <GridToolbarQuickFilter
+              sx={{
+                height: 33,
+                backgroundColor: "#D9D9D9",
+                color: actualTheme==="light" ? 'darkgrey' : 'darkgrey',
+                borderColor: "#404040",
+                borderRadius: 1,
+              }}
+            />
+          </Tooltip>
+
+
+        <div className="customToolbarRightButtons">
+          {userData.role === ROLE.ADMIN || 
+          userData.role === ROLE.SUPER_ADMIN ? (
+            deletedTable === false ? (
+              <>
+                <Button
+                  disabled={selectedEntities.length <= 0}
+                  startIcon={<EditIcon />}
+                  sx={{
+                    height: 37,
+                    backgroundColor: "#D9D9D9",
+                    color: "#404040",
+                    borderColor: "#404040",
+                    "&:hover": {
+                      borderColor: "#0D0D0D",
+                      backgroundColor: "#0D0D0D",
+                      color: "#f2f2f2",
+                    },
+                    "&.Mui-disabled": {
+                      color: 'darkgrey',
+                    },
+                  }}
+                  onClick={getSelectedEntities}
+                >
+                  Editar
+                </Button>
+                <Button
+                  disabled={selectedEntities.length <= 0}
+                  startIcon={<DeleteIcon />}
+                  sx={{
+                    height: 37,
+                    backgroundColor: "#D9D9D9",
+                    color: "#404040",
+                    borderColor: "#404040",
+                    "&:hover": {
+                      borderColor: "#0D0D0D",
+                      backgroundColor: "#0D0D0D",
+                      color: "#f2f2f2",
+                    },
+                    "&.Mui-disabled": {
+                      color: 'darkgrey',
+                    },
+                  }}
+                  onClick={deleteRegisters}
+                >
+                  Eliminar
+                </Button>
+              </>
+            ) : (
+              <></>
+            )
           ) : (
             <></>
-          )
-        ) : (
-          <></>
-        )}
-        <GridToolbarQuickFilter
-          sx={{
-            height: 33,
-            backgroundColor: "#D9D9D9",
-            color: "#404040",
-            borderColor: "#404040",
-            borderRadius: 1,
-          }}
-        />
+          )}
+        </div>
       </GridToolbarContainer>
     );
   }
@@ -597,6 +695,7 @@ function EntitiesList() {
   return (
     <>
       <div>
+        <ThemeProvider theme={baseTheme(actualTheme)}>
         <DataGrid
           apiRef={gridApiRef}
           rows={rows}
@@ -604,13 +703,19 @@ function EntitiesList() {
           sx={{
             height: 700,
             width: "100%",
+            backgroundColor: actualTheme==="light" ? "white" : "#252525",
+            color: actualTheme==="light" ? "#252525" : "white",
             "& .header-theme": {
               backgroundColor: "lightblue",
               border: "1px 1px 0px 0px solid black",
             },
+            "& .MuiDataGrid-row":{
+              border: "none",
+              margin: "none",
+            },
             "& .MuiDataGrid-row:hover": {
-              color: paletaColores("colorTextAlter"),
-              bgcolor: paletaColores("colorRowHover"),
+              color: actualTheme==='light' ? paletaColores("colorTextAlter") : paletaColores("colorBgRowSelectedBorder"),
+              bgcolor: actualTheme==='light' ? paletaColores("colorRowHover") : paletaColores("colorRowHoverDark"),
               border: "1px solid " + paletaColores("colorBgRowSelectedBorder"),
             },
           }}
@@ -620,7 +725,16 @@ function EntitiesList() {
             },
             filter: {
               filterModel: {
-                items: [],
+                items:
+                  userData.service === RESPONSIBLE_IDENTITY.GENERAL
+                    ? []
+                    : [
+                        {
+                          field: "responsibleIdentity",
+                          operator: "contains",
+                          value: userData.service,
+                        },
+                      ],
                 quickFilterValues: [],
               },
             },
@@ -653,7 +767,6 @@ function EntitiesList() {
             columnsPanelTextFieldPlaceholder: t(
               "localtext.columnsTexts.columnsPanelTextFieldPlaceholder"
             ),
-
             toolbarFilters: t("dataTable.filters"),
             filterPanelInputLabel: t(
               "localtext.filterTexts.filterPanelInputLabel"
@@ -710,6 +823,7 @@ function EntitiesList() {
             toolbarQuickFilterPlaceholder: t("dataTable.quickFilter"),
           }}
         />
+        </ThemeProvider>
       </div>
       <CreateEntityDialog enviar={dialogData}></CreateEntityDialog>
       <UpdateEntityDialog enviar={datosUpdateDialog}></UpdateEntityDialog>

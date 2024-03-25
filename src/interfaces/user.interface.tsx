@@ -1,4 +1,5 @@
 import { LANGUAGE } from "../utils/enums/language.enum";
+import { THEMEAPP } from "../utils/enums/themeApp.enum";
 import { RESPONSIBLE_IDENTITY } from "../utils/enums/responsible-identity.enum";
 import { ROLE } from "../utils/enums/role.enum";
 
@@ -16,6 +17,7 @@ export interface User {
   language: LANGUAGE;
   role: ROLE;
   service: RESPONSIBLE_IDENTITY;
+  themeApp: THEMEAPP;
   deleted: boolean;
   createdAt?: Date;
   updatedAt?: Date;

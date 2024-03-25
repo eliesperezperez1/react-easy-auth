@@ -19,7 +19,7 @@
     display: flex;
     justify-content: flex-end;
     right: 0;
-    background-color: aqua;
+    /*background-color: aqua;*/
 }
 .customToolbarRightButtons button{
     margin-left: 10px;

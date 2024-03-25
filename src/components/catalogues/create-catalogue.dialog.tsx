@@ -18,10 +18,15 @@ import {
   MenuItem,
   Select,
   Switch,
+  ThemeProvider,
+  createTheme,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import "./create-catalogue.dialog.css";
 import React from "react";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import { grey } from "@mui/material/colors";
+import { esES } from "@mui/x-data-grid";
 
 export interface DialogData {
   open: boolean;
@@ -40,6 +45,62 @@ const MenuProps = {
   },
 };
 const formatOptions = ["PDF", "EXCEL", "CSV"];
+
+const baseTheme = (actualTheme:any) => createTheme(
+  {
+    typography: {
+      fontFamily: "Montserrat",
+    },
+    components: {
+      MuiTextField: {
+
+      },
+      MuiCssBaseline: {
+        styleOverrides: `
+        @font-face {
+          font-family: 'Montserrat';
+          src: url(https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap);
+        }
+      `,
+      },
+      MuiInput: {
+        styleOverrides: {
+          root: {
+            color: actualTheme === 'light' ? "black" : "white",
+          },
+        },
+      },
+    },
+    palette:{
+      mode: actualTheme==="light" ? "light" : "dark",
+      ...(actualTheme === 'light'
+      ? {
+          // palette values for light mode
+          primary: grey,
+          divider: grey[800],
+          text: {
+            primary: grey[900],
+            secondary: grey[800],
+          },
+        }
+      : {
+          // palette values for dark mode
+          primary: grey,
+          divider: grey[800],
+          background: {
+            default: grey[800],
+            paper: grey[800],
+          },
+          text: {
+            primary: grey[900],
+            secondary: grey[800],
+          },
+        }),
+    },
+    
+  },
+  esES
+);
 
 export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [open, setOpen] = useState<boolean>(false);
@@ -81,15 +142,41 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [personalData, setPersonalData] = useState("SI");
   const [activeAds, setActiveAds] = useState("SI");
   const [format, setFormat] = React.useState<string[]>([]);
+  const {actualTheme} = useAlternateTheme();
 
   useEffect(() => {
     setOpen(props.enviar.open);
   }, [props]);
 
   const handleClose = () => {
-    setOpen(false);
-    props.enviar.closeDialog(false);
     setFormData({});
+    setFormDataSteps({
+      title: "",
+      description: "",
+      language: "",
+      territorialScope: "",
+      temporaryCoverage: "",
+      updateFrequency: "",
+      topic: "",
+      lastUpdate: "",
+      format: "",
+      distribution: "",
+      sensitiveInformation: "",
+      isUsing: "",
+      accessType: "",
+      internalRelationship: "",
+      contactPerson: "",
+      structured: "",
+      associatedApplication: "",
+      georreference: "",
+      comments: "",
+      timmingEffect: "",
+      creationDate: "",
+      personalData: "",
+      source: "",
+      responsibleIdentity: "",
+      activeAds: "",
+    });
     setStep(1);
     setSensitiveInformation("SI");
     setIsUsing("SI");
@@ -98,6 +185,8 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     setPersonalData("SI");
     setActiveAds("SI");
     setFormat([]);
+    setOpen(false);
+    props.enviar.closeDialog(false);
   };
 
   const handleFormat = (event: any, newValue: any) => {
@@ -247,16 +336,34 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
 
   return (
     <>
+    
+    <ThemeProvider theme={baseTheme(actualTheme)}>
       <Dialog
         fullWidth={true}
         open={open}
         onClose={handleClose}
         sx={{
+          backgroundColor: actualTheme==="light" ? "white" : "#252525",
+          color: actualTheme==="light" ? "#252525" : "white",
           "& .MuiInputBase-root": { border: "none" },
         }}
       >
-        <DialogTitle>{t("dialog.addRegister")}</DialogTitle>
-        <DialogContent>
+        <DialogTitle
+          sx={{
+            backgroundColor: actualTheme==="light" ? "white" : "#252525",
+            color: actualTheme==="light" ? "#252525" : "white",
+            "& .MuiInputBase-root": { border: "none" },
+          }}
+        >
+          {t("dialog.addRegister")}
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            backgroundColor: actualTheme==="light" ? "white" : "#252525",
+            color: actualTheme==="light" ? "#252525" : "white",
+            "& .MuiInputBase-root": { border: "none" },
+          }}
+        >
           <div className="dialogContentText">
             <span>{t("dialog.fillInfo")}</span>
             <span>
@@ -999,8 +1106,15 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
             )}
           </Box>
         </DialogContent>
-        <DialogActions></DialogActions>
+        <DialogActions
+          sx={{
+            backgroundColor: actualTheme==="light" ? "white" : "#252525",
+            color: actualTheme==="light" ? "#252525" : "white",
+            "& .MuiInputBase-root": { border: "none" },
+          }}
+        ></DialogActions>
       </Dialog>
+    </ThemeProvider>
     </>
   );
 }
