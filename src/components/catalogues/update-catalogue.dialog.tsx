@@ -13,6 +13,7 @@ import {
 import { updateCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
 import { Autocomplete, Box, Checkbox, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Select, Switch } from "@mui/material";
+
 import { useTranslation } from "react-i18next";
 import React from "react";
 export interface UpdateDialogData {
