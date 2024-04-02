@@ -125,7 +125,6 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
                   </p>
                   <TextField
                     autoFocus
-                    required
                     margin="dense"
                     id="responsibleIdentity"
                     name="responsibleIdentity"
@@ -141,7 +140,6 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
                   </p>
                   <TextField
                     autoFocus
-                    required
                     margin="dense"
                     id="topic"
                     name="topic"
@@ -196,7 +194,6 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
                   </p>
                   <TextField
                     autoFocus
-                    required
                     margin="dense"
                     id="contactPerson"
                     name="contactPerson"

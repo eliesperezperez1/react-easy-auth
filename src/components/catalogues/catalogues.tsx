@@ -96,6 +96,7 @@ function CatalogueList() {
   const [catalogueSelected, setCatalogueSelected] =
     useState<Catalogue>(catalogueMock);
   const [userData, setUserData] = useState<User>(userMock);
+  // const [filter, setFilter] = useState<any>();
   const gridApiRef = useGridApiRef();
 
   const datosDialog: DialogData = {
@@ -309,7 +310,7 @@ function CatalogueList() {
   function rowCouldBeSelectable(params: any) {
     return (
       (userData.role === ROLE.ADMIN &&
-        params.row.responsibleIdentity === userData.service) ||
+        params.row.responsibleIdentity.includes(userData.service)) ||
       userData.role === ROLE.SUPER_ADMIN
     );
   }
@@ -362,7 +363,14 @@ function CatalogueList() {
     });
     getAndSetCatalogues();
   }
-
+  /*   function eraseFilters() {
+    setFilter({
+      filterModel: {
+        items: [],
+        quickFilterValues: [],
+      },
+    });
+  } */
   function itCouldBeSelectable() {
     return userData.role === ROLE.ADMIN || userData.role === ROLE.SUPER_ADMIN;
   }
@@ -386,9 +394,24 @@ function CatalogueList() {
       const a = user() ? user().user : userMock;
       if (a) {
         setUserData(a);
+        /*  setFilter({
+          filterModel: {
+            items:
+              a.service === RESPONSIBLE_IDENTITY.GENERAL
+                ? []
+                : [
+                    {
+                      field: "responsibleIdentity",
+                      operator: "contains",
+                      value: a.service,
+                    },
+                  ],
+            quickFilterValues: [],
+          },
+        }); */
       }
+      getAndSetCatalogues();
     }
-    getAndSetCatalogues();
   }, []);
 
   function createDialogOpen() {
@@ -453,6 +476,24 @@ function CatalogueList() {
             />
           </Tooltip>
 
+          {/* <Tooltip title={t("tooltipText.filter")}>
+            <Button
+              sx={{
+                height: 37,
+                backgroundColor: "#D9D9D9",
+                color: "#404040",
+                borderColor: "#404040",
+                "&:hover": {
+                  borderColor: "#0D0D0D",
+                  backgroundColor: "#0D0D0D",
+                  color: "#f2f2f2",
+                },
+              }}
+              onClick={eraseFilters}
+            >
+              Mostrar todos
+            </Button>
+          </Tooltip> */}
           <Tooltip title={t("tooltipText.filter")}>
             <GridToolbarFilterButton
               sx={{

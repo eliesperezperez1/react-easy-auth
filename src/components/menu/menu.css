@@ -32,7 +32,6 @@ body {
   display: flex;
   justify-content: space-between;
   list-style-type: none;
-  background-color: rgba(255, 255, 255, 1);
 }
 
 .nav-elements ul li:not(:last-child) {
@@ -61,11 +60,10 @@ body {
   width: 100%;
   height: 2px;
 }
-.nav-elements ul li:hover{
-    background-color: #0d0d0d;
-}
+
 .nav-elements ul a:hover {
-    color:white;
+    color:black;
+    font-weight: bold;
     text-decoration: underline;
 }
 @media (max-width: 768px) {

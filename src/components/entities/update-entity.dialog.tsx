@@ -10,8 +10,6 @@ import { Entity, UpdateEntity } from "../../interfaces/entity.interface";
 import { updateEntityRequest } from "../../api/entities";
 import { useAuthHeader } from "react-auth-kit";
 import { Box } from "@mui/material";
-import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useTranslation } from "react-i18next";
 export interface UpdateDialogData {
   open: boolean;
@@ -47,11 +45,9 @@ export default function UpdateEntityDialog(props: {
   const updateEntity = (formJson: any) => {
     const prueba = formJson as UpdateEntity;
     setUpdate(prueba);
-    updateEntityRequest(
-      props.enviar.entity._id,
-      update,
-      authHeader()
-    ).then((response) => response.json());
+    updateEntityRequest(props.enviar.entity._id, update, authHeader()).then(
+      (response) => response.json()
+    );
     props.enviar.getInfo();
     handleClose();
   };
@@ -61,7 +57,7 @@ export default function UpdateEntityDialog(props: {
 
     // Collect form data for the current step
     const currentStepData = new FormData(event.currentTarget);
-    
+
     //--------------------------------------------------------------------
     const currentStepJson = Object.fromEntries(currentStepData.entries());
 
@@ -79,10 +75,9 @@ export default function UpdateEntityDialog(props: {
     updateEntity(mergedFormData);
   };
 
-  
   const handleGoBack = () => {
     setStep(step - 1);
-  }
+  };
   return (
     <>
       <Dialog
@@ -99,82 +94,59 @@ export default function UpdateEntityDialog(props: {
         <DialogContent>
           <DialogContentText>{t("dialog.fillInfo")}</DialogContentText>
           <Box>
-          {step === 1 && (
-            <form onSubmit={handleNext}>
-              <div className="verticalForm">
-                <div className="horizontalForm">
-                  <p>
-                  {t("columnsNames.responsibleIdentity")}
-                  </p>
-                  <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="responsibleIdentity"
-                    name="responsibleIdentity"
-                    type="string"
-                    variant="standard"
-                    value={update.responsibleIdentity}
-                    onChange={handleChange}
-                  />
+            {step === 1 && (
+              <form onSubmit={handleNext}>
+                <div className="verticalForm">
+                  <div className="horizontalForm">
+                    <p>{t("columnsNames.responsibleIdentity")}</p>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="responsibleIdentity"
+                      name="responsibleIdentity"
+                      type="string"
+                      variant="standard"
+                      value={update.responsibleIdentity}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="horizontalForm">
+                    <p>{t("columnsNames.topic")}</p>
+                    <TextField
+                      autoFocus
+                      required
+                      margin="dense"
+                      id="topic"
+                      name="topic"
+                      type="string"
+                      variant="standard"
+                      value={update.topic}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="horizontalForm">
+                    <p>{t("columnsNames.contactPerson")}</p>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="contactPerson"
+                      name="contactPerson"
+                      type="string"
+                      variant="standard"
+                      value={update.contactPerson}
+                      onChange={handleChange}
+                    />
+                  </div>
                 </div>
-                <div className="horizontalForm">
-                  <p>
-                  {t("columnsNames.topic")}
-                  </p>
-                  <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="topic"
-                    name="topic"
-                    type="string"
-                    variant="standard"
-                    value={update.topic}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="horizontalForm">
-                  <p>
-                  {t("columnsNames.contactPerson")}
-                  </p>
-                  <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="contactPerson"
-                    name="contactPerson"
-                    type="string"
-                    variant="standard"
-                    value={update.contactPerson}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
 
-              <div className="buttonsForm">
-              <Button 
-                onClick={handleClose} 
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}>{t("dialog.cancel")}</Button>
-                <div>
+                <div className="buttonsForm">
                   <Button
-                    onClick={handleGoBack}
+                    onClick={handleClose}
                     sx={{
                       height: 37,
                       backgroundColor: "#D9D9D9",
                       color: "#404040",
                       borderColor: "#404040",
-                      marginRight: 1,
                       "&:hover": {
                         borderColor: "#0D0D0D",
                         backgroundColor: "#0D0D0D",
@@ -182,133 +154,151 @@ export default function UpdateEntityDialog(props: {
                       },
                     }}
                   >
-                    Atrás
+                    {t("dialog.cancel")}
                   </Button>
-                  <Button 
-                  type="submit"
-                  sx={{
-                    height: 37,
-                    backgroundColor: "#D9D9D9",
-                    color: "#404040",
-                    borderColor: "#404040",
-                    "&:hover": {
-                      borderColor: "#0D0D0D",
-                      backgroundColor: "#0D0D0D",
-                      color: "#f2f2f2",
-                    },
-                  }}>{t("dialog.next")}</Button>
+                  <div>
+                    <Button
+                      onClick={handleGoBack}
+                      sx={{
+                        height: 37,
+                        backgroundColor: "#D9D9D9",
+                        color: "#404040",
+                        borderColor: "#404040",
+                        marginRight: 1,
+                        "&:hover": {
+                          borderColor: "#0D0D0D",
+                          backgroundColor: "#0D0D0D",
+                          color: "#f2f2f2",
+                        },
+                      }}
+                    >
+                      Atrás
+                    </Button>
+                    <Button
+                      type="submit"
+                      sx={{
+                        height: 37,
+                        backgroundColor: "#D9D9D9",
+                        color: "#404040",
+                        borderColor: "#404040",
+                        "&:hover": {
+                          borderColor: "#0D0D0D",
+                          backgroundColor: "#0D0D0D",
+                          color: "#f2f2f2",
+                        },
+                      }}
+                    >
+                      {t("dialog.next")}
+                    </Button>
+                  </div>
                 </div>
-              
-              </div>
-            </form>
-          )}
-          {step === 2 && (
-            <form onSubmit={handleSubmit}>
-            <div className="verticalForm">
-              <div className="horizontalForm">
-                <p>
-                {t("columnsNames.location")}
-                </p>
-                <TextField
-                  autoFocus
-                  required
-                  margin="dense"
-                  id="location"
-                  name="location"
-                  type="string"
-                  variant="standard"
-                  value={update.location}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="horizontalForm">
-                <p>
-                {t("columnsNames.phoneNumber")}
-                </p>
-                <TextField
-                  autoFocus
-                  required
-                  margin="dense"
-                  id="telephone"
-                  name="telephone"
-                  type="string"
-                  variant="standard"
-                  value={update.telephone}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="horizontalForm">
-                <p>
-                {t("login.email")}
-                </p>
-                <TextField
-                  autoFocus
-                  required
-                  margin="dense"
-                  id="email"
-                  name="email"
-                  type="email"
-                  variant="standard"
-                  value={update.email}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
+              </form>
+            )}
+            {step === 2 && (
+              <form onSubmit={handleSubmit}>
+                <div className="verticalForm">
+                  <div className="horizontalForm">
+                    <p>{t("columnsNames.location")}</p>
+                    <TextField
+                      autoFocus
+                      required
+                      margin="dense"
+                      id="location"
+                      name="location"
+                      type="string"
+                      variant="standard"
+                      value={update.location}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="horizontalForm">
+                    <p>{t("columnsNames.phoneNumber")}</p>
+                    <TextField
+                      autoFocus
+                      required
+                      margin="dense"
+                      id="telephone"
+                      name="telephone"
+                      type="string"
+                      variant="standard"
+                      value={update.telephone}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="horizontalForm">
+                    <p>{t("login.email")}</p>
+                    <TextField
+                      autoFocus
+                      required
+                      margin="dense"
+                      id="email"
+                      name="email"
+                      type="email"
+                      variant="standard"
+                      value={update.email}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
 
-            <div className="buttonsForm">
-              <Button 
-                onClick={handleClose} 
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}>{t("dialog.cancel")}</Button>
-              <div>
-                <Button
-                onClick={handleGoBack}
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  marginRight: 1,
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}
-              >
-                Atrás
-              </Button>
-              <Button 
-                type="submit"
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}>{t("dialog.updateEntity")}</Button>
-              </div>
-            </div>
-            
-          </form>
-          )}
+                <div className="buttonsForm">
+                  <Button
+                    onClick={handleClose}
+                    sx={{
+                      height: 37,
+                      backgroundColor: "#D9D9D9",
+                      color: "#404040",
+                      borderColor: "#404040",
+                      "&:hover": {
+                        borderColor: "#0D0D0D",
+                        backgroundColor: "#0D0D0D",
+                        color: "#f2f2f2",
+                      },
+                    }}
+                  >
+                    {t("dialog.cancel")}
+                  </Button>
+                  <div>
+                    <Button
+                      onClick={handleGoBack}
+                      sx={{
+                        height: 37,
+                        backgroundColor: "#D9D9D9",
+                        color: "#404040",
+                        borderColor: "#404040",
+                        marginRight: 1,
+                        "&:hover": {
+                          borderColor: "#0D0D0D",
+                          backgroundColor: "#0D0D0D",
+                          color: "#f2f2f2",
+                        },
+                      }}
+                    >
+                      Atrás
+                    </Button>
+                    <Button
+                      type="submit"
+                      sx={{
+                        height: 37,
+                        backgroundColor: "#D9D9D9",
+                        color: "#404040",
+                        borderColor: "#404040",
+                        "&:hover": {
+                          borderColor: "#0D0D0D",
+                          backgroundColor: "#0D0D0D",
+                          color: "#f2f2f2",
+                        },
+                      }}
+                    >
+                      {t("dialog.updateEntity")}
+                    </Button>
+                  </div>
+                </div>
+              </form>
+            )}
           </Box>
         </DialogContent>
-        <DialogActions>
-        </DialogActions>
+        <DialogActions></DialogActions>
       </Dialog>
     </>
   );
