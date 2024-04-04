@@ -1,0 +1,8 @@
+#buttonChangeLanguage {
+    border: none;
+    background-color: none;
+}
+
+#buttonChangeLanguage:hover{
+    cursor: pointer;
+}

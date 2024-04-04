@@ -4,14 +4,7 @@ import {
   GridRenderCellParams,
   useGridApiRef,
 } from "@mui/x-data-grid";
-import {
-  Box,
-  Button,
-  ClickAwayListener,
-  Fade,
-  FormControl,
-  Tooltip,
-} from "@mui/material";
+import { Box, Button, FormControl, Tooltip } from "@mui/material";
 import {
   GridToolbarColumnsButton,
   GridToolbarContainer,
@@ -38,7 +31,6 @@ import { useTranslation } from "react-i18next";
 import FolderDeleteIcon from "@mui/icons-material/FolderDelete";
 import FolderIcon from "@mui/icons-material/Folder";
 import RestoreIcon from "@mui/icons-material/Restore";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import "./catalogues.css";
 import CreateCatalogueDialog, { DialogData } from "./create-catalogue.dialog";
 import UpdateCatalogueDialog, {
@@ -49,8 +41,7 @@ import { ROLE } from "../../utils/enums/role.enum";
 import { User } from "../../interfaces/user.interface";
 import { userMock } from "../../utils/user.mock";
 import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
-import * as XLSX from "xlsx";
-import { saveAs } from "file-saver";
+import ExportButton from "../export-button/export-button";
 const CustomPagination = (props: any) => {
   const { t } = useTranslation();
 
@@ -92,11 +83,9 @@ function CatalogueList() {
   const [deletedTable, setDeletedTable] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
-  const [openMenuExportar, setOpenMenuExportar] = useState<boolean>(false);
   const [catalogueSelected, setCatalogueSelected] =
     useState<Catalogue>(catalogueMock);
   const [userData, setUserData] = useState<User>(userMock);
-  // const [filter, setFilter] = useState<any>();
   const gridApiRef = useGridApiRef();
 
   const datosDialog: DialogData = {
@@ -301,12 +290,6 @@ function CatalogueList() {
     },
   ];
 
-  /* const handleFilterChange = (filterItems: FilterItem[]) => {
-    // Apply the filter logic here (e.g., update state, filter rows)
-    console.log('Filter items:', filterItems);
-    // Implement your filtering logic based on the selected values
-  }; */
-
   function rowCouldBeSelectable(params: any) {
     return (
       (userData.role === ROLE.ADMIN &&
@@ -363,14 +346,7 @@ function CatalogueList() {
     });
     getAndSetCatalogues();
   }
-  /*   function eraseFilters() {
-    setFilter({
-      filterModel: {
-        items: [],
-        quickFilterValues: [],
-      },
-    });
-  } */
+
   function itCouldBeSelectable() {
     return userData.role === ROLE.ADMIN || userData.role === ROLE.SUPER_ADMIN;
   }
@@ -394,21 +370,6 @@ function CatalogueList() {
       const a = user() ? user().user : userMock;
       if (a) {
         setUserData(a);
-        /*  setFilter({
-          filterModel: {
-            items:
-              a.service === RESPONSIBLE_IDENTITY.GENERAL
-                ? []
-                : [
-                    {
-                      field: "responsibleIdentity",
-                      operator: "contains",
-                      value: a.service,
-                    },
-                  ],
-            quickFilterValues: [],
-          },
-        }); */
       }
       getAndSetCatalogues();
     }
@@ -475,25 +436,6 @@ function CatalogueList() {
               }}
             />
           </Tooltip>
-
-          {/* <Tooltip title={t("tooltipText.filter")}>
-            <Button
-              sx={{
-                height: 37,
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                "&:hover": {
-                  borderColor: "#0D0D0D",
-                  backgroundColor: "#0D0D0D",
-                  color: "#f2f2f2",
-                },
-              }}
-              onClick={eraseFilters}
-            >
-              Mostrar todos
-            </Button>
-          </Tooltip> */}
           <Tooltip title={t("tooltipText.filter")}>
             <GridToolbarFilterButton
               sx={{
@@ -524,7 +466,7 @@ function CatalogueList() {
               }}
             />
           </Tooltip>
-          <ExportButton />
+          <ExportButton visibleData={gridApiRef} />
 
           <Tooltip title="Búsqueda rápida">
             <GridToolbarQuickFilter
@@ -625,139 +567,6 @@ function CatalogueList() {
       </>
     );
   }
-  function exportButtonOption() {
-    return (
-      <div className="menuExportar">
-        <Button
-          variant="text"
-          className="menu-item-exportar"
-          onClick={() => handleExportExcel()}
-          sx={{
-            backgroundColor: "#D9D9D9",
-            color: "#404040",
-            borderColor: "#404040",
-            marginRight: "5px",
-            marginTop: "5px",
-            marginBottom: "5px",
-            "&:hover": {
-              borderColor: "#0D0D0D",
-              backgroundColor: "#0D0D0D",
-              color: "#f2f2f2",
-            },
-          }}
-        >
-          EXCEL
-        </Button>
-        <Button
-          variant="text"
-          className="menu-item-exportar"
-          onClick={() => handleExportJSON()}
-          sx={{
-            backgroundColor: "#D9D9D9",
-            color: "#404040",
-            borderColor: "#404040",
-            marginTop: "5px",
-            marginBottom: "5px",
-            "&:hover": {
-              borderColor: "#0D0D0D",
-              backgroundColor: "#0D0D0D",
-              color: "#f2f2f2",
-            },
-          }}
-        >
-          JSON
-        </Button>
-      </div>
-    );
-  }
-  const handleCloseExportMenu = () => {
-    setOpenMenuExportar(false);
-  };
-
-  const handleSwitchExportMenu = () => {
-    setOpenMenuExportar(!openMenuExportar);
-  };
-
-  function ExportButton() {
-    return (
-      <ClickAwayListener onClickAway={handleCloseExportMenu}>
-        <Tooltip
-          open={openMenuExportar}
-          title={exportButtonOption()}
-          TransitionComponent={Fade}
-          TransitionProps={{ timeout: 600 }}
-          disableHoverListener
-        >
-          <Button
-            className="botonExportar"
-            variant="text"
-            onClick={handleSwitchExportMenu}
-            startIcon={<FileDownloadIcon />}
-            sx={{
-              backgroundColor: "#D9D9D9",
-              color: "#404040",
-              borderColor: "#404040",
-              "&:hover": {
-                borderColor: "#0D0D0D",
-                backgroundColor: "#0D0D0D",
-                color: "#f2f2f2",
-              },
-            }}
-          >
-            Exportar
-          </Button>
-        </Tooltip>
-      </ClickAwayListener>
-    );
-  }
-
-  function getVisibleData() {
-    const rowModels = Array.from(gridApiRef.current.getRowModels().values());
-    var saveDataRow: any = [];
-    saveDataRow = rowModels.map((obj) => {
-      const clonedObj = JSON.parse(JSON.stringify(obj));
-      delete clonedObj._id;
-      return clonedObj;
-    });
-    const visibleColumns = gridApiRef.current.getVisibleColumns();
-    const saveDataColumn = visibleColumns.map((obj) =>
-      JSON.parse(JSON.stringify({ field: obj.field }))
-    );
-
-    const dataShowed = saveDataRow.map((obj: any) => {
-      const nuevoObjeto: { [key: string]: any } = {};
-      saveDataColumn.forEach((columna) => {
-        const clave = columna.field;
-        nuevoObjeto[clave] = obj[clave];
-      });
-      return nuevoObjeto;
-    });
-
-    return dataShowed;
-  }
-
-  //-----------------------------------------------------------------------
-  // EXPORT AS EXCEL
-  //-----------------------------------------------------------------------
-  function handleExportExcel() {
-    var dataShowed = getVisibleData();
-
-    const worksheet = XLSX.utils.json_to_sheet(dataShowed);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "catalogues");
-    XLSX.writeFile(workbook, document.title + ".xlsx", { compression: true });
-  }
-
-  //-----------------------------------------------------------------------
-  // EXPORT AS JSON
-  //-----------------------------------------------------------------------
-  const handleExportJSON = () => {
-    var dataShowed = getVisibleData();
-
-    const json = JSON.stringify(dataShowed);
-    const blob = new Blob([json], { type: "application/json" });
-    saveAs(blob, "data.json");
-  };
 
   if (!catalogues.length)
     return (
