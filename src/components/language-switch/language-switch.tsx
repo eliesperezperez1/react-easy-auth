@@ -73,7 +73,6 @@ function ChangeLanguage() {
       }
     }
     await changeI18();
-    //props.change.changeComponentsLanguage();
   }
   async function changeI18() {
     await i18n.changeLanguage(idioma);
