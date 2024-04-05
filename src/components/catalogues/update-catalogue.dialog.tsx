@@ -12,16 +12,125 @@ import {
 } from "../../interfaces/catalogue.interface";
 import { updateCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
-import { Autocomplete, Box, Checkbox, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Select, Switch } from "@mui/material";
+import { 
+  Autocomplete, 
+  Box, 
+  Checkbox, 
+  FormControl, 
+  FormControlLabel, 
+  FormGroup, 
+  InputLabel, 
+  MenuItem, 
+  Select, 
+  Switch,
+  ThemeProvider,
+  createTheme, } from "@mui/material";
 
 import { useTranslation } from "react-i18next";
 import React from "react";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import { grey, red } from "@mui/material/colors";
+import { esES } from "@mui/x-data-grid";
+import { CalendarIcon, DateTimePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import 'dayjs/locale/es';
+import { debug } from "console";
 export interface UpdateDialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
   getInfo: () => void;
   catalogue: Catalogue;
 }
+const baseTheme = (actualTheme:any) => createTheme(
+  {
+    typography: {
+      fontFamily: "Montserrat",
+    },
+    components: {
+      MuiTextField: {
+        styleOverrides: {
+          root: {
+            color: actualTheme === 'light' ? "black" : "white",
+          },
+        },
+      },
+      MuiCssBaseline: {
+        styleOverrides: `
+        @font-face {
+          font-family: 'Montserrat';
+          src: url(https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap);
+        }
+      `,
+      },
+      MuiInput: {
+        styleOverrides: {
+          root: {
+            color: actualTheme === 'light' ? "black" : "white",
+          },
+          
+        },
+      },
+      MuiSelect: {
+        defaultProps: {
+          variant: 'standard', // Set the default variant (outlined, filled, standard)
+        },
+        styleOverrides: {
+          icon: {
+            color: actualTheme === 'light' ? "black" : "white", // Set the color of the dropdown arrow icon
+          },
+          // Add other styles as needed
+        },
+      },
+      MuiMenuList:{
+        styleOverrides:{
+          'root':{
+            //backgroundColor: actualTheme === 'light' ? "white" : "black", 
+            color: actualTheme === 'light' ? "black" : "white",
+          },
+        },
+      },
+      MuiMenuItem:{
+        styleOverrides:{
+          root:{
+            //backgroundColor: actualTheme === 'light' ? "white" : "black", 
+            color: actualTheme === 'light' ? "black" : "white",
+          }
+        }
+      },
+    },
+    palette:{
+      mode: actualTheme==="light" ? "light" : "dark",
+      ...(actualTheme === 'light'
+      ? {
+          // palette values for light mode
+          primary: grey,
+          divider: grey[800],
+          text: {
+            primary: grey[900],
+            secondary: grey[800],
+          },
+        }
+      : {
+          // palette values for dark mode
+          primary: grey,
+          divider: grey[800],
+          background: {
+            default: grey[800],
+            paper: grey[900],
+          },
+          text: {
+            primary: grey[100],
+            secondary: grey[800],
+          },
+        }),
+    },
+    
+  },
+  esES
+);
 
 export default function UpdateCatalogueDialog(props: {
   enviar: UpdateDialogData;
@@ -32,13 +141,44 @@ export default function UpdateCatalogueDialog(props: {
   const [t, i18n] = useTranslation();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
-  const [format, setFormat] = React.useState<string[]>([]);
+  const [formDataSteps, setFormDataSteps] = useState({
+    title: "",
+    description: "",
+    language: "",
+    territorialScope: "",
+    temporaryCoverage: "",
+    updateFrequency: "",
+    topic: "",
+    lastUpdate: "",
+    format: "",
+    distribution: "",
+    sensitiveInformation: "",
+    isUsing: "",
+    accessType: "",
+    internalRelationship: "",
+    contactPerson: "",
+    structured: "",
+    associatedApplication: "",
+    georreference: "",
+    comments: "",
+    timmingEffect: "",
+    creationDate: "",
+    personalData: "",
+    source: "",
+    responsibleIdentity: "",
+    activeAds: "",
+  });
+  const [formato, setFormat] = React.useState<string[]>([]);
   const [sensitiveInformation, setSensitiveInformation] = useState("SI");
   const [isUsing, setIsUsing] = useState("SI");
   const [structured, setStructured] = useState("SI");
   const [georeference, setGeoreference] = useState("SI");
   const [personalData, setPersonalData] = useState("SI");
   const [activeAds, setActiveAds] = useState("SI");
+  const [lastUpdateAlmacenado, setLastUpdate] = React.useState<Dayjs | null>();
+  const [creationDateAlmacenado, setCreationDate] = React.useState<Dayjs | null>();
+  const {actualTheme} = useAlternateTheme();
+  
 
   useEffect(() => {
     setUpdate(props.enviar.catalogue);
@@ -49,19 +189,69 @@ export default function UpdateCatalogueDialog(props: {
     setGeoreference(props.enviar.catalogue.georeference);
     setPersonalData(props.enviar.catalogue.personalData);
     setActiveAds(props.enviar.catalogue.activeAds);
+    setFormat(props.enviar.catalogue.format.split(" / "));
+    console.log("last update: " + props.enviar.catalogue.lastUpdate);
+    console.log("creation date: " + props.enviar.catalogue.creationDate);
     setStep(1);
   }, [props.enviar.open, props.enviar.catalogue]);
 
   const handleClose = () => {
+    setFormData({});
+    setFormDataSteps({
+      title: "",
+      description: "",
+      language: "",
+      territorialScope: "",
+      temporaryCoverage: "",
+      updateFrequency: "",
+      topic: "",
+      lastUpdate: "",
+      format: "",
+      distribution: "",
+      sensitiveInformation: "",
+      isUsing: "",
+      accessType: "",
+      internalRelationship: "",
+      contactPerson: "",
+      structured: "",
+      associatedApplication: "",
+      georreference: "",
+      comments: "",
+      timmingEffect: "",
+      creationDate: "",
+      personalData: "",
+      source: "",
+      responsibleIdentity: "",
+      activeAds: "",
+    });
+    setStep(1);
+    setSensitiveInformation("SI");
+    setIsUsing("SI");
+    setStructured("SI");
+    setGeoreference("SI");
+    setPersonalData("SI");
+    setActiveAds("SI");
+    setFormat([]);
+    setLastUpdate(null);
+    setCreationDate(null);
     setOpen(false);
     setStep(1);
     props.enviar.closeDialog(false);
   };
+  
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setUpdate((prevState) => ({ ...prevState, [name]: value }));
   };
-
+  /*
+  const handleChange = (field: string, value: string) => {
+    // Update the form data
+    setFormDataSteps((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+*/
   const updateCatalogue = (formJson: any) => {
     const a = formJson.lastUpdate;
     const b = formJson.creationDate;
@@ -70,13 +260,19 @@ export default function UpdateCatalogueDialog(props: {
     const lastUpdate = new Date(a);
     const creationDate = new Date(b);
     const prueba = formJson as UpdateCatalogue;
+    const formatosDatos = formato.toString();
+    const format = formatosDatos.replace(/,/g, " / ");
     setUpdate({
       ...prueba,
+      format,
       deleted,
       deletedDate,
       lastUpdate,
       creationDate,
     });
+
+    update.format=format;
+    
     updateCatalogueRequest(
       props.enviar.catalogue._id,
       update,
@@ -132,26 +328,52 @@ export default function UpdateCatalogueDialog(props: {
       currentStepData.set("activeAds", "SI");
     }
 
-    if( (format!==undefined || format !== null) && (currentStepData.get("format")!==null || currentStepData.get("format")!==undefined)){
-      const formatosDatos = format.toString();
+    if(step==2 && (formato!==undefined || formato !== null) && (currentStepData.get("format")!==null || currentStepData.get("format")!==undefined)){
+      const formatosDatos = formato.toString();
       const formatosDatosMod = formatosDatos.replace(/,/g, " / ");
       currentStepData.set("format", formatosDatosMod);
+      console.log("Step 2: " + formatosDatosMod);
+    }
+
+    if (
+      (lastUpdateAlmacenado !== undefined && lastUpdateAlmacenado !== null) &&
+      (currentStepData.get("lastUpdate") !== null ||
+        currentStepData.get("lastUpdate") !== undefined)
+    ) {
+      const lastUpdateDatos = lastUpdateAlmacenado.toString();
+      currentStepData.set("lastUpdate", lastUpdateDatos);
+    }
+
+    if (
+      (creationDateAlmacenado !== undefined && creationDateAlmacenado !== null) &&
+      (currentStepData.get("creationDate") !== null ||
+        currentStepData.get("creationDate") !== undefined)
+    ) {
+      const creationDateDatos = creationDateAlmacenado.toString();
+      currentStepData.set("creationDate", creationDateDatos);
     }
 
     const currentStepJson = Object.fromEntries(currentStepData.entries());
+    
+    setFormDataSteps((prevData) => ({ ...prevData, ...currentStepJson }));
 
     // Merge current step data with existing form data
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
-    console.log(formData);
     setStep(step + 1);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     const currentStepData = new FormData(event.currentTarget);
+    const formatosDatos = formato.toString();
+    const formatosDatosMod = formatosDatos.replace(/,/g, " / ");
+    currentStepData.set("format", formatosDatosMod);
+  
     const currentStepJson = Object.fromEntries(currentStepData.entries());
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
     const mergedFormData = {...formData, ...currentStepJson};
-    console.log(mergedFormData);
+    
+    
     updateCatalogue(mergedFormData);
   };
 
@@ -221,6 +443,7 @@ export default function UpdateCatalogueDialog(props: {
   };
 
   const handleFormat = (event: any, newValue: any) => {
+    setFormat([]);
     setFormat(newValue);
     console.log(newValue);
   };
@@ -242,17 +465,67 @@ export default function UpdateCatalogueDialog(props: {
     }
   }
 
+  const handleValueDateTime = (picker: any) => {
+    if(picker === "lastUpdate" && update.lastUpdate !== undefined){
+      const dateObject = new Date(update.lastUpdate);
+      const formatDate = dateObject.toISOString();
+      const dateObj = dayjs(formatDate);
+      return dateObj;
+    } else if(picker === "creationDate" && update.creationDate !== undefined){
+      const dateObject = new Date(update.creationDate);
+      const formatDate = dateObject.toISOString();
+      const dateObj = dayjs(formatDate);
+      return dateObj;
+    }
+  }
+
+  const handleChangeLastUpdate = (value: any) => {
+    const dayjs = require('dayjs');
+    const utc = require('dayjs/plugin/utc');
+    const timezone = require('dayjs/plugin/timezone');
+
+    //---------------------------
+    dayjs.extend(utc);          
+    dayjs.extend(timezone);
+    //---------------------------
+
+    const dayjsLocal = dayjs(value);
+    const dateIsoString = dayjsLocal.toISOString();
+
+    setLastUpdate(dateIsoString);
+    setUpdate((prevState) => ({ ...prevState, ["lastUpdate"]: dateIsoString }));
+  };
+
+  const handleChangeCreationDate = (value: any) => {
+    const dayjs = require('dayjs');
+    const utc = require('dayjs/plugin/utc');
+    const timezone = require('dayjs/plugin/timezone');
+
+    //---------------------------
+    dayjs.extend(utc);          
+    dayjs.extend(timezone);
+    //---------------------------
+
+    const dayjsLocal = dayjs(value);
+    const dateIsoString = dayjsLocal.toISOString();
+
+    setCreationDate(value);
+    setUpdate((prevState) => ({ ...prevState, ["creationDate"]: dateIsoString }));
+  };
+
   return (
     <>
+    <ThemeProvider theme={baseTheme(actualTheme)}>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
       <Dialog
         fullWidth={true}
         open={open}
-        onClose={handleClose}
+        //onClose={handleClose}
       >
         <DialogTitle>{t("dialog.updateRegister")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-          <div className="dialogContentText">
+          <div className="dialogContentText" style={{color: actualTheme==="light" ? "#252525" : "white"}}>
             <span>{t("dialog.fillInfo")}</span>
             <span><b>{step}/5</b></span>
           </div>
@@ -271,7 +544,6 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="title"
                   name="title"
-                  label={t("columnsNames.title")}
                   type="string"
                   variant="standard"
                   value={update.title}
@@ -288,7 +560,6 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="description"
                   name="description"
-                  label={t("columnsNames.description")}
                   type="string"
                   variant="standard"
                   value={update.description}
@@ -322,7 +593,6 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="territorialScope"
                   name="territorialScope"
-                  label={t("columnsNames.territorialScope")}
                   type="string"
                   variant="standard"
                   value={update.territorialScope}
@@ -338,7 +608,6 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="temporaryCoverage"
                   name="temporaryCoverage"
-                  label={t("columnsNames.temporaryCoverage")}
                   type="string"
                   variant="standard"
                   value={update.temporaryCoverage}
@@ -389,7 +658,6 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="updateFrequency"
                   name="updateFrequency"
-                  label={t("columnsNames.updateFrequency")}
                   type="string"
                   variant="standard"
                   value={update.updateFrequency}
@@ -405,7 +673,6 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="topic"
                   name="topic"
-                  label={t("columnsNames.topic")}
                   type="string"
                   variant="standard"
                   value={update.topic}
@@ -416,6 +683,22 @@ export default function UpdateCatalogueDialog(props: {
                 <p>
                 {t("columnsNames.lastUpdate")}
                 </p>
+                
+                <FormControl variant="standard">
+                  <DateTimePicker 
+                    views={['year', 'month', 'day', 'hours', 'minutes', 'seconds']}
+                    format="YYYY/MM/DD hh:mm:ss a"
+                    name="lastUpdate"
+                    value={handleValueDateTime("lastUpdate")}
+                    onChange={(e) =>
+                      handleChangeLastUpdate(e)
+                    }
+                    slotProps={{ textField: { variant: "standard", id:"lastUpdate" } }}
+                  >
+
+                  </DateTimePicker>
+                </FormControl>
+                {/*
                 <TextField
                   autoFocus
                   id="lastUpdate"
@@ -449,6 +732,7 @@ export default function UpdateCatalogueDialog(props: {
                     }
                   }}
                 />
+                */}
               </div>
               <div className="horizontalForm">
                 <p>
@@ -460,14 +744,23 @@ export default function UpdateCatalogueDialog(props: {
                       multiple
                       id="format"
                       options={['PDF', 'EXCEL', 'CSV', 'JSON']}
-                      value={format}
+                      value={formato}
                       onChange={handleFormat}
                       disableCloseOnSelect={true}
                       renderOption={(props, option, { selected }) => (
                         <li {...props}>
                           <FormControlLabel
-                            control={<Checkbox checked={selected} />}
+                            control={
+                            <Checkbox 
+                            checked={selected} 
+                            sx={{
+                              color: actualTheme === 'light' ? "black" : "white",
+                            }}
+                            />}
                             label={option}
+                            sx={{
+                              color: actualTheme === 'light' ? "black" : "white",
+                            }}
                           />
                         </li>
                       )}
@@ -477,6 +770,9 @@ export default function UpdateCatalogueDialog(props: {
                           name="format"
                           variant="standard"
                           placeholder="Select formats"
+                          sx={{
+                            color: actualTheme === 'light' ? "black" : "white",
+                          }}
                         />
                       )}
                     />
@@ -492,7 +788,6 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="distribution"
                   name="distribution"
-                  label="Distribución"
                   type="string"
                   variant="standard"
                   value={update.distribution}
@@ -611,7 +906,6 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="internalRelationship"
                   name="internalRelationship"
-                  label="Relación interna"
                   type="string"
                   variant="standard"
                   value={update.internalRelationship}
@@ -627,7 +921,6 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="contactPerson"
                   name="contactPerson"
-                  label={t("columnsNames.contactPerson")}
                   type="string"
                   variant="standard"
                   value={update.contactPerson}
@@ -713,7 +1006,6 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="associatedApplication"
                   name="associatedApplication"
-                  label="Aplicación asociada"
                   type="string"
                   variant="standard"
                   value={update.associatedApplication}
@@ -744,7 +1036,6 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="comments"
                   name="comments"
-                  label={t("columnsNames.comments")}
                   type="string"
                   variant="standard"
                   value={update.comments}
@@ -760,7 +1051,6 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="timmingEffect"
                   name="timmingEffect"
-                  label="Efecto temporal"
                   type="string"
                   variant="standard"
                   value={update.timmingEffect}
@@ -826,7 +1116,22 @@ export default function UpdateCatalogueDialog(props: {
                 <p>
                 Fecha de creación
                 </p>
-              <TextField
+                <FormControl variant="standard">
+                  <DateTimePicker 
+                    views={['year', 'month', 'day', 'hours', 'minutes', 'seconds']}
+                    format="YYYY/MM/DD hh:mm:ss a"
+                    name="creationDate"
+                    value={handleValueDateTime("creationDate")}
+                    onChange={(e) =>
+                      handleChangeCreationDate(e)
+                    }
+                    slotProps={{ textField: { variant: "standard", id:"creationDate" } }}
+                  >
+                    
+                  </DateTimePicker>
+                </FormControl>
+                {/*
+                <TextField
                   autoFocus
                   id="creationDate"
                   margin="dense"
@@ -859,6 +1164,7 @@ export default function UpdateCatalogueDialog(props: {
                     }
                   }}
                 />
+                */}
               </div>
               <div className="horizontalFormSwitch">
                 <p>
@@ -884,7 +1190,6 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="source"
                   name="source"
-                  label={t("columnsNames.source")}
                   type="string"
                   variant="standard"
                   value={update.source}
@@ -901,7 +1206,6 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="responsibleIdentity"
                   name="responsibleIdentity"
-                  label={t("columnsNames.responsibleIdentity")}
                   type="string"
                   variant="standard"
                   value={update.responsibleIdentity}
@@ -981,6 +1285,8 @@ export default function UpdateCatalogueDialog(props: {
         <DialogActions>
         </DialogActions>
       </Dialog>
+    </LocalizationProvider>
+    </ThemeProvider>
     </>
   );
 }

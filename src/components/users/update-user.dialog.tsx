@@ -10,10 +10,106 @@ import {
   User,
   UpdateUser,
 } from "../../interfaces/user.interface";
+import {
+  ThemeProvider,
+  createTheme,
+} from "@mui/material";
 import { updateUserRequest } from "../../api/users";
 import { useAuthHeader } from "react-auth-kit";
 import { Box } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import { grey, red } from "@mui/material/colors";
+import { esES } from "@mui/x-data-grid";
+
+const baseTheme = (actualTheme:any) => createTheme(
+  {
+    typography: {
+      fontFamily: "Montserrat",
+    },
+    components: {
+      MuiTextField: {
+        styleOverrides: {
+          root: {
+            color: actualTheme === 'light' ? "black" : "white",
+          },
+        },
+      },
+      MuiCssBaseline: {
+        styleOverrides: `
+        @font-face {
+          font-family: 'Montserrat';
+          src: url(https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap);
+        }
+      `,
+      },
+      MuiInput: {
+        styleOverrides: {
+          root: {
+            color: actualTheme === 'light' ? "black" : "white",
+          },
+          
+        },
+      },
+      MuiSelect: {
+        defaultProps: {
+          variant: 'standard', // Set the default variant (outlined, filled, standard)
+        },
+        styleOverrides: {
+          icon: {
+            color: actualTheme === 'light' ? "black" : "white", // Set the color of the dropdown arrow icon
+          },
+          // Add other styles as needed
+        },
+      },
+      MuiMenuList:{
+        styleOverrides:{
+          'root':{
+            //backgroundColor: actualTheme === 'light' ? "white" : "black", 
+            color: actualTheme === 'light' ? "black" : "white",
+          },
+        },
+      },
+      MuiMenuItem:{
+        styleOverrides:{
+          root:{
+            //backgroundColor: actualTheme === 'light' ? "white" : "black", 
+            color: actualTheme === 'light' ? "black" : "white",
+          }
+        }
+      },
+    },
+    palette:{
+      mode: actualTheme==="light" ? "light" : "dark",
+      ...(actualTheme === 'light'
+      ? {
+          // palette values for light mode
+          primary: grey,
+          divider: grey[800],
+          text: {
+            primary: grey[900],
+            secondary: grey[800],
+          },
+        }
+      : {
+          // palette values for dark mode
+          primary: grey,
+          divider: grey[800],
+          background: {
+            default: grey[800],
+            paper: grey[900],
+          },
+          text: {
+            primary: grey[100],
+            secondary: grey[800],
+          },
+        }),
+    },
+    
+  },
+  esES
+);
+
 export interface UpdateDialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
@@ -30,6 +126,7 @@ export default function UpdateUserDialog(props: {
   const [t, i18n] = useTranslation();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
+  const {actualTheme} = useAlternateTheme();
 
   useEffect(() => {
     setUpdate(props.enviar.user);
@@ -88,6 +185,7 @@ export default function UpdateUserDialog(props: {
 
   return (
     <>
+    <ThemeProvider theme={baseTheme(actualTheme)}>
       <Dialog
         fullWidth={true}
         maxWidth="lg"
@@ -102,7 +200,10 @@ export default function UpdateUserDialog(props: {
         <DialogTitle>{t("dialog.updateRegister")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-          {t("dialog.fillInfo")}
+          <div className="dialogContentText" style={{color: actualTheme==="light" ? "#252525" : "white"}}>
+            <span>{t("dialog.fillInfo")}</span>
+            <span><b>{step}/5</b></span>
+          </div>
           </DialogContentText>
           
           <Box>
@@ -355,6 +456,7 @@ export default function UpdateUserDialog(props: {
         <DialogActions>
         </DialogActions>
       </Dialog>
+    </ThemeProvider>
     </>
   );
 }
