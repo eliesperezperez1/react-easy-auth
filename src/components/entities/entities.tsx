@@ -4,18 +4,7 @@ import {
   GridRenderCellParams,
   useGridApiRef,
 } from "@mui/x-data-grid";
-import { Box, Button, Chip, FormControl, Tooltip } from "@mui/material";
-import {
-  GridToolbarColumnsButton,
-  GridToolbarContainer,
-  GridToolbarDensitySelector,
-  GridToolbarFilterButton,
-  GridToolbarQuickFilter,
-} from "@mui/x-data-grid";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import FolderDeleteIcon from "@mui/icons-material/FolderDelete";
-import FolderIcon from "@mui/icons-material/Folder";
+import { Chip } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Entity } from "../../interfaces/entity.interface";
 import { updateCatalogueRequest } from "../../api/catalogues";
@@ -31,21 +20,13 @@ import CreateEntityDialog, { DialogData } from "./create-entity.dialog";
 import { ROLE } from "../../utils/enums/role.enum";
 import { LANGUAGE } from "../../utils/enums/language.enum";
 import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
-import ExportButton from "../export-button/export-button";
 import CustomPagination from "../custom-pagination/custom-pagination";
-
-function paletaColores(color: string) {
-  switch (color) {
-    case "colorTextAlter":
-      return "#787878";
-    case "colorBgRowSelected":
-      return "rgba(255, 202, 66, 0.62)";
-    case "colorBgRowSelectedBorder":
-      return "#333333";
-    case "colorRowHover":
-      return "rgba(212, 212, 212, 0.2)";
-  }
-}
+import {
+  getLocationUrl,
+  getTopicColor,
+  paletaColores,
+} from "../../utils/functions/table-functions";
+import CustomToolbar from "../custom-toolbar/custom-toolbar";
 
 function EntitiesList() {
   const authHeader = useAuthHeader();
@@ -75,43 +56,6 @@ function EntitiesList() {
     closeDialog: (a: boolean) => setOpenDialog(a),
     getInfo: () => getAndSetEntities(),
   };
-
-  function getLocationUrl(location: string | undefined) {
-    return !!location
-      ? "https://www.google.com/maps/search/?api=1&query=" +
-          location.split(" ").join("+")
-      : "";
-  }
-  function getTopicColor(topic: string | undefined) {
-    switch (topic) {
-      case "Sector Público":
-        return { backgroundColor: "#9400D3", color: "white" };
-      case "Salud":
-        return { backgroundColor: "#4B0082", color: "white" };
-      case "Cultura y ocio":
-        return { backgroundColor: "#0000FF", color: "white" };
-      case "Urbanismo e infraestructuras":
-        return { backgroundColor: "#00FF00" };
-      case "Ciencia y tecnología":
-        return { backgroundColor: "#FFFF00" };
-      case "Medio Ambiente":
-        return { backgroundColor: "#FF7F00" };
-      case "Economía":
-        return { backgroundColor: "#FF0000" };
-      case "Hacienda":
-        return { backgroundColor: "#FF00FF" };
-      case "Seguridad":
-        return { backgroundColor: "#00FF80" };
-      case "Turismo":
-        return { backgroundColor: "#00FFFF" };
-      case "Sociedad y Bienestar":
-        return { backgroundColor: "#0080FF" };
-      case "Educación":
-        return { backgroundColor: "#000000", color: "white" };
-      case "Transporte":
-        return { backgroundColor: "#FFFFFF", color: "black" };
-    }
-  }
 
   const columns: GridColDef[] = [
     {
@@ -254,158 +198,6 @@ function EntitiesList() {
     getAndSetEntities();
   }, []);
 
-  function CustomToolbar() {
-    return (
-      <GridToolbarContainer>
-        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-          <div>
-            <Box
-              className="Tabla"
-              sx={{ display: "flex", alignItems: "center" }}
-            >
-              {userData.role !== ROLE.VIEWER ? (
-                <>
-                  <Button
-                    sx={{
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                    id="demo-select-small"
-                    onClick={() => {
-                      setDeletedTable(!deletedTable);
-                      showDeleted();
-                    }}
-                  >
-                    {deletedTable === true ? (
-                      <Tooltip title={t("dataTable.showNotDeleted")}>
-                        <FolderIcon></FolderIcon>
-                      </Tooltip>
-                    ) : (
-                      <Tooltip title={t("dataTable.showDeleted")}>
-                        <FolderDeleteIcon></FolderDeleteIcon>
-                      </Tooltip>
-                    )}
-                  </Button>
-                </>
-              ) : (
-                <></>
-              )}
-            </Box>
-          </div>
-        </FormControl>
-        <Tooltip title={t("tooltipText.column")}>
-          <GridToolbarColumnsButton
-            sx={{
-              height: 37,
-              backgroundColor: "#D9D9D9",
-              color: "#404040",
-              borderColor: "#404040",
-              "&:hover": {
-                borderColor: "#0D0D0D",
-                backgroundColor: "#0D0D0D",
-                color: "#f2f2f2",
-              },
-            }}
-          />
-        </Tooltip>
-
-        <Tooltip title={t("tooltipText.filter")}>
-          <GridToolbarFilterButton
-            sx={{
-              height: 37,
-              backgroundColor: "#D9D9D9",
-              color: "#404040",
-              borderColor: "#404040",
-              "&:hover": {
-                borderColor: "#0D0D0D",
-                backgroundColor: "#0D0D0D",
-                color: "#f2f2f2",
-              },
-            }}
-          />
-        </Tooltip>
-        <Tooltip title={t("tooltipText.density")}>
-          <GridToolbarDensitySelector
-            sx={{
-              height: 37,
-              backgroundColor: "#D9D9D9",
-              color: "#404040",
-              borderColor: "#404040",
-              "&:hover": {
-                borderColor: "#0D0D0D",
-                backgroundColor: "#0D0D0D",
-                color: "#f2f2f2",
-              },
-            }}
-          />
-        </Tooltip>
-        <ExportButton visibleData={gridApiRef} />
-
-        {userData.role === ROLE.ADMIN || userData.role === ROLE.SUPER_ADMIN ? (
-          deletedTable === true ? (
-            <>
-              <Button
-                disabled={selectedEntities.length <= 0}
-                startIcon={<EditIcon />}
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}
-                onClick={getSelectedEntities}
-              >
-                Editar
-              </Button>
-              <Button
-                disabled={selectedEntities.length <= 0}
-                startIcon={<DeleteIcon />}
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}
-                onClick={deleteRegisters}
-              >
-                Eliminar
-              </Button>
-            </>
-          ) : (
-            <></>
-          )
-        ) : (
-          <></>
-        )}
-        <GridToolbarQuickFilter
-          sx={{
-            height: 33,
-            backgroundColor: "#D9D9D9",
-            color: "#404040",
-            borderColor: "#404040",
-            borderRadius: 1,
-          }}
-        />
-      </GridToolbarContainer>
-    );
-  }
-
   if (!entities.length)
     return (
       <span className="text-center text-xl font-bold my-4">
@@ -454,7 +246,25 @@ function EntitiesList() {
             },
           }}
           components={{
-            Toolbar: CustomToolbar,
+            Toolbar: function CustomToolbarComponent() {
+              return (
+                <CustomToolbar
+                  userData={userData}
+                  deletedTable={deletedTable}
+                  visibleData={gridApiRef}
+                  selectedCatalogues={selectedEntities}
+                  deleteRegisters={deleteRegisters}
+                  showshowDeleted={() => {
+                    setDeletedTable(!deletedTable);
+                    showDeleted();
+                  }}
+                  createDialogOpen={() => {
+                    setOpenDialog(true);
+                  }}
+                  getSelectedCatalogues={getSelectedEntities}
+                ></CustomToolbar>
+              );
+            },
             Pagination: CustomPagination,
           }}
           getRowId={(row) => row._id}

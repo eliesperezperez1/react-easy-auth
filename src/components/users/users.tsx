@@ -53,7 +53,7 @@ function UserList() {
     getInfo: () => getAndSetUsers(),
     user: userSelected,
   };
-
+  
   const columns: GridColDef[] = [
     { field: "name", headerName: t("columnsNames.name"), width: 200 },
     {
