@@ -4,18 +4,6 @@ import {
   GridRenderCellParams,
   useGridApiRef,
 } from "@mui/x-data-grid";
-import { Box, Button, FormControl, Tooltip } from "@mui/material";
-import {
-  GridToolbarColumnsButton,
-  GridToolbarContainer,
-  GridToolbarDensitySelector,
-  GridToolbarFilterButton,
-  GridToolbarQuickFilter,
-  GridPagination,
-} from "@mui/x-data-grid";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
 import { useEffect, useState } from "react";
 import { Catalogue } from "../../interfaces/catalogue.interface";
 import {
@@ -25,12 +13,7 @@ import {
 } from "../../api/catalogues";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import Chip from "@mui/material/Chip";
-import { ReactComponent as Val } from "../../assets/val.svg";
-import { ReactComponent as Esp } from "../../assets/esp.svg";
 import { useTranslation } from "react-i18next";
-import FolderDeleteIcon from "@mui/icons-material/FolderDelete";
-import FolderIcon from "@mui/icons-material/Folder";
-import RestoreIcon from "@mui/icons-material/Restore";
 import "./catalogues.css";
 import CreateCatalogueDialog, { DialogData } from "./create-catalogue.dialog";
 import UpdateCatalogueDialog, {
@@ -41,37 +24,13 @@ import { ROLE } from "../../utils/enums/role.enum";
 import { User } from "../../interfaces/user.interface";
 import { userMock } from "../../utils/user.mock";
 import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
-import ExportButton from "../export-button/export-button";
-const CustomPagination = (props: any) => {
-  const { t } = useTranslation();
-
-  return (
-    <GridPagination
-      {...props}
-      labelRowsPerPage={t("tooltipText.rowsPage")} // Use your translation key here
-    />
-  );
-};
-
-function paletaColores(color: string) {
-  switch (color) {
-    case "colorTextAlter":
-      return "#787878";
-    case "colorBgRowSelected":
-      return "rgba(255, 202, 66, 0.62)";
-    case "colorBgRowSelectedBorder":
-      return "#333333";
-    case "colorRowHover":
-      return "rgba(212, 212, 212, 0.2)";
-  }
-}
-
-function yesOrNo(p: string | undefined) {
-  return p === "NO" || undefined ? "error" : "success";
-}
-function valOrEsp(p: string | undefined) {
-  return p === "VAL" || undefined ? <Val /> : <Esp />;
-}
+import CustomPagination from "../custom-pagination/custom-pagination";
+import CustomToolbar from "../custom-toolbar/custom-toolbar";
+import {
+  paletaColores,
+  yesOrNo,
+  valOrEsp,
+} from "../../utils/functions/table-functions";
 
 function CatalogueList() {
   const authHeader = useAuthHeader();
@@ -87,13 +46,11 @@ function CatalogueList() {
     useState<Catalogue>(catalogueMock);
   const [userData, setUserData] = useState<User>(userMock);
   const gridApiRef = useGridApiRef();
-
   const datosDialog: DialogData = {
     open: openDialog,
     closeDialog: (close: boolean) => setOpenDialog(close),
     getInfo: () => getAndSetCatalogues(),
   };
-
   const [t, i18n] = useTranslation();
   const datosUpdateDialog: UpdateDialogData = {
     open: openUpdateDialog,
@@ -379,195 +336,6 @@ function CatalogueList() {
     setOpenDialog(true);
   }
 
-  function CustomToolbar() {
-    return (
-      <>
-        <GridToolbarContainer>
-          {userData.role !== ROLE.VIEWER ? (
-            <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-              <Box
-                className="Tabla"
-                sx={{ display: "flex", alignItems: "center" }}
-              >
-                <Button
-                  sx={{
-                    backgroundColor: "#D9D9D9",
-                    color: "#404040",
-                    borderColor: "#404040",
-                    "&:hover": {
-                      borderColor: "#0D0D0D",
-                      backgroundColor: "#0D0D0D",
-                      color: "#f2f2f2",
-                    },
-                  }}
-                  id="demo-select-small"
-                  onClick={() => {
-                    setDeletedTable(!deletedTable);
-                    showDeleted();
-                  }}
-                >
-                  {deletedTable === true ? (
-                    <Tooltip title={t("dataTable.showNotDeleted")}>
-                      <FolderIcon></FolderIcon>
-                    </Tooltip>
-                  ) : (
-                    <Tooltip title={t("dataTable.showDeleted")}>
-                      <FolderDeleteIcon></FolderDeleteIcon>
-                    </Tooltip>
-                  )}
-                </Button>
-              </Box>
-            </FormControl>
-          ) : (
-            <></>
-          )}
-          <Tooltip title={t("tooltipText.column")}>
-            <GridToolbarColumnsButton
-              sx={{
-                height: 37,
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                "&:hover": {
-                  borderColor: "#0D0D0D",
-                  backgroundColor: "#0D0D0D",
-                  color: "#f2f2f2",
-                },
-              }}
-            />
-          </Tooltip>
-          <Tooltip title={t("tooltipText.filter")}>
-            <GridToolbarFilterButton
-              sx={{
-                height: 37,
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                "&:hover": {
-                  borderColor: "#0D0D0D",
-                  backgroundColor: "#0D0D0D",
-                  color: "#f2f2f2",
-                },
-              }}
-            />
-          </Tooltip>
-          <Tooltip title={t("tooltipText.density")}>
-            <GridToolbarDensitySelector
-              sx={{
-                height: 37,
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                "&:hover": {
-                  borderColor: "#0D0D0D",
-                  backgroundColor: "#0D0D0D",
-                  color: "#f2f2f2",
-                },
-              }}
-            />
-          </Tooltip>
-          <ExportButton visibleData={gridApiRef} />
-
-          <Tooltip title="Búsqueda rápida">
-            <GridToolbarQuickFilter
-              sx={{
-                height: 33,
-                backgroundColor: "#D9D9D9",
-                color: "#404040",
-                borderColor: "#404040",
-                borderRadius: 1,
-              }}
-            />
-          </Tooltip>
-
-          <div className="customToolbarRightButtons">
-            {userData.role === ROLE.ADMIN ||
-            userData.role === ROLE.SUPER_ADMIN ? (
-              deletedTable === true ? (
-                <Button
-                  disabled={selectedCatalogues.length <= 0}
-                  startIcon={<RestoreIcon />}
-                  sx={{
-                    height: 37,
-                    backgroundColor: "#D9D9D9",
-                    color: "#404040",
-                    borderColor: "#404040",
-                    "&:hover": {
-                      borderColor: "#0D0D0D",
-                      backgroundColor: "#0D0D0D",
-                      color: "#f2f2f2",
-                    },
-                  }}
-                  onClick={getSelectedCatalogues}
-                >
-                  Restaurar
-                </Button>
-              ) : (
-                <>
-                  <Button
-                    startIcon={<AddIcon />}
-                    onClick={createDialogOpen}
-                    sx={{
-                      height: 37,
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                  >
-                    {t("dataTable.addDataset")}
-                  </Button>
-                  <Button
-                    disabled={selectedCatalogues.length <= 0}
-                    startIcon={<EditIcon />}
-                    sx={{
-                      height: 37,
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                    onClick={getSelectedCatalogues}
-                  >
-                    Editar
-                  </Button>
-                  <Button
-                    disabled={selectedCatalogues.length <= 0}
-                    startIcon={<DeleteIcon />}
-                    sx={{
-                      height: 37,
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                    onClick={deleteRegisters}
-                  >
-                    Eliminar
-                  </Button>
-                </>
-              )
-            ) : (
-              <></>
-            )}
-          </div>
-        </GridToolbarContainer>
-      </>
-    );
-  }
-
   if (!catalogues.length)
     return (
       <span className="text-center text-xl font-bold my-4">
@@ -597,7 +365,7 @@ function CatalogueList() {
           }}
           initialState={{
             pagination: {
-              paginationModel: { pageSize: 10, page: 0 },
+              paginationModel: { pageSize: 25, page: 0 },
             },
             filter: {
               filterModel: {
@@ -616,7 +384,23 @@ function CatalogueList() {
             },
           }}
           components={{
-            Toolbar: CustomToolbar,
+            Toolbar: function CustomToolbarComponent() {
+              return (
+                <CustomToolbar
+                  userData={userData}
+                  deletedTable={deletedTable}
+                  visibleData={gridApiRef}
+                  selectedCatalogues={selectedCatalogues}
+                  deleteRegisters={deleteRegisters}
+                  showshowDeleted={() => {
+                    setDeletedTable(!deletedTable);
+                    showDeleted();
+                  }}
+                  createDialogOpen={createDialogOpen}
+                  getSelectedCatalogues={getSelectedCatalogues}
+                ></CustomToolbar>
+              );
+            },
             Pagination: CustomPagination,
           }}
           getRowId={(row) => row._id}

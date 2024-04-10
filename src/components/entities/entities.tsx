@@ -11,7 +11,6 @@ import {
   GridToolbarDensitySelector,
   GridToolbarFilterButton,
   GridToolbarQuickFilter,
-  GridPagination,
 } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -33,17 +32,7 @@ import { ROLE } from "../../utils/enums/role.enum";
 import { LANGUAGE } from "../../utils/enums/language.enum";
 import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
 import ExportButton from "../export-button/export-button";
-
-const CustomPagination = (props: any) => {
-  const { t } = useTranslation();
-
-  return (
-    <GridPagination
-      {...props}
-      labelRowsPerPage={t("tooltipText.rowsPage")} // Use your translation key here
-    />
-  );
-};
+import CustomPagination from "../custom-pagination/custom-pagination";
 
 function paletaColores(color: string) {
   switch (color) {

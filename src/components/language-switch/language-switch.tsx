@@ -55,7 +55,6 @@ function ChangeLanguage() {
       }
     } else {
       setIdioma("es");
-      console.log("Idioma es: val");
       if (userData !== userMock) {
         updateUserLanguage({ ...userData, language: LANGUAGE.ES }, authHeader())
           .then((response) => response.json())
