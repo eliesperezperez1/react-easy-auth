@@ -10,7 +10,6 @@ import { userMock } from "../../utils/user.mock";
 import { User } from "../../interfaces/user.interface";
 import { updateUserLanguage } from "../../api/users";
 import { LANGUAGE } from "../../utils/enums/language.enum";
-import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 
 function ChangeLanguage(props: {change: any}) {
   const user = useAuthUser();
@@ -20,7 +19,6 @@ function ChangeLanguage(props: {change: any}) {
   const [idioma, setIdioma] = useState("es");
   const imagenes = [ValImage, CasImage];
   const [userData, setUserData] = useState<User>(userMock);
-  const {actualTheme} = useAlternateTheme();
 
   useEffect(() => {
     console.log("hola");
@@ -90,8 +88,6 @@ function ChangeLanguage(props: {change: any}) {
         padding: 0,
         backgroundImage: "transparent",
         borderRadius: 50,
-        borderColor: actualTheme === 'light' ? "black" : "white",
-        marginTop: '15px',
         overflow: "hidden",
       }}
     >

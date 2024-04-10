@@ -242,7 +242,6 @@ function UserList() {
           setOpenUpdateDialog(true);
         });
     });
-    console.log(userSelected);
   }
 
   function showDeleted() {

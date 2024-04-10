@@ -321,7 +321,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     ) {
       const lastUpdateDatos = lastUpdateAlmacenado.toString();
       currentStepData.set("lastUpdate", lastUpdateDatos);
-      console.log(lastUpdateDatos);
     }
 
     if (
@@ -344,12 +343,11 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
     const currentStepData = new FormData(event.currentTarget);
     const currentStepJson = Object.fromEntries(currentStepData.entries());
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
     const mergedFormData = { ...formData, ...currentStepJson };
-    console.log(currentStepData.get("lastUpdate"));
+    console.log(mergedFormData);
     createCatalogue(mergedFormData);
   };
 
@@ -396,6 +394,12 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   };
 
   const handleChangeLastUpdate = (value: any) => {
+    // Update the form data
+    /*var dataString = value.toLocaleString();
+    setFormDataSteps((prevData) => ({
+      ...prevData,
+      ["lastUpdate"]: dataString,
+    }));*/
     setLastUpdate(value);
   };
 
@@ -407,7 +411,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     <>
     
     <ThemeProvider theme={baseTheme(actualTheme)}>
-    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Dialog
         fullWidth={true}
         open={open}
@@ -594,19 +598,17 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                   </div>
                   <div className="horizontalForm">
                     <p>{t("columnsNames.lastUpdate")}</p>
-                    <FormControl variant="standard">
-                      <DateTimePicker 
-                        format="YYYY/MM/DD hh:mm:ss a"
-                        name="lastUpdate"
-                        value={lastUpdateAlmacenado}
-                        onChange={(e) =>
-                          handleChangeLastUpdate(e)
-                        }
-                        slotProps={{ textField: { variant: "standard", id:"lastUpdate" } }}
-                      >
+                    <DateTimePicker 
+                      format="DD/MM/YYYY hh:mm:ss a"
+                      name="lastUpdate"
+                      value={lastUpdateAlmacenado}
+                      onChange={(e) =>
+                        handleChangeLastUpdate(e)
+                      }
+                      slotProps={{ textField: { variant: "standard", id:"lastUpdate" } }}
+                    >
 
-                      </DateTimePicker>
-                    </FormControl>
+                    </DateTimePicker>
                     {/*
                     <TextField
                       autoFocus
@@ -1055,19 +1057,17 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 <div className="verticalForm">
                   <div className="horizontalForm">
                     <p>Fecha de creación</p>
-                    <FormControl variant="standard">
-                      <DateTimePicker 
-                        format="YYYY/MM/DD hh:mm:ss a"
-                        name="creationDate"
-                        value={creationDateAlmacenado}
-                        onChange={(e) =>
-                          handleChangeCreationDate(e)
-                        }
-                        slotProps={{ textField: { variant: "standard", id:"creationDate" } }}
-                      >
+                    <DateTimePicker 
+                      format="DD/MM/YYYY hh:mm:ss a"
+                      name="creationDate"
+                      value={creationDateAlmacenado}
+                      onChange={(e) =>
+                        handleChangeCreationDate(e)
+                      }
+                      slotProps={{ textField: { variant: "standard", id:"creationDate" } }}
+                    >
 
-                      </DateTimePicker>
-                    </FormControl>
+                    </DateTimePicker>
                     {/*
                     <TextField
                       autoFocus

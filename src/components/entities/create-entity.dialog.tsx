@@ -67,10 +67,10 @@ const baseTheme = (actualTheme:any) => createTheme(
           divider: grey[800],
           background: {
             default: grey[800],
-            paper: grey[900],
+            paper: grey[800],
           },
           text: {
-            primary: grey[100],
+            primary: grey[900],
             secondary: grey[800],
           },
         }),
@@ -186,13 +186,14 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
         >
           {t("dialog.addRegister")}
         </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-          <div className="dialogContentText" style={{color: actualTheme==="light" ? "#252525" : "white"}}>
-            <span>{t("dialog.fillInfo")}</span>
-            <span><b>{step}/2</b></span>
-          </div>
-          </DialogContentText>
+        <DialogContent
+          sx={{
+            backgroundColor: actualTheme==="light" ? "white" : "#252525",
+            color: actualTheme==="light" ? "#252525" : "white",
+            "& .MuiInputBase-root": { border: "none" },
+          }}
+        >
+          <DialogContentText>{t("dialog.fillInfo")}</DialogContentText>
           <Box>
           {step === 1 && (
             <form onSubmit={handleNext}>

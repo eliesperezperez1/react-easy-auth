@@ -9,77 +9,10 @@ import { useEffect, useState } from "react";
 import { Entity, UpdateEntity } from "../../interfaces/entity.interface";
 import { updateEntityRequest } from "../../api/entities";
 import { useAuthHeader } from "react-auth-kit";
-import { Box, 
-  ThemeProvider,
-  createTheme } from "@mui/material";
+import { Box } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useTranslation } from "react-i18next";
-import useAlternateTheme from "../darkModeSwitch/alternateTheme";
-import { grey, red } from "@mui/material/colors";
-import { esES } from "@mui/x-data-grid";
-
-const baseTheme = (actualTheme:any) => createTheme(
-  {
-    typography: {
-      fontFamily: "Montserrat",
-    },
-    components: {
-      MuiTextField: {
-        styleOverrides: {
-          root: {
-            color: actualTheme === 'light' ? "black" : "white",
-          },
-        },
-      },
-      MuiCssBaseline: {
-        styleOverrides: `
-        @font-face {
-          font-family: 'Montserrat';
-          src: url(https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap);
-        }
-      `,
-      },
-      MuiInput: {
-        styleOverrides: {
-          root: {
-            color: actualTheme === 'light' ? "black" : "white",
-          },
-          
-        },
-      },
-    },
-    palette:{
-      mode: actualTheme==="light" ? "light" : "dark",
-      ...(actualTheme === 'light'
-      ? {
-          // palette values for light mode
-          primary: grey,
-          divider: grey[800],
-          text: {
-            primary: grey[900],
-            secondary: grey[800],
-          },
-        }
-      : {
-          // palette values for dark mode
-          primary: grey,
-          divider: grey[800],
-          background: {
-            default: grey[800],
-            paper: grey[900],
-          },
-          text: {
-            primary: grey[100],
-            secondary: grey[800],
-          },
-        }),
-    },
-    
-  },
-  esES
-);
-
 export interface UpdateDialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
@@ -96,7 +29,6 @@ export default function UpdateEntityDialog(props: {
   const [t, i18n] = useTranslation();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
-  const {actualTheme} = useAlternateTheme();
 
   useEffect(() => {
     setUpdate(props.enviar.entity);
@@ -147,12 +79,12 @@ export default function UpdateEntityDialog(props: {
     updateEntity(mergedFormData);
   };
 
+  
   const handleGoBack = () => {
     setStep(step - 1);
   }
   return (
     <>
-    <ThemeProvider theme={baseTheme(actualTheme)}>
       <Dialog
         fullWidth={true}
         open={open}
@@ -165,12 +97,7 @@ export default function UpdateEntityDialog(props: {
       >
         <DialogTitle>{t("dialog.addRegister")}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-          <div className="dialogContentText" style={{color: actualTheme==="light" ? "#252525" : "white"}}>
-            <span>{t("dialog.fillInfo")}</span>
-            <span><b>{step}/2</b></span>
-          </div>
-          </DialogContentText>
+          <DialogContentText>{t("dialog.fillInfo")}</DialogContentText>
           <Box>
           {step === 1 && (
             <form onSubmit={handleNext}>
@@ -383,7 +310,6 @@ export default function UpdateEntityDialog(props: {
         <DialogActions>
         </DialogActions>
       </Dialog>
-    </ThemeProvider>
     </>
   );
 }
