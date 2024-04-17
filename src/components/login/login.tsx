@@ -5,6 +5,7 @@ import {
   InputWrapper,
   StyledInput,
   LanguageFlag,
+  LanguageFlag,
 } from "../commons";
 
 import { useSignIn } from "react-auth-kit";
@@ -87,6 +88,7 @@ function Login(props: any) {
               value={formik.values.email}
               onChange={formik.handleChange}
               placeholder={t("login.email")}
+              placeholder={t("login.email")}
               clearOnEscape
               size="large"
               type="email"
@@ -97,6 +99,7 @@ function Login(props: any) {
               name="password"
               value={formik.values.password}
               onChange={formik.handleChange}
+              placeholder={t("login.password")}
               placeholder={t("login.password")}
               clearOnEscape
               size="large"

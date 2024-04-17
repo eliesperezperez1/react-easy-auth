@@ -78,6 +78,7 @@ const Menu = (props: { change: ChangeLanguageEvent }) => {
                 }}
               >
                 {t("header.inventory")}
+                {t("header.inventory")}
               </a>
             </li>
             <li>

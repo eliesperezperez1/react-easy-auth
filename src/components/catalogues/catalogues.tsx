@@ -42,7 +42,9 @@ import { ReactComponent as Val } from "../../assets/val.svg";
 import { ReactComponent as Esp } from "../../assets/esp.svg";
 import { useTranslation } from "react-i18next";
 import FolderDeleteIcon from "@mui/icons-material/FolderDelete";
-import FolderIcon from "@mui/icons-material/Folder";
+import FolderIcon from "@mui/icons-material/Folder";import { useTranslation } from "react-i18next";
+import { namespaces } from "../../@types/i18n.constants";
+
 import "./catalogues.css";
 import CreateCatalogueDialog, { DialogData } from "./create-catalogue.dialog";
 import UpdateCatalogueDialog, {
@@ -173,6 +175,9 @@ function valOrEsp(p: string | undefined) {
 function CatalogueList() {
   const authHeader = useAuthHeader();
   const user = useAuthUser();
+  const [t, i18n] = useTranslation();
+  const singOut = useSignOut();
+  const navigate = useNavigate();
   const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
   const [deletedCatalogues, setDeletedCatalogues] = useState<Catalogue[]>([]);
   const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>([]);
@@ -381,6 +386,7 @@ function CatalogueList() {
     },
     {
       field: "lastUpdate",
+      headerName: t("columnsNames.lastUpdate"),
       headerName: t("columnsNames.lastUpdate"),
       type: "dateTime",
       width: 200,
