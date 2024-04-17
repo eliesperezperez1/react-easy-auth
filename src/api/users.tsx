@@ -98,16 +98,16 @@ export const updateUserLanguage = async (
     },
   });
 
-  export const updateUserThemeApp = async (
-    User: UpdateUser,
-    refreshToken: string
-  ) =>
-    fetch(`${API}/user/themeApp`, {
-      method: "POST",
-      body: JSON.stringify(User),
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-        Authorization: refreshToken,
-      },
-    });
+export const updateUserThemeApp = async (
+  User: UpdateUser,
+  refreshToken: string
+) =>
+  fetch(`${API}/user/themeApp`, {
+    method: "POST",
+    body: JSON.stringify(User),
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/json",
+      Authorization: refreshToken,
+    },
+  });

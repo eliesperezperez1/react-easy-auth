@@ -42,7 +42,7 @@ import { ReactComponent as Val } from "../../assets/val.svg";
 import { ReactComponent as Esp } from "../../assets/esp.svg";
 import { useTranslation } from "react-i18next";
 import FolderDeleteIcon from "@mui/icons-material/FolderDelete";
-import FolderIcon from "@mui/icons-material/Folder";import { useTranslation } from "react-i18next";
+import FolderIcon from "@mui/icons-material/Folder";
 import { namespaces } from "../../@types/i18n.constants";
 
 import "./catalogues.css";
@@ -113,22 +113,6 @@ const CustomPagination = (props:any) => {
 
   return (
     
-    /*<GridPagination
-      {...props}
-      labelRowsPerPage={t("tooltipText.rowsPage")} // Use your translation key here
-      sx={{
-        color: actualTheme==="light" ? "black" : "white",
-      }}
-      renderItem={(item: any) => (
-        <PaginationItem
-            sx={{
-                color: actualTheme==="light" ? "black" : "white",
-            }}
-            components={{previous: KeyboardArrowRightIcon, next: KeyboardArrowLeftIcon}}
-            {...item}
-        />
-      )}
-    />*/
     <GridPagination
       labelRowsPerPage={t("tooltipText.rowsPage")}
       sx={{
@@ -176,8 +160,6 @@ function CatalogueList() {
   const authHeader = useAuthHeader();
   const user = useAuthUser();
   const [t, i18n] = useTranslation();
-  const singOut = useSignOut();
-  const navigate = useNavigate();
   const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
   const [deletedCatalogues, setDeletedCatalogues] = useState<Catalogue[]>([]);
   const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>([]);
@@ -198,7 +180,6 @@ function CatalogueList() {
     getInfo: () => getAndSetCatalogues(),
   };
 
-  const [t, i18n] = useTranslation();
   const datosUpdateDialog: UpdateDialogData = {
     open: openUpdateDialog,
     closeDialog: (close: boolean) => setOpenUpdateDialog(close),

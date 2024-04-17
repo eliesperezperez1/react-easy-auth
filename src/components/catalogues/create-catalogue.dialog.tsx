@@ -609,45 +609,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                     >
 
                     </DateTimePicker>
-                    {/*
-                    <TextField
-                      autoFocus
-                      required
-                      id="lastUpdate"
-                      margin="dense"
-                      name="lastUpdate"
-                      type="datetime-local"
-                      variant="standard"
-                      
-                      value={formDataSteps.lastUpdate}
-                      onChange={(e) =>
-                        handleChange("lastUpdate", e.target.value)
-                      }
-                      sx={{
-                        backgroundColor: "none",
-                        width: "100%",
-                        border: "none",
-                        color: actualTheme === 'light' ? "black" : "white",
-                        borderBottom: "1px solid lightgrey",
-                        "& input": {
-                          backgroundColor: "none",
-                          border: "none",
-                        },
-                      }}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      InputProps={{
-                        style: {
-                          backgroundColor: "none",
-                          //width: "100%",
-                          //border: "none",
-                          //borderBottom: "1px solid lightgrey",
-                          color: actualTheme === 'light' ? "black" : "white",
-                        },
-                      }}
-                    />
-                    */}
+                    
                   </div>
                   <div className="horizontalForm">
                     <p>{t("columnsNames.format")}</p>
