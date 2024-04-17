@@ -1,7 +1,7 @@
 import { GridPagination } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
 
-const CustomPagination = (props: any) => {
+function CustomPagination(props: any) {
   const { t } = useTranslation();
 
   return (
@@ -10,5 +10,5 @@ const CustomPagination = (props: any) => {
       labelRowsPerPage={t("tooltipText.rowsPage")} // Use your translation key here
     />
   );
-};
+}
 export default CustomPagination;
