@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ReactComponent as Brand } from "../../assets/logowithname.svg";
+import { ReactComponent as BrandWhite } from "../../assets/logowhitewithname.svg";
 import MenuIcon from "@mui/icons-material/Menu";
 import "./menu.css";
 import { useAuthUser, useSignOut } from "react-auth-kit";
@@ -37,7 +38,11 @@ const Menu = (props: { change: ChangeLanguageEvent }) => {
     <nav className="navbar">
       <div className="container">
         <div className="logo">
+        { userData.themeApp === "light" ? 
           <Brand />
+          :
+          <BrandWhite />
+          }
         </div>
         <div className="menu-icon" onClick={handleShowNavbar}>
           <MenuIcon />

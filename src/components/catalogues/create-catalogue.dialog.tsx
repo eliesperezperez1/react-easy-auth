@@ -18,10 +18,17 @@ import {
   MenuItem,
   Select,
   Switch,
+  ThemeProvider,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import "./create-catalogue.dialog.css";
 import React from "react";
+import { CalendarIcon, DateTimePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { Dayjs } from "dayjs";
+import baseTheme from "../darkModeSwitch/darkmodeTheme";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 
 export interface DialogData {
   open: boolean;
@@ -81,6 +88,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [personalData, setPersonalData] = useState("SI");
   const [activeAds, setActiveAds] = useState("SI");
   const [format, setFormat] = React.useState<string[]>([]);
+  const [lastUpdateAlmacenado, setLastUpdate] = React.useState<Dayjs | null>();
+  const [creationDateAlmacenado, setCreationDate] = React.useState<Dayjs | null>();
+  const {actualTheme} = useAlternateTheme();
 
   useEffect(() => {
     setOpen(props.enviar.open);
@@ -98,6 +108,8 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     setPersonalData("SI");
     setActiveAds("SI");
     setFormat([]);
+    setLastUpdate(null);
+    setCreationDate(null);
   };
 
   const handleFormat = (event: any, newValue: any) => {
@@ -183,6 +195,24 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       const formatosDatosMod: string = formatosDatos.replace(/,/g, " / ");
       currentStepData.set("format", formatosDatosMod);
     }
+
+    if (
+      (lastUpdateAlmacenado !== undefined && lastUpdateAlmacenado !== null) &&
+      (currentStepData.get("lastUpdate") !== null ||
+        currentStepData.get("lastUpdate") !== undefined)
+    ) {
+      const lastUpdateDatos = lastUpdateAlmacenado.toString();
+      currentStepData.set("lastUpdate", lastUpdateDatos);
+    }
+
+    if (
+      (creationDateAlmacenado !== undefined && creationDateAlmacenado !== null) &&
+      (currentStepData.get("creationDate") !== null ||
+        currentStepData.get("creationDate") !== undefined)
+    ) {
+      const creationDateDatos = creationDateAlmacenado.toString();
+      currentStepData.set("creationDate", creationDateDatos);
+    }
     //--------------------------------------------------------------------
     const currentStepJson = Object.fromEntries(currentStepData.entries());
 
@@ -245,18 +275,45 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     }));
   };
 
+  const handleChangeLastUpdate = (value: any) => {
+    setLastUpdate(value);
+  };
+
+  const handleChangeCreationDate = (value: any) => {
+    setCreationDate(value);
+  };
+
   return (
     <>
+    
+    <ThemeProvider theme={baseTheme(actualTheme)}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Dialog
         fullWidth={true}
         open={open}
         onClose={handleClose}
         sx={{
+          backgroundColor: actualTheme==="light" ? "white" : "#252525",
+          color: actualTheme==="light" ? "#252525" : "white",
           "& .MuiInputBase-root": { border: "none" },
         }}
       >
-        <DialogTitle>{t("dialog.addRegister")}</DialogTitle>
-        <DialogContent>
+        <DialogTitle
+        sx={{
+          backgroundColor: actualTheme==="light" ? "white" : "#252525",
+          color: actualTheme==="light" ? "#252525" : "white",
+          "& .MuiInputBase-root": { border: "none" },
+        }}
+        >
+          {t("dialog.addRegister")}
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            backgroundColor: actualTheme==="light" ? "white" : "#252525",
+            color: actualTheme==="light" ? "#252525" : "white",
+            "& .MuiInputBase-root": { border: "none" },
+          }}
+        >
           <div className="dialogContentText">
             <span>{t("dialog.fillInfo")}</span>
             <span>
@@ -416,58 +473,47 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                     />
                   </div>
                   <div className="horizontalForm">
-                    <p>{t("columnsNames.lastUpdate")}</p>
-                    <TextField
-                      autoFocus
-                      required
-                      id="lastUpdate"
-                      margin="dense"
+                  <p>{t("columnsNames.lastUpdate")}</p>
+                    <DateTimePicker 
+                      format="DD/MM/YYYY hh:mm:ss a"
                       name="lastUpdate"
-                      type="datetime-local"
-                      variant="standard"
-                      value={formDataSteps.lastUpdate}
+                      value={lastUpdateAlmacenado}
                       onChange={(e) =>
-                        handleChange("lastUpdate", e.target.value)
+                        handleChangeLastUpdate(e)
                       }
-                      sx={{
-                        backgroundColor: "none",
-                        width: "100%",
-                        border: "none",
-                        borderBottom: "1px solid lightgrey",
-                        "& input": {
-                          backgroundColor: "none",
-                          border: "none",
-                        },
-                      }}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        style: {
-                          backgroundColor: "none",
-                          width: "100%",
-                          border: "none",
-                          borderBottom: "1px solid lightgrey",
-                        },
-                      }}
-                    />
+                      slotProps={{ textField: { variant: "standard", id:"lastUpdate" } }}
+                    >
+                    </DateTimePicker>
                   </div>
                   <div className="horizontalForm">
                     <p>{t("columnsNames.format")}</p>
                     <FormControl variant="standard">
-                      <FormGroup>
+                      <FormGroup >
                         <Autocomplete
                           multiple
                           id="format"
                           options={["PDF", "EXCEL", "CSV", "JSON"]}
+                          sx={{
+                            color: actualTheme === 'light' ? "black" : "white",
+                          }}
                           value={format}
                           onChange={handleFormat}
                           disableCloseOnSelect={true}
                           renderOption={(props, option, { selected }) => (
                             <li {...props}>
                               <FormControlLabel
-                                control={<Checkbox checked={selected} />}
+                                control={
+                                <Checkbox 
+                                checked={selected} 
+                                sx={{
+                                  color: actualTheme === 'light' ? "black" : "white",
+                                }}
+                                />
+                              }
                                 label={option}
+                                sx={{
+                                  color: actualTheme === 'light' ? "black" : "white",
+                                }}
                               />
                             </li>
                           )}
@@ -477,6 +523,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                               name="format"
                               variant="standard"
                               placeholder="Select formats"
+                              sx={{
+                                color: actualTheme === 'light' ? "black" : "white",
+                              }}
                             />
                           )}
                         />
@@ -844,40 +893,17 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 <div className="verticalForm">
                   <div className="horizontalForm">
                     <p>Fecha de creación</p>
-                    <TextField
-                      autoFocus
-                      required
-                      id="creationDate"
-                      margin="dense"
+                    <DateTimePicker 
+                      format="DD/MM/YYYY hh:mm:ss a"
                       name="creationDate"
-                      type="datetime-local"
-                      variant="standard"
-                      value={formDataSteps.creationDate}
+                      value={creationDateAlmacenado}
                       onChange={(e) =>
-                        handleChange("creationDate", e.target.value)
+                        handleChangeCreationDate(e)
                       }
-                      sx={{
-                        backgroundColor: "none",
-                        width: "100%",
-                        border: "none",
-                        borderBottom: "1px solid lightgrey",
-                        "& input": {
-                          backgroundColor: "none",
-                          border: "none",
-                        },
-                      }}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        style: {
-                          backgroundColor: "none",
-                          width: "100%",
-                          border: "none",
-                          borderBottom: "1px solid lightgrey",
-                        },
-                      }}
-                    />
+                      slotProps={{ textField: { variant: "standard", id:"creationDate" } }}
+                    >
+
+                    </DateTimePicker>
                   </div>
                   <div className="horizontalFormSwitch">
                     <p>{t("columnsNames.personalData")}</p>
@@ -1001,6 +1027,8 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
         </DialogContent>
         <DialogActions></DialogActions>
       </Dialog>
+    </LocalizationProvider>
+    </ThemeProvider>
     </>
   );
 }

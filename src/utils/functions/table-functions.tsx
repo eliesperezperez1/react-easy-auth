@@ -11,6 +11,8 @@ export function paletaColores(color: string) {
       return "#333333";
     case "colorRowHover":
       return "rgba(212, 212, 212, 0.2)";
+      case "colorRowHoverDark":
+        return "rgba(212, 212, 212, 1)";
   }
 }
 

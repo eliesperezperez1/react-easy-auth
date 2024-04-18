@@ -1,6 +1,7 @@
 import { LANGUAGE } from "../utils/enums/language.enum";
 import { RESPONSIBLE_IDENTITY } from "../utils/enums/responsible-identity.enum";
 import { ROLE } from "../utils/enums/role.enum";
+import { THEMEAPP } from "../utils/enums/themeApp.enum";
 
 export interface AuthUser {
   user: SentUser;
@@ -16,6 +17,7 @@ export interface User {
   language: LANGUAGE;
   role: ROLE;
   service: RESPONSIBLE_IDENTITY;
+  themeApp: THEMEAPP;
   deleted: boolean;
   createdAt?: Date;
   updatedAt?: Date;

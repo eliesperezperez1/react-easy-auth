@@ -5,6 +5,7 @@ import {
   useGridApiRef,
 } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
+import * as React from 'react';
 import { Catalogue } from "../../interfaces/catalogue.interface";
 import {
   getCatalogueRequest,
@@ -31,6 +32,10 @@ import {
   yesOrNo,
   valOrEsp,
 } from "../../utils/functions/table-functions";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import { grey } from "@mui/material/colors";
+import baseTheme from "../darkModeSwitch/darkmodeTheme";
+import { ThemeProvider } from "@mui/material";
 
 function CatalogueList() {
   const authHeader = useAuthHeader();
@@ -46,6 +51,8 @@ function CatalogueList() {
     useState<Catalogue>(catalogueMock);
   const [userData, setUserData] = useState<User>(userMock);
   const gridApiRef = useGridApiRef();
+  const {actualTheme} = useAlternateTheme();
+
   const datosDialog: DialogData = {
     open: openDialog,
     closeDialog: (close: boolean) => setOpenDialog(close),
@@ -272,7 +279,7 @@ function CatalogueList() {
       });
   }
   function getSelectedCatalogues() {
-    selectedCatalogues.forEach((sc) => {
+    selectedCatalogues.forEach((sc:any) => {
       getCatalogueRequest(authHeader(), sc)
         .then((response) => response.json())
         .then((data) => {
@@ -292,7 +299,7 @@ function CatalogueList() {
 
   function deleteRegisters() {
     selectedCatalogues.forEach((sc: string) => {
-      let cata = catalogues.find((v) => v._id === sc);
+      let cata = catalogues.find((v: any) => v._id === sc);
       if (cata) {
         updateCatalogueRequest(
           cata._id,
@@ -310,7 +317,7 @@ function CatalogueList() {
 
   function restoreRegisters() {
     selectedCatalogues.forEach((sc: string) => {
-      let cata = deletedCatalogues.find((v) => v._id === sc);
+      let cata = deletedCatalogues.find((v:any) => v._id === sc);
       if (cata) {
         updateCatalogueRequest(
           cata._id,
@@ -346,6 +353,7 @@ function CatalogueList() {
   return (
     <>
       <div>
+        <ThemeProvider theme={baseTheme(actualTheme)}>
         <DataGrid
           apiRef={gridApiRef}
           rows={rows}
@@ -353,13 +361,15 @@ function CatalogueList() {
           sx={{
             height: 700,
             width: "100%",
+            backgroundColor: actualTheme==="light" ? "white" : "#252525",
+            color: actualTheme==="light" ? "#252525" : "white",
             "& .header-theme": {
               backgroundColor: "lightblue",
               border: "1px 1px 0px 0px solid black",
             },
             "& .MuiDataGrid-row:hover": {
-              color: paletaColores("colorTextAlter"),
-              bgcolor: paletaColores("colorRowHover"),
+              color: actualTheme==='light' ? paletaColores("colorTextAlter") : paletaColores("colorBgRowSelectedBorder"),
+              bgcolor: actualTheme==='light' ? paletaColores("colorRowHover") : paletaColores("colorRowHoverDark"),
               border: "1px solid " + paletaColores("colorBgRowSelectedBorder"),
             },
           }}
@@ -484,6 +494,7 @@ function CatalogueList() {
             toolbarQuickFilterPlaceholder: t("dataTable.quickFilter"),
           }}
         />
+        </ThemeProvider>
       </div>
       <CreateCatalogueDialog enviar={datosDialog}></CreateCatalogueDialog>
       <UpdateCatalogueDialog enviar={datosUpdateDialog}></UpdateCatalogueDialog>

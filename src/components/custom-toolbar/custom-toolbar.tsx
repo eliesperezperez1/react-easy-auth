@@ -18,6 +18,8 @@ import { User } from "../../interfaces/user.interface";
 import { useTranslation } from "react-i18next";
 import { MutableRefObject } from "react";
 import { GridApiCommunity } from "@mui/x-data-grid/models/api/gridApiCommunity";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import { grey } from "@mui/material/colors";
 
 export interface CustomToolbarProperties {
   userData: User;
@@ -32,6 +34,7 @@ export interface CustomToolbarProperties {
 
 function CustomToolbar(props: CustomToolbarProperties) {
   const { t } = useTranslation();
+  const {actualTheme} = useAlternateTheme();
 
   return (
     <>
@@ -118,17 +121,22 @@ function CustomToolbar(props: CustomToolbarProperties) {
         </Tooltip>
         <ExportButton visibleData={props.visibleData} />
 
-        <Tooltip title="Búsqueda rápida">
-          <GridToolbarQuickFilter
+        <Tooltip 
+            title="Búsqueda rápida"
             sx={{
-              height: 33,
-              backgroundColor: "#D9D9D9",
-              color: "#404040",
-              borderColor: "#404040",
-              borderRadius: 1,
+              color: actualTheme==="light" ? 'darkgrey' : 'darkgrey',
             }}
-          />
-        </Tooltip>
+            >
+            <GridToolbarQuickFilter
+              sx={{
+                height: 33,
+                backgroundColor: "#D9D9D9",
+                color: actualTheme==="light" ? 'darkgrey' : 'darkgrey',
+                borderColor: "#404040",
+                borderRadius: 1,
+              }}
+            />
+          </Tooltip>
 
         <div className="customToolbarRightButtons">
           {props.userData.role === ROLE.ADMIN ||
@@ -146,6 +154,9 @@ function CustomToolbar(props: CustomToolbarProperties) {
                     borderColor: "#0D0D0D",
                     backgroundColor: "#0D0D0D",
                     color: "#f2f2f2",
+                  },
+                  "&.Mui-disabled": {
+                    color: 'darkgrey',
                   },
                 }}
                 onClick={props.getSelectedCatalogues}
@@ -167,6 +178,9 @@ function CustomToolbar(props: CustomToolbarProperties) {
                       backgroundColor: "#0D0D0D",
                       color: "#f2f2f2",
                     },
+                    "&.Mui-disabled": {
+                      color: 'darkgrey',
+                    },
                   }}
                 >
                   {t("dataTable.addDataset")}
@@ -183,6 +197,9 @@ function CustomToolbar(props: CustomToolbarProperties) {
                       borderColor: "#0D0D0D",
                       backgroundColor: "#0D0D0D",
                       color: "#f2f2f2",
+                    },
+                    "&.Mui-disabled": {
+                      color: 'darkgrey',
                     },
                   }}
                   onClick={props.getSelectedCatalogues}
@@ -201,6 +218,9 @@ function CustomToolbar(props: CustomToolbarProperties) {
                       borderColor: "#0D0D0D",
                       backgroundColor: "#0D0D0D",
                       color: "#f2f2f2",
+                    },
+                    "&.Mui-disabled": {
+                      color: 'darkgrey',
                     },
                   }}
                   onClick={props.deleteRegisters}
