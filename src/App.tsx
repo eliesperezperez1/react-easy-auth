@@ -10,6 +10,7 @@ import UserList from "./components/users/users";
 import Menu, { ChangeLanguageEvent } from "./components/menu/menu";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { caES, esES } from "@mui/material/locale";
+import { GraphList } from "./components/graphs/graphs";
 
 const AppContainer = styled.div`
   width: 100%;
@@ -108,6 +109,17 @@ function App() {
                 <>
                   <Menu change={change} />
                   <UserList />
+                </>
+              </RequireAuth>
+            }
+          ></Route>
+          <Route
+            path="/graphs"
+            element={
+              <RequireAuth loginPath="/login">
+                <>
+                  <Menu change={change} />
+                  <GraphList />
                 </>
               </RequireAuth>
             }

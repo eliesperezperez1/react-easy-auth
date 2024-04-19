@@ -9,17 +9,76 @@ import { useEffect, useState } from "react";
 import { CreateEntity } from "../../interfaces/entity.interface";
 import { createEntityRequest } from "../../api/entities";
 import { useAuthHeader } from "react-auth-kit";
-import { Box } from "@mui/material";
+import { Box, ThemeProvider, createTheme } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { useTranslation } from "react-i18next";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "./create-entity.dialog.css";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import { grey } from "@mui/material/colors";
+import { esES } from "@mui/x-data-grid";
 
 export interface DialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
   getInfo: () => void;
 }
+
+const baseTheme = (actualTheme:any) => createTheme(
+  {
+    typography: {
+      fontFamily: "Montserrat",
+    },
+    components: {
+      MuiTextField: {
+
+      },
+      MuiCssBaseline: {
+        styleOverrides: `
+        @font-face {
+          font-family: 'Montserrat';
+          src: url(https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap);
+        }
+      `,
+      },
+      MuiInput: {
+        styleOverrides: {
+          root: {
+            color: actualTheme === 'light' ? "black" : "white",
+          },
+        },
+      },
+    },
+    palette:{
+      mode: actualTheme==="light" ? "light" : "dark",
+      ...(actualTheme === 'light'
+      ? {
+          // palette values for light mode
+          primary: grey,
+          divider: grey[800],
+          text: {
+            primary: grey[900],
+            secondary: grey[800],
+          },
+        }
+      : {
+          // palette values for dark mode
+          primary: grey,
+          divider: grey[800],
+          background: {
+            default: grey[800],
+            paper: grey[800],
+          },
+          text: {
+            primary: grey[900],
+            secondary: grey[800],
+          },
+        }),
+    },
+    
+  },
+  esES
+);
 
 export default function CreateEntityDialog(props: { enviar: DialogData }) {
   const [open, setOpen] = useState<boolean>(false);
@@ -32,6 +91,7 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
     telephone: "", email: "" 
     }
   );
+  const {actualTheme} = useAlternateTheme();
   //const [creationDate, setCreationDate] = useState(getCurrentDateTime());
 
   useEffect(() => {
@@ -39,6 +99,8 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
   });
 
   const handleClose = () => {
+    setFormData({});
+    setStep(1);
     setOpen(false);
     props.enviar.closeDialog(false);
   };
@@ -102,18 +164,35 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
 
   return (
     <>
+    <ThemeProvider theme={baseTheme(actualTheme)}>
       <Dialog
         fullWidth={true}
         open={open}
         onClose={handleClose}
         sx={{
+          backgroundColor: actualTheme==="light" ? "white" : "#252525",
+          color: actualTheme==="light" ? "#252525" : "white",
           "& .MuiTextField-root": { m: 1, width: "20ch" },
           "& .MuiFormControl-root": { m: 1, width: "20ch" },
           "&. MuiInputBase-root": { m: 1, width: "20ch" },
         }}
       >
-        <DialogTitle>{t("dialog.addRegister")}</DialogTitle>
-        <DialogContent>
+        <DialogTitle
+          sx={{
+            backgroundColor: actualTheme==="light" ? "white" : "#252525",
+            color: actualTheme==="light" ? "#252525" : "white",
+            "& .MuiInputBase-root": { border: "none" },
+          }}
+        >
+          {t("dialog.addRegister")}
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            backgroundColor: actualTheme==="light" ? "white" : "#252525",
+            color: actualTheme==="light" ? "#252525" : "white",
+            "& .MuiInputBase-root": { border: "none" },
+          }}
+        >
           <DialogContentText>{t("dialog.fillInfo")}</DialogContentText>
           <Box>
           {step === 1 && (
@@ -380,9 +459,16 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
           )}
           </Box>
         </DialogContent>
-        <DialogActions>
+        <DialogActions
+          sx={{
+            backgroundColor: actualTheme==="light" ? "white" : "#252525",
+            color: actualTheme==="light" ? "#252525" : "white",
+            "& .MuiInputBase-root": { border: "none" },
+          }}
+        >
         </DialogActions>
       </Dialog>
+    </ThemeProvider>
     </>
   );
 }

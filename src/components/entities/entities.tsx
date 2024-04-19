@@ -4,7 +4,7 @@ import {
   GridRenderCellParams,
   useGridApiRef,
 } from "@mui/x-data-grid";
-import { Chip } from "@mui/material";
+import { Chip, ThemeProvider } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Entity } from "../../interfaces/entity.interface";
 import { updateCatalogueRequest } from "../../api/catalogues";
@@ -27,6 +27,8 @@ import {
   paletaColores,
 } from "../../utils/functions/table-functions";
 import CustomToolbar from "../custom-toolbar/custom-toolbar";
+import baseTheme from "../darkModeSwitch/darkmodeTheme";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 
 function EntitiesList() {
   const authHeader = useAuthHeader();
@@ -41,6 +43,7 @@ function EntitiesList() {
   const [entitySelected, setEntitySelected] = useState<Entity>(entityMock);
   const [userData, setUserData] = useState<User>(userMock);
   const gridApiRef = useGridApiRef();
+  const {actualTheme} = useAlternateTheme();
 
   const [t, i18n] = useTranslation();
 
@@ -69,7 +72,15 @@ function EntitiesList() {
       headerName: t("columnsNames.location"),
       width: 200,
       renderCell: (params: GridRenderCellParams<any, string>) => (
-        <a href={getLocationUrl(params.value)}>{params.value}</a>
+        <a 
+        href={getLocationUrl(params.value)}
+        style={{
+          color: actualTheme==="light" ? "darkblue" : "lightblue", // Set your desired color here
+          // Add any other styling properties you need
+        }}
+        >
+          {params.value}
+        </a>
       ),
       description: t("tooltipText.locationService"),
     },
@@ -98,7 +109,15 @@ function EntitiesList() {
       headerName: t("columnsNames.phoneNumber"),
       width: 200,
       renderCell: (params: GridRenderCellParams<any, string>) => (
-        <a href={"tel:+34" + params.value}>{params.value}</a>
+        <a 
+        href={"tel:+34" + params.value}
+        style={{
+          color: actualTheme==="light" ? "darkblue" : "lightblue", // Set your desired color here
+          // Add any other styling properties you need
+        }}
+        >
+          {params.value}
+        </a>
       ),
       description: t("tooltipText.phoneNumberService"),
     },
@@ -107,7 +126,15 @@ function EntitiesList() {
       headerName: t("login.email"),
       width: 200,
       renderCell: (params: GridRenderCellParams<any, string>) => (
-        <a href={"mailto:" + params.value}>{params.value}</a>
+        <a 
+        href={"mailto:" + params.value}
+        style={{
+          color: actualTheme==="light" ? "darkblue" : "lightblue", // Set your desired color here
+          // Add any other styling properties you need
+        }}
+        >
+          {params.value}
+        </a>
       ),
       description: t("tooltipText.emailService"),
     },
@@ -208,6 +235,7 @@ function EntitiesList() {
   return (
     <>
       <div>
+        <ThemeProvider theme={baseTheme(actualTheme)}>
         <DataGrid
           apiRef={gridApiRef}
           rows={rows}
@@ -215,13 +243,19 @@ function EntitiesList() {
           sx={{
             height: 700,
             width: "100%",
+            backgroundColor: actualTheme==="light" ? "white" : "#252525",
+            color: actualTheme==="light" ? "#252525" : "white",
             "& .header-theme": {
               backgroundColor: "lightblue",
               border: "1px 1px 0px 0px solid black",
             },
+            "& .MuiDataGrid-row":{
+              border: "none",
+              margin: "none",
+            },
             "& .MuiDataGrid-row:hover": {
-              color: paletaColores("colorTextAlter"),
-              bgcolor: paletaColores("colorRowHover"),
+              color: actualTheme==='light' ? paletaColores("colorTextAlter") : paletaColores("colorBgRowSelectedBorder"),
+              bgcolor: actualTheme==='light' ? paletaColores("colorRowHover") : paletaColores("colorRowHoverDark"),
               border: "1px solid " + paletaColores("colorBgRowSelectedBorder"),
             },
           }}
@@ -347,6 +381,7 @@ function EntitiesList() {
             toolbarQuickFilterPlaceholder: t("dataTable.quickFilter"),
           }}
         />
+        </ThemeProvider>
       </div>
       <CreateEntityDialog enviar={dialogData}></CreateEntityDialog>
       <UpdateEntityDialog enviar={datosUpdateDialog}></UpdateEntityDialog>

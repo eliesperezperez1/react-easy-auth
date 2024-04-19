@@ -16,9 +16,11 @@ body {
   height: 60px;
   position: relative;
   z-index: 1000;
+  /*background-color: #0d0d0d;*/
 }
 
 .logo {
+  margin-top: 15px;
 }
 
 .menu-icon {
