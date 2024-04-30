@@ -13,6 +13,7 @@ const useAlternateTheme = () => {
     if (user() && user().user) {
       setUserData(user().user);
       setActualTheme(user().user.themeApp);
+      console.log("user().user.themeApp: " + user().user.themeApp);
     } else {
       setActualTheme("light");
     }

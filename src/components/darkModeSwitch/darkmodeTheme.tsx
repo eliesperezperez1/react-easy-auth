@@ -33,14 +33,14 @@ const baseTheme = (actualTheme:any) => createTheme(
         : {
             // palette values for dark mode
             primary: grey,
-            divider: grey[800],
+            divider: grey[900],
             background: {
-              default: grey[800],
-              paper: grey[800],
+              default: grey[900],
+              paper: grey[900],
             },
             text: {
-              primary: grey[900],
-              secondary: grey[800],
+              primary: grey[100],
+              secondary: grey[200],
             },
           }),
       },

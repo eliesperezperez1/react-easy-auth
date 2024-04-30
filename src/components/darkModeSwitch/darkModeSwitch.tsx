@@ -5,6 +5,10 @@ import { User } from "../../interfaces/user.interface";
 import { updateUserThemeApp } from "../../api/users";
 import { THEMEAPP } from "../../utils/enums/themeApp.enum";
 import useAlternateTheme from "./alternateTheme";
+import Luna from "../../assets/moon.svg";
+import Sol from "../../assets/sun.svg";
+import "./darkModeSwitch.css"; 
+import { Switch } from "@mui/material";
 
 
 const DarkModeSwitch = () => {//: React.FC<{ onThemeChange: (themeStatus: string) => void }> = ({ onThemeChange }) => {
@@ -24,6 +28,8 @@ const DarkModeSwitch = () => {//: React.FC<{ onThemeChange: (themeStatus: string
       }, [user()]);
 
     async function switchThemeApp() {
+      console.log("click cambio");
+      console.log("actualTheme: " + actualTheme);
         if(actualTheme==="light"){
             toggleTheme();
             if(userData !== null && userData !== userMock){
@@ -62,7 +68,29 @@ const DarkModeSwitch = () => {//: React.FC<{ onThemeChange: (themeStatus: string
     }
 
     return (
-        <button onClick={switchThemeApp}>Theme</button>
+        <button 
+          className="darkModeButton" 
+          onClick={switchThemeApp}
+          style={{
+            height: "35px",
+            width: "35px",
+            padding: 0,
+            backgroundImage: "transparent",
+            borderRadius: 50,
+            overflow: "hidden",
+          }}
+          >
+            <img
+              src={actualTheme === "light" ? Sol : Luna}
+              alt="Image"
+              style={{
+                objectFit: "cover",
+                objectPosition: "left",
+                width: "100%",
+                height: "100%",
+              }}
+            />
+          </button>
     );
 };
 

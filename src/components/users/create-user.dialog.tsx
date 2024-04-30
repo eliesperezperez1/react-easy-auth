@@ -9,9 +9,14 @@ import { useEffect, useState } from "react";
 import { CreateUser } from "../../interfaces/user.interface";
 import { registerUser } from "../../api/users";
 import { useAuthHeader } from "react-auth-kit";
-import { Box } from "@mui/material";
+import { Box, ThemeProvider } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import "./create-users.dialog.css";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { Dayjs } from "dayjs";
+import baseTheme from "../darkModeSwitch/darkmodeTheme";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 
 export interface DialogData {
   open: boolean;
@@ -30,6 +35,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
     password: "", language: "", role: "", responsibleIdentity: "" 
     }
   );
+  const {actualTheme} = useAlternateTheme();
 
   useEffect(() => {
     setOpen(props.enviar.open);
@@ -94,19 +100,27 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
       [field]: value,
     }));
   };
+
+  const dynamicStyle = {
+    backgroundColor: actualTheme === "light" ? "white" : "#252525",
+    color: actualTheme === "light" ? "#252525" : "white",
+    "& .MuiInputBase-root": { border: "none" },
+  };
+
   return (
     <>
-      <Dialog fullWidth={true} open={open} onClose={handleClose}>
-        <DialogTitle>{t("dialog.addRegister")}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
+    <ThemeProvider theme={baseTheme(actualTheme)}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      
+      <Dialog style={dynamicStyle} fullWidth={true} open={open} onClose={handleClose}>
+        <DialogTitle style={dynamicStyle}>{t("dialog.addRegister")}</DialogTitle>
+        <DialogContent style={dynamicStyle}>
             <div className="dialogContentText">
               <span>{t("dialog.fillInfo")}</span>
               <span>
                 <b>{step}/2</b>
               </span>
             </div>
-          </DialogContentText>
           <Box>
             {step === 1 && (
               <form onSubmit={handleNext}>
@@ -342,6 +356,8 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
         </DialogContent>
         <DialogActions></DialogActions>
       </Dialog>
+    </LocalizationProvider>
+    </ThemeProvider>
     </>
   );
 }

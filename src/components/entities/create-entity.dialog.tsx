@@ -14,6 +14,9 @@ import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { useTranslation } from "react-i18next";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "./create-entity.dialog.css";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import baseTheme from "../darkModeSwitch/darkmodeTheme";
+import { ThemeProvider } from "@mui/material";
 
 export interface DialogData {
   open: boolean;
@@ -32,6 +35,7 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
     telephone: "", email: "" 
     }
   );
+  const {actualTheme} = useAlternateTheme();
   //const [creationDate, setCreationDate] = useState(getCurrentDateTime());
 
   useEffect(() => {
@@ -39,6 +43,13 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
   });
 
   const handleClose = () => {
+    setFormData({});
+    setFormDataSteps({
+      responsibleIdentity: "", topic:"", contactPerson: "", location: "", 
+      telephone: "", email: "" 
+      }
+    );
+    setStep(1);
     setOpen(false);
     props.enviar.closeDialog(false);
   };
@@ -100,22 +111,45 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
     }));
   };
 
+  
+  const dynamicStyle = {
+    backgroundColor: actualTheme === "light" ? "white" : "#252525",
+    color: actualTheme === "light" ? "#252525" : "white",
+    "& .MuiInputBase-root": { border: "none" },
+  };
+
   return (
     <>
+    <ThemeProvider theme={baseTheme(actualTheme)}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Dialog
         fullWidth={true}
         open={open}
         onClose={handleClose}
         sx={{
+          backgroundColor: actualTheme==="light" ? "white" : "#252525",
+          color: actualTheme==="light" ? "#252525" : "white",
           "& .MuiTextField-root": { m: 1, width: "20ch" },
           "& .MuiFormControl-root": { m: 1, width: "20ch" },
-          "&. MuiInputBase-root": { m: 1, width: "20ch" },
+          "& .MuiInputBase-root": { m: 1, width: "20ch", border: "none" },
         }}
       >
-        <DialogTitle>{t("dialog.addRegister")}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>{t("dialog.fillInfo")}</DialogContentText>
-          <Box>
+        <DialogTitle
+          style={dynamicStyle}
+        >
+          {t("dialog.addRegister")}
+        </DialogTitle>
+        <DialogContent
+          style={dynamicStyle}
+        >
+          <div className="dialogContentText">
+            <span>{t("dialog.fillInfo")}</span>
+            <span>
+              <strong>{step}/2</strong>
+            </span>
+          </div>
+          <Box
+          >
           {step === 1 && (
             <form onSubmit={handleNext}>
               <div className="verticalForm">
@@ -124,6 +158,9 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
                   {t("columnsNames.responsibleIdentity")}
                   </p>
                   <TextField
+                    sx={{
+                      color: "white",
+                    }}
                     autoFocus
                     margin="dense"
                     id="responsibleIdentity"
@@ -383,6 +420,8 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
         <DialogActions>
         </DialogActions>
       </Dialog>
+    </LocalizationProvider>
+    </ThemeProvider>
     </>
   );
 }

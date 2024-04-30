@@ -26,6 +26,10 @@ import {
   yesOrNo,
   valOrEsp,
 } from "../../utils/functions/table-functions";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import { grey } from "@mui/material/colors";
+import baseTheme from "../darkModeSwitch/darkmodeTheme";
+import { ThemeProvider } from "@mui/material";
 
 function UserList() {
   const authHeader = useAuthHeader();
@@ -40,6 +44,8 @@ function UserList() {
   const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
   const [userSelected, setUserSelected] = useState<User>(userMock);
   const [userData, setUserData] = useState<User>(userMock);
+  const {actualTheme} = useAlternateTheme();
+  
   const datosDialog: DialogData = {
     open: openDialog,
     closeDialog: (close: boolean) => setOpenDialog(close),
@@ -114,7 +120,7 @@ function UserList() {
   }
   function getSelectedUsers() {
     selectedUsers.forEach((sc) => {
-      getUserRequest(authHeader(), sc)
+      getUserRequest(sc, authHeader())
         .then((response) => response.json())
         .then((data) => {
           setUserSelected(data);
@@ -177,6 +183,7 @@ function UserList() {
   return (
     <>
       <div>
+        <ThemeProvider theme={baseTheme(actualTheme)}>
         <DataGrid
           rows={rows}
           columns={columns}
@@ -184,13 +191,15 @@ function UserList() {
           sx={{
             height: 700,
             width: "100%",
+            backgroundColor: actualTheme==="light" ? "white" : "#252525",
+            color: actualTheme==="light" ? "#252525" : "white",
             "& .header-theme": {
               backgroundColor: "lightblue",
               border: "1px 1px 0px 0px solid black",
             },
             "& .MuiDataGrid-row:hover": {
-              color: paletaColores("colorTextAlter"),
-              bgcolor: paletaColores("colorRowHover"),
+              color: actualTheme==='light' ? paletaColores("colorTextAlter") : paletaColores("colorBgRowSelectedBorder"),
+              bgcolor: actualTheme==='light' ? paletaColores("colorRowHover") : paletaColores("colorRowHoverDark"),
               border: "1px solid " + paletaColores("colorBgRowSelectedBorder"),
             },
           }}
@@ -237,11 +246,78 @@ function UserList() {
           }}
           localeText={{
             toolbarColumns: t("dataTable.columns"),
+            filterPanelColumns: t("localtext.columnsTexts.filterPanelColumns"),
+            columnMenuLabel: t("localtext.columnsTexts.columnMenuLabel"),
+            columnsPanelShowAllButton: t(
+              "localtext.columnsTexts.columnsPanelShowAllButton"
+            ),
+            columnsPanelHideAllButton: t(
+              "localtext.columnsTexts.columnsPanelHideAllButton"
+            ),
+            columnsPanelTextFieldLabel: t(
+              "localtext.columnsTexts.columnsPanelTextFieldLabel"
+            ),
+            columnsPanelTextFieldPlaceholder: t(
+              "localtext.columnsTexts.columnsPanelTextFieldPlaceholder"
+            ),
+
             toolbarFilters: t("dataTable.filters"),
+            filterPanelInputLabel: t(
+              "localtext.filterTexts.filterPanelInputLabel"
+            ),
+            filterPanelInputPlaceholder: t(
+              "localtext.filterTexts.filterPanelInputPlaceholder"
+            ),
+            filterPanelOperator: t("localtext.filterTexts.filterPanelOperator"),
+            filterOperatorContains: t(
+              "localtext.filterTexts.filterOperatorContains"
+            ),
+            filterOperatorEquals: t(
+              "localtext.filterTexts.filterOperatorEquals"
+            ),
+            filterOperatorStartsWith: t(
+              "localtext.filterTexts.filterOperatorStartsWith"
+            ),
+            filterOperatorEndsWith: t(
+              "localtext.filterTexts.filterOperatorEndsWith"
+            ),
+            filterOperatorIs: t("localtext.filterTexts.filterOperatorIs"),
+            filterOperatorNot: t("localtext.filterTexts.filterOperatorNot"),
+            filterOperatorAfter: t("localtext.filterTexts.filterOperatorAfter"),
+            filterOperatorOnOrAfter: t(
+              "localtext.filterTexts.filterOperatorOnOrAfter"
+            ),
+            filterOperatorBefore: t(
+              "localtext.filterTexts.filterOperatorBefore"
+            ),
+            filterOperatorOnOrBefore: t(
+              "localtext.filterTexts.filterOperatorOnOrBefore"
+            ),
+            filterOperatorIsEmpty: t(
+              "localtext.filterTexts.filterOperatorIsEmpty"
+            ),
+            filterOperatorIsNotEmpty: t(
+              "localtext.filterTexts.filterOperatorIsNotEmpty"
+            ),
+            filterOperatorIsAnyOf: t(
+              "localtext.filterTexts.filterOperatorIsAnyOf"
+            ),
+
             toolbarDensity: t("dataTable.density"),
+            toolbarDensityCompact: t(
+              "localtext.densityTexts.toolbarDensityCompact"
+            ),
+            toolbarDensityStandard: t(
+              "localtext.densityTexts.toolbarDensityStandard"
+            ),
+            toolbarDensityComfortable: t(
+              "localtext.densityTexts.toolbarDensityComfortable"
+            ),
+
             toolbarQuickFilterPlaceholder: t("dataTable.quickFilter"),
           }}
         />
+        </ThemeProvider>
       </div>
       <CreateUserDialog enviar={datosDialog}></CreateUserDialog>
       <UpdateUserDialog enviar={datosUpdateDialog}></UpdateUserDialog>

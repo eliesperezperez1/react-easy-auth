@@ -12,9 +12,25 @@ import {
 } from "../../interfaces/catalogue.interface";
 import { updateCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
-import { Autocomplete, Box, Checkbox, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Select, Switch } from "@mui/material";
+import { Autocomplete, 
+  Box, 
+  Checkbox, 
+  FormControl, 
+  FormControlLabel, 
+  FormGroup, 
+  InputLabel, 
+  MenuItem, 
+  Select, 
+  Switch,
+  ThemeProvider, } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import baseTheme from "../darkModeSwitch/darkmodeTheme";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import React from "react";
+import { CalendarIcon, DateTimePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { Dayjs } from "dayjs";
 export interface UpdateDialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
@@ -38,6 +54,9 @@ export default function UpdateCatalogueDialog(props: {
   const [georeference, setGeoreference] = useState("SI");
   const [personalData, setPersonalData] = useState("SI");
   const [activeAds, setActiveAds] = useState("SI");
+  const [lastUpdateAlmacenado, setLastUpdate] = React.useState<Dayjs | null>();
+  const [creationDateAlmacenado, setCreationDate] = React.useState<Dayjs | null>();
+  const {actualTheme} = useAlternateTheme();
 
   useEffect(() => {
     setUpdate(props.enviar.catalogue);
@@ -48,6 +67,8 @@ export default function UpdateCatalogueDialog(props: {
     setGeoreference(props.enviar.catalogue.georeference);
     setPersonalData(props.enviar.catalogue.personalData);
     setActiveAds(props.enviar.catalogue.activeAds);
+    //setLastUpdate(props.enviar.catalogue.lastUpdate);
+    //setCreationDate(props.enviar.catalogue.creationDate);
     setStep(1);
   }, [props.enviar.open, props.enviar.catalogue]);
 
@@ -135,6 +156,24 @@ export default function UpdateCatalogueDialog(props: {
       const formatosDatos = format.toString();
       const formatosDatosMod = formatosDatos.replace(/,/g, " / ");
       currentStepData.set("format", formatosDatosMod);
+    }
+
+    if (
+      (lastUpdateAlmacenado !== undefined && lastUpdateAlmacenado !== null) &&
+      (currentStepData.get("lastUpdate") !== null ||
+        currentStepData.get("lastUpdate") !== undefined)
+    ) {
+      const lastUpdateDatos = lastUpdateAlmacenado.toString();
+      currentStepData.set("lastUpdate", lastUpdateDatos);
+    }
+
+    if (
+      (creationDateAlmacenado !== undefined && creationDateAlmacenado !== null) &&
+      (currentStepData.get("creationDate") !== null ||
+        currentStepData.get("creationDate") !== undefined)
+    ) {
+      const creationDateDatos = creationDateAlmacenado.toString();
+      currentStepData.set("creationDate", creationDateDatos);
     }
 
     const currentStepJson = Object.fromEntries(currentStepData.entries());
@@ -241,21 +280,43 @@ export default function UpdateCatalogueDialog(props: {
     }
   }
 
+  const handleChangeLastUpdate = (value: any) => {
+    setLastUpdate(value);
+  };
+
+  const handleChangeCreationDate = (value: any) => {
+    setCreationDate(value);
+  };
+
+  const dynamicStyle = {
+    backgroundColor: actualTheme === "light" ? "white" : "#252525",
+    color: actualTheme === "light" ? "#252525" : "white",
+    "& .MuiInputBase-root": { border: "none" },
+  };
+
   return (
     <>
+    
+    <ThemeProvider theme={baseTheme(actualTheme)}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Dialog
         fullWidth={true}
         open={open}
         onClose={handleClose}
+        style={dynamicStyle}
       >
-        <DialogTitle>{t("dialog.updateRegister")}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
+        <DialogTitle 
+        style={dynamicStyle}
+        >
+          {t("dialog.updateRegister")}
+        </DialogTitle>
+        <DialogContent
+          style={dynamicStyle}
+        >
           <div className="dialogContentText">
             <span>{t("dialog.fillInfo")}</span>
             <span><b>{step}/5</b></span>
           </div>
-          </DialogContentText>
           <Box>
           {step === 1 && (
             <form onSubmit={handleNext}>
@@ -419,40 +480,16 @@ export default function UpdateCatalogueDialog(props: {
                 <p>
                 {t("columnsNames.lastUpdate")}
                 </p>
-                <TextField
-                  autoFocus
-                  required
-                  id="lastUpdate"
-                  margin="dense"
+                <DateTimePicker 
+                  format="DD/MM/YYYY hh:mm:ss a"
                   name="lastUpdate"
-                  type="datetime-local"
-                  variant="standard"
-                  value={handleValuePicker("lastUpdate")}
-                  onChange={handleChange}
-
-                  sx= {{
-                    backgroundColor: 'none',
-                    width: '100%',
-                    border: 'none',
-                    borderBottom: '1px solid lightgrey',
-                    '& input': {
-                      backgroundColor: 'none',
-                      border: 'none',
-                      
-                    },
-                  }}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  inputProps={{
-                    style:{
-                      backgroundColor: 'none',
-                      width: '100%',
-                      border: 'none',
-                      borderBottom: '1px solid lightgrey',
-                    }
-                  }}
-                />
+                  value={lastUpdateAlmacenado}
+                  onChange={(e) =>
+                    handleChangeLastUpdate(e)
+                  }
+                  slotProps={{ textField: { variant: "standard", id:"lastUpdate" } }}
+                >
+                </DateTimePicker>
               </div>
               <div className="horizontalForm">
                 <p>
@@ -472,6 +509,9 @@ export default function UpdateCatalogueDialog(props: {
                           <FormControlLabel
                             control={<Checkbox checked={selected} />}
                             label={option}
+                            sx={{
+                              color: actualTheme === 'light' ? "black" : "white",
+                            }}
                           />
                         </li>
                       )}
@@ -481,6 +521,9 @@ export default function UpdateCatalogueDialog(props: {
                           name="format"
                           variant="standard"
                           placeholder="Select formats"
+                          sx={{
+                            color: actualTheme === 'light' ? "black" : "white",
+                          }}
                         />
                       )}
                     />
@@ -834,43 +877,18 @@ export default function UpdateCatalogueDialog(props: {
             <form onSubmit={handleSubmit}>
             <div className="verticalForm">
             <div className="horizontalForm">
-                <p>
-                Fecha de creación
-                </p>
-              <TextField
-                  autoFocus
-                  required
-                  id="creationDate"
-                  margin="dense"
+                <p>Fecha de creación</p>
+                <DateTimePicker 
+                  format="DD/MM/YYYY hh:mm:ss a"
                   name="creationDate"
-                  type="datetime-local"
-                  variant="standard"
-                  value={handleValuePicker("creationDate")}
-                  onChange={handleChange}
+                  value={creationDateAlmacenado}
+                  onChange={(e) =>
+                    handleChangeCreationDate(e)
+                  }
+                  slotProps={{ textField: { variant: "standard", id:"creationDate" } }}
+                >
 
-                  sx= {{
-                    backgroundColor: 'none',
-                    width: '100%',
-                    border: 'none',
-                    borderBottom: '1px solid lightgrey',
-                    '& input': {
-                      backgroundColor: 'none',
-                      border: 'none',
-                      
-                    },
-                  }}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  inputProps={{
-                    style:{
-                      backgroundColor: 'none',
-                      width: '100%',
-                      border: 'none',
-                      borderBottom: '1px solid lightgrey',
-                    }
-                  }}
-                />
+                </DateTimePicker>
               </div>
               <div className="horizontalFormSwitch">
                 <p>
@@ -994,6 +1012,8 @@ export default function UpdateCatalogueDialog(props: {
         <DialogActions>
         </DialogActions>
       </Dialog>
+    </LocalizationProvider>
+    </ThemeProvider>
     </>
   );
 }

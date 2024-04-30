@@ -27,6 +27,10 @@ import {
   paletaColores,
 } from "../../utils/functions/table-functions";
 import CustomToolbar from "../custom-toolbar/custom-toolbar";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import { grey } from "@mui/material/colors";
+import baseTheme from "../darkModeSwitch/darkmodeTheme";
+import { ThemeProvider } from "@mui/material";
 
 function EntitiesList() {
   const authHeader = useAuthHeader();
@@ -41,6 +45,7 @@ function EntitiesList() {
   const [entitySelected, setEntitySelected] = useState<Entity>(entityMock);
   const [userData, setUserData] = useState<User>(userMock);
   const gridApiRef = useGridApiRef();
+  const {actualTheme} = useAlternateTheme();
 
   const [t, i18n] = useTranslation();
 
@@ -208,6 +213,7 @@ function EntitiesList() {
   return (
     <>
       <div>
+        <ThemeProvider theme={baseTheme(actualTheme)}>
         <DataGrid
           apiRef={gridApiRef}
           rows={rows}
@@ -215,6 +221,8 @@ function EntitiesList() {
           sx={{
             height: 700,
             width: "100%",
+            backgroundColor: actualTheme==="light" ? "white" : "#252525",
+            color: actualTheme==="light" ? "#252525" : "white",
             "& .header-theme": {
               backgroundColor: "lightblue",
               border: "1px 1px 0px 0px solid black",
@@ -224,6 +232,9 @@ function EntitiesList() {
               bgcolor: paletaColores("colorRowHover"),
               border: "1px solid " + paletaColores("colorBgRowSelectedBorder"),
             },
+            "a":{
+              color: actualTheme==="light" ? "darkblue" : "lightblue",
+            }
           }}
           initialState={{
             pagination: {
@@ -347,6 +358,7 @@ function EntitiesList() {
             toolbarQuickFilterPlaceholder: t("dataTable.quickFilter"),
           }}
         />
+        </ThemeProvider>
       </div>
       <CreateEntityDialog enviar={dialogData}></CreateEntityDialog>
       <UpdateEntityDialog enviar={datosUpdateDialog}></UpdateEntityDialog>

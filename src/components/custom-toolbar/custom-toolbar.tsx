@@ -18,8 +18,7 @@ import { User } from "../../interfaces/user.interface";
 import { useTranslation } from "react-i18next";
 import { MutableRefObject } from "react";
 import { GridApiCommunity } from "@mui/x-data-grid/models/api/gridApiCommunity";
-import useAlternateTheme from "../darkModeSwitch/alternateTheme";
-import { grey } from "@mui/material/colors";
+
 
 export interface CustomToolbarProperties {
   userData: User;
@@ -34,13 +33,16 @@ export interface CustomToolbarProperties {
 
 function CustomToolbar(props: CustomToolbarProperties) {
   const { t } = useTranslation();
-  const {actualTheme} = useAlternateTheme();
 
   return (
     <>
-      <GridToolbarContainer>
+      <GridToolbarContainer
+        sx={{
+          color:"#404040",
+        }}
+      >
         {props.userData.role !== ROLE.VIEWER ? (
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+          <FormControl sx={{ m: 1, minWidth: 120, color:"#404040", }} size="small">
             <Box
               className="Tabla"
               sx={{ display: "flex", alignItems: "center" }}
@@ -121,22 +123,17 @@ function CustomToolbar(props: CustomToolbarProperties) {
         </Tooltip>
         <ExportButton visibleData={props.visibleData} />
 
-        <Tooltip 
-            title="Búsqueda rápida"
+        <Tooltip title="Búsqueda rápida">
+          <GridToolbarQuickFilter
             sx={{
-              color: actualTheme==="light" ? 'darkgrey' : 'darkgrey',
+              height: 33,
+              backgroundColor: "#D9D9D9",
+              color: "#404040",
+              borderColor: "#404040",
+              borderRadius: 1,
             }}
-            >
-            <GridToolbarQuickFilter
-              sx={{
-                height: 33,
-                backgroundColor: "#D9D9D9",
-                color: actualTheme==="light" ? 'darkgrey' : 'darkgrey',
-                borderColor: "#404040",
-                borderRadius: 1,
-              }}
-            />
-          </Tooltip>
+          />
+        </Tooltip>
 
         <div className="customToolbarRightButtons">
           {props.userData.role === ROLE.ADMIN ||

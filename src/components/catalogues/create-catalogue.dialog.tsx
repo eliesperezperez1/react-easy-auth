@@ -97,9 +97,34 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   }, [props]);
 
   const handleClose = () => {
-    setOpen(false);
-    props.enviar.closeDialog(false);
     setFormData({});
+    setFormDataSteps({
+      title: "",
+      description: "",
+      language: "",
+      territorialScope: "",
+      temporaryCoverage: "",
+      updateFrequency: "",
+      topic: "",
+      lastUpdate: "",
+      format: "",
+      distribution: "",
+      sensitiveInformation: "",
+      isUsing: "",
+      accessType: "",
+      internalRelationship: "",
+      contactPerson: "",
+      structured: "",
+      associatedApplication: "",
+      georreference: "",
+      comments: "",
+      timmingEffect: "",
+      creationDate: "",
+      personalData: "",
+      source: "",
+      responsibleIdentity: "",
+      activeAds: "",
+    });
     setStep(1);
     setSensitiveInformation("SI");
     setIsUsing("SI");
@@ -110,6 +135,8 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     setFormat([]);
     setLastUpdate(null);
     setCreationDate(null);
+    setOpen(false);
+    props.enviar.closeDialog(false);
   };
 
   const handleFormat = (event: any, newValue: any) => {
@@ -205,14 +232,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       currentStepData.set("lastUpdate", lastUpdateDatos);
     }
 
-    if (
-      (creationDateAlmacenado !== undefined && creationDateAlmacenado !== null) &&
-      (currentStepData.get("creationDate") !== null ||
-        currentStepData.get("creationDate") !== undefined)
-    ) {
-      const creationDateDatos = creationDateAlmacenado.toString();
-      currentStepData.set("creationDate", creationDateDatos);
-    }
     //--------------------------------------------------------------------
     const currentStepJson = Object.fromEntries(currentStepData.entries());
 
@@ -226,6 +245,17 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const currentStepData = new FormData(event.currentTarget);
+    if (
+      (creationDateAlmacenado !== undefined && creationDateAlmacenado !== null) &&
+      (currentStepData.get("creationDate") !== null ||
+        currentStepData.get("creationDate") !== undefined)
+    ) {
+      const creationDateDatos = creationDateAlmacenado.toString();
+      console.log("CreationDateAlmacenado: " + creationDateAlmacenado);
+      console.log("CreationDateAlmacenado.ToString(): " + creationDateAlmacenado.toString());
+      console.log("creationDateDatos" + creationDateDatos);
+      currentStepData.set("creationDate", creationDateDatos);
+    }
     const currentStepJson = Object.fromEntries(currentStepData.entries());
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
     const mergedFormData = { ...formData, ...currentStepJson };
@@ -283,6 +313,12 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     setCreationDate(value);
   };
 
+  const dynamicStyle = {
+    backgroundColor: actualTheme === "light" ? "white" : "#252525",
+    color: actualTheme === "light" ? "#252525" : "white",
+    "& .MuiInputBase-root": { border: "none" },
+  };
+
   return (
     <>
     
@@ -292,27 +328,15 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
         fullWidth={true}
         open={open}
         onClose={handleClose}
-        sx={{
-          backgroundColor: actualTheme==="light" ? "white" : "#252525",
-          color: actualTheme==="light" ? "#252525" : "white",
-          "& .MuiInputBase-root": { border: "none" },
-        }}
+        style={dynamicStyle}
       >
         <DialogTitle
-        sx={{
-          backgroundColor: actualTheme==="light" ? "white" : "#252525",
-          color: actualTheme==="light" ? "#252525" : "white",
-          "& .MuiInputBase-root": { border: "none" },
-        }}
+          style={dynamicStyle}
         >
           {t("dialog.addRegister")}
         </DialogTitle>
         <DialogContent
-          sx={{
-            backgroundColor: actualTheme==="light" ? "white" : "#252525",
-            color: actualTheme==="light" ? "#252525" : "white",
-            "& .MuiInputBase-root": { border: "none" },
-          }}
+          style={dynamicStyle}
         >
           <div className="dialogContentText">
             <span>{t("dialog.fillInfo")}</span>
