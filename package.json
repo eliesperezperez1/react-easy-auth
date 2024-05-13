@@ -28,6 +28,8 @@
     "i18next-http-backend": "^2.4.3",
     "i18next-resources-for-ts": "^1.5.0",
     "jsx": "^0.9.89",
+    "mongoose": "^8.3.4",
+    "nestjs": "^0.0.1",
     "react": "^18.2.0",
     "react-auth-kit": "^2.1.1",
     "react-dom": "^18.2.0",

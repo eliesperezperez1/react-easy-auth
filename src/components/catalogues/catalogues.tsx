@@ -80,76 +80,22 @@ function CatalogueList() {
       description: t("tooltipText.description"),
     },
     {
-      field: "topic",
-      headerName: t("columnsNames.topic"),
-      width: 200,
-      description: t("tooltipText.topic"),
-    },
-    {
       field: "responsibleIdentity",
       headerName: t("columnsNames.responsibleIdentity"),
       width: 200,
       description: t("tooltipText.responsibleIdentity"),
     },
     {
-      field: "datasetsRelation",
-      headerName: t("columnsNames.datasetsRelation"),
+      field: "topic",
+      headerName: t("columnsNames.topic"),
       width: 200,
-      description: t("tooltipText.datasetsRelation"),
+      description: t("tooltipText.topic"),
     },
     {
-      field: "fieldList",
-      headerName: t("columnsNames.fieldList"),
+      field: "territorialScope",
+      headerName: t("columnsNames.territorialScope"),
       width: 200,
-      description: t("tooltipText.fieldList"),
-    },
-    {
-      field: "dataUnbundling",
-      headerName: t("columnsNames.dataUnbundling"),
-      width: 200,
-      description: t("tooltipText.dataUnbundling"),
-    },
-    {
-      field: "updateFrequency",
-      headerName: t("columnsNames.updateFrequency"),
-      width: 200,
-      description: t("tooltipText.updateFrequency"),
-    },
-    {
-      field: "format",
-      headerName: t("columnsNames.format"),
-      width: 200,
-      description: t("tooltipText.format"),
-    },
-    {
-      field: "dataOrigin",
-      headerName: t("columnsNames.dataOrigin"),
-      width: 200,
-      description: t("tooltipText.dataOrigin"),
-    },
-    {
-      field: "dataOriginURL",
-      headerName: t("columnsNames.dataOriginURL"),
-      width: 200,
-      description: t("tooltipText.dataOriginURL"),
-    },
-    {
-      field: "connection",
-      headerName: t("columnsNames.connection"),
-      width: 200,
-      description: t("tooltipText.connection"),
-    },
-    {
-      field: "dataFiability",
-      headerName: t("columnsNames.dataFiability"),
-      width: 200,
-      description: t("tooltipText.dataFiability"),
-    },
-    {
-      field: "comments",
-      headerName: t("columnsNames.comments"),
-      width: 200,
-      description: t("tooltipText.comments"),
+      description: t("tooltipText.territorialScope"),
     },
     {
       field: "temporaryCoverage",
@@ -158,28 +104,70 @@ function CatalogueList() {
       description: t("tooltipText.temporaryCoverage"),
     },
     {
-      field: "repositoryStorage",
-      headerName: t("columnsNames.repositoryStorage"),
+      field: "organism",
+      headerName: "Organismo",
       width: 200,
-      description: t("tooltipText.repositoryStorage"),
+      description: "Organismo al que pertenece",
     },
     {
-      field: "repositoryStorageURL",
-      headerName: t("columnsNames.repositoryStorageURL"),
-      width: 200,
-      description: t("tooltipText.repositoryStorageURL"),
+      field: "language",
+      headerName: t("columnsNames.language"),
+      width: 70,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>{valOrEsp(params.value)}</>
+      ),
+      description: t("tooltipText.language"),
     },
     {
-      field: "fieldSuppression",
-      headerName: t("columnsNames.fieldSuppression"),
+      field: "keywords",
+      headerName: "keywords",
       width: 200,
-      description: t("tooltipText.fieldSuppression"),
+      description: "Palabras clave",
     },
     {
-      field: "accessType",
-      headerName: t("columnsNames.accessType"),
+      field: "minimumVariables",
+      headerName: "Campos mínimos",
       width: 200,
-      description: t("tooltipText.accessType"),
+      description: "Campos mínimos que debe incluir el dataset",
+    },
+    {
+      field: "contactPerson",
+      headerName: t("columnsNames.contactPerson"),
+      width: 200,
+      description: t("tooltipText.contactPersonService"),
+    },
+    {
+      field: "masterData",
+      headerName: "Dato maestro",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "Datos referentes a las características básicas del negocio",
+    },
+    {
+      field: "referenceData",
+      headerName: "Dato de referencia",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "Datos que definen el conjunto de valores admisibles en otros campos de datos",
+    },
+    {
+      field: "highValue",
+      headerName: "Alto valor",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "¿Es un dataset de alto valor?",
     },
     {
       field: "activeAds",
@@ -193,16 +181,56 @@ function CatalogueList() {
       description: t("tooltipText.activeAds"),
     },
     {
-      field: "posts",
-      headerName: t("columnsNames.posts"),
+      field: "comments",
+      headerName: t("columnsNames.comments"),
       width: 200,
-      description: t("tooltipText.posts"),
+      description: t("tooltipText.comments"),
     },
     {
-      field: "licence",
-      headerName: t("columnsNames.licence"),
+      field: "typeGeo",
+      headerName: "Información geográfica",
       width: 200,
-      description: t("tooltipText.licence"),
+      description: "¿Qué tipo de información geográfica contiene el dataset?",
+    },
+    {
+      field: "genderInfo",
+      headerName: "Información de género",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "¿¿El dataset dispone de información de género??",
+    },
+    {
+      field: "structuredComments",
+      headerName: "Comentarios de la estructura",
+      width: 200,
+      description: "Comentarios relativos a la estructura interna del dataset",
+    },
+    {
+      field: "associatedApplication",
+      headerName: "Aplicación de origen",
+      width: 200,
+      description: "Nombre de la aplicación de origen de los datos",
+    },
+    {
+      field: "autoAcess",
+      headerName: "Acceso automatizado",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "¿Se puede acceder a los datos de origen de forma automatizada? ",
+    },
+    {
+      field: "originComments",
+      headerName: "Comentarios del origen",
+      width: 200,
+      description: "Comentarios relativos al origen de los datos",
     },
     {
       field: "RAT",
@@ -216,24 +244,156 @@ function CatalogueList() {
       description: t("tooltipText.RAT"),
     },
     {
-      field: "georreference",
-      headerName: t("columnsNames.georreference"),
+      field: "dataProtection",
+      headerName: "Protección de datos",
       width: 200,
       renderCell: (params: GridRenderCellParams<any, string>) => (
         <>
           <Chip label={params.value} color={yesOrNo(params.value)} />
         </>
       ),
-      description: t("tooltipText.georreference"),
+      description: "¿El dataset contiene datos personales protegidos por la LOPD?",
     },
     {
-      field: "language",
-      headerName: t("columnsNames.language"),
-      width: 70,
+      field: "dataStandards",
+      headerName: "Estándares de datos",
+      width: 200,
       renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>{valOrEsp(params.value)}</>
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
       ),
-      description: t("tooltipText.language"),
+      description: "¿Existen campos del dataset que deberían publicarse por normativa?",
+    },
+    {
+      field: "dataProtectionComments",
+      headerName: "Comentarios del origen",
+      width: 200,
+      description: "Comentarios relativos a la protección de los datos",
+    },
+    {
+      field: "dataAnonymize",
+      headerName: "Anonimización de datos",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "Campos del dataset que requieren ser anonimizados. Separar cada campo con un punto y coma (;)",
+    },
+    {
+      field: "dataQuality",
+      headerName: "Calidad de los datos",
+      width: 200,
+      description: "Valoración numérica de la calidad de los datos (del 1 al 5)",
+    },
+    {
+      field: "sharingLevel",
+      headerName: "Nivel de compartición",
+      width: 200,
+      description: "¿Quién tiene acceso a estos datos dentro de la organización?",
+    },
+    {
+      field: "sharedData",
+      headerName: "Datos compartidos",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "¿Se han compartido estos datos en alguna plataforma?",
+    },
+    {
+      field: "VLCi",
+      headerName: "VLCi",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "¿Está compartido en la plataforma Smart City?",
+    },
+    {
+      field: "ArcGIS",
+      headerName: "ArcGIS",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "¿Está cargado en ArcGIS?",
+    },
+    {
+      field: "Pentaho",
+      headerName: "Pentaho",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "¿Está disponible en Pentaho?",
+    },
+    {
+      field: "CKAN",
+      headerName: "CKAN",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "¿Está cargado en CKAN?",
+    },
+    {
+      field: "MongoDB",
+      headerName: "MongoDB",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "¿Está cargado en MongoDB?",
+    },
+    {
+      field: "OpenDataSoft",
+      headerName: "OpenDataSoft",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "¿Está publiccado en OpenDataSoft?",
+    },
+    {
+      field: "temporarySolution",
+      headerName: "Resolución temporal",
+      width: 200,
+      description: "Frecuencia de actualización del dato",
+    },
+    {
+      field: "chargeStateComments",
+      headerName: "Comentarios sobre el estado de carga",
+      width: 200,
+      description: "Comentarios relativos al estado de carga del dataset",
+    },
+    {
+      field: "productData",
+      headerName: "Producto de datos",
+      width: 200,
+      description: "Nombre del producto de datos",
+    },
+    {
+      field: "productComments",
+      headerName: "Comentarios del producto",
+      width: 200,
+      description: "Comentarios relativo al producto de datos",
     },
     {
       field: "source",

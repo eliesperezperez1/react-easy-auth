@@ -146,6 +146,7 @@
         "dataFiability": "¿Com de fiables son aquestes dades?",
         "comments": "Comentaris de qualsevol aspecte del conjunt de dades",
         "RAT": "Víncul a la informació disponible del Registre de activitats de tratament",
+        "territorialScope":"¿En quin lloc es recollix aquesta informació?",
         "temporaryCoverage": "¿Desde quan es recollix aquesta informació?",
         "repositoryStorage": "El repositori on es guarda la informació",
         "repositoryStorageURL": "Enllaç al repositori on es guarda la informació",
