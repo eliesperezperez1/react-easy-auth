@@ -149,6 +149,7 @@
         "dataFiability":"¿Cómo de fiables son estos datos?",
         "comments":"Comentarios sobre cualquier aspecto del conjunto de datos",
         "RAT":"Vínculo a la información disponible del Registro de actividades de tratamiento",
+        "territorialScope":"¿En qué zona se recopila esta información?",
         "temporaryCoverage":"¿Desde cuándo se recoge está información?",
         "repositoryStorage":"El repositorio donde se guarda la información",
         "repositoryStorageURL":"Enlace al repositorio donde se guarda la información",

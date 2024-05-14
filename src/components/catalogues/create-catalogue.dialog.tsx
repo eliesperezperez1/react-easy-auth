@@ -15,7 +15,6 @@ import {
   FormControl,
   FormControlLabel,
   FormGroup,
-  InputAdornment,
   MenuItem,
   Select,
   Switch,
@@ -25,13 +24,13 @@ import {
 import { useTranslation } from "react-i18next";
 import "./create-catalogue.dialog.css";
 import React from "react";
-import useAlternateTheme from "../darkModeSwitch/alternateTheme";
-import { grey, red } from "@mui/material/colors";
-import { esES } from "@mui/x-data-grid";
-import { CalendarIcon, DateTimePicker } from "@mui/x-date-pickers";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Dayjs } from "dayjs";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import { grey } from "@mui/material/colors";
+import { esES } from "@mui/x-data-grid/locales";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 export interface DialogData {
   open: boolean;
@@ -51,93 +50,92 @@ const MenuProps = {
 };
 const formatOptions = ["PDF", "EXCEL", "CSV"];
 
-const baseTheme = (actualTheme:any) => createTheme(
-  {
-    typography: {
-      fontFamily: "Montserrat",
-    },
-    components: {
-      MuiTextField: {
-        styleOverrides: {
-          root: {
-            color: actualTheme === 'light' ? "black" : "white",
+const baseTheme = (actualTheme: any) =>
+  createTheme(
+    {
+      typography: {
+        fontFamily: "Montserrat",
+      },
+      components: {
+        MuiTextField: {
+          styleOverrides: {
+            root: {
+              color: actualTheme === "light" ? "black" : "white",
+            },
           },
         },
-      },
-      MuiCssBaseline: {
-        styleOverrides: `
+        MuiCssBaseline: {
+          styleOverrides: `
         @font-face {
           font-family: 'Montserrat';
           src: url(https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap);
         }
       `,
-      },
-      MuiInput: {
-        styleOverrides: {
-          root: {
-            color: actualTheme === 'light' ? "black" : "white",
-          },
-          
         },
-      },
-      MuiSelect: {
-        defaultProps: {
-          variant: 'standard', // Set the default variant (outlined, filled, standard)
-        },
-        styleOverrides: {
-          icon: {
-            color: actualTheme === 'light' ? "black" : "white", // Set the color of the dropdown arrow icon
-          },
-          // Add other styles as needed
-        },
-      },
-      MuiMenuList:{
-        styleOverrides:{
-          'root':{
-            //backgroundColor: actualTheme === 'light' ? "white" : "black", 
-            color: actualTheme === 'light' ? "black" : "white",
+        MuiInput: {
+          styleOverrides: {
+            root: {
+              color: actualTheme === "light" ? "black" : "white",
+            },
           },
         },
+        MuiSelect: {
+          defaultProps: {
+            variant: "standard", // Set the default variant (outlined, filled, standard)
+          },
+          styleOverrides: {
+            icon: {
+              color: actualTheme === "light" ? "black" : "white", // Set the color of the dropdown arrow icon
+            },
+            // Add other styles as needed
+          },
+        },
+        MuiMenuList: {
+          styleOverrides: {
+            root: {
+              //backgroundColor: actualTheme === 'light' ? "white" : "black",
+              color: actualTheme === "light" ? "black" : "white",
+            },
+          },
+        },
+        MuiMenuItem: {
+          styleOverrides: {
+            root: {
+              //backgroundColor: actualTheme === 'light' ? "white" : "black",
+              color: actualTheme === "light" ? "black" : "white",
+            },
+          },
+        },
       },
-      MuiMenuItem:{
-        styleOverrides:{
-          root:{
-            //backgroundColor: actualTheme === 'light' ? "white" : "black", 
-            color: actualTheme === 'light' ? "black" : "white",
-          }
-        }
+      palette: {
+        mode: actualTheme === "light" ? "light" : "dark",
+        ...(actualTheme === "light"
+          ? {
+              // palette values for light mode
+              primary: grey,
+              divider: grey[800],
+              text: {
+                primary: grey[900],
+                secondary: grey[800],
+              },
+            }
+          : {
+              // palette values for dark mode
+              primary: grey,
+              divider: grey[800],
+              background: {
+                default: grey[800],
+                paper: grey[900],
+              },
+              text: {
+                primary: grey[100],
+                secondary: grey[800],
+              },
+            }),
       },
     },
-    palette:{
-      mode: actualTheme==="light" ? "light" : "dark",
-      ...(actualTheme === 'light'
-      ? {
-          // palette values for light mode
-          primary: grey,
-          divider: grey[800],
-          text: {
-            primary: grey[900],
-            secondary: grey[800],
-          },
-        }
-      : {
-          // palette values for dark mode
-          primary: grey,
-          divider: grey[800],
-          background: {
-            default: grey[800],
-            paper: grey[900],
-          },
-          text: {
-            primary: grey[100],
-            secondary: grey[800],
-          },
-        }),
-    },
-    
-  },
-  esES
-);
+    esES
+  );
 
 export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [open, setOpen] = useState<boolean>(false);
@@ -180,8 +178,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [activeAds, setActiveAds] = useState("SI");
   const [format, setFormat] = React.useState<string[]>([]);
   const [lastUpdateAlmacenado, setLastUpdate] = React.useState<Dayjs | null>();
-  const [creationDateAlmacenado, setCreationDate] = React.useState<Dayjs | null>();
-  const {actualTheme} = useAlternateTheme();
+  const [creationDateAlmacenado, setCreationDate] =
+    React.useState<Dayjs | null>();
+  const { actualTheme } = useAlternateTheme();
 
   useEffect(() => {
     setOpen(props.enviar.open);
@@ -315,7 +314,8 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     }
 
     if (
-      (lastUpdateAlmacenado !== undefined && lastUpdateAlmacenado !== null) &&
+      lastUpdateAlmacenado !== undefined &&
+      lastUpdateAlmacenado !== null &&
       (currentStepData.get("lastUpdate") !== null ||
         currentStepData.get("lastUpdate") !== undefined)
     ) {
@@ -323,14 +323,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       currentStepData.set("lastUpdate", lastUpdateDatos);
     }
 
-    if (
-      (creationDateAlmacenado !== undefined && creationDateAlmacenado !== null) &&
-      (currentStepData.get("creationDate") !== null ||
-        currentStepData.get("creationDate") !== undefined)
-    ) {
-      const creationDateDatos = creationDateAlmacenado.toString();
-      currentStepData.set("creationDate", creationDateDatos);
-    }
     //--------------------------------------------------------------------
     const currentStepJson = Object.fromEntries(currentStepData.entries());
 
@@ -344,6 +336,21 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const currentStepData = new FormData(event.currentTarget);
+    if (
+      creationDateAlmacenado !== undefined &&
+      creationDateAlmacenado !== null &&
+      (currentStepData.get("creationDate") !== null ||
+        currentStepData.get("creationDate") !== undefined)
+    ) {
+      const creationDateDatos = creationDateAlmacenado.toString();
+      console.log("CreationDateAlmacenado: " + creationDateAlmacenado);
+      console.log(
+        "CreationDateAlmacenado.ToString(): " +
+          creationDateAlmacenado.toString()
+      );
+      console.log("creationDateDatos" + creationDateDatos);
+      currentStepData.set("creationDate", creationDateDatos);
+    }
     const currentStepJson = Object.fromEntries(currentStepData.entries());
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
     const mergedFormData = { ...formData, ...currentStepJson };
@@ -394,12 +401,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   };
 
   const handleChangeLastUpdate = (value: any) => {
-    // Update the form data
-    /*var dataString = value.toLocaleString();
-    setFormDataSteps((prevData) => ({
-      ...prevData,
-      ["lastUpdate"]: dataString,
-    }));*/
     setLastUpdate(value);
   };
 
@@ -407,796 +408,775 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     setCreationDate(value);
   };
 
+  const dynamicStyle = {
+    backgroundColor: actualTheme === "light" ? "white" : "#252525",
+    color: actualTheme === "light" ? "#252525" : "white",
+    "& .MuiInputBase-root": { border: "none" },
+  };
+
   return (
     <>
-    
-    <ThemeProvider theme={baseTheme(actualTheme)}>
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Dialog
-        fullWidth={true}
-        open={open}
-        onClose={handleClose}
-        sx={{
-          backgroundColor: actualTheme==="light" ? "white" : "#252525",
-          color: actualTheme==="light" ? "#252525" : "white",
-          "& .MuiInputBase-root": { border: "none" },
-        }}
-      >
-        <DialogTitle
-          sx={{
-            backgroundColor: actualTheme==="light" ? "white" : "#252525",
-            color: actualTheme==="light" ? "#252525" : "white",
-            "& .MuiInputBase-root": { border: "none" },
-          }}
-        >
-          {t("dialog.addRegister")}
-        </DialogTitle>
-        <DialogContent
-          sx={{
-            backgroundColor: actualTheme==="light" ? "white" : "#252525",
-            color: actualTheme==="light" ? "#252525" : "white",
-            "& .MuiInputBase-root": { border: "none" },
-          }}
-        >
-          <div className="dialogContentText">
-            <span>{t("dialog.fillInfo")}</span>
-            <span>
-              <strong>{step}/5</strong>
-            </span>
-          </div>
-          <Box>
-            {step === 1 && (
-              <form onSubmit={handleNext}>
-                <div className="verticalForm">
-                  <div className="horizontalForm">
-                    <p>{t("columnsNames.title")}</p>
-                    <TextField
-                      autoFocus
-                      required
-                      margin="dense"
-                      id="title"
-                      name="title"
-                      type="string"
-                      variant="standard"
-                      value={formDataSteps.title}
-                      onChange={(e) => handleChange("title", e.target.value)}
-                    />
-                  </div>
-                  <div className="horizontalForm">
-                    <p>{t("columnsNames.description")}</p>
-                    <TextField
-                      autoFocus
-                      required
-                      margin="dense"
-                      id="description"
-                      name="description"
-                      type="string"
-                      variant="standard"
-                      value={formDataSteps.description}
-                      onChange={(e) =>
-                        handleChange("description", e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="horizontalForm">
-                    <p>{t("columnsNames.language")}</p>
-                    <FormControl variant="standard">
-                      <Select
-                        id="language"
-                        name="language"
-                        margin="dense"
-                        defaultValue={formDataSteps.language}
-                        //onChange={(e) => handleChange('language', e.target.value)}
-                        required
-                      >
-                        <MenuItem value={"es"}>ES</MenuItem>
-                        <MenuItem value={"val"}>VAL</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </div>
-                  <div className="horizontalForm">
-                    <p>{t("columnsNames.territorialScope")}</p>
-                    <TextField
-                      autoFocus
-                      required
-                      margin="dense"
-                      id="territorialScope"
-                      name="territorialScope"
-                      type="string"
-                      variant="standard"
-                      value={formDataSteps.territorialScope}
-                      onChange={(e) =>
-                        handleChange("territorialScope", e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="horizontalForm">
-                    <p>{t("columnsNames.temporaryCoverage")}</p>
-                    <TextField
-                      autoFocus
-                      required
-                      margin="dense"
-                      id="temporaryCoverage"
-                      name="temporaryCoverage"
-                      type="string"
-                      variant="standard"
-                      value={formDataSteps.temporaryCoverage}
-                      onChange={(e) =>
-                        handleChange("temporaryCoverage", e.target.value)
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="buttonsForm">
-                  <Button
-                    onClick={handleClose}
-                    sx={{
-                      height: 37,
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                  >
-                    {t("dialog.cancel")}
-                  </Button>
-                  <Button
-                    type="submit"
-                    sx={{
-                      height: 37,
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                  >
-                    {t("dialog.next")}
-                  </Button>
-                </div>
-              </form>
-            )}
-            {step === 2 && (
-              <form onSubmit={handleNext}>
-                <div className="verticalForm">
-                  <div className="horizontalForm">
-                    <p>{t("columnsNames.updateFrequency")}</p>
-                    <TextField
-                      autoFocus
-                      required
-                      margin="dense"
-                      id="updateFrequency"
-                      name="updateFrequency"
-                      type="string"
-                      variant="standard"
-                      value={formDataSteps.updateFrequency}
-                      onChange={(e) =>
-                        handleChange("updateFrequency", e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="horizontalForm">
-                    <p>{t("columnsNames.topic")}</p>
-                    <TextField
-                      autoFocus
-                      required
-                      margin="dense"
-                      id="topic"
-                      name="topic"
-                      type="string"
-                      variant="standard"
-                      value={formDataSteps.topic}
-                      onChange={(e) => handleChange("topic", e.target.value)}
-                    />
-                  </div>
-                  <div className="horizontalForm">
-                    <p>{t("columnsNames.lastUpdate")}</p>
-                    <DateTimePicker 
-                      format="DD/MM/YYYY hh:mm:ss a"
-                      name="lastUpdate"
-                      value={lastUpdateAlmacenado}
-                      onChange={(e) =>
-                        handleChangeLastUpdate(e)
-                      }
-                      slotProps={{ textField: { variant: "standard", id:"lastUpdate" } }}
-                    >
-
-                    </DateTimePicker>
-                    
-                  </div>
-                  <div className="horizontalForm">
-                    <p>{t("columnsNames.format")}</p>
-                    <FormControl variant="standard">
-                      <FormGroup >
-                        <Autocomplete
-                          multiple
-                          id="format"
-                          options={["PDF", "EXCEL", "CSV", "JSON"]}
-                          sx={{
-                            color: actualTheme === 'light' ? "black" : "white",
-                          }}
-                          value={format}
-                          onChange={handleFormat}
-                          disableCloseOnSelect={true}
-                          renderOption={(props, option, { selected }) => (
-                            <li {...props}>
-                              <FormControlLabel
-                                control={
-                                <Checkbox 
-                                checked={selected} 
-                                sx={{
-                                  color: actualTheme === 'light' ? "black" : "white",
-                                }}
-                                />
-                              }
-                                label={option}
-                                sx={{
-                                  color: actualTheme === 'light' ? "black" : "white",
-                                }}
-                              />
-                            </li>
-                          )}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              name="format"
-                              variant="standard"
-                              placeholder="Select formats"
-                              sx={{
-                                color: actualTheme === 'light' ? "black" : "white",
-                              }}
-                            />
-                          )}
+      <ThemeProvider theme={baseTheme(actualTheme)}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Dialog
+            fullWidth={true}
+            open={open}
+            onClose={handleClose}
+            style={dynamicStyle}
+          >
+            <DialogTitle style={dynamicStyle}>
+              {t("dialog.addRegister")}
+            </DialogTitle>
+            <DialogContent style={dynamicStyle}>
+              <div className="dialogContentText">
+                <span>{t("dialog.fillInfo")}</span>
+                <span>
+                  <strong>{step}/5</strong>
+                </span>
+              </div>
+              <Box>
+                {step === 1 && (
+                  <form onSubmit={handleNext}>
+                    <div className="verticalForm">
+                      <div className="horizontalForm">
+                        <p>{t("columnsNames.title")}</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="title"
+                          name="title"
+                          type="string"
+                          variant="standard"
+                          value={formDataSteps.title}
+                          onChange={(e) =>
+                            handleChange("title", e.target.value)
+                          }
                         />
-                      </FormGroup>
-                    </FormControl>
-                  </div>
-                  <div className="horizontalForm">
-                    <p>Distribución</p>
-                    <TextField
-                      autoFocus
-                      required
-                      margin="dense"
-                      id="distribution"
-                      name="distribution"
-                      type="string"
-                      variant="standard"
-                      value={formDataSteps.distribution}
-                      onChange={(e) =>
-                        handleChange("distribution", e.target.value)
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="buttonsForm">
-                  <Button
-                    onClick={handleClose}
-                    sx={{
-                      height: 37,
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                  >
-                    {t("dialog.cancel")}
-                  </Button>
-                  <div>
-                    <Button
-                      onClick={handleGoBack}
-                      sx={{
-                        height: 37,
-                        backgroundColor: "#D9D9D9",
-                        color: "#404040",
-                        borderColor: "#404040",
-                        marginRight: 1,
-                        "&:hover": {
-                          borderColor: "#0D0D0D",
-                          backgroundColor: "#0D0D0D",
-                          color: "#f2f2f2",
-                        },
-                      }}
-                    >
-                      Atrás
-                    </Button>
-
-                    <Button
-                      type="submit"
-                      sx={{
-                        height: 37,
-                        backgroundColor: "#D9D9D9",
-                        color: "#404040",
-                        borderColor: "#404040",
-                        "&:hover": {
-                          borderColor: "#0D0D0D",
-                          backgroundColor: "#0D0D0D",
-                          color: "#f2f2f2",
-                        },
-                      }}
-                    >
-                      {t("dialog.next")}
-                    </Button>
-                  </div>
-                </div>
-              </form>
-            )}
-            {step === 3 && (
-              <form onSubmit={handleNext}>
-                <div className="verticalForm">
-                  <div className="horizontalFormSwitch">
-                    <p>{t("columnsNames.sensitiveInformation")}</p>
-                    <FormControl variant="standard">
-                      <Switch
-                        id="sensitiveInformation"
-                        name="sensitiveInformation"
-                        value={sensitiveInformation}
-                        checked={sensitiveInformation === "SI"}
-                        onChange={(event) =>
-                          handleSwitch(
-                            "sensitiveInformation",
-                            event.target.checked
-                          )
-                        }
-                        color="primary" // Opcional: ajusta el color del switch
-                      />
-                    </FormControl>
-                  </div>
-                  <div className="horizontalFormSwitch">
-                    <p>Se está usando</p>
-                    <FormControl variant="standard">
-                      <Switch
-                        id="isUsing"
-                        name="isUsing"
-                        value={isUsing}
-                        checked={isUsing === "SI"}
-                        onChange={(event) =>
-                          handleSwitch("isUsing", event.target.checked)
-                        }
-                        color="primary" // Opcional: ajusta el color del switch
-                      />
-                    </FormControl>
-                  </div>
-                  <div className="horizontalForm">
-                    <p>{t("columnsNames.accessType")}</p>
-                    <FormControl variant="standard">
-                      <Select
-                        id="accessType"
-                        name="accessType"
-                        margin="dense"
-                        defaultValue={formDataSteps.accessType}
-                        onChange={(e) =>
-                          handleChange("accessType", e.target.value)
-                        }
-                        required
+                      </div>
+                      <div className="horizontalForm">
+                        <p>{t("columnsNames.description")}</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="description"
+                          name="description"
+                          type="string"
+                          variant="standard"
+                          value={formDataSteps.description}
+                          onChange={(e) =>
+                            handleChange("description", e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="horizontalForm">
+                        <p>{t("columnsNames.language")}</p>
+                        <FormControl variant="standard">
+                          <Select
+                            id="language"
+                            name="language"
+                            margin="dense"
+                            defaultValue={formDataSteps.language}
+                            //onChange={(e) => handleChange('language', e.target.value)}
+                            required
+                          >
+                            <MenuItem value={"es"}>ES</MenuItem>
+                            <MenuItem value={"val"}>VAL</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </div>
+                      <div className="horizontalForm">
+                        <p>{t("columnsNames.territorialScope")}</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="territorialScope"
+                          name="territorialScope"
+                          type="string"
+                          variant="standard"
+                          value={formDataSteps.territorialScope}
+                          onChange={(e) =>
+                            handleChange("territorialScope", e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="horizontalForm">
+                        <p>{t("columnsNames.temporaryCoverage")}</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="temporaryCoverage"
+                          name="temporaryCoverage"
+                          type="string"
+                          variant="standard"
+                          value={formDataSteps.temporaryCoverage}
+                          onChange={(e) =>
+                            handleChange("temporaryCoverage", e.target.value)
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div className="buttonsForm">
+                      <Button
+                        onClick={handleClose}
+                        sx={{
+                          height: 37,
+                          backgroundColor: "#D9D9D9",
+                          color: "#404040",
+                          borderColor: "#404040",
+                          "&:hover": {
+                            borderColor: "#0D0D0D",
+                            backgroundColor: "#0D0D0D",
+                            color: "#f2f2f2",
+                          },
+                        }}
                       >
-                        <MenuItem value={"Públic/Público"}>Público</MenuItem>
-                        <MenuItem value={"Restringit/Restringido"}>
-                          Restringido
-                        </MenuItem>
-                        <MenuItem value={"Privat/Privado"}>Privado</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </div>
-                  <div className="horizontalForm">
-                    <p>Relación interna</p>
-                    <TextField
-                      autoFocus
-                      required
-                      margin="dense"
-                      id="internalRelationship"
-                      name="internalRelationship"
-                      type="string"
-                      variant="standard"
-                      value={formDataSteps.internalRelationship}
-                      onChange={(e) =>
-                        handleChange("internalRelationship", e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="horizontalForm">
-                    <p>{t("columnsNames.contactPerson")}</p>
+                        {t("dialog.cancel")}
+                      </Button>
+                      <Button
+                        type="submit"
+                        sx={{
+                          height: 37,
+                          backgroundColor: "#D9D9D9",
+                          color: "#404040",
+                          borderColor: "#404040",
+                          "&:hover": {
+                            borderColor: "#0D0D0D",
+                            backgroundColor: "#0D0D0D",
+                            color: "#f2f2f2",
+                          },
+                        }}
+                      >
+                        {t("dialog.next")}
+                      </Button>
+                    </div>
+                  </form>
+                )}
+                {step === 2 && (
+                  <form onSubmit={handleNext}>
+                    <div className="verticalForm">
+                      <div className="horizontalForm">
+                        <p>{t("columnsNames.updateFrequency")}</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="updateFrequency"
+                          name="updateFrequency"
+                          type="string"
+                          variant="standard"
+                          value={formDataSteps.updateFrequency}
+                          onChange={(e) =>
+                            handleChange("updateFrequency", e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="horizontalForm">
+                        <p>{t("columnsNames.topic")}</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="topic"
+                          name="topic"
+                          type="string"
+                          variant="standard"
+                          value={formDataSteps.topic}
+                          onChange={(e) =>
+                            handleChange("topic", e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="horizontalForm">
+                        <p>{t("columnsNames.lastUpdate")}</p>
+                        <DateTimePicker
+                          format="DD/MM/YYYY hh:mm:ss a"
+                          name="lastUpdate"
+                          value={lastUpdateAlmacenado}
+                          onChange={(e) => handleChangeLastUpdate(e)}
+                          slotProps={{
+                            textField: {
+                              variant: "standard",
+                              id: "lastUpdate",
+                            },
+                          }}
+                        ></DateTimePicker>
+                      </div>
+                      <div className="horizontalForm">
+                        <p>{t("columnsNames.format")}</p>
+                        <FormControl variant="standard">
+                          <FormGroup>
+                            <Autocomplete
+                              multiple
+                              id="format"
+                              options={["PDF", "EXCEL", "CSV", "JSON"]}
+                              sx={{
+                                color:
+                                  actualTheme === "light" ? "black" : "white",
+                              }}
+                              value={format}
+                              onChange={handleFormat}
+                              disableCloseOnSelect={true}
+                              renderOption={(props, option, { selected }) => (
+                                <li {...props}>
+                                  <FormControlLabel
+                                    control={
+                                      <Checkbox
+                                        checked={selected}
+                                        sx={{
+                                          color:
+                                            actualTheme === "light"
+                                              ? "black"
+                                              : "white",
+                                        }}
+                                      />
+                                    }
+                                    label={option}
+                                    sx={{
+                                      color:
+                                        actualTheme === "light"
+                                          ? "black"
+                                          : "white",
+                                    }}
+                                  />
+                                </li>
+                              )}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  name="format"
+                                  variant="standard"
+                                  placeholder="Select formats"
+                                  sx={{
+                                    color:
+                                      actualTheme === "light"
+                                        ? "black"
+                                        : "white",
+                                  }}
+                                />
+                              )}
+                            />
+                          </FormGroup>
+                        </FormControl>
+                      </div>
+                      <div className="horizontalForm">
+                        <p>Distribución</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="distribution"
+                          name="distribution"
+                          type="string"
+                          variant="standard"
+                          value={formDataSteps.distribution}
+                          onChange={(e) =>
+                            handleChange("distribution", e.target.value)
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div className="buttonsForm">
+                      <Button
+                        onClick={handleClose}
+                        sx={{
+                          height: 37,
+                          backgroundColor: "#D9D9D9",
+                          color: "#404040",
+                          borderColor: "#404040",
+                          "&:hover": {
+                            borderColor: "#0D0D0D",
+                            backgroundColor: "#0D0D0D",
+                            color: "#f2f2f2",
+                          },
+                        }}
+                      >
+                        {t("dialog.cancel")}
+                      </Button>
+                      <div>
+                        <Button
+                          onClick={handleGoBack}
+                          sx={{
+                            height: 37,
+                            backgroundColor: "#D9D9D9",
+                            color: "#404040",
+                            borderColor: "#404040",
+                            marginRight: 1,
+                            "&:hover": {
+                              borderColor: "#0D0D0D",
+                              backgroundColor: "#0D0D0D",
+                              color: "#f2f2f2",
+                            },
+                          }}
+                        >
+                          Atrás
+                        </Button>
 
-                    <TextField
-                      autoFocus
-                      required
-                      margin="dense"
-                      id="contactPerson"
-                      name="contactPerson"
-                      type="string"
-                      variant="standard"
-                      value={formDataSteps.contactPerson}
-                      onChange={(e) =>
-                        handleChange("contactPerson", e.target.value)
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="buttonsForm">
-                  <Button
-                    onClick={handleClose}
-                    sx={{
-                      height: 37,
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                  >
-                    {t("dialog.cancel")}
-                  </Button>
-                  <div>
-                    <Button
-                      onClick={handleGoBack}
-                      sx={{
-                        height: 37,
-                        backgroundColor: "#D9D9D9",
-                        color: "#404040",
-                        borderColor: "#404040",
-                        marginRight: 1,
-                        "&:hover": {
-                          borderColor: "#0D0D0D",
-                          backgroundColor: "#0D0D0D",
-                          color: "#f2f2f2",
-                        },
-                      }}
-                    >
-                      Atrás
-                    </Button>
+                        <Button
+                          type="submit"
+                          sx={{
+                            height: 37,
+                            backgroundColor: "#D9D9D9",
+                            color: "#404040",
+                            borderColor: "#404040",
+                            "&:hover": {
+                              borderColor: "#0D0D0D",
+                              backgroundColor: "#0D0D0D",
+                              color: "#f2f2f2",
+                            },
+                          }}
+                        >
+                          {t("dialog.next")}
+                        </Button>
+                      </div>
+                    </div>
+                  </form>
+                )}
+                {step === 3 && (
+                  <form onSubmit={handleNext}>
+                    <div className="verticalForm">
+                      <div className="horizontalFormSwitch">
+                        <p>{t("columnsNames.sensitiveInformation")}</p>
+                        <FormControl variant="standard">
+                          <Switch
+                            id="sensitiveInformation"
+                            name="sensitiveInformation"
+                            value={sensitiveInformation}
+                            checked={sensitiveInformation === "SI"}
+                            onChange={(event) =>
+                              handleSwitch(
+                                "sensitiveInformation",
+                                event.target.checked
+                              )
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </FormControl>
+                      </div>
+                      <div className="horizontalFormSwitch">
+                        <p>Se está usando</p>
+                        <FormControl variant="standard">
+                          <Switch
+                            id="isUsing"
+                            name="isUsing"
+                            value={isUsing}
+                            checked={isUsing === "SI"}
+                            onChange={(event) =>
+                              handleSwitch("isUsing", event.target.checked)
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </FormControl>
+                      </div>
+                      <div className="horizontalForm">
+                        <p>{t("columnsNames.accessType")}</p>
+                        <FormControl variant="standard">
+                          <Select
+                            id="accessType"
+                            name="accessType"
+                            margin="dense"
+                            defaultValue={formDataSteps.accessType}
+                            onChange={(e) =>
+                              handleChange("accessType", e.target.value)
+                            }
+                            required
+                          >
+                            <MenuItem value={"Públic/Público"}>
+                              Público
+                            </MenuItem>
+                            <MenuItem value={"Restringit/Restringido"}>
+                              Restringido
+                            </MenuItem>
+                            <MenuItem value={"Privat/Privado"}>
+                              Privado
+                            </MenuItem>
+                          </Select>
+                        </FormControl>
+                      </div>
+                      <div className="horizontalForm">
+                        <p>Relación interna</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="internalRelationship"
+                          name="internalRelationship"
+                          type="string"
+                          variant="standard"
+                          value={formDataSteps.internalRelationship}
+                          onChange={(e) =>
+                            handleChange("internalRelationship", e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="horizontalForm">
+                        <p>{t("columnsNames.contactPerson")}</p>
 
-                    <Button
-                      type="submit"
-                      sx={{
-                        height: 37,
-                        backgroundColor: "#D9D9D9",
-                        color: "#404040",
-                        borderColor: "#404040",
-                        "&:hover": {
-                          borderColor: "#0D0D0D",
-                          backgroundColor: "#0D0D0D",
-                          color: "#f2f2f2",
-                        },
-                      }}
-                    >
-                      {t("dialog.next")}
-                    </Button>
-                  </div>
-                </div>
-              </form>
-            )}
-            {step === 4 && (
-              <form onSubmit={handleNext}>
-                <div className="verticalForm">
-                  <div className="horizontalFormSwitch">
-                    <p>Estructurado</p>
-                    <FormControl variant="standard">
-                      <Switch
-                        id="structured"
-                        name="structured"
-                        value={structured}
-                        checked={structured === "SI"}
-                        onChange={(event) =>
-                          handleSwitch("structured", event.target.checked)
-                        }
-                        color="primary" // Opcional: ajusta el color del switch
-                      />
-                    </FormControl>
-                  </div>
-                  <div className="horizontalForm">
-                    <p>Aplicación asociada</p>
-                    <TextField
-                      autoFocus
-                      required
-                      margin="dense"
-                      id="associatedApplication"
-                      name="associatedApplication"
-                      type="string"
-                      variant="standard"
-                      value={formDataSteps.associatedApplication}
-                      onChange={(e) =>
-                        handleChange("associatedApplication", e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="horizontalFormSwitch">
-                    <p>{t("columnsNames.georreference")}</p>
-                    <FormControl variant="standard">
-                      <Switch
-                        id="georeference"
-                        name="georeference"
-                        value={georeference}
-                        checked={georeference === "SI"}
-                        onChange={(event) =>
-                          handleSwitch("georeference", event.target.checked)
-                        }
-                        color="primary" // Opcional: ajusta el color del switch
-                      />
-                    </FormControl>
-                  </div>
-                  <div className="horizontalForm">
-                    <p>{t("columnsNames.comments")}</p>
-                    <TextField
-                      autoFocus
-                      required
-                      margin="dense"
-                      id="comments"
-                      name="comments"
-                      type="string"
-                      variant="standard"
-                      value={formDataSteps.comments}
-                      onChange={(e) => handleChange("comments", e.target.value)}
-                    />
-                  </div>
-                  <div className="horizontalForm">
-                    <p>Efecto temporal</p>
-                    <TextField
-                      autoFocus
-                      required
-                      margin="dense"
-                      id="timmingEffect"
-                      name="timmingEffect"
-                      type="string"
-                      variant="standard"
-                      value={formDataSteps.timmingEffect}
-                      onChange={(e) =>
-                        handleChange("timmingEffect", e.target.value)
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="buttonsForm">
-                  <Button
-                    onClick={handleClose}
-                    sx={{
-                      height: 37,
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                  >
-                    {t("dialog.cancel")}
-                  </Button>
-                  <div>
-                    <Button
-                      onClick={handleGoBack}
-                      sx={{
-                        height: 37,
-                        backgroundColor: "#D9D9D9",
-                        color: "#404040",
-                        borderColor: "#404040",
-                        marginRight: 1,
-                        "&:hover": {
-                          borderColor: "#0D0D0D",
-                          backgroundColor: "#0D0D0D",
-                          color: "#f2f2f2",
-                        },
-                      }}
-                    >
-                      Atrás
-                    </Button>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="contactPerson"
+                          name="contactPerson"
+                          type="string"
+                          variant="standard"
+                          value={formDataSteps.contactPerson}
+                          onChange={(e) =>
+                            handleChange("contactPerson", e.target.value)
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div className="buttonsForm">
+                      <Button
+                        onClick={handleClose}
+                        sx={{
+                          height: 37,
+                          backgroundColor: "#D9D9D9",
+                          color: "#404040",
+                          borderColor: "#404040",
+                          "&:hover": {
+                            borderColor: "#0D0D0D",
+                            backgroundColor: "#0D0D0D",
+                            color: "#f2f2f2",
+                          },
+                        }}
+                      >
+                        {t("dialog.cancel")}
+                      </Button>
+                      <div>
+                        <Button
+                          onClick={handleGoBack}
+                          sx={{
+                            height: 37,
+                            backgroundColor: "#D9D9D9",
+                            color: "#404040",
+                            borderColor: "#404040",
+                            marginRight: 1,
+                            "&:hover": {
+                              borderColor: "#0D0D0D",
+                              backgroundColor: "#0D0D0D",
+                              color: "#f2f2f2",
+                            },
+                          }}
+                        >
+                          Atrás
+                        </Button>
 
-                    <Button
-                      type="submit"
-                      sx={{
-                        height: 37,
-                        backgroundColor: "#D9D9D9",
-                        color: "#404040",
-                        borderColor: "#404040",
-                        "&:hover": {
-                          borderColor: "#0D0D0D",
-                          backgroundColor: "#0D0D0D",
-                          color: "#f2f2f2",
-                        },
-                      }}
-                    >
-                      {t("dialog.next")}
-                    </Button>
-                  </div>
-                </div>
-              </form>
-            )}
-            {step === 5 && (
-              <form onSubmit={handleSubmit}>
-                <div className="verticalForm">
-                  <div className="horizontalForm">
-                    <p>Fecha de creación</p>
-                    <DateTimePicker 
-                      format="DD/MM/YYYY hh:mm:ss a"
-                      name="creationDate"
-                      value={creationDateAlmacenado}
-                      onChange={(e) =>
-                        handleChangeCreationDate(e)
-                      }
-                      slotProps={{ textField: { variant: "standard", id:"creationDate" } }}
-                    >
+                        <Button
+                          type="submit"
+                          sx={{
+                            height: 37,
+                            backgroundColor: "#D9D9D9",
+                            color: "#404040",
+                            borderColor: "#404040",
+                            "&:hover": {
+                              borderColor: "#0D0D0D",
+                              backgroundColor: "#0D0D0D",
+                              color: "#f2f2f2",
+                            },
+                          }}
+                        >
+                          {t("dialog.next")}
+                        </Button>
+                      </div>
+                    </div>
+                  </form>
+                )}
+                {step === 4 && (
+                  <form onSubmit={handleNext}>
+                    <div className="verticalForm">
+                      <div className="horizontalFormSwitch">
+                        <p>Estructurado</p>
+                        <FormControl variant="standard">
+                          <Switch
+                            id="structured"
+                            name="structured"
+                            value={structured}
+                            checked={structured === "SI"}
+                            onChange={(event) =>
+                              handleSwitch("structured", event.target.checked)
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </FormControl>
+                      </div>
+                      <div className="horizontalForm">
+                        <p>Aplicación asociada</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="associatedApplication"
+                          name="associatedApplication"
+                          type="string"
+                          variant="standard"
+                          value={formDataSteps.associatedApplication}
+                          onChange={(e) =>
+                            handleChange(
+                              "associatedApplication",
+                              e.target.value
+                            )
+                          }
+                        />
+                      </div>
+                      <div className="horizontalFormSwitch">
+                        <p>{t("columnsNames.georreference")}</p>
+                        <FormControl variant="standard">
+                          <Switch
+                            id="georeference"
+                            name="georeference"
+                            value={georeference}
+                            checked={georeference === "SI"}
+                            onChange={(event) =>
+                              handleSwitch("georeference", event.target.checked)
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </FormControl>
+                      </div>
+                      <div className="horizontalForm">
+                        <p>{t("columnsNames.comments")}</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="comments"
+                          name="comments"
+                          type="string"
+                          variant="standard"
+                          value={formDataSteps.comments}
+                          onChange={(e) =>
+                            handleChange("comments", e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="horizontalForm">
+                        <p>Efecto temporal</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="timmingEffect"
+                          name="timmingEffect"
+                          type="string"
+                          variant="standard"
+                          value={formDataSteps.timmingEffect}
+                          onChange={(e) =>
+                            handleChange("timmingEffect", e.target.value)
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div className="buttonsForm">
+                      <Button
+                        onClick={handleClose}
+                        sx={{
+                          height: 37,
+                          backgroundColor: "#D9D9D9",
+                          color: "#404040",
+                          borderColor: "#404040",
+                          "&:hover": {
+                            borderColor: "#0D0D0D",
+                            backgroundColor: "#0D0D0D",
+                            color: "#f2f2f2",
+                          },
+                        }}
+                      >
+                        {t("dialog.cancel")}
+                      </Button>
+                      <div>
+                        <Button
+                          onClick={handleGoBack}
+                          sx={{
+                            height: 37,
+                            backgroundColor: "#D9D9D9",
+                            color: "#404040",
+                            borderColor: "#404040",
+                            marginRight: 1,
+                            "&:hover": {
+                              borderColor: "#0D0D0D",
+                              backgroundColor: "#0D0D0D",
+                              color: "#f2f2f2",
+                            },
+                          }}
+                        >
+                          Atrás
+                        </Button>
 
-                    </DateTimePicker>
-                    {/*
-                    <TextField
-                      autoFocus
-                      required
-                      id="creationDate"
-                      margin="dense"
-                      name="creationDate"
-                      type="datetime-local"
-                      variant="standard"
-                      value={formDataSteps.creationDate}
-                      onChange={(e) =>
-                        handleChange("creationDate", e.target.value)
-                      }
-                      sx={{
-                        backgroundColor: "none",
-                        width: "100%",
-                        border: "none",
-                        borderBottom: "1px solid lightgrey",
-                        "& input": {
-                          backgroundColor: "none",
-                          border: "none",
-                        },
-                      }}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        style: {
-                          backgroundColor: "none",
-                          width: "100%",
-                          border: "none",
-                          borderBottom: "1px solid lightgrey",
-                        },
-                      }}
-                    />
-                    */}
-                  </div>
-                  <div className="horizontalFormSwitch">
-                    <p>{t("columnsNames.personalData")}</p>
-                    <FormControl variant="standard">
-                      <Switch
-                        id="personalData"
-                        name="personalData"
-                        value={personalData}
-                        checked={personalData === "SI"}
-                        onChange={(event) =>
-                          handleSwitch("personalData", event.target.checked)
-                        }
-                        color="primary" // Opcional: ajusta el color del switch
-                      />
-                    </FormControl>
-                  </div>
-                  <div className="horizontalForm">
-                    <p>{t("columnsNames.source")}</p>
-                    <TextField
-                      autoFocus
-                      required
-                      margin="dense"
-                      id="source"
-                      name="source"
-                      type="string"
-                      variant="standard"
-                      value={formDataSteps.source}
-                      onChange={(e) => handleChange("source", e.target.value)}
-                    />
-                  </div>
-                  <div className="horizontalForm">
-                    <p>{t("columnsNames.responsibleIdentity")}</p>
-                    <TextField
-                      autoFocus
-                      required
-                      margin="dense"
-                      id="responsibleIdentity"
-                      name="responsibleIdentity"
-                      type="string"
-                      variant="standard"
-                      value={formDataSteps.responsibleIdentity}
-                      onChange={(e) =>
-                        handleChange("responsibleIdentity", e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="horizontalFormSwitch">
-                    <p>{t("columnsNames.activeAds")}</p>
-                    <FormControl variant="standard">
-                      <Switch
-                        id="activeAds"
-                        name="activeAds"
-                        value={activeAds}
-                        checked={activeAds === "SI"}
-                        onChange={(event) =>
-                          handleSwitch("activeAds", event.target.checked)
-                        }
-                        color="primary" // Opcional: ajusta el color del switch
-                      />
-                    </FormControl>
-                  </div>
-                </div>
-                <div className="buttonsForm">
-                  <Button
-                    onClick={handleClose}
-                    sx={{
-                      height: 37,
-                      backgroundColor: "#D9D9D9",
-                      color: "#404040",
-                      borderColor: "#404040",
-                      "&:hover": {
-                        borderColor: "#0D0D0D",
-                        backgroundColor: "#0D0D0D",
-                        color: "#f2f2f2",
-                      },
-                    }}
-                  >
-                    {t("dialog.cancel")}
-                  </Button>
+                        <Button
+                          type="submit"
+                          sx={{
+                            height: 37,
+                            backgroundColor: "#D9D9D9",
+                            color: "#404040",
+                            borderColor: "#404040",
+                            "&:hover": {
+                              borderColor: "#0D0D0D",
+                              backgroundColor: "#0D0D0D",
+                              color: "#f2f2f2",
+                            },
+                          }}
+                        >
+                          {t("dialog.next")}
+                        </Button>
+                      </div>
+                    </div>
+                  </form>
+                )}
+                {step === 5 && (
+                  <form onSubmit={handleSubmit}>
+                    <div className="verticalForm">
+                      <div className="horizontalForm">
+                        <p>Fecha de creación</p>
+                        <DateTimePicker
+                          format="DD/MM/YYYY hh:mm:ss a"
+                          name="creationDate"
+                          value={creationDateAlmacenado}
+                          onChange={(e) => handleChangeCreationDate(e)}
+                          slotProps={{
+                            textField: {
+                              variant: "standard",
+                              id: "creationDate",
+                            },
+                          }}
+                        ></DateTimePicker>
+                      </div>
+                      <div className="horizontalFormSwitch">
+                        <p>{t("columnsNames.personalData")}</p>
+                        <FormControl variant="standard">
+                          <Switch
+                            id="personalData"
+                            name="personalData"
+                            value={personalData}
+                            checked={personalData === "SI"}
+                            onChange={(event) =>
+                              handleSwitch("personalData", event.target.checked)
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </FormControl>
+                      </div>
+                      <div className="horizontalForm">
+                        <p>{t("columnsNames.source")}</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="source"
+                          name="source"
+                          type="string"
+                          variant="standard"
+                          value={formDataSteps.source}
+                          onChange={(e) =>
+                            handleChange("source", e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="horizontalForm">
+                        <p>{t("columnsNames.responsibleIdentity")}</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="responsibleIdentity"
+                          name="responsibleIdentity"
+                          type="string"
+                          variant="standard"
+                          value={formDataSteps.responsibleIdentity}
+                          onChange={(e) =>
+                            handleChange("responsibleIdentity", e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="horizontalFormSwitch">
+                        <p>{t("columnsNames.activeAds")}</p>
+                        <FormControl variant="standard">
+                          <Switch
+                            id="activeAds"
+                            name="activeAds"
+                            value={activeAds}
+                            checked={activeAds === "SI"}
+                            onChange={(event) =>
+                              handleSwitch("activeAds", event.target.checked)
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </FormControl>
+                      </div>
+                    </div>
+                    <div className="buttonsForm">
+                      <Button
+                        onClick={handleClose}
+                        sx={{
+                          height: 37,
+                          backgroundColor: "#D9D9D9",
+                          color: "#404040",
+                          borderColor: "#404040",
+                          "&:hover": {
+                            borderColor: "#0D0D0D",
+                            backgroundColor: "#0D0D0D",
+                            color: "#f2f2f2",
+                          },
+                        }}
+                      >
+                        {t("dialog.cancel")}
+                      </Button>
 
-                  <div>
-                    <Button
-                      onClick={handleGoBack}
-                      sx={{
-                        height: 37,
-                        backgroundColor: "#D9D9D9",
-                        color: "#404040",
-                        borderColor: "#404040",
-                        marginRight: 1,
-                        "&:hover": {
-                          borderColor: "#0D0D0D",
-                          backgroundColor: "#0D0D0D",
-                          color: "#f2f2f2",
-                        },
-                      }}
-                    >
-                      Atrás
-                    </Button>
+                      <div>
+                        <Button
+                          onClick={handleGoBack}
+                          sx={{
+                            height: 37,
+                            backgroundColor: "#D9D9D9",
+                            color: "#404040",
+                            borderColor: "#404040",
+                            marginRight: 1,
+                            "&:hover": {
+                              borderColor: "#0D0D0D",
+                              backgroundColor: "#0D0D0D",
+                              color: "#f2f2f2",
+                            },
+                          }}
+                        >
+                          Atrás
+                        </Button>
 
-                    <Button
-                      type="submit"
-                      sx={{
-                        height: 37,
-                        backgroundColor: "#D9D9D9",
-                        color: "#404040",
-                        borderColor: "#404040",
-                        "&:hover": {
-                          borderColor: "#0D0D0D",
-                          backgroundColor: "#0D0D0D",
-                          color: "#f2f2f2",
-                        },
-                      }}
-                    >
-                      {t("dialog.addButton")}
-                    </Button>
-                  </div>
-                </div>
-              </form>
-            )}
-          </Box>
-        </DialogContent>
-        <DialogActions
-          sx={{
-            backgroundColor: actualTheme==="light" ? "white" : "#252525",
-            color: actualTheme==="light" ? "#252525" : "white",
-            "& .MuiInputBase-root": { border: "none" },
-          }}
-        ></DialogActions>
-      </Dialog>
-    </LocalizationProvider>
-    </ThemeProvider>
+                        <Button
+                          type="submit"
+                          sx={{
+                            height: 37,
+                            backgroundColor: "#D9D9D9",
+                            color: "#404040",
+                            borderColor: "#404040",
+                            "&:hover": {
+                              borderColor: "#0D0D0D",
+                              backgroundColor: "#0D0D0D",
+                              color: "#f2f2f2",
+                            },
+                          }}
+                        >
+                          {t("dialog.addButton")}
+                        </Button>
+                      </div>
+                    </div>
+                  </form>
+                )}
+              </Box>
+            </DialogContent>
+            <DialogActions
+              sx={{
+                backgroundColor: actualTheme === "light" ? "white" : "#252525",
+                color: actualTheme === "light" ? "#252525" : "white",
+                "& .MuiInputBase-root": { border: "none" },
+              }}
+            ></DialogActions>
+          </Dialog>
+        </LocalizationProvider>
+      </ThemeProvider>
     </>
   );
 }

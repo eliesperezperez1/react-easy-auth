@@ -21,7 +21,6 @@ function ChangeLanguage() {
   const [userData, setUserData] = useState<User>(userMock);
 
   useEffect(() => {
-    console.log("hola");
     if (user() && user().user) {
       setUserData(user().user);
       setIdioma(user().user.language === "caES" ? "val" : "es");
@@ -32,8 +31,8 @@ function ChangeLanguage() {
   }, [user()]);
 
   async function switchVisibleSeleccion() {
-    if(userData === userMock)
-      console.log("igualesss");
+    console.log("hola");
+    if (userData === userMock) console.log("igualesss");
 
     if (idioma === "es") {
       setIdioma("val");

@@ -1,13 +1,31 @@
 import { GridPagination } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import { PaginationItem } from "@mui/material";
 
 function CustomPagination(props: any) {
   const { t } = useTranslation();
+  const {actualTheme} = useAlternateTheme();
 
   return (
+    
     <GridPagination
-      {...props}
-      labelRowsPerPage={t("tooltipText.rowsPage")} // Use your translation key here
+      labelRowsPerPage={t("tooltipText.rowsPage")}
+      sx={{
+        color: actualTheme==="light" ? "black" : "white",
+      }}
+      showFirstButton
+      showLastButton
+      /*sx={{
+        color: actualTheme==="light" ? "black" : "white",
+      }}*/
+      // @ts-expect-error
+      renderItem={props2 => 
+      <PaginationItem {...props2} disableRipple 
+        sx={{
+          color: actualTheme==="light" ? "black" : "white",
+        }} 
+      />}
     />
   );
 }

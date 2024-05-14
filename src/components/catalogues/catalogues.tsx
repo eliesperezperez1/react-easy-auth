@@ -1,6 +1,7 @@
 import {
   DataGrid,
   GridColDef,
+  GridColumnGroupingModel,
   GridRenderCellParams,
   useGridApiRef,
 } from "@mui/x-data-grid";
@@ -31,9 +32,9 @@ import {
   yesOrNo,
   valOrEsp,
 } from "../../utils/functions/table-functions";
-import { ThemeProvider } from "@mui/material";
-import baseTheme from "../darkModeSwitch/darkmodeTheme";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import baseTheme from "../darkModeSwitch/darkmodeTheme";
+import { ThemeProvider } from "@mui/material";
 
 function CatalogueList() {
   const authHeader = useAuthHeader();
@@ -51,6 +52,7 @@ function CatalogueList() {
     useState<Catalogue>(catalogueMock);
   const [userData, setUserData] = useState<User>(userMock);
   const gridApiRef = useGridApiRef();
+
   const datosDialog: DialogData = {
     open: openDialog,
     closeDialog: (close: boolean) => setOpenDialog(close),
@@ -78,106 +80,83 @@ function CatalogueList() {
       description: t("tooltipText.description"),
     },
     {
-      field: "topic",
-      headerName: t("columnsNames.topic"),
-      width: 200,
-      description: t("tooltipText.topic"),
-    },
-    {
       field: "responsibleIdentity",
       headerName: t("columnsNames.responsibleIdentity"),
       width: 200,
       description: t("tooltipText.responsibleIdentity"),
     },
     {
-      field: "datasetsRelation",
-      headerName: t("columnsNames.datasetsRelation"),
+      field: "organism",
+      headerName: "Organismo",
       width: 200,
-      description: t("tooltipText.datasetsRelation"),
+      description: "Organismo al que pertenece",
     },
     {
-      field: "fieldList",
-      headerName: t("columnsNames.fieldList"),
+      field: "topic",
+      headerName: t("columnsNames.topic"),
       width: 200,
-      description: t("tooltipText.fieldList"),
+      description: t("tooltipText.topic"),
     },
     {
-      field: "dataUnbundling",
-      headerName: t("columnsNames.dataUnbundling"),
-      width: 200,
-      description: t("tooltipText.dataUnbundling"),
+      field: "language",
+      headerName: "Idioma",
+      width: 70,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>{valOrEsp(params.value)}</>
+      ),
+      description: t("tooltipText.language"),
     },
     {
-      field: "updateFrequency",
-      headerName: t("columnsNames.updateFrequency"),
+      field: "keywords",
+      headerName: "Palabras clave",
       width: 200,
-      description: t("tooltipText.updateFrequency"),
+      description: "Palabras clave",
     },
     {
-      field: "format",
-      headerName: t("columnsNames.format"),
+      field: "minimumVariables",
+      headerName: "Campos mínimos",
       width: 200,
-      description: t("tooltipText.format"),
+      description: "Campos mínimos que debe incluir el dataset",
     },
     {
-      field: "dataOrigin",
-      headerName: t("columnsNames.dataOrigin"),
+      field: "contactPerson",
+      headerName: t("columnsNames.contactPerson"),
       width: 200,
-      description: t("tooltipText.dataOrigin"),
+      description: t("tooltipText.contactPersonService"),
     },
     {
-      field: "dataOriginURL",
-      headerName: t("columnsNames.dataOriginURL"),
+      field: "masterData",
+      headerName: "Dato maestro",
       width: 200,
-      description: t("tooltipText.dataOriginURL"),
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "Datos referentes a las características básicas del negocio",
     },
     {
-      field: "connection",
-      headerName: t("columnsNames.connection"),
+      field: "referenceData",
+      headerName: "Dato de referencia",
       width: 200,
-      description: t("tooltipText.connection"),
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description:
+        "Datos que definen el conjunto de valores admisibles en otros campos de datos",
     },
     {
-      field: "dataFiability",
-      headerName: t("columnsNames.dataFiability"),
+      field: "highValue",
+      headerName: "Alto valor",
       width: 200,
-      description: t("tooltipText.dataFiability"),
-    },
-    {
-      field: "comments",
-      headerName: t("columnsNames.comments"),
-      width: 200,
-      description: t("tooltipText.comments"),
-    },
-    {
-      field: "temporaryCoverage",
-      headerName: t("columnsNames.temporaryCoverage"),
-      width: 200,
-      description: t("tooltipText.temporaryCoverage"),
-    },
-    {
-      field: "repositoryStorage",
-      headerName: t("columnsNames.repositoryStorage"),
-      width: 200,
-      description: t("tooltipText.repositoryStorage"),
-    },
-    {
-      field: "repositoryStorageURL",
-      headerName: t("columnsNames.repositoryStorageURL"),
-      width: 200,
-      description: t("tooltipText.repositoryStorageURL"),
-    },
-    {
-      field: "fieldSuppression",
-      headerName: t("columnsNames.fieldSuppression"),
-      width: 200,
-      description: t("tooltipText.fieldSuppression"),
-    },
-    {
-      field: "accessType",
-      headerName: t("columnsNames.accessType"),
-      width: 200,
-      description: t("tooltipText.accessType"),
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "¿Es un dataset de alto valor?",
     },
     {
       field: "activeAds",
@@ -191,16 +170,65 @@ function CatalogueList() {
       description: t("tooltipText.activeAds"),
     },
     {
-      field: "posts",
-      headerName: t("columnsNames.posts"),
+      field: "comments",
+      headerName: t("columnsNames.comments"),
       width: 200,
-      description: t("tooltipText.posts"),
+      description: t("tooltipText.comments"),
+    },
+
+    {
+      field: "typeGeo",
+      headerName: "Información geográfica",
+      width: 200,
+      description: "¿Qué tipo de información geográfica contiene el dataset?",
     },
     {
-      field: "licence",
-      headerName: t("columnsNames.licence"),
+      field: "temporaryCoverage",
+      headerName: t("columnsNames.temporaryCoverage"),
       width: 200,
-      description: t("tooltipText.licence"),
+      description: t("tooltipText.temporaryCoverage"),
+    },
+
+    {
+      field: "genderInfo",
+      headerName: "Información de género",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "¿¿El dataset dispone de información de género??",
+    },
+    {
+      field: "structuredComments",
+      headerName: "Comentarios de la estructura",
+      width: 200,
+      description: "Comentarios relativos a la estructura interna del dataset",
+    },
+    {
+      field: "associatedApplication",
+      headerName: "Aplicación de origen",
+      width: 200,
+      description: "Nombre de la aplicación de origen de los datos",
+    },
+    {
+      field: "autoAcess",
+      headerName: "Acceso automatizado",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description:
+        "¿Se puede acceder a los datos de origen de forma automatizada? ",
+    },
+    {
+      field: "originComments",
+      headerName: "Comentarios del origen",
+      width: 200,
+      description: "Comentarios relativos al origen de los datos",
     },
     {
       field: "RAT",
@@ -214,26 +242,163 @@ function CatalogueList() {
       description: t("tooltipText.RAT"),
     },
     {
-      field: "georreference",
-      headerName: t("columnsNames.georreference"),
+      field: "dataProtection",
+      headerName: "Protección de datos",
       width: 200,
       renderCell: (params: GridRenderCellParams<any, string>) => (
         <>
           <Chip label={params.value} color={yesOrNo(params.value)} />
         </>
       ),
-      description: t("tooltipText.georreference"),
+      description:
+        "¿El dataset contiene datos personales protegidos por la LOPD?",
     },
     {
-      field: "language",
-      headerName: t("columnsNames.language"),
-      width: 70,
+      field: "dataStandards",
+      headerName: "Estándares de datos",
+      width: 200,
       renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>{valOrEsp(params.value)}</>
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
       ),
-      description: t("tooltipText.language"),
+      description:
+        "¿Existen campos del dataset que deberían publicarse por normativa?",
     },
     {
+      field: "dataProtectionComments",
+      headerName: "Comentarios del origen",
+      width: 200,
+      description: "Comentarios relativos a la protección de los datos",
+    },
+    {
+      field: "dataAnonymize",
+      headerName: "Anonimización de datos",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description:
+        "Campos del dataset que requieren ser anonimizados. Separar cada campo con un punto y coma (;)",
+    },
+    {
+      field: "dataQuality",
+      headerName: "Calidad de los datos",
+      width: 200,
+      description:
+        "Valoración numérica de la calidad de los datos (del 1 al 5)",
+    },
+    {
+      field: "sharingLevel",
+      headerName: "Nivel de compartición",
+      width: 200,
+      description:
+        "¿Quién tiene acceso a estos datos dentro de la organización?",
+    },
+    {
+      field: "sharedData",
+      headerName: "Datos compartidos",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "¿Se han compartido estos datos en alguna plataforma?",
+    },
+    {
+      field: "VLCi",
+      headerName: "VLCi",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "¿Está compartido en la plataforma Smart City?",
+    },
+    {
+      field: "ArcGIS",
+      headerName: "ArcGIS",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "¿Está cargado en ArcGIS?",
+    },
+    {
+      field: "Pentaho",
+      headerName: "Pentaho",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "¿Está disponible en Pentaho?",
+    },
+    {
+      field: "CKAN",
+      headerName: "CKAN",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "¿Está cargado en CKAN?",
+    },
+    {
+      field: "MongoDB",
+      headerName: "MongoDB",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "¿Está cargado en MongoDB?",
+    },
+    {
+      field: "OpenDataSoft",
+      headerName: "OpenDataSoft",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>
+          <Chip label={params.value} color={yesOrNo(params.value)} />
+        </>
+      ),
+      description: "¿Está publiccado en OpenDataSoft?",
+    },
+    {
+      field: "temporarySolution",
+      headerName: "Resolución temporal",
+      width: 200,
+      description: "Frecuencia de actualización del dato",
+    },
+    {
+      field: "chargeStateComments",
+      headerName: "Comentarios sobre el estado de carga",
+      width: 200,
+      description: "Comentarios relativos al estado de carga del dataset",
+    },
+    {
+      field: "productData",
+      headerName: "Producto de datos",
+      width: 200,
+      description: "Nombre del producto de datos",
+    },
+    {
+      field: "productComments",
+      headerName: "Comentarios del producto",
+      width: 200,
+      description: "Comentarios relativo al producto de datos",
+    },
+    /*  {
       field: "source",
       headerName: t("columnsNames.source"),
       width: 200,
@@ -245,11 +410,80 @@ function CatalogueList() {
     {
       field: "lastUpdate",
       headerName: t("columnsNames.lastUpdate"),
-      headerName: t("columnsNames.lastUpdate"),
       type: "dateTime",
       width: 200,
       valueGetter: ({ value }) => value && new Date(value),
       description: t("tooltipText.lastUpdate"),
+    },
+    {
+      field: "territorialScope",
+      headerName: t("columnsNames.territorialScope"),
+      width: 200,
+      description: t("tooltipText.territorialScope"),
+    }, */
+  ];
+
+  const columnGroupingModel: GridColumnGroupingModel = [
+    {
+      groupId: "Estructura general del dataset",
+      children: [
+        { field: "title" },
+        { field: "description" },
+        { field: "responsibleIdentity" },
+        { field: "organism" },
+        { field: "topic" },
+        { field: "language" },
+        { field: "keywords" },
+        { field: "minimumVariables" },
+        { field: "contactPerson" },
+        { field: "masterData" },
+        { field: "referenceData" },
+        { field: "highValue" },
+        { field: "activeAds" },
+        { field: "comments" },
+      ],
+    },
+    {
+      groupId: "internalStructure",
+      children: [
+        { field: "typeGeo" },
+        { field: "temporaryScope" },
+        { field: "genderInfo" },
+        { field: "structuredComments" },
+      ],
+    },
+    {
+      groupId: "dataOrigin",
+      children: [
+        { field: "associatedApplication" },
+        { field: "autoAccess" },
+        { field: "originComments" },
+      ],
+    },
+    {
+      groupId: "datasetChargeState",
+      children: [
+        { field: "RAT" },
+        { field: "dataProtection" },
+        { field: "dataStandards" },
+        { field: "dataProtectionComments" },
+        { field: "dataAnonymize" },
+        { field: "dataQuality" },
+        { field: "sharingLevel" },
+        { field: "sharedData" },
+        { field: "VLCi" },
+        { field: "ArcGIS" },
+        { field: "Pentaho" },
+        { field: "CKAN" },
+        { field: "MongoDB" },
+        { field: "OpenDataSoft" },
+        { field: "temporarySolution" },
+        { field: "chargeStateComments" },
+      ],
+    },
+    {
+      groupId: "datasetApplicationCreated",
+      children: [{ field: "productData" }, { field: "productComments" }],
     },
   ];
 
@@ -278,7 +512,7 @@ function CatalogueList() {
       });
   }
   function getSelectedCatalogues() {
-    selectedCatalogues.forEach((sc) => {
+    selectedCatalogues.forEach((sc: any) => {
       getCatalogueRequest(authHeader(), sc)
         .then((response) => response.json())
         .then((data) => {
@@ -298,7 +532,7 @@ function CatalogueList() {
 
   function deleteRegisters() {
     selectedCatalogues.forEach((sc: string) => {
-      let cata = catalogues.find((v) => v._id === sc);
+      let cata = catalogues.find((v: any) => v._id === sc);
       if (cata) {
         updateCatalogueRequest(
           cata._id,
@@ -316,7 +550,7 @@ function CatalogueList() {
 
   function restoreRegisters() {
     selectedCatalogues.forEach((sc: string) => {
-      let cata = deletedCatalogues.find((v) => v._id === sc);
+      let cata = deletedCatalogues.find((v: any) => v._id === sc);
       if (cata) {
         updateCatalogueRequest(
           cata._id,
@@ -357,8 +591,74 @@ function CatalogueList() {
             apiRef={gridApiRef}
             rows={rows}
             columns={columns}
+            columnGroupingModel={[
+              {
+                groupId: "Estructura general del dataset",
+                children: [
+                  { field: "title" },
+                  { field: "description" },
+                  { field: "responsibleIdentity" },
+                  { field: "organism" },
+                  { field: "topic" },
+                  { field: "language" },
+                  { field: "keywords" },
+                  { field: "minimumVariables" },
+                  { field: "contactPerson" },
+                  { field: "masterData" },
+                  { field: "referenceData" },
+                  { field: "highValue" },
+                  { field: "activeAds" },
+                  { field: "comments" },
+                ],
+              },
+              {
+                groupId: "internalStructure",
+                children: [
+                  { field: "typeGeo" },
+                  { field: "temporaryScope" },
+                  { field: "genderInfo" },
+                  { field: "structuredComments" },
+                ],
+              },
+              {
+                groupId: "dataOrigin",
+                children: [
+                  { field: "associatedApplication" },
+                  { field: "autoAccess" },
+                  { field: "originComments" },
+                ],
+              },
+              {
+                groupId: "datasetChargeState",
+                children: [
+                  { field: "RAT" },
+                  { field: "dataProtection" },
+                  { field: "dataStandards" },
+                  { field: "dataProtectionComments" },
+                  { field: "dataAnonymize" },
+                  { field: "dataQuality" },
+                  { field: "sharingLevel" },
+                  { field: "sharedData" },
+                  { field: "VLCi" },
+                  { field: "ArcGIS" },
+                  { field: "Pentaho" },
+                  { field: "CKAN" },
+                  { field: "MongoDB" },
+                  { field: "OpenDataSoft" },
+                  { field: "temporarySolution" },
+                  { field: "chargeStateComments" },
+                ],
+              },
+              {
+                groupId: "datasetApplicationCreated",
+                children: [
+                  { field: "productData" },
+                  { field: "productComments" },
+                ],
+              },
+            ]}
             sx={{
-              height: 700,
+              height: "100%",
               width: "100%",
               backgroundColor: actualTheme === "light" ? "white" : "#252525",
               color: actualTheme === "light" ? "#252525" : "white",
@@ -367,7 +667,6 @@ function CatalogueList() {
                 border: "1px 1px 0px 0px solid black",
               },
               "& .MuiDataGrid-row:hover": {
-                //color: paletaColores("colorTextAlter"),
                 color:
                   actualTheme === "light"
                     ? paletaColores("colorTextAlter")
@@ -413,7 +712,9 @@ function CatalogueList() {
                       setDeletedTable(!deletedTable);
                       showDeleted();
                     }}
-                    createDialogOpen={createDialogOpen}
+                    createDialogOpen={() => {
+                      setOpenDialog(true);
+                    }}
                     getSelectedCatalogues={getSelectedCatalogues}
                   ></CustomToolbar>
                 );

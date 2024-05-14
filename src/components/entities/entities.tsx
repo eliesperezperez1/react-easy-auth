@@ -27,8 +27,8 @@ import {
   paletaColores,
 } from "../../utils/functions/table-functions";
 import CustomToolbar from "../custom-toolbar/custom-toolbar";
-import baseTheme from "../darkModeSwitch/darkmodeTheme";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import baseTheme from "../darkModeSwitch/darkmodeTheme";
 
 function EntitiesList() {
   const authHeader = useAuthHeader();
@@ -258,6 +258,9 @@ function EntitiesList() {
               bgcolor: actualTheme==='light' ? paletaColores("colorRowHover") : paletaColores("colorRowHoverDark"),
               border: "1px solid " + paletaColores("colorBgRowSelectedBorder"),
             },
+            "a":{
+              color: actualTheme==="light" ? "darkblue" : "lightblue",
+            }
           }}
           initialState={{
             pagination: {

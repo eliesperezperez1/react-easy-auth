@@ -12,8 +12,12 @@ import {
 } from "../../interfaces/user.interface";
 import { updateUserRequest } from "../../api/users";
 import { useAuthHeader } from "react-auth-kit";
-import { Box } from "@mui/material";
+import { Box, ThemeProvider } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import baseTheme from "../darkModeSwitch/darkmodeTheme";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 export interface UpdateDialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
@@ -30,14 +34,19 @@ export default function UpdateUserDialog(props: {
   const [t, i18n] = useTranslation();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
+  const {actualTheme} = useAlternateTheme();
 
   useEffect(() => {
     setUpdate(props.enviar.user);
+    console.log(props.enviar.user);
+    console.log(update);
     setOpen(props.enviar.open);
+    setStep(1);
   }, [props.enviar.open, props.enviar.user]);
 
   const handleClose = () => {
     setOpen(false);
+    setStep(1);
     props.enviar.closeDialog(false);
   };
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,24 +95,41 @@ export default function UpdateUserDialog(props: {
     setStep(step - 1);
   }
 
+  const dynamicStyle = {
+    backgroundColor: actualTheme === "light" ? "white" : "#252525",
+    color: actualTheme === "light" ? "#252525" : "white",
+    "& .MuiInputBase-root": { border: "none" },
+  };
+
   return (
     <>
+    
+    <ThemeProvider theme={baseTheme(actualTheme)}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Dialog
         fullWidth={true}
         maxWidth="lg"
         open={open}
         onClose={handleClose}
+        style={dynamicStyle}
         sx={{
           "& .MuiTextField-root": { m: 1, width: "20ch" },
           "& .MuiFormControl-root": { m: 1, width: "20ch" },
           "&. MuiInputBase-root": { m: 1, width: "20ch" },
         }}
       >
-        <DialogTitle>{t("dialog.updateRegister")}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-          {t("dialog.fillInfo")}
-          </DialogContentText>
+        <DialogTitle 
+        style={dynamicStyle}
+        >
+          {t("dialog.updateRegister")}
+        </DialogTitle>
+        <DialogContent
+          style={dynamicStyle}
+        >
+        <div className="dialogContentText">
+          <span>{t("dialog.fillInfo")}</span>
+          <span><b>{step}/2</b></span>
+        </div>
           
           <Box>
           {step === 1 && (
@@ -355,6 +381,8 @@ export default function UpdateUserDialog(props: {
         <DialogActions>
         </DialogActions>
       </Dialog>
+    </LocalizationProvider>
+    </ThemeProvider>
     </>
   );
 }

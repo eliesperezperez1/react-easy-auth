@@ -30,6 +30,7 @@ import {
   valOrEsp,
 } from "../../utils/functions/table-functions";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import { grey } from "@mui/material/colors";
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
 
 function UserList() {
@@ -47,7 +48,7 @@ function UserList() {
   const [userSelected, setUserSelected] = useState<User>(userMock);
   const [userData, setUserData] = useState<User>(userMock);
   const {actualTheme} = useAlternateTheme();
-
+  
   const datosDialog: DialogData = {
     open: openDialog,
     closeDialog: (close: boolean) => setOpenDialog(close),
@@ -122,7 +123,7 @@ function UserList() {
   }
   function getSelectedUsers() {
     selectedUsers.forEach((sc) => {
-      getUserRequest(authHeader(), sc)
+      getUserRequest(sc, authHeader())
         .then((response) => response.json())
         .then((data) => {
           setUserSelected(data);
@@ -185,7 +186,7 @@ function UserList() {
   return (
     <>
       <div>
-      <ThemeProvider theme={baseTheme(actualTheme)}>
+        <ThemeProvider theme={baseTheme(actualTheme)}>
         <DataGrid
           apiRef={gridApiRef}
           rows={rows}
@@ -200,7 +201,6 @@ function UserList() {
               border: "1px 1px 0px 0px solid black",
             },
             "& .MuiDataGrid-row:hover": {
-              //color: paletaColores("colorTextAlter"),
               color: actualTheme==='light' ? paletaColores("colorTextAlter") : paletaColores("colorBgRowSelectedBorder"),
               bgcolor: actualTheme==='light' ? paletaColores("colorRowHover") : paletaColores("colorRowHoverDark"),
               border: "1px solid " + paletaColores("colorBgRowSelectedBorder"),

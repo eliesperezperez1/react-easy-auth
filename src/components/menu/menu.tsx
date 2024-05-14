@@ -23,6 +23,7 @@ const Menu = (props: { change: ChangeLanguageEvent }) => {
   const user = useAuthUser();
   const { actualTheme } = useAlternateTheme();
   const [userData, setUserData] = useState<User>(userMock);
+
   const handleShowNavbar = () => {
     setShowNavbar(!showNavbar);
   };
@@ -39,13 +40,12 @@ const Menu = (props: { change: ChangeLanguageEvent }) => {
     backgroundColor: actualTheme === "light" ? "white" : "#252525",
     color: actualTheme === "light" ? "#252525" : "white",
   };
-
   useEffect(() => {
     setUserData(user().user);
   });
   return (
     <nav className="navbar" style={dynamicStyle}>
-      <div className="container">
+      <div className="container" style={dynamicStyle}>
         <div className="logo">
           {userData.themeApp === "light" ? <Brand /> : <BrandWhite />}
         </div>
@@ -57,7 +57,7 @@ const Menu = (props: { change: ChangeLanguageEvent }) => {
           style={dynamicStyle}
         >
           <ul style={dynamicStyle}>
-            <li>
+            <li style={dynamicStyle}>
               <a
                 style={dynamicStyle}
                 onClick={() => {
@@ -106,7 +106,7 @@ const Menu = (props: { change: ChangeLanguageEvent }) => {
 
             <li>
               <a style={dynamicStyle} onClick={logout}>
-                {t("header.logout")}
+                <div>{t("header.logout")}</div>
               </a>
             </li>
           </ul>

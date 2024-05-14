@@ -11,6 +11,11 @@ import { updateEntityRequest } from "../../api/entities";
 import { useAuthHeader } from "react-auth-kit";
 import { Box } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import baseTheme from "../darkModeSwitch/darkmodeTheme";
+import { ThemeProvider } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers";
 export interface UpdateDialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
@@ -27,13 +32,17 @@ export default function UpdateEntityDialog(props: {
   const [t, i18n] = useTranslation();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
+  const {actualTheme} = useAlternateTheme();
 
   useEffect(() => {
     setUpdate(props.enviar.entity);
+    console.log(props.enviar.entity);
     setOpen(props.enviar.open);
   }, [props.enviar.open, props.enviar.entity]);
 
   const handleClose = () => {
+    setFormData({});
+    setStep(1);
     setOpen(false);
     props.enviar.closeDialog(false);
   };
@@ -54,7 +63,7 @@ export default function UpdateEntityDialog(props: {
 
   const handleNext = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    console.log(update);
     // Collect form data for the current step
     const currentStepData = new FormData(event.currentTarget);
 
@@ -78,21 +87,43 @@ export default function UpdateEntityDialog(props: {
   const handleGoBack = () => {
     setStep(step - 1);
   };
+
+  const dynamicStyle = {
+    backgroundColor: actualTheme === "light" ? "white" : "#252525",
+    color: actualTheme === "light" ? "#252525" : "white",
+    "& .MuiInputBase-root": { border: "none" },
+  };
+
   return (
     <>
+    <ThemeProvider theme={baseTheme(actualTheme)}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Dialog
         fullWidth={true}
         open={open}
         onClose={handleClose}
         sx={{
+          backgroundColor: actualTheme==="light" ? "white" : "#252525",
+          color: actualTheme==="light" ? "#252525" : "white",
           "& .MuiTextField-root": { m: 1, width: "20ch" },
           "& .MuiFormControl-root": { m: 1, width: "20ch" },
-          "&. MuiInputBase-root": { m: 1, width: "20ch" },
+          "&. MuiInputBase-root": { m: 1, width: "20ch", border: "none" },
         }}
       >
-        <DialogTitle>{t("dialog.addRegister")}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>{t("dialog.fillInfo")}</DialogContentText>
+        <DialogTitle
+          style={dynamicStyle}
+        >
+          {t("dialog.addRegister")}
+        </DialogTitle>
+        <DialogContent
+          style={dynamicStyle}
+        >
+          <div className="dialogContentText">
+            <span>{t("dialog.fillInfo")}</span>
+            <span>
+              <strong>{step}/2</strong>
+            </span>
+          </div>
           <Box>
             {step === 1 && (
               <form onSubmit={handleNext}>
@@ -300,6 +331,8 @@ export default function UpdateEntityDialog(props: {
         </DialogContent>
         <DialogActions></DialogActions>
       </Dialog>
+    </LocalizationProvider>
+    </ThemeProvider>
     </>
   );
 }

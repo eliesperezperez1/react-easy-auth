@@ -19,6 +19,7 @@ import { useTranslation } from "react-i18next";
 import { MutableRefObject } from "react";
 import { GridApiCommunity } from "@mui/x-data-grid/models/api/gridApiCommunity";
 
+
 export interface CustomToolbarProperties {
   userData: User;
   deletedTable: boolean;
@@ -35,9 +36,13 @@ function CustomToolbar(props: CustomToolbarProperties) {
 
   return (
     <>
-      <GridToolbarContainer>
+      <GridToolbarContainer
+        sx={{
+          color:"#404040",
+        }}
+      >
         {props.userData.role !== ROLE.VIEWER ? (
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+          <FormControl sx={{ m: 1, minWidth: 120, color:"#404040", }} size="small">
             <Box
               className="Tabla"
               sx={{ display: "flex", alignItems: "center" }}
@@ -147,6 +152,9 @@ function CustomToolbar(props: CustomToolbarProperties) {
                     backgroundColor: "#0D0D0D",
                     color: "#f2f2f2",
                   },
+                  "&.Mui-disabled": {
+                    color: 'darkgrey',
+                  },
                 }}
                 onClick={props.getSelectedCatalogues}
               >
@@ -167,6 +175,9 @@ function CustomToolbar(props: CustomToolbarProperties) {
                       backgroundColor: "#0D0D0D",
                       color: "#f2f2f2",
                     },
+                    "&.Mui-disabled": {
+                      color: 'darkgrey',
+                    },
                   }}
                 >
                   {t("dataTable.addDataset")}
@@ -183,6 +194,9 @@ function CustomToolbar(props: CustomToolbarProperties) {
                       borderColor: "#0D0D0D",
                       backgroundColor: "#0D0D0D",
                       color: "#f2f2f2",
+                    },
+                    "&.Mui-disabled": {
+                      color: 'darkgrey',
                     },
                   }}
                   onClick={props.getSelectedCatalogues}
@@ -201,6 +215,9 @@ function CustomToolbar(props: CustomToolbarProperties) {
                       borderColor: "#0D0D0D",
                       backgroundColor: "#0D0D0D",
                       color: "#f2f2f2",
+                    },
+                    "&.Mui-disabled": {
+                      color: 'darkgrey',
                     },
                   }}
                   onClick={props.deleteRegisters}
