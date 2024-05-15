@@ -47,6 +47,7 @@ export interface Catalogue {
   creationDate: Date;
   deleted: boolean;
   deletedDate: Date;
+  lastUpdate: Date;
 
   /*language: LANGUAGE;
   territorialScope: string;

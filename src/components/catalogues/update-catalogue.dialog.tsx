@@ -31,6 +31,8 @@ import { CalendarIcon, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Dayjs } from "dayjs";
+import { getEntitiesRequest } from "../../api/entities";
+import { Entity } from "../../interfaces/entity.interface";
 export interface UpdateDialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
@@ -43,6 +45,9 @@ export default function UpdateCatalogueDialog(props: {
 }) {
   const [open, setOpen] = useState<boolean>(false);
   const authHeader = useAuthHeader();
+  const [entities, setEntities] = useState<Entity[]>([]);
+  const [entitiesName, setEntitiesName] = useState<string[]>([]);
+  const [deletedEntities, setDeletedEntities] = useState<Entity[]>([]);
   const [update, setUpdate] = useState<UpdateCatalogue>({});
   const [t, i18n] = useTranslation();
   const [step, setStep] = useState(1);
@@ -54,6 +59,23 @@ export default function UpdateCatalogueDialog(props: {
   const [georeference, setGeoreference] = useState("SI");
   const [personalData, setPersonalData] = useState("SI");
   const [activeAds, setActiveAds] = useState("SI");
+  const [masterData, setMasterData] = useState("SI");
+  const [referenceData, setReferenceData] = useState("SI");
+  const [highValue, setHighValue] = useState("SI");
+  const [genderInfo, setGenderInfo] = useState("SI");
+  const [autoAcess, setAutoAcess] = useState("SI");
+  const [RAT, setRAT] = useState("SI");
+  const [dataProtection, setDataProtection] = useState("SI");
+  const [dataStandards, setDataStandards] = useState("SI");
+  const [dataAnonymize, setDataAnonymize] = useState("SI");
+  const [sharedData, setSharedData] = useState("SI");
+  const [VLCi, setVLCi] = useState("SI");
+  const [ArcGIS, setArcGIS] = useState("SI");
+  const [Pentaho, setPentaho] = useState("SI");
+  const [CKAN, setCKAN] = useState("SI");
+  const [MongoDB, setMongoDB] = useState("SI");
+  const [OpenDataSoft, setOpenDataSoft] = useState("SI");
+  const [deleted, setDeleted] = useState("SI");
   const [lastUpdateAlmacenado, setLastUpdate] = React.useState<Dayjs | null>();
   const [creationDateAlmacenado, setCreationDate] = React.useState<Dayjs | null>();
   const {actualTheme} = useAlternateTheme();
@@ -61,15 +83,18 @@ export default function UpdateCatalogueDialog(props: {
   useEffect(() => {
     setUpdate(props.enviar.catalogue);
     setOpen(props.enviar.open);
+    /*
     setSensitiveInformation(props.enviar.catalogue.sensitiveInformation);
     setIsUsing(props.enviar.catalogue.isUsing);
     setStructured(props.enviar.catalogue.structured);
     setGeoreference(props.enviar.catalogue.georeference);
     setPersonalData(props.enviar.catalogue.personalData);
+    */
     setActiveAds(props.enviar.catalogue.activeAds);
     //setLastUpdate(props.enviar.catalogue.lastUpdate);
     //setCreationDate(props.enviar.catalogue.creationDate);
     setStep(1);
+    getAndSetEntities();
   }, [props.enviar.open, props.enviar.catalogue]);
 
   const handleClose = () => {
@@ -255,6 +280,172 @@ export default function UpdateCatalogueDialog(props: {
           setUpdate((prevState) => ({ ...prevState, [activeAds]: "SI" }));
         }
         break;
+      case "masterData":
+        if(masterData==="SI") {
+          setMasterData("NO");
+          setUpdate((prevState) => ({ ...prevState, [masterData]: "NO" }));
+        }
+        else {
+          setMasterData("SI");
+          setUpdate((prevState) => ({ ...prevState, [masterData]: "SI" }));
+        }
+        break;
+      case "referenceData":
+        if(referenceData==="SI") {
+          setReferenceData("NO");
+          setUpdate((prevState) => ({ ...prevState, [referenceData]: "NO" }));
+        }
+        else {
+          setReferenceData("SI");
+          setUpdate((prevState) => ({ ...prevState, [referenceData]: "SI" }));
+        }
+        break;
+      case "highValue":
+        if(highValue==="SI") {
+          setHighValue("NO");
+          setUpdate((prevState) => ({ ...prevState, [highValue]: "NO" }));
+        }
+        else {
+          setHighValue("SI");
+          setUpdate((prevState) => ({ ...prevState, [highValue]: "SI" }));
+        }
+        break;
+      case "genderInfo":
+        if(genderInfo==="SI") {
+          setGenderInfo("NO");
+          setUpdate((prevState) => ({ ...prevState, [genderInfo]: "NO" }));
+        }
+        else {
+          setGenderInfo("SI");
+          setUpdate((prevState) => ({ ...prevState, [genderInfo]: "SI" }));
+        }
+        break;
+      case "autoAcess":
+        if(autoAcess==="SI") {
+          setAutoAcess("NO");
+          setUpdate((prevState) => ({ ...prevState, [autoAcess]: "NO" }));
+        }
+        else {
+          setAutoAcess("SI");
+          setUpdate((prevState) => ({ ...prevState, [autoAcess]: "SI" }));
+        }
+      break;
+      case "RAT":
+      if(RAT==="SI") {
+        setRAT("NO");
+        setUpdate((prevState) => ({ ...prevState, [RAT]: "NO" }));
+      }
+      else {
+        setRAT("SI");
+        setUpdate((prevState) => ({ ...prevState, [RAT]: "SI" }));
+      }
+      break;
+      case "dataProtection":
+      if(dataProtection==="SI") {
+        setDataProtection("NO");
+        setUpdate((prevState) => ({ ...prevState, [dataProtection]: "NO" }));
+      }
+      else {
+        setDataProtection("SI");
+        setUpdate((prevState) => ({ ...prevState, [dataProtection]: "SI" }));
+      }
+      break;
+      case "dataStandards":
+        if(dataStandards==="SI") {
+          setDataStandards("NO");
+          setUpdate((prevState) => ({ ...prevState, [dataStandards]: "NO" }));
+        }
+        else {
+          setDataStandards("SI");
+          setUpdate((prevState) => ({ ...prevState, [dataStandards]: "SI" }));
+        }
+        break;
+      case "dataAnonymize":
+        if(dataAnonymize==="SI") {
+          setDataAnonymize("NO");
+          setUpdate((prevState) => ({ ...prevState, [dataAnonymize]: "NO" }));
+        }
+        else {
+          setDataAnonymize("SI");
+          setUpdate((prevState) => ({ ...prevState, [dataAnonymize]: "SI" }));
+        }
+        break;
+      case "sharedData":
+        if(sharedData==="SI") {
+          setSharedData("NO");
+          setUpdate((prevState) => ({ ...prevState, [sharedData]: "NO" }));
+        }
+        else {
+          setSharedData("SI");
+          setUpdate((prevState) => ({ ...prevState, [sharedData]: "SI" }));
+        }
+        break;
+      case "VLCi":
+        if(VLCi==="SI") {
+          setVLCi("NO");
+          setUpdate((prevState) => ({ ...prevState, [VLCi]: "NO" }));
+        }
+        else {
+          setVLCi("SI");
+          setUpdate((prevState) => ({ ...prevState, [VLCi]: "SI" }));
+        }
+        break;
+        
+      case "ArcGIS":
+        if(ArcGIS==="SI") {
+          setArcGIS("NO");
+          setUpdate((prevState) => ({ ...prevState, [ArcGIS]: "NO" }));
+        }
+        else {
+          setArcGIS("SI");
+          setUpdate((prevState) => ({ ...prevState, [ArcGIS]: "SI" }));
+        }
+        break;
+        
+      case "Pentaho":
+        if(Pentaho==="SI") {
+          setPentaho("NO");
+          setUpdate((prevState) => ({ ...prevState, [Pentaho]: "NO" }));
+        }
+        else {
+          setPentaho("SI");
+          setUpdate((prevState) => ({ ...prevState, [Pentaho]: "SI" }));
+        }
+        break;
+        
+      case "CKAN":
+        if(CKAN==="SI") {
+          setCKAN("NO");
+          setUpdate((prevState) => ({ ...prevState, [CKAN]: "NO" }));
+        }
+        else {
+          setCKAN("SI");
+          setUpdate((prevState) => ({ ...prevState, [CKAN]: "SI" }));
+        }
+        break;
+        
+      case "MongoDB":
+        if(MongoDB==="SI") {
+          setMongoDB("NO");
+          setUpdate((prevState) => ({ ...prevState, [MongoDB]: "NO" }));
+        }
+        else {
+          setMongoDB("SI");
+          setUpdate((prevState) => ({ ...prevState, [MongoDB]: "SI" }));
+        }
+        break;
+        
+      case "OpenDataSoft":
+        if(VLCi==="SI") {
+          setOpenDataSoft("NO");
+          setUpdate((prevState) => ({ ...prevState, [OpenDataSoft]: "NO" }));
+        }
+        else {
+          setOpenDataSoft("SI");
+          setUpdate((prevState) => ({ ...prevState, [OpenDataSoft]: "SI" }));
+        }
+        break;
+
     }
   };
 
@@ -294,6 +485,22 @@ export default function UpdateCatalogueDialog(props: {
     "& .MuiInputBase-root": { border: "none" },
   };
 
+  function getAndSetEntities() {
+    getEntitiesRequest(authHeader())
+      .then((response) => response.json())
+      .then((data) => {
+        let notDeleted = data.filter((d: Entity) => d.deleted !== true).responsibleIdentityES;
+        let deleted = data.filter((d: Entity) => d.deleted === true);
+        //setEntities(notDeleted);
+        setEntitiesName(notDeleted);
+        setDeletedEntities(deleted);
+        
+      })
+      .catch((error) => {
+        console.error('Error fetching entities:', error);
+      });
+  }
+
   return (
     <>
     
@@ -315,10 +522,10 @@ export default function UpdateCatalogueDialog(props: {
         >
           <div className="dialogContentText">
             <span>{t("dialog.fillInfo")}</span>
-            <span><b>{step}/5</b></span>
+            <span><b>{step}/7</b></span>
           </div>
           <Box>
-          {step === 1 && (
+          {step === 1 && (  // ESTRUCTURA GENERAL DEL DATASET
             <form onSubmit={handleNext}>
               <div className="verticalForm">
                 <div className="horizontalForm">
@@ -337,145 +544,292 @@ export default function UpdateCatalogueDialog(props: {
                   value={update.title}
                   onChange={handleChange}
                 />
+                </div>
+                <div className="horizontalForm">
+                  <p>
+                  {t("columnsNames.description")}
+                  </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="description"
+                    name="description"
+                    label={t("columnsNames.description")}
+                    type="string"
+                    variant="standard"
+                    value={update.description}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="horizontalForm">
+                  <p>
+                  {t("columnsNames.responsibleIdentity")}
+                  </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="responsibleIdentity"
+                    name="responsibleIdentity"
+                    label={t("columnsNames.responsibleIdentity")}
+                    type="string"
+                    variant="standard"
+                    value={update.responsibleIdentity}
+                    onChange={handleChange}
+                  />
+                  {/* 
+                    <FormControl variant="standard">
+                      <Select
+                        id="responsibleIdentity"
+                        name="responsibleIdentity"
+                        margin="dense"
+                        defaultValue={update.responsibleIdentity}
+                        //onChange={(e) => handleChange('language', e.target.value)}
+                        //required
+                      >
+                        {entitiesName.map((entityName, index) => (
+                          <MenuItem key={index} value={entityName}>
+                            {entityName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    */}
+                </div>
+                <div className="horizontalForm">
+                  <p>
+                  {t("columnsNames.topic")}
+                  </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="topic"
+                    name="topic"
+                    label={t("columnsNames.topic")}
+                    type="string"
+                    variant="standard"
+                    value={update.topic}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="horizontalForm">
+                  <p>
+                  Organismo
+                  </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="organism"
+                    name="organism"
+                    label="organismo"
+                    type="string"
+                    variant="standard"
+                    value={update.organism}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="horizontalForm">
+                  <p>
+                  {t("columnsNames.language")}
+                  </p>
+                  
+                  
+                    <FormControl variant="standard">
+                      <Select
+                        id="language"
+                        name="language"
+                        margin="dense"
+                        defaultValue={update.language}
+                        //onChange={(e) => handleChange('language', e.target.value)}
+                        required
+                      >
+                        <MenuItem value={"es"}>ES</MenuItem>
+                        <MenuItem value={"val"}>VAL</MenuItem>
+                      </Select>
+                    </FormControl>
+                  
+                </div>
               </div>
-              <div className="horizontalForm">
-                <p>
-                {t("columnsNames.description")}
-                </p>
-                <TextField
-                  autoFocus
-                  required
-                  margin="dense"
-                  id="description"
-                  name="description"
-                  label={t("columnsNames.description")}
-                  type="string"
-                  variant="standard"
-                  value={update.description}
-                  onChange={handleChange}
-                />
+              <div className="buttonsForm">
+                <Button 
+                  onClick={handleClose} 
+                  sx={{
+                    height: 37,
+                    backgroundColor: "#D9D9D9",
+                    color: "#404040",
+                    borderColor: "#404040",
+                    "&:hover": {
+                      borderColor: "#0D0D0D",
+                      backgroundColor: "#0D0D0D",
+                      color: "#f2f2f2",
+                    },
+                  }}>{t("dialog.cancel")}</Button>
+                <Button 
+                  type="submit"
+                  sx={{
+                    height: 37,
+                    backgroundColor: "#D9D9D9",
+                    color: "#404040",
+                    borderColor: "#404040",
+                    "&:hover": {
+                      borderColor: "#0D0D0D",
+                      backgroundColor: "#0D0D0D",
+                      color: "#f2f2f2",
+                    },
+                  }}>{t("dialog.next")}</Button>
               </div>
-              <div className="horizontalForm">
-                <p>
-                {t("columnsNames.language")}
-                </p>
-                <FormControl variant="standard">
-                    <Select
-                      id="language"
-                      name="language"
-                      margin="dense"
-                      defaultValue={update.language}
-                      //onChange={(e) => handleChange('language', e.target.value)}
-                      required
-                    >
-                      <MenuItem value={"es"}>ES</MenuItem>
-                      <MenuItem value={"val"}>VAL</MenuItem>
-                    </Select>
-                  </FormControl>
-              </div>
-              <div className="horizontalForm">
-                <p>
-                {t("columnsNames.territorialScope")}
-                </p>
-                <TextField
-                  autoFocus
-                  required
-                  margin="dense"
-                  id="territorialScope"
-                  name="territorialScope"
-                  label={t("columnsNames.territorialScope")}
-                  type="string"
-                  variant="standard"
-                  value={update.territorialScope}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="horizontalForm">
-                <p>
-                {t("columnsNames.temporaryCoverage")}
-                </p>
-                <TextField
-                  autoFocus
-                  required
-                  margin="dense"
-                  id="temporaryCoverage"
-                  name="temporaryCoverage"
-                  label={t("columnsNames.temporaryCoverage")}
-                  type="string"
-                  variant="standard"
-                  value={update.temporaryCoverage}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-            <div className="buttonsForm">
-              <Button 
-                onClick={handleClose} 
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}>{t("dialog.cancel")}</Button>
-              <Button 
-                type="submit"
-                sx={{
-                  height: 37,
-                  backgroundColor: "#D9D9D9",
-                  color: "#404040",
-                  borderColor: "#404040",
-                  "&:hover": {
-                    borderColor: "#0D0D0D",
-                    backgroundColor: "#0D0D0D",
-                    color: "#f2f2f2",
-                  },
-                }}>{t("dialog.next")}</Button>
-            </div>
             </form>
             
           )}
-          {step === 2 && (
+          {step === 2 && ( // ESTRUCTURA GENERAL DEL DATASET
             <form onSubmit={handleNext}>
             <div className="verticalForm">
               <div className="horizontalForm">
                 <p>
-                {t("columnsNames.updateFrequency")}
+                Palabras clave
                 </p>
                 <TextField
                   autoFocus
                   required
                   margin="dense"
-                  id="updateFrequency"
-                  name="updateFrequency"
-                  label={t("columnsNames.updateFrequency")}
+                  id="keywords"
+                  name="keywords"
+                  label="Palabras clave"
                   type="string"
                   variant="standard"
-                  value={update.updateFrequency}
+                  value={update.keyWords}
                   onChange={handleChange}
                 />
               </div>
               <div className="horizontalForm">
                 <p>
-                {t("columnsNames.topic")}
+                Campos mínimos
                 </p>
                 <TextField
                   autoFocus
                   required
                   margin="dense"
-                  id="topic"
-                  name="topic"
-                  label={t("columnsNames.topic")}
+                  id="minimumVariables"
+                  name="minimumVariables"
+                  label="Campos mínimos"
                   type="string"
                   variant="standard"
-                  value={update.topic}
+                  value={update.minimumVariables}
                   onChange={handleChange}
                 />
               </div>
+              <div className="horizontalForm">
+                <p>
+                {t("columnsNames.contactPerson")}
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="contactPerson"
+                  name="contactPerson"
+                  label={t("columnsNames.contactPerson")}
+                  type="string"
+                  variant="standard"
+                  value={update.contactPerson}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="horizontalForm">
+                <p>
+                Dato maestro
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="masterData"
+                  name="masterData"
+                  label="Dato maestro"
+                  type="string"
+                  variant="standard"
+                  value={update.masterData}
+                  onChange={handleChange}
+                />
+                <Switch
+                    id="masterData"
+                    name="masterData"
+                    value={masterData}
+                    checked={masterData === "SI"}
+                    onChange={(event) => handleSwitch("masterData", event.target.checked)} 
+                    color="primary" // Opcional: ajusta el color del switch
+                  />  
+              </div>
+              <div className="horizontalForm">
+                <p>
+                Dato de referencia
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="referenceData"
+                  name="referenceData"
+                  label="Dato de referencia"
+                  type="string"
+                  variant="standard"
+                  value={update.referenceData}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="horizontalForm">
+                <p>
+                Alto valor
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="highValue"
+                  name="highValue"
+                  label="Dato maestro"
+                  type="string"
+                  variant="standard"
+                  value={update.highValue}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="horizontalFormSwitch">
+                <p>
+                {t("columnsNames.activeAds")}
+                </p>
+                <FormControl variant="standard">
+                  <Switch
+                    id="activeAds"
+                    name="activeAds"
+                    value={activeAds}
+                    checked={activeAds === "SI"}
+                    onChange={(event) => handleSwitch("activeAds", event.target.checked)} 
+                    color="primary" // Opcional: ajusta el color del switch
+                  />  
+                </FormControl>
+              </div>
+              <div className="horizontalForm">
+                <p>
+                Comentarios generales
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="comments"
+                  name="comments"
+                  label="Comentarios generales"
+                  type="string"
+                  variant="standard"
+                  value={update.comments}
+                  onChange={handleChange}
+                />
+              </div>
+              {/*
               <div className="horizontalForm">
                 <p>
                 {t("columnsNames.lastUpdate")}
@@ -530,23 +884,7 @@ export default function UpdateCatalogueDialog(props: {
                   </FormGroup>
                 </FormControl>
               </div>
-              <div className="horizontalForm">
-                <p>
-                Distribución
-                </p>
-                <TextField
-                  autoFocus
-                  required
-                  margin="dense"
-                  id="distribution"
-                  name="distribution"
-                  label="Distribución"
-                  type="string"
-                  variant="standard"
-                  value={update.distribution}
-                  onChange={handleChange}
-                />
-              </div>
+              */}
             </div>
             <div className="buttonsForm">
               <Button 
@@ -599,10 +937,96 @@ export default function UpdateCatalogueDialog(props: {
             </div>
             </form>
           )}
-          {step === 3 && (
+          {step === 3 && ( // ESTRUCTURA INTERNA DEL DATASET
             <form onSubmit={handleNext}>
             <div className="verticalForm">
-            <div className="horizontalFormSwitch">
+              <div className="horizontalForm">
+                <p>
+                Información geográfica
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="typeGeo"
+                  name="typeGeo"
+                  label="Información geográfica"
+                  type="string"
+                  variant="standard"
+                  value={update.typeGeo}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="horizontalForm">
+                <p>
+                {t("columnsNames.territorialScope")}
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="territorialScope"
+                  name="territorialScope"
+                  label={t("columnsNames.territorialScope")}
+                  type="string"
+                  variant="standard"
+                  value={update.territorialScope}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="horizontalForm">
+                <p>
+                {t("columnsNames.temporaryCoverage")}
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="temporaryCoverage"
+                  name="temporaryCoverage"
+                  label={t("columnsNames.temporaryCoverage")}
+                  type="string"
+                  variant="standard"
+                  value={update.temporaryCoverage}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="horizontalForm">
+                <p>
+                Información de género
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="genderInfo"
+                  name="genderInfo"
+                  label="Información de género"
+                  type="string"
+                  variant="standard"
+                  value={update.genderInfo}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="horizontalForm">
+                <p>
+                Comentario de la estructura
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="structuredComments"
+                  name="structuredComments"
+                  label="Comentario de la estructura"
+                  type="string"
+                  variant="standard"
+                  value={update.structuredComments}
+                  onChange={handleChange}
+                />
+              </div>
+              {/*
+              <div className="horizontalFormSwitch">
                 <p>
                 {t("columnsNames.sensitiveInformation")}
                 </p>
@@ -668,23 +1092,7 @@ export default function UpdateCatalogueDialog(props: {
                   onChange={handleChange}
                 />
               </div>
-              <div className="horizontalForm">
-                <p>
-                {t("columnsNames.contactPerson")}
-                </p>
-                <TextField
-                  autoFocus
-                  required
-                  margin="dense"
-                  id="contactPerson"
-                  name="contactPerson"
-                  label={t("columnsNames.contactPerson")}
-                  type="string"
-                  variant="standard"
-                  value={update.contactPerson}
-                  onChange={handleChange}
-                />
-              </div>
+              */}
             </div>
             <div className="buttonsForm">
               <Button 
@@ -737,10 +1145,62 @@ export default function UpdateCatalogueDialog(props: {
             </div>
             </form>
           )}
-          {step === 4 && (
+          {step === 4 && ( // APLICACIÓN DE ORIGEN DE LOS DATOS
             <form onSubmit={handleNext}>
             <div className="verticalForm">
-            <div className="horizontalFormSwitch">
+              <div className="horizontalForm">
+                <p>
+                Aplicación de origen
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="associatedApplication"
+                  name="associatedApplication"
+                  label="Aplicación de origen"
+                  type="string"
+                  variant="standard"
+                  value={update.associatedApplication}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="horizontalForm">
+                <p>
+                Acceso automatizado
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="autoAcess"
+                  name="autoAcess"
+                  label="Acceso automatizado"
+                  type="string"
+                  variant="standard"
+                  value={update.autoAcess}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="horizontalForm">
+                <p>
+                Comentarios del origen
+                </p>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="originComments"
+                  name="originComments"
+                  label="Comentarios del origen"
+                  type="string"
+                  variant="standard"
+                  value={update.originComments}
+                  onChange={handleChange}
+                />
+              </div>
+              {/*
+              <div className="horizontalFormSwitch">
                 <p>
                 Estructurado
                 </p>
@@ -754,23 +1214,6 @@ export default function UpdateCatalogueDialog(props: {
                     color="primary" // Opcional: ajusta el color del switch
                   />  
                 </FormControl>
-              </div>
-              <div className="horizontalForm">
-                <p>
-                Aplicación asociada
-                </p>
-                <TextField
-                  autoFocus
-                  required
-                  margin="dense"
-                  id="associatedApplication"
-                  name="associatedApplication"
-                  label="Aplicación asociada"
-                  type="string"
-                  variant="standard"
-                  value={update.associatedApplication}
-                  onChange={handleChange}
-                />
               </div>
               <div className="horizontalFormSwitch">
                 <p>
@@ -821,6 +1264,7 @@ export default function UpdateCatalogueDialog(props: {
                   onChange={handleChange}
                 />
               </div>
+              */}
             </div>
             <div className="buttonsForm">
               <Button 
@@ -873,7 +1317,389 @@ export default function UpdateCatalogueDialog(props: {
             </div>
             </form>
           )}
-          {step === 5 && (
+          {step===5 && ( // ESTADO DE LA CARGA DEL DATASET EN LAS DIFERENTES PLATAFORMAS
+            <form onSubmit={handleNext}>
+              <div className="verticalForm">
+                <div className="horizontalForm">
+                  <p>
+                  RAT
+                  </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="RAT"
+                    name="RAT"
+                    label="RAT"
+                    type="string"
+                    variant="standard"
+                    value={update.RAT}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="horizontalForm">
+                  <p>
+                  Protección de datos
+                  </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="dataProtection"
+                    name="dataProtection"
+                    label="Protección de datos"
+                    type="string"
+                    variant="standard"
+                    value={update.dataProtection}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="horizontalForm">
+                  <p>
+                  Estándares de datos
+                  </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="dataStandards"
+                    name="dataStandards"
+                    label="Estándares de datos"
+                    type="string"
+                    variant="standard"
+                    value={update.dataStandards}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="horizontalForm">
+                  <p>
+                  Comentarios del origen
+                  </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="dataProtectionComments"
+                    name="dataProtectionComments"
+                    label="Comentarios del origen"
+                    type="string"
+                    variant="standard"
+                    value={update.dataProtectionComments}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="horizontalForm">
+                  <p>
+                  Anonimización de datos
+                  </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="dataAnonymize"
+                    name="dataAnonymize"
+                    label="Anonimización de datos"
+                    type="string"
+                    variant="standard"
+                    value={update.dataAnonymize}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="horizontalForm">
+                  <p>
+                  Calidad de los datos
+                  </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="dataQuality"
+                    name="dataQuality"
+                    label="Calidad de los datos"
+                    type="string"
+                    variant="standard"
+                    value={update.dataQuality}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="horizontalForm">
+                  <p>
+                  Nivel de compartición
+                  </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="sharingLevel"
+                    name="sharingLevel"
+                    label="Nivel de compartición"
+                    type="string"
+                    variant="standard"
+                    value={update.sharingLevel}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="horizontalForm">
+                  <p>
+                  Datos compartidos
+                  </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="sharedData"
+                    name="sharedData"
+                    label="Datos compartidos"
+                    type="string"
+                    variant="standard"
+                    value={update.sharedData}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+              <div className="buttonsForm">
+              <Button 
+                onClick={handleClose} 
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.cancel")}</Button>
+              <div>
+                <Button
+                  onClick={handleGoBack}
+                  sx={{
+                    height: 37,
+                    backgroundColor: "#D9D9D9",
+                    color: "#404040",
+                    borderColor: "#404040",
+                    marginRight: 1,
+                    "&:hover": {
+                      borderColor: "#0D0D0D",
+                      backgroundColor: "#0D0D0D",
+                      color: "#f2f2f2",
+                    },
+                  }}
+                >
+                  Atrás
+                </Button>
+
+                <Button 
+                  type="submit"
+                  sx={{
+                    height: 37,
+                    backgroundColor: "#D9D9D9",
+                    color: "#404040",
+                    borderColor: "#404040",
+                    "&:hover": {
+                      borderColor: "#0D0D0D",
+                      backgroundColor: "#0D0D0D",
+                      color: "#f2f2f2",
+                    },
+                  }}>{t("dialog.next")}
+                </Button>
+              </div>
+            </div>
+            </form>
+          )}
+          {step===6 && ( // ESTADO DE LA CARGA DEL DATASET EN LAS DIFERENTES PLATAFORMAS
+            <form onSubmit={handleNext}>
+              <div className="verticalForm">
+                <div className="horizontalForm">
+                  <p>
+                  VLCi
+                  </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="VLCi"
+                    name="VLCi"
+                    label="VLCi"
+                    type="string"
+                    variant="standard"
+                    value={update.VLCi}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="horizontalForm">
+                  <p>
+                  ArcGIS
+                  </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="ArcGIS"
+                    name="ArcGIS"
+                    label="ArcGIS"
+                    type="string"
+                    variant="standard"
+                    value={update.ArcGIS}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="horizontalForm">
+                  <p>
+                  Pentaho
+                  </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="Pentaho"
+                    name="Pentaho"
+                    label="Pentaho"
+                    type="string"
+                    variant="standard"
+                    value={update.Pentaho}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="horizontalForm">
+                  <p>
+                  CKAN
+                  </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="CKAN"
+                    name="CKAN"
+                    label="CKAN"
+                    type="string"
+                    variant="standard"
+                    value={update.CKAN}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="horizontalForm">
+                  <p>
+                  MongoDB
+                  </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="MongoDB"
+                    name="MongoDB"
+                    label="MongoDB"
+                    type="string"
+                    variant="standard"
+                    value={update.MongoDB}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="horizontalForm">
+                  <p>
+                  OpenDataSoft
+                  </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="OpenDataSoft"
+                    name="OpenDataSoft"
+                    label="OpenDataSoft"
+                    type="string"
+                    variant="standard"
+                    value={update.OpenDataSoft}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="horizontalForm">
+                  <p>
+                  Resolución temporal
+                  </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="temporarySolution"
+                    name="temporarySolution"
+                    label="Resolución temporal"
+                    type="string"
+                    variant="standard"
+                    value={update.temporarySolution}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="horizontalForm">
+                  <p>
+                  Comentarios sobre el estado de carga
+                  </p>
+                  <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="chargeStateComments"
+                    name="chargeStateComments"
+                    label="Comentarios sobre el estado de carga"
+                    type="string"
+                    variant="standard"
+                    value={update.chargeStateComments}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+              <div className="buttonsForm">
+              <Button 
+                onClick={handleClose} 
+                sx={{
+                  height: 37,
+                  backgroundColor: "#D9D9D9",
+                  color: "#404040",
+                  borderColor: "#404040",
+                  "&:hover": {
+                    borderColor: "#0D0D0D",
+                    backgroundColor: "#0D0D0D",
+                    color: "#f2f2f2",
+                  },
+                }}>{t("dialog.cancel")}</Button>
+              <div>
+                <Button
+                  onClick={handleGoBack}
+                  sx={{
+                    height: 37,
+                    backgroundColor: "#D9D9D9",
+                    color: "#404040",
+                    borderColor: "#404040",
+                    marginRight: 1,
+                    "&:hover": {
+                      borderColor: "#0D0D0D",
+                      backgroundColor: "#0D0D0D",
+                      color: "#f2f2f2",
+                    },
+                  }}
+                >
+                  Atrás
+                </Button>
+
+                <Button 
+                  type="submit"
+                  sx={{
+                    height: 37,
+                    backgroundColor: "#D9D9D9",
+                    color: "#404040",
+                    borderColor: "#404040",
+                    "&:hover": {
+                      borderColor: "#0D0D0D",
+                      backgroundColor: "#0D0D0D",
+                      color: "#f2f2f2",
+                    },
+                  }}>{t("dialog.next")}
+                </Button>
+              </div>
+            </div>
+            </form>
+          )}
+          {step === 7 && ( // VISUALIZACIONES/APLICACIONES CREADAS A PARTIR DEL DATASET
             <form onSubmit={handleSubmit}>
             <div className="verticalForm">
             <div className="horizontalForm">
@@ -938,21 +1764,6 @@ export default function UpdateCatalogueDialog(props: {
                   value={update.responsibleIdentity}
                   onChange={handleChange}
                 />
-              </div>
-              <div className="horizontalFormSwitch">
-                <p>
-                {t("columnsNames.activeAds")}
-                </p>
-                <FormControl variant="standard">
-                  <Switch
-                    id="activeAds"
-                    name="activeAds"
-                    value={activeAds}
-                    checked={activeAds === "SI"}
-                    onChange={(event) => handleSwitch("activeAds", event.target.checked)} 
-                    color="primary" // Opcional: ajusta el color del switch
-                  />  
-                </FormControl>
               </div>
             </div>
             <div className="buttonsForm">

@@ -96,6 +96,8 @@ export class Catalogue {
   deleted: boolean;
   @Prop()
   deletedDate: Date;
+  @Prop()
+  lastUpdate: Date;
   /*   @Prop()
   timmingEffect: string;
   @Prop()

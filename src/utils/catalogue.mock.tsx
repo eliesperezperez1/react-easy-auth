@@ -73,4 +73,5 @@ export const catalogueMock: Catalogue = {
   creationDate: new Date(),
   deleted: false,
   deletedDate: new Date(),
+  lastUpdate: new Date(),
 };
