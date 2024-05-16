@@ -73,7 +73,7 @@ export class Catalogue {
   @Prop()
   VLCi: boolean;
   @Prop()
-  ArGIS: boolean;
+  ArcGIS: boolean;
   @Prop()
   Pentaho: boolean;
   @Prop()

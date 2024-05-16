@@ -35,7 +35,7 @@ export interface Catalogue {
   sharingLevel: string;
   sharedData: boolean;
   VLCi: boolean;
-  ArGIS: boolean;
+  ArcGIS: boolean;
   Pentaho: boolean;
   CKAN: boolean;
   MongoDB: boolean;

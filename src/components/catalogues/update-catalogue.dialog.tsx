@@ -738,11 +738,11 @@ export default function UpdateCatalogueDialog(props: {
                   onChange={handleChange}
                 />
               </div>
-              <div className="horizontalForm">
+              <div className="horizontalFormSwitch">
                 <p>
                 Dato maestro
                 </p>
-                <TextField
+                {/* <TextField
                   autoFocus
                   required
                   margin="dense"
@@ -753,7 +753,7 @@ export default function UpdateCatalogueDialog(props: {
                   variant="standard"
                   value={update.masterData}
                   onChange={handleChange}
-                />
+                /> */}
                 <Switch
                     id="masterData"
                     name="masterData"
@@ -763,11 +763,11 @@ export default function UpdateCatalogueDialog(props: {
                     color="primary" // Opcional: ajusta el color del switch
                   />  
               </div>
-              <div className="horizontalForm">
+              <div className="horizontalFormSwitch">
                 <p>
                 Dato de referencia
                 </p>
-                <TextField
+                {/* <TextField
                   autoFocus
                   required
                   margin="dense"
@@ -778,13 +778,21 @@ export default function UpdateCatalogueDialog(props: {
                   variant="standard"
                   value={update.referenceData}
                   onChange={handleChange}
-                />
+                /> */}
+                <Switch
+                    id="referenceData"
+                    name="referenceData"
+                    value={referenceData}
+                    checked={referenceData === "SI"}
+                    onChange={(event) => handleSwitch("referenceData", event.target.checked)} 
+                    color="primary" // Opcional: ajusta el color del switch
+                  />  
               </div>
-              <div className="horizontalForm">
+              <div className="horizontalFormSwitch">
                 <p>
                 Alto valor
                 </p>
-                <TextField
+                {/* <TextField
                   autoFocus
                   required
                   margin="dense"
@@ -795,7 +803,15 @@ export default function UpdateCatalogueDialog(props: {
                   variant="standard"
                   value={update.highValue}
                   onChange={handleChange}
-                />
+                /> */}
+                <Switch
+                    id="highValue"
+                    name="highValue"
+                    value={highValue}
+                    checked={highValue === "SI"}
+                    onChange={(event) => handleSwitch("highValue", event.target.checked)} 
+                    color="primary" // Opcional: ajusta el color del switch
+                  />
               </div>
               <div className="horizontalFormSwitch">
                 <p>
@@ -991,11 +1007,11 @@ export default function UpdateCatalogueDialog(props: {
                   onChange={handleChange}
                 />
               </div>
-              <div className="horizontalForm">
+              <div className="horizontalFormSwitch">
                 <p>
                 Información de género
                 </p>
-                <TextField
+                {/* <TextField
                   autoFocus
                   required
                   margin="dense"
@@ -1006,7 +1022,15 @@ export default function UpdateCatalogueDialog(props: {
                   variant="standard"
                   value={update.genderInfo}
                   onChange={handleChange}
-                />
+                /> */}
+                <Switch
+                    id="genderInfo"
+                    name="genderInfo"
+                    value={genderInfo}
+                    checked={genderInfo === "SI"}
+                    onChange={(event) => handleSwitch("genderInfo", event.target.checked)} 
+                    color="primary" // Opcional: ajusta el color del switch
+                  />
               </div>
               <div className="horizontalForm">
                 <p>
@@ -1165,11 +1189,11 @@ export default function UpdateCatalogueDialog(props: {
                   onChange={handleChange}
                 />
               </div>
-              <div className="horizontalForm">
+              <div className="horizontalFormSwitch">
                 <p>
                 Acceso automatizado
                 </p>
-                <TextField
+                {/* <TextField
                   autoFocus
                   required
                   margin="dense"
@@ -1180,7 +1204,15 @@ export default function UpdateCatalogueDialog(props: {
                   variant="standard"
                   value={update.autoAcess}
                   onChange={handleChange}
-                />
+                /> */}
+                <Switch
+                    id="autoAcess"
+                    name="autoAcess"
+                    value={autoAcess}
+                    checked={autoAcess === "SI"}
+                    onChange={(event) => handleSwitch("autoAcess", event.target.checked)} 
+                    color="primary" // Opcional: ajusta el color del switch
+                  />
               </div>
               <div className="horizontalForm">
                 <p>
@@ -1320,11 +1352,11 @@ export default function UpdateCatalogueDialog(props: {
           {step===5 && ( // ESTADO DE LA CARGA DEL DATASET EN LAS DIFERENTES PLATAFORMAS
             <form onSubmit={handleNext}>
               <div className="verticalForm">
-                <div className="horizontalForm">
+                <div className="horizontalFormSwitch">
                   <p>
                   RAT
                   </p>
-                  <TextField
+                  {/* <TextField
                     autoFocus
                     required
                     margin="dense"
@@ -1335,13 +1367,21 @@ export default function UpdateCatalogueDialog(props: {
                     variant="standard"
                     value={update.RAT}
                     onChange={handleChange}
+                  /> */}
+                  <Switch
+                    id="RAT"
+                    name="RAT"
+                    value={RAT}
+                    checked={RAT === "SI"}
+                    onChange={(event) => handleSwitch("RAT", event.target.checked)} 
+                    color="primary" // Opcional: ajusta el color del switch
                   />
                 </div>
-                <div className="horizontalForm">
+                <div className="horizontalFormSwitch">
                   <p>
                   Protección de datos
                   </p>
-                  <TextField
+                  {/* <TextField
                     autoFocus
                     required
                     margin="dense"
@@ -1352,13 +1392,21 @@ export default function UpdateCatalogueDialog(props: {
                     variant="standard"
                     value={update.dataProtection}
                     onChange={handleChange}
-                  />
+                  /> */}
+                  <Switch
+                  id="dataProtection"
+                  name="dataProtection"
+                  value={dataProtection}
+                  checked={dataProtection === "SI"}
+                  onChange={(event) => handleSwitch("dataProtection", event.target.checked)} 
+                  color="primary" // Opcional: ajusta el color del switch
+                />
                 </div>
-                <div className="horizontalForm">
+                <div className="horizontalFormSwitch">
                   <p>
                   Estándares de datos
                   </p>
-                  <TextField
+                  {/* <TextField
                     autoFocus
                     required
                     margin="dense"
@@ -1369,7 +1417,15 @@ export default function UpdateCatalogueDialog(props: {
                     variant="standard"
                     value={update.dataStandards}
                     onChange={handleChange}
-                  />
+                  /> */}
+                  <Switch
+                  id="dataStandards"
+                  name="dataStandards"
+                  value={dataStandards}
+                  checked={dataStandards === "SI"}
+                  onChange={(event) => handleSwitch("dataStandards", event.target.checked)} 
+                  color="primary" // Opcional: ajusta el color del switch
+                />
                 </div>
                 <div className="horizontalForm">
                   <p>
@@ -1388,11 +1444,11 @@ export default function UpdateCatalogueDialog(props: {
                     onChange={handleChange}
                   />
                 </div>
-                <div className="horizontalForm">
+                <div className="horizontalFormSwitch">
                   <p>
                   Anonimización de datos
                   </p>
-                  <TextField
+                  {/* <TextField
                     autoFocus
                     required
                     margin="dense"
@@ -1403,7 +1459,15 @@ export default function UpdateCatalogueDialog(props: {
                     variant="standard"
                     value={update.dataAnonymize}
                     onChange={handleChange}
-                  />
+                  /> */}
+                  <Switch
+                  id="dataAnonymize"
+                  name="dataAnonymize"
+                  value={dataAnonymize}
+                  checked={dataAnonymize === "SI"}
+                  onChange={(event) => handleSwitch("dataAnonymize", event.target.checked)} 
+                  color="primary" // Opcional: ajusta el color del switch
+                />
                 </div>
                 <div className="horizontalForm">
                   <p>
@@ -1439,11 +1503,11 @@ export default function UpdateCatalogueDialog(props: {
                     onChange={handleChange}
                   />
                 </div>
-                <div className="horizontalForm">
+                <div className="horizontalFormSwitch">
                   <p>
                   Datos compartidos
                   </p>
-                  <TextField
+                  {/* <TextField
                     autoFocus
                     required
                     margin="dense"
@@ -1454,7 +1518,15 @@ export default function UpdateCatalogueDialog(props: {
                     variant="standard"
                     value={update.sharedData}
                     onChange={handleChange}
-                  />
+                  /> */}
+                  <Switch
+                  id="sharedData"
+                  name="sharedData"
+                  value={sharedData}
+                  checked={sharedData === "SI"}
+                  onChange={(event) => handleSwitch("sharedData", event.target.checked)} 
+                  color="primary" // Opcional: ajusta el color del switch
+                />
                 </div>
               </div>
               <div className="buttonsForm">
@@ -1511,11 +1583,11 @@ export default function UpdateCatalogueDialog(props: {
           {step===6 && ( // ESTADO DE LA CARGA DEL DATASET EN LAS DIFERENTES PLATAFORMAS
             <form onSubmit={handleNext}>
               <div className="verticalForm">
-                <div className="horizontalForm">
+                <div className="horizontalFormSwitch">
                   <p>
                   VLCi
                   </p>
-                  <TextField
+                  {/* <TextField
                     autoFocus
                     required
                     margin="dense"
@@ -1526,13 +1598,21 @@ export default function UpdateCatalogueDialog(props: {
                     variant="standard"
                     value={update.VLCi}
                     onChange={handleChange}
-                  />
+                  /> */}
+                  <Switch
+                  id="VLCi"
+                  name="VLCi"
+                  value={VLCi}
+                  checked={VLCi === "SI"}
+                  onChange={(event) => handleSwitch("VLCi", event.target.checked)} 
+                  color="primary" // Opcional: ajusta el color del switch
+                />
                 </div>
-                <div className="horizontalForm">
+                <div className="horizontalFormSwitch">
                   <p>
                   ArcGIS
                   </p>
-                  <TextField
+                  {/* <TextField
                     autoFocus
                     required
                     margin="dense"
@@ -1543,13 +1623,21 @@ export default function UpdateCatalogueDialog(props: {
                     variant="standard"
                     value={update.ArcGIS}
                     onChange={handleChange}
-                  />
+                  /> */}
+                  <Switch
+                  id="ArcGIS"
+                  name="ArcGIS"
+                  value={ArcGIS}
+                  checked={ArcGIS === "SI"}
+                  onChange={(event) => handleSwitch("ArcGIS", event.target.checked)} 
+                  color="primary" // Opcional: ajusta el color del switch
+                />
                 </div>
-                <div className="horizontalForm">
+                <div className="horizontalFormSwitch">
                   <p>
                   Pentaho
                   </p>
-                  <TextField
+                  {/* <TextField
                     autoFocus
                     required
                     margin="dense"
@@ -1560,13 +1648,21 @@ export default function UpdateCatalogueDialog(props: {
                     variant="standard"
                     value={update.Pentaho}
                     onChange={handleChange}
-                  />
+                  /> */}
+                  <Switch
+                  id="Pentaho"
+                  name="Pentaho"
+                  value={Pentaho}
+                  checked={Pentaho === "SI"}
+                  onChange={(event) => handleSwitch("Pentaho", event.target.checked)} 
+                  color="primary" // Opcional: ajusta el color del switch
+                />
                 </div>
-                <div className="horizontalForm">
+                <div className="horizontalFormSwitch">
                   <p>
                   CKAN
                   </p>
-                  <TextField
+                  {/* <TextField
                     autoFocus
                     required
                     margin="dense"
@@ -1577,13 +1673,21 @@ export default function UpdateCatalogueDialog(props: {
                     variant="standard"
                     value={update.CKAN}
                     onChange={handleChange}
-                  />
+                  /> */}
+                  <Switch
+                  id="CKAN"
+                  name="CKAN"
+                  value={CKAN}
+                  checked={CKAN === "SI"}
+                  onChange={(event) => handleSwitch("CKAN", event.target.checked)} 
+                  color="primary" // Opcional: ajusta el color del switch
+                />
                 </div>
-                <div className="horizontalForm">
+                <div className="horizontalFormSwitch">
                   <p>
                   MongoDB
                   </p>
-                  <TextField
+                  {/* <TextField
                     autoFocus
                     required
                     margin="dense"
@@ -1594,13 +1698,21 @@ export default function UpdateCatalogueDialog(props: {
                     variant="standard"
                     value={update.MongoDB}
                     onChange={handleChange}
-                  />
+                  /> */}
+                  <Switch
+                  id="MongoDB"
+                  name="MongoDB"
+                  value={MongoDB}
+                  checked={MongoDB === "SI"}
+                  onChange={(event) => handleSwitch("MongoDB", event.target.checked)} 
+                  color="primary" // Opcional: ajusta el color del switch
+                />
                 </div>
-                <div className="horizontalForm">
+                <div className="horizontalFormSwitch">
                   <p>
                   OpenDataSoft
                   </p>
-                  <TextField
+                  {/* <TextField
                     autoFocus
                     required
                     margin="dense"
@@ -1611,7 +1723,15 @@ export default function UpdateCatalogueDialog(props: {
                     variant="standard"
                     value={update.OpenDataSoft}
                     onChange={handleChange}
-                  />
+                  /> */}
+                  <Switch
+                  id="OpenDataSoft"
+                  name="OpenDataSoft"
+                  value={OpenDataSoft}
+                  checked={OpenDataSoft === "SI"}
+                  onChange={(event) => handleSwitch("OpenDataSoft", event.target.checked)} 
+                  color="primary" // Opcional: ajusta el color del switch
+                />
                 </div>
                 <div className="horizontalForm">
                   <p>
