@@ -29,6 +29,7 @@ export interface CustomToolbarProperties {
   showshowDeleted: () => void;
   createDialogOpen: () => void;
   getSelectedCatalogues: () => void;
+  restoreRegisters?: () => void;
 }
 
 function CustomToolbar(props: CustomToolbarProperties) {
@@ -156,7 +157,7 @@ function CustomToolbar(props: CustomToolbarProperties) {
                     color: 'darkgrey',
                   },
                 }}
-                onClick={props.getSelectedCatalogues}
+                onClick={props.restoreRegisters}
               >
                 Restaurar
               </Button>

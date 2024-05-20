@@ -13,7 +13,6 @@ import {
   updateCatalogueRequest,
 } from "../../api/catalogues";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
-import Chip from "@mui/material/Chip";
 import { useTranslation } from "react-i18next";
 import "./catalogues.css";
 import CreateCatalogueDialog, { DialogData } from "./create-catalogue.dialog";
@@ -31,6 +30,7 @@ import {
   paletaColores,
   yesOrNo,
   valOrEsp,
+  isChecked,
 } from "../../utils/functions/table-functions";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
@@ -72,30 +72,35 @@ function CatalogueList() {
       headerName: t("columnsNames.title"),
       width: 200,
       description: t("tooltipText.title"),
+      resizable: true,
     },
     {
       field: "description",
       headerName: t("columnsNames.description"),
       width: 200,
       description: t("tooltipText.description"),
+      resizable: true,
     },
     {
       field: "responsibleIdentity",
       headerName: t("columnsNames.responsibleIdentity"),
       width: 200,
       description: t("tooltipText.responsibleIdentity"),
+      resizable: true,
     },
     {
       field: "organism",
       headerName: "Organismo",
       width: 200,
       description: "Organismo al que pertenece",
+      resizable: true,
     },
     {
       field: "topic",
       headerName: t("columnsNames.topic"),
       width: 200,
       description: t("tooltipText.topic"),
+      resizable: true,
     },
     {
       field: "language",
@@ -111,6 +116,7 @@ function CatalogueList() {
       headerName: "Palabras clave",
       width: 200,
       description: "Palabras clave",
+      resizable: true,
     },
     {
       field: "minimumVariables",
@@ -123,27 +129,22 @@ function CatalogueList() {
       headerName: t("columnsNames.contactPerson"),
       width: 200,
       description: t("tooltipText.contactPersonService"),
+      resizable: true,
     },
     {
       field: "masterData",
       headerName: "Dato maestro",
       width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
+      renderCell: (params: GridRenderCellParams<any, boolean>) =>
+        isChecked(params.value),
       description: "Datos referentes a las características básicas del negocio",
     },
     {
       field: "referenceData",
       headerName: "Dato de referencia",
       width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
+      renderCell: (params: GridRenderCellParams<any, boolean>) =>
+        isChecked(params.value),
       description:
         "Datos que definen el conjunto de valores admisibles en otros campos de datos",
     },
@@ -151,22 +152,16 @@ function CatalogueList() {
       field: "highValue",
       headerName: "Alto valor",
       width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
+      renderCell: (params: GridRenderCellParams<any, boolean>) =>
+        isChecked(params.value),
       description: "¿Es un dataset de alto valor?",
     },
     {
       field: "activeAds",
       headerName: t("columnsNames.activeAds"),
       width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
+      renderCell: (params: GridRenderCellParams<any, boolean>) =>
+        isChecked(params.value),
       description: t("tooltipText.activeAds"),
     },
     {
@@ -174,6 +169,7 @@ function CatalogueList() {
       headerName: t("columnsNames.comments"),
       width: 200,
       description: t("tooltipText.comments"),
+      resizable: true,
     },
 
     {
@@ -193,34 +189,30 @@ function CatalogueList() {
       field: "genderInfo",
       headerName: "Información de género",
       width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
-      description: "¿¿El dataset dispone de información de género??",
+      renderCell: (params: GridRenderCellParams<any, boolean>) =>
+        isChecked(params.value),
+      description: "¿El dataset dispone de información de género?",
     },
     {
       field: "structuredComments",
       headerName: "Comentarios de la estructura",
       width: 200,
       description: "Comentarios relativos a la estructura interna del dataset",
+      resizable: true,
     },
     {
       field: "associatedApplication",
       headerName: "Aplicación de origen",
       width: 200,
       description: "Nombre de la aplicación de origen de los datos",
+      resizable: true,
     },
     {
       field: "autoAcess",
       headerName: "Acceso automatizado",
       width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
+      renderCell: (params: GridRenderCellParams<any, boolean>) =>
+        isChecked(params.value),
       description:
         "¿Se puede acceder a los datos de origen de forma automatizada? ",
     },
@@ -229,27 +221,22 @@ function CatalogueList() {
       headerName: "Comentarios del origen",
       width: 200,
       description: "Comentarios relativos al origen de los datos",
+      resizable: true,
     },
     {
       field: "RAT",
       headerName: t("columnsNames.RAT"),
       width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
+      renderCell: (params: GridRenderCellParams<any, boolean>) =>
+        isChecked(params.value),
       description: t("tooltipText.RAT"),
     },
     {
       field: "dataProtection",
       headerName: "Protección de datos",
       width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
+      renderCell: (params: GridRenderCellParams<any, boolean>) =>
+        isChecked(params.value),
       description:
         "¿El dataset contiene datos personales protegidos por la LOPD?",
     },
@@ -257,11 +244,8 @@ function CatalogueList() {
       field: "dataStandards",
       headerName: "Estándares de datos",
       width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
+      renderCell: (params: GridRenderCellParams<any, boolean>) =>
+        isChecked(params.value),
       description:
         "¿Existen campos del dataset que deberían publicarse por normativa?",
     },
@@ -270,16 +254,14 @@ function CatalogueList() {
       headerName: "Comentarios del origen",
       width: 200,
       description: "Comentarios relativos a la protección de los datos",
+      resizable: true,
     },
     {
       field: "dataAnonymize",
       headerName: "Anonimización de datos",
       width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
+      renderCell: (params: GridRenderCellParams<any, boolean>) =>
+        isChecked(params.value),
       description:
         "Campos del dataset que requieren ser anonimizados. Separar cada campo con un punto y coma (;)",
     },
@@ -301,77 +283,56 @@ function CatalogueList() {
       field: "sharedData",
       headerName: "Datos compartidos",
       width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
+      renderCell: (params: GridRenderCellParams<any, boolean>) =>
+        isChecked(params.value),
       description: "¿Se han compartido estos datos en alguna plataforma?",
     },
     {
       field: "VLCi",
       headerName: "VLCi",
       width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
+      renderCell: (params: GridRenderCellParams<any, boolean>) =>
+        isChecked(params.value),
       description: "¿Está compartido en la plataforma Smart City?",
     },
     {
       field: "ArcGIS",
       headerName: "ArcGIS",
       width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
+      renderCell: (params: GridRenderCellParams<any, boolean>) =>
+        isChecked(params.value),
       description: "¿Está cargado en ArcGIS?",
     },
     {
       field: "Pentaho",
       headerName: "Pentaho",
       width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
+      renderCell: (params: GridRenderCellParams<any, boolean>) =>
+        isChecked(params.value),
       description: "¿Está disponible en Pentaho?",
     },
     {
       field: "CKAN",
       headerName: "CKAN",
       width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
+      renderCell: (params: GridRenderCellParams<any, boolean>) =>
+        isChecked(params.value),
       description: "¿Está cargado en CKAN?",
     },
     {
       field: "MongoDB",
       headerName: "MongoDB",
       width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
+      renderCell: (params: GridRenderCellParams<any, boolean>) =>
+        isChecked(params.value),
       description: "¿Está cargado en MongoDB?",
     },
     {
       field: "OpenDataSoft",
       headerName: "OpenDataSoft",
       width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
+      renderCell: (params: GridRenderCellParams<any, boolean>) =>
+        isChecked(params.value),
       description: "¿Está publiccado en OpenDataSoft?",
     },
     {
@@ -385,42 +346,22 @@ function CatalogueList() {
       headerName: "Comentarios sobre el estado de carga",
       width: 200,
       description: "Comentarios relativos al estado de carga del dataset",
+      resizable: true,
     },
     {
       field: "productData",
       headerName: "Producto de datos",
       width: 200,
       description: "Nombre del producto de datos",
+      resizable: true,
     },
     {
       field: "productComments",
       headerName: "Comentarios del producto",
       width: 200,
       description: "Comentarios relativo al producto de datos",
+      resizable: true,
     },
-    /*  {
-      field: "source",
-      headerName: t("columnsNames.source"),
-      width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <a href={params.value}>{params.value}</a>
-      ),
-      description: t("tooltipText.source"),
-    },
-    {
-      field: "lastUpdate",
-      headerName: t("columnsNames.lastUpdate"),
-      type: "dateTime",
-      width: 200,
-      valueGetter: ({ value }) => value && new Date(value),
-      description: t("tooltipText.lastUpdate"),
-    },
-    {
-      field: "territorialScope",
-      headerName: t("columnsNames.territorialScope"),
-      width: 200,
-      description: t("tooltipText.territorialScope"),
-    }, */
   ];
 
   const columnGroupingModel: GridColumnGroupingModel = [
@@ -499,7 +440,6 @@ function CatalogueList() {
     getCataloguesRequest(authHeader())
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         let notDeleted = data.filter((d: Catalogue) => d.deleted !== true);
         let deleted = data.filter((d: Catalogue) => d.deleted === true);
         setCatalogues(notDeleted);
@@ -716,6 +656,7 @@ function CatalogueList() {
                       setOpenDialog(true);
                     }}
                     getSelectedCatalogues={getSelectedCatalogues}
+                    restoreRegisters={restoreRegisters}
                   ></CustomToolbar>
                 );
               },

@@ -1,5 +1,7 @@
 import { ReactComponent as Val } from "../../assets/val.svg";
 import { ReactComponent as Esp } from "../../assets/esp.svg";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 
 export function paletaColores(color: string) {
   switch (color) {
@@ -11,11 +13,13 @@ export function paletaColores(color: string) {
       return "#333333";
     case "colorRowHover":
       return "rgba(212, 212, 212, 0.2)";
-      case "colorRowHoverDark":
-        return "rgba(212, 212, 212, 1)";
+    case "colorRowHoverDark":
+      return "rgba(212, 212, 212, 1)";
   }
 }
-
+export function isChecked(p: boolean | undefined) {
+  return p === false ? <CheckIcon></CheckIcon> : <CloseIcon></CloseIcon>;
+}
 export function yesOrNo(p: string | undefined) {
   return p === "NO" || undefined ? "error" : "success";
 }
