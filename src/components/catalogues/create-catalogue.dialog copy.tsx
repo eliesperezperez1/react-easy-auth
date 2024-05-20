@@ -3,56 +3,126 @@ import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
-import {
-  Catalogue,
-  UpdateCatalogue,
-} from "../../interfaces/catalogue.interface";
-import { updateCatalogueRequest } from "../../api/catalogues";
+import { CreateCatalogue } from "../../interfaces/catalogue.interface";
+import { createCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
-import { Autocomplete, 
-  Box, 
-  Checkbox, 
-  FormControl, 
-  FormControlLabel, 
-  FormGroup, 
-  InputLabel, 
-  MenuItem, 
-  Select, 
+import {
+  Autocomplete,
+  Box,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  MenuItem,
+  Select,
   Switch,
-  ThemeProvider, } from "@mui/material";
+  ThemeProvider,
+} from "@mui/material";
 import { useTranslation } from "react-i18next";
-import baseTheme from "../darkModeSwitch/darkmodeTheme";
-import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import "./create-catalogue.dialog.css";
 import React from "react";
 import { CalendarIcon, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Dayjs } from "dayjs";
-import { getEntitiesRequest } from "../../api/entities";
-import { Entity } from "../../interfaces/entity.interface";
-export interface UpdateDialogData {
+import baseTheme from "../darkModeSwitch/darkmodeTheme";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+
+export interface DialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
   getInfo: () => void;
-  catalogue: Catalogue;
 }
 
-export default function UpdateCatalogueDialog(props: {
-  enviar: UpdateDialogData;
-}) {
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+const formatOptions = ["PDF", "EXCEL", "CSV"];
+
+export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [open, setOpen] = useState<boolean>(false);
   const authHeader = useAuthHeader();
-  const [entities, setEntities] = useState<Entity[]>([]);
-  const [entitiesName, setEntitiesName] = useState<string[]>([]);
-  const [deletedEntities, setDeletedEntities] = useState<Entity[]>([]);
-  const [update, setUpdate] = useState<UpdateCatalogue>({});
   const [t, i18n] = useTranslation();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
-  const [format, setFormat] = React.useState<string[]>([]);
+  /* const [formDataSteps, setFormDataSteps] = useState({
+    title: "",
+    description: "",
+    language: "",
+    territorialScope: "",
+    temporaryCoverage: "",
+    updateFrequency: "",
+    topic: "",
+    lastUpdate: "",
+    format: "",
+    distribution: "",
+    sensitiveInformation: "",
+    isUsing: "",
+    accessType: "",
+    internalRelationship: "",
+    contactPerson: "",
+    structured: "",
+    associatedApplication: "",
+    georreference: "",
+    comments: "",
+    timmingEffect: "",
+    creationDate: "",
+    personalData: "",
+    source: "",
+    responsibleIdentity: "",
+    activeAds: "",
+  }); */
+  const [formDataSteps, setFormDataSteps] = useState({
+    title: '',
+    description: '',
+    responsibleIdentity: '',
+    topic: '',
+    territorialScope: '',
+    temporaryCoverage: '',
+    organism: '',
+    language: '',
+    keyWords: '',
+    minimumVariables: '',
+    contactPerson: '',
+    masterData: '',
+    referenceData: '',
+    highValue: '',
+    activeAds: '',
+    comments: '',
+    typeGeo: '',
+    genderInfo: '',
+    structuredComments: '',
+    associatedApplication: '',
+    autoAcess: '',
+    originComments: '',
+    RAT: '',
+    dataProtection: '',
+    dataStandards: '',
+    dataProtectionComments: '',
+    dataAnonymize: '',
+    dataQuality: 0,
+    sharingLevel: '',
+    sharedData: '',
+    VLCi: '',
+    ArcGIS: '',
+    Pentaho: '',
+    CKAN: '',
+    MongoDB: '',
+    OpenDataSoft: '',
+    temporarySolution: '',
+    chargeStateComments: '',
+    productData: '',
+    productComments: '',
+  });
   const [sensitiveInformation, setSensitiveInformation] = useState("SI");
   const [isUsing, setIsUsing] = useState("SI");
   const [structured, setStructured] = useState("SI");
@@ -75,103 +145,169 @@ export default function UpdateCatalogueDialog(props: {
   const [CKAN, setCKAN] = useState("SI");
   const [MongoDB, setMongoDB] = useState("SI");
   const [OpenDataSoft, setOpenDataSoft] = useState("SI");
-  const [deleted, setDeleted] = useState("SI");
+  const [format, setFormat] = React.useState<string[]>([]);
   const [lastUpdateAlmacenado, setLastUpdate] = React.useState<Dayjs | null>();
   const [creationDateAlmacenado, setCreationDate] = React.useState<Dayjs | null>();
   const {actualTheme} = useAlternateTheme();
 
   useEffect(() => {
-    setUpdate(props.enviar.catalogue);
     setOpen(props.enviar.open);
-    /*
-    setSensitiveInformation(props.enviar.catalogue.sensitiveInformation);
-    setIsUsing(props.enviar.catalogue.isUsing);
-    setStructured(props.enviar.catalogue.structured);
-    setGeoreference(props.enviar.catalogue.georeference);
-    setPersonalData(props.enviar.catalogue.personalData);
-    */
-    setActiveAds(props.enviar.catalogue.activeAds);
-    //setLastUpdate(props.enviar.catalogue.lastUpdate);
-    //setCreationDate(props.enviar.catalogue.creationDate);
-    setStep(1);
-    getAndSetEntities();
-  }, [props.enviar.open, props.enviar.catalogue]);
+  }, [props]);
 
   const handleClose = () => {
-    setOpen(false);
+    setFormData({});
+    /* setFormDataSteps({
+      title: "",
+      description: "",
+      language: "",
+      territorialScope: "",
+      temporaryCoverage: "",
+      updateFrequency: "",
+      topic: "",
+      lastUpdate: "",
+      format: "",
+      distribution: "",
+      sensitiveInformation: "",
+      isUsing: "",
+      accessType: "",
+      internalRelationship: "",
+      contactPerson: "",
+      structured: "",
+      associatedApplication: "",
+      georreference: "",
+      comments: "",
+      timmingEffect: "",
+      creationDate: "",
+      personalData: "",
+      source: "",
+      responsibleIdentity: "",
+      activeAds: "",
+    }); */
+    setFormDataSteps({
+      title: '',
+      description: '',
+      responsibleIdentity: '',
+      topic: '',
+      territorialScope: '',
+      temporaryCoverage: '',
+      organism: '',
+      language: '',
+      keyWords: '',
+      minimumVariables: '',
+      contactPerson: '',
+      masterData: '',
+      referenceData: '',
+      highValue: '',
+      activeAds: '',
+      comments: '',
+      typeGeo: '',
+      genderInfo: '',
+      structuredComments: '',
+      associatedApplication: '',
+      autoAcess: '',
+      originComments: '',
+      RAT: '',
+      dataProtection: '',
+      dataStandards: '',
+      dataProtectionComments: '',
+      dataAnonymize: '',
+      dataQuality: 0,
+      sharingLevel: '',
+      sharedData: '',
+      VLCi: '',
+      ArcGIS: '',
+      Pentaho: '',
+      CKAN: '',
+      MongoDB: '',
+      OpenDataSoft: '',
+      temporarySolution: '',
+      chargeStateComments: '',
+      productData: '',
+      productComments: '',
+    })
     setStep(1);
+    setSensitiveInformation("SI");
+    setIsUsing("SI");
+    setStructured("SI");
+    setGeoreference("SI");
+    setPersonalData("SI");
+    setActiveAds("SI");
+    setFormat([]);
+    setLastUpdate(null);
+    setCreationDate(null);
+    setOpen(false);
     props.enviar.closeDialog(false);
   };
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setUpdate((prevState) => ({ ...prevState, [name]: value }));
+
+  const handleFormat = (event: any, newValue: any) => {
+    setFormat(newValue);
+    console.log(newValue);
   };
 
-  const updateCatalogue = (formJson: any) => {
+  const createCatalogue = (formJson: any) => {
     const a = formJson.lastUpdate;
     const b = formJson.creationDate;
     const deletedDate = new Date();
     const deleted = false;
     const lastUpdate = new Date(a);
     const creationDate = new Date(b);
-    const prueba = formJson as UpdateCatalogue;
-    setUpdate({
+    const prueba = formJson as CreateCatalogue;
+    const create: CreateCatalogue = {
       ...prueba,
       deleted,
       deletedDate,
       lastUpdate,
       creationDate,
-    });
-    updateCatalogueRequest(
-      props.enviar.catalogue._id,
-      update,
-      authHeader()
-    ).then((response) => response.json());
+    };
+    createCatalogueRequest(create, authHeader())
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      });
     props.enviar.getInfo();
     handleClose();
   };
 
   const handleGoBack = () => {
     setStep(step - 1);
-  }
+  };
 
   const handleNext = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+
     // Collect form data for the current step
     const currentStepData = new FormData(event.currentTarget);
-
-    if(currentStepData.get("sensitiveInformation")!=="on"){
+    if (currentStepData.get("sensitiveInformation") !== "on") {
       currentStepData.set("sensitiveInformation", "NO");
     } else {
       currentStepData.set("sensitiveInformation", "SI");
     }
 
-    if(currentStepData.get("isUsing")!=="on"){
+    if (currentStepData.get("isUsing") !== "on") {
       currentStepData.set("isUsing", "NO");
     } else {
       currentStepData.set("isUsing", "SI");
     }
 
-    if(currentStepData.get("structured")!=="on"){
+    if (currentStepData.get("structured") !== "on") {
       currentStepData.set("structured", "NO");
     } else {
       currentStepData.set("structured", "SI");
     }
 
-    if(currentStepData.get("georeference")!=="on"){
+    if (currentStepData.get("georeference") !== "on") {
       currentStepData.set("georeference", "NO");
     } else {
       currentStepData.set("georeference", "SI");
     }
 
-    if(currentStepData.get("personalData")!=="on"){
+    if (currentStepData.get("personalData") !== "on") {
       currentStepData.set("personalData", "NO");
     } else {
       currentStepData.set("personalData", "SI");
     }
 
-    if(currentStepData.get("activeAds")!=="on"){
+    if (currentStepData.get("activeAds") !== "on") {
       currentStepData.set("activeAds", "NO");
     } else {
       currentStepData.set("activeAds", "SI");
@@ -273,9 +409,13 @@ export default function UpdateCatalogueDialog(props: {
       currentStepData.set("OpenDataSoft", "SI");
     }
 
-    if( (format!==undefined || format !== null) && (currentStepData.get("format")!==null || currentStepData.get("format")!==undefined)){
+    if (
+      (format !== undefined || format !== null) &&
+      (currentStepData.get("format") !== null ||
+        currentStepData.get("format") !== undefined)
+    ) {
       const formatosDatos = format.toString();
-      const formatosDatosMod = formatosDatos.replace(/,/g, " / ");
+      const formatosDatosMod: string = formatosDatos.replace(/,/g, " / ");
       currentStepData.set("format", formatosDatosMod);
     }
 
@@ -288,16 +428,10 @@ export default function UpdateCatalogueDialog(props: {
       currentStepData.set("lastUpdate", lastUpdateDatos);
     }
 
-    if (
-      (creationDateAlmacenado !== undefined && creationDateAlmacenado !== null) &&
-      (currentStepData.get("creationDate") !== null ||
-        currentStepData.get("creationDate") !== undefined)
-    ) {
-      const creationDateDatos = creationDateAlmacenado.toString();
-      currentStepData.set("creationDate", creationDateDatos);
-    }
-
+    //--------------------------------------------------------------------
     const currentStepJson = Object.fromEntries(currentStepData.entries());
+
+    setFormDataSteps((prevData) => ({ ...prevData, ...currentStepJson }));
 
     // Merge current step data with existing form data
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
@@ -307,66 +441,226 @@ export default function UpdateCatalogueDialog(props: {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const currentStepData = new FormData(event.currentTarget);
+    if (
+      (creationDateAlmacenado !== undefined && creationDateAlmacenado !== null) &&
+      (currentStepData.get("creationDate") !== null ||
+        currentStepData.get("creationDate") !== undefined)
+    ) {
+      const creationDateDatos = creationDateAlmacenado.toString();
+      console.log("CreationDateAlmacenado: " + creationDateAlmacenado);
+      console.log("CreationDateAlmacenado.ToString(): " + creationDateAlmacenado.toString());
+      console.log("creationDateDatos" + creationDateDatos);
+      currentStepData.set("creationDate", creationDateDatos);
+    }
     const currentStepJson = Object.fromEntries(currentStepData.entries());
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
-    const mergedFormData = {...formData, ...currentStepJson};
+    const mergedFormData = { ...formData, ...currentStepJson };
     console.log(mergedFormData);
-    updateCatalogue(mergedFormData);
+    createCatalogue(mergedFormData);
   };
 
   const handleSwitch = (nameSwitch: any, event: any) => {
-    switch(nameSwitch){
-     
+    switch (nameSwitch) {
       case "sensitiveInformation":
-       setSensitiveInformation(sensitiveInformation === "SI" ? "NO" : "SI");
-       console.log(sensitiveInformation); 
-       break;
-       case "isUsing": setIsUsing(isUsing === "SI" ? "NO" : "SI"); break;
-       case "structured": setStructured(structured === "SI" ? "NO" : "SI"); break;
-       case "georeference": setGeoreference(georeference === "SI" ? "NO" : "SI"); break;
-       case "personalData": setPersonalData(personalData === "SI" ? "NO" : "SI"); break;
-       case "activeAds": setActiveAds(activeAds === "SI" ? "NO" : "SI"); break;
-       case "masterData": setMasterData(masterData === "SI" ? "NO" : "SI"); break;
-       case "referenceData": setReferenceData(referenceData === "SI" ? "NO" : "SI"); break;
-       case "highValue": setHighValue(highValue === "SI" ? "NO" : "SI"); break;
-       case "genderInfo": setGenderInfo(genderInfo === "SI" ? "NO" : "SI"); break;
-       case "autoAcess": setAutoAcess(autoAcess === "SI" ? "NO" : "SI"); break;
-       case "RAT": setRAT(RAT === "SI" ? "NO" : "SI"); break;
-       case "dataProtection": setDataProtection(dataProtection === "SI" ? "NO" : "SI"); break;
-       case "dataStandards": setDataStandards(dataStandards === "SI" ? "NO" : "SI"); break;
-       case "dataAnonymize": setDataAnonymize(dataAnonymize === "SI" ? "NO" : "SI"); break;
-       case "sharedData": setSharedData(sharedData === "SI" ? "NO" : "SI"); break;
-       case "VLCi": setVLCi(VLCi === "SI" ? "NO" : "SI"); break;
-       case "ArcGIS": setArcGIS(ArcGIS === "SI" ? "NO" : "SI"); break;
-       case "Pentaho": setPentaho(Pentaho === "SI" ? "NO" : "SI"); break;
-       case "CKAN": setCKAN(CKAN === "SI" ? "NO" : "SI"); break;
-       case "MongoDB": setMongoDB(MongoDB === "SI" ? "NO" : "SI"); break;
-       case "OpenDataSoft": setOpenDataSoft(OpenDataSoft === "SI" ? "NO" : "SI"); break;
- 
+        if (sensitiveInformation === "SI") {
+          setSensitiveInformation("NO");
+          console.log(sensitiveInformation);
+        } else {
+          setSensitiveInformation("SI");
+          console.log(sensitiveInformation);
+        }
+        break;
+      case "isUsing":
+        if (isUsing === "SI") setIsUsing("NO");
+        else setIsUsing("SI");
+        break;
+      case "structured":
+        if (structured === "SI") setStructured("NO");
+        else setStructured("SI");
+        break;
+      case "georeference":
+        if (georeference === "SI") setGeoreference("NO");
+        else setGeoreference("SI");
+        break;
+      case "personalData":
+        if (personalData === "SI") setPersonalData("NO");
+        else setPersonalData("SI");
+        break;
+      case "activeAds":
+        if (activeAds === "SI") setActiveAds("NO");
+        else setActiveAds("SI");
+        break;
+      case "masterData":
+        if(masterData==="SI") {
+          setMasterData("NO");
+          setUpdate((prevState) => ({ ...prevState, [masterData]: "NO" }));
+        }
+        else {
+          setMasterData("SI");
+          setUpdate((prevState) => ({ ...prevState, [masterData]: "SI" }));
+        }
+        break;
+      case "referenceData":
+        if(referenceData==="SI") {
+          setReferenceData("NO");
+          setUpdate((prevState) => ({ ...prevState, [referenceData]: "NO" }));
+        }
+        else {
+          setReferenceData("SI");
+          setUpdate((prevState) => ({ ...prevState, [referenceData]: "SI" }));
+        }
+        break;
+      case "highValue":
+        if(highValue==="SI") {
+          setHighValue("NO");
+          setUpdate((prevState) => ({ ...prevState, [highValue]: "NO" }));
+        }
+        else {
+          setHighValue("SI");
+          setUpdate((prevState) => ({ ...prevState, [highValue]: "SI" }));
+        }
+        break;
+      case "genderInfo":
+        if(genderInfo==="SI") {
+          setGenderInfo("NO");
+          setUpdate((prevState) => ({ ...prevState, [genderInfo]: "NO" }));
+        }
+        else {
+          setGenderInfo("SI");
+          setUpdate((prevState) => ({ ...prevState, [genderInfo]: "SI" }));
+        }
+        break;
+      case "autoAcess":
+        if(autoAcess==="SI") {
+          setAutoAcess("NO");
+          setUpdate((prevState) => ({ ...prevState, [autoAcess]: "NO" }));
+        }
+        else {
+          setAutoAcess("SI");
+          setUpdate((prevState) => ({ ...prevState, [autoAcess]: "SI" }));
+        }
+      break;
+      case "RAT":
+      if(RAT==="SI") {
+        setRAT("NO");
+        setUpdate((prevState) => ({ ...prevState, [RAT]: "NO" }));
+      }
+      else {
+        setRAT("SI");
+        setUpdate((prevState) => ({ ...prevState, [RAT]: "SI" }));
+      }
+      break;
+      case "dataProtection":
+      if(dataProtection==="SI") {
+        setDataProtection("NO");
+        setUpdate((prevState) => ({ ...prevState, [dataProtection]: "NO" }));
+      }
+      else {
+        setDataProtection("SI");
+        setUpdate((prevState) => ({ ...prevState, [dataProtection]: "SI" }));
+      }
+      break;
+      case "dataStandards":
+        if(dataStandards==="SI") {
+          setDataStandards("NO");
+          setUpdate((prevState) => ({ ...prevState, [dataStandards]: "NO" }));
+        }
+        else {
+          setDataStandards("SI");
+          setUpdate((prevState) => ({ ...prevState, [dataStandards]: "SI" }));
+        }
+        break;
+      case "dataAnonymize":
+        if(dataAnonymize==="SI") {
+          setDataAnonymize("NO");
+          setUpdate((prevState) => ({ ...prevState, [dataAnonymize]: "NO" }));
+        }
+        else {
+          setDataAnonymize("SI");
+          setUpdate((prevState) => ({ ...prevState, [dataAnonymize]: "SI" }));
+        }
+        break;
+      case "sharedData":
+        if(sharedData==="SI") {
+          setSharedData("NO");
+          setUpdate((prevState) => ({ ...prevState, [sharedData]: "NO" }));
+        }
+        else {
+          setSharedData("SI");
+          setUpdate((prevState) => ({ ...prevState, [sharedData]: "SI" }));
+        }
+        break;
+      case "VLCi":
+        if(VLCi==="SI") {
+          setVLCi("NO");
+          setUpdate((prevState) => ({ ...prevState, [VLCi]: "NO" }));
+        }
+        else {
+          setVLCi("SI");
+          setUpdate((prevState) => ({ ...prevState, [VLCi]: "SI" }));
+        }
+        break;
+      case "ArcGIS":
+        if(ArcGIS==="SI") {
+          setArcGIS("NO");
+          setUpdate((prevState) => ({ ...prevState, [ArcGIS]: "NO" }));
+        }
+        else {
+          setArcGIS("SI");
+          setUpdate((prevState) => ({ ...prevState, [ArcGIS]: "SI" }));
+        }
+        break;
+      case "Pentaho":
+        if(Pentaho==="SI") {
+          setPentaho("NO");
+          setUpdate((prevState) => ({ ...prevState, [Pentaho]: "NO" }));
+        }
+        else {
+          setPentaho("SI");
+          setUpdate((prevState) => ({ ...prevState, [Pentaho]: "SI" }));
+        }
+        break;
+      case "CKAN":
+        if(CKAN==="SI") {
+          setCKAN("NO");
+          setUpdate((prevState) => ({ ...prevState, [CKAN]: "NO" }));
+        }
+        else {
+          setCKAN("SI");
+          setUpdate((prevState) => ({ ...prevState, [CKAN]: "SI" }));
+        }
+        break;
+      case "MongoDB":
+        if(MongoDB==="SI") {
+          setMongoDB("NO");
+          setUpdate((prevState) => ({ ...prevState, [MongoDB]: "NO" }));
+        }
+        else {
+          setMongoDB("SI");
+          setUpdate((prevState) => ({ ...prevState, [MongoDB]: "SI" }));
+        }
+        break;
+      case "OpenDataSoft":
+        if(VLCi==="SI") {
+          setOpenDataSoft("NO");
+          setUpdate((prevState) => ({ ...prevState, [OpenDataSoft]: "NO" }));
+        }
+        else {
+          setOpenDataSoft("SI");
+          setUpdate((prevState) => ({ ...prevState, [OpenDataSoft]: "SI" }));
+        }
+        break;
+
     }
   };
 
-  const handleFormat = (event: any, newValue: any) => {
-    setFormat(newValue);
-    console.log(newValue);
+  const handleChange = (field: string, value: string) => {
+    // Update the form data
+    setFormDataSteps((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
   };
-
-  const handleValuePicker = (picker: any) => {
-    if(picker==="lastUpdate"){
-      if(update.lastUpdate !== undefined) {
-        const dateObject = new Date(update.lastUpdate);
-        const formattedDate = dateObject.toISOString().slice(0, 16);
-        return formattedDate;
-      }
-    }
-    else if (picker==="creationDate"){
-      if(update.creationDate !== undefined) {
-        const dateObject = new Date(update.creationDate);
-        const formattedDate = dateObject.toISOString().slice(0, 16);
-        return formattedDate;
-      }
-    }
-  }
 
   const handleChangeLastUpdate = (value: any) => {
     setLastUpdate(value);
@@ -382,22 +676,6 @@ export default function UpdateCatalogueDialog(props: {
     "& .MuiInputBase-root": { border: "none" },
   };
 
-  function getAndSetEntities() {
-    getEntitiesRequest(authHeader())
-      .then((response) => response.json())
-      .then((data) => {
-        let notDeleted = data.filter((d: Entity) => d.deleted !== true).responsibleIdentityES;
-        let deleted = data.filter((d: Entity) => d.deleted === true);
-        //setEntities(notDeleted);
-        setEntitiesName(notDeleted);
-        setDeletedEntities(deleted);
-        
-      })
-      .catch((error) => {
-        console.error('Error fetching entities:', error);
-      });
-  }
-
   return (
     <>
     
@@ -409,17 +687,19 @@ export default function UpdateCatalogueDialog(props: {
         onClose={handleClose}
         style={dynamicStyle}
       >
-        <DialogTitle 
-        style={dynamicStyle}
+        <DialogTitle
+          style={dynamicStyle}
         >
-          {t("dialog.updateRegister")}
+          {t("dialog.addRegister")}
         </DialogTitle>
         <DialogContent
           style={dynamicStyle}
         >
           <div className="dialogContentText">
             <span>{t("dialog.fillInfo")}</span>
-            <span><b>{step}/7</b></span>
+            <span>
+              <strong>{step}/5</strong>
+            </span>
           </div>
           <Box>
           {step === 1 && (  // ESTRUCTURA GENERAL DEL DATASET
@@ -435,9 +715,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="title"
                   name="title"
+                  label={t("columnsNames.title")}
                   type="string"
                   variant="standard"
-                  value={update.title}
+                  value={formDataSteps.title}
                   onChange={handleChange}
                 />
                 </div>
@@ -451,9 +732,10 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     id="description"
                     name="description"
+                    label={t("columnsNames.description")}
                     type="string"
                     variant="standard"
-                    value={update.description}
+                    value={formDataSteps.description}
                     onChange={handleChange}
                   />
                 </div>
@@ -467,9 +749,10 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     id="responsibleIdentity"
                     name="responsibleIdentity"
+                    label={t("columnsNames.responsibleIdentity")}
                     type="string"
                     variant="standard"
-                    value={update.responsibleIdentity}
+                    value={formDataSteps.responsibleIdentity}
                     onChange={handleChange}
                   />
                   {/* 
@@ -478,7 +761,7 @@ export default function UpdateCatalogueDialog(props: {
                         id="responsibleIdentity"
                         name="responsibleIdentity"
                         margin="dense"
-                        defaultValue={update.responsibleIdentity}
+                        defaultValue={formDataSteps.responsibleIdentity}
                         //onChange={(e) => handleChange('language', e.target.value)}
                         //required
                       >
@@ -501,9 +784,10 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     id="topic"
                     name="topic"
+                    label={t("columnsNames.topic")}
                     type="string"
                     variant="standard"
-                    value={update.topic}
+                    value={formDataSteps.topic}
                     onChange={handleChange}
                   />
                 </div>
@@ -517,9 +801,10 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     id="organism"
                     name="organism"
+                    label="organismo"
                     type="string"
                     variant="standard"
-                    value={update.organism}
+                    value={formDataSteps.organism}
                     onChange={handleChange}
                   />
                 </div>
@@ -534,7 +819,7 @@ export default function UpdateCatalogueDialog(props: {
                         id="language"
                         name="language"
                         margin="dense"
-                        defaultValue={update.language}
+                        defaultValue={formDataSteps.language}
                         //onChange={(e) => handleChange('language', e.target.value)}
                         required
                       >
@@ -589,9 +874,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="keywords"
                   name="keywords"
+                  label="Palabras clave"
                   type="string"
                   variant="standard"
-                  value={update.keyWords}
+                  value={formDataSteps.keyWords}
                   onChange={handleChange}
                 />
               </div>
@@ -605,9 +891,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="minimumVariables"
                   name="minimumVariables"
+                  label="Campos mínimos"
                   type="string"
                   variant="standard"
-                  value={update.minimumVariables}
+                  value={formDataSteps.minimumVariables}
                   onChange={handleChange}
                 />
               </div>
@@ -621,9 +908,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="contactPerson"
                   name="contactPerson"
+                  label={t("columnsNames.contactPerson")}
                   type="string"
                   variant="standard"
-                  value={update.contactPerson}
+                  value={formDataSteps.contactPerson}
                   onChange={handleChange}
                 />
               </div>
@@ -637,9 +925,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="masterData"
                   name="masterData"
+                  label="Dato maestro"
                   type="string"
                   variant="standard"
-                  value={update.masterData}
+                  value={formDataSteps.masterData}
                   onChange={handleChange}
                 /> */}
                 <Switch
@@ -661,9 +950,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="referenceData"
                   name="referenceData"
+                  label="Dato de referencia"
                   type="string"
                   variant="standard"
-                  value={update.referenceData}
+                  value={formDataSteps.referenceData}
                   onChange={handleChange}
                 /> */}
                 <Switch
@@ -685,9 +975,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="highValue"
                   name="highValue"
+                  label="Dato maestro"
                   type="string"
                   variant="standard"
-                  value={update.highValue}
+                  value={formDataSteps.highValue}
                   onChange={handleChange}
                 /> */}
                 <Switch
@@ -724,9 +1015,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="comments"
                   name="comments"
+                  label="Comentarios generales"
                   type="string"
                   variant="standard"
-                  value={update.comments}
+                  value={formDataSteps.comments}
                   onChange={handleChange}
                 />
               </div>
@@ -851,9 +1143,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="typeGeo"
                   name="typeGeo"
+                  label="Información geográfica"
                   type="string"
                   variant="standard"
-                  value={update.typeGeo}
+                  value={formDataSteps.typeGeo}
                   onChange={handleChange}
                 />
               </div>
@@ -867,9 +1160,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="territorialScope"
                   name="territorialScope"
+                  label={t("columnsNames.territorialScope")}
                   type="string"
                   variant="standard"
-                  value={update.territorialScope}
+                  value={formDataSteps.territorialScope}
                   onChange={handleChange}
                 />
               </div>
@@ -883,9 +1177,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="temporaryCoverage"
                   name="temporaryCoverage"
+                  label={t("columnsNames.temporaryCoverage")}
                   type="string"
                   variant="standard"
-                  value={update.temporaryCoverage}
+                  value={formDataSteps.temporaryCoverage}
                   onChange={handleChange}
                 />
               </div>
@@ -899,9 +1194,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="genderInfo"
                   name="genderInfo"
+                  label="Información de género"
                   type="string"
                   variant="standard"
-                  value={update.genderInfo}
+                  value={formDataSteps.genderInfo}
                   onChange={handleChange}
                 /> */}
                 <Switch
@@ -923,9 +1219,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="structuredComments"
                   name="structuredComments"
+                  label="Comentario de la estructura"
                   type="string"
                   variant="standard"
-                  value={update.structuredComments}
+                  value={formDataSteps.structuredComments}
                   onChange={handleChange}
                 />
               </div>
@@ -969,7 +1266,7 @@ export default function UpdateCatalogueDialog(props: {
                     id="accessType"
                     name="accessType"
                     margin="dense"
-                    defaultValue={update.accessType}
+                    defaultValue={formDataSteps.accessType}
                     onChange={(e) => handleChange}
                     required
                   >
@@ -989,9 +1286,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="internalRelationship"
                   name="internalRelationship"
+                  label="Relación interna"
                   type="string"
                   variant="standard"
-                  value={update.internalRelationship}
+                  value={formDataSteps.internalRelationship}
                   onChange={handleChange}
                 />
               </div>
@@ -1061,9 +1359,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="associatedApplication"
                   name="associatedApplication"
+                  label="Aplicación de origen"
                   type="string"
                   variant="standard"
-                  value={update.associatedApplication}
+                  value={formDataSteps.associatedApplication}
                   onChange={handleChange}
                 />
               </div>
@@ -1077,9 +1376,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="autoAcess"
                   name="autoAcess"
+                  label="Acceso automatizado"
                   type="string"
                   variant="standard"
-                  value={update.autoAcess}
+                  value={formDataSteps.autoAcess}
                   onChange={handleChange}
                 /> */}
                 <Switch
@@ -1101,9 +1401,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="originComments"
                   name="originComments"
+                  label="Comentarios del origen"
                   type="string"
                   variant="standard"
-                  value={update.originComments}
+                  value={formDataSteps.originComments}
                   onChange={handleChange}
                 />
               </div>
@@ -1148,9 +1449,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="comments"
                   name="comments"
+                  label={t("columnsNames.comments")}
                   type="string"
                   variant="standard"
-                  value={update.comments}
+                  value={formDataSteps.comments}
                   onChange={handleChange}
                 />
               </div>
@@ -1164,9 +1466,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="timmingEffect"
                   name="timmingEffect"
+                  label="Efecto temporal"
                   type="string"
                   variant="standard"
-                  value={update.timmingEffect}
+                  value={formDataSteps.timmingEffect}
                   onChange={handleChange}
                 />
               </div>
@@ -1236,9 +1539,10 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     id="RAT"
                     name="RAT"
+                    label="RAT"
                     type="string"
                     variant="standard"
-                    value={update.RAT}
+                    value={formDataSteps.RAT}
                     onChange={handleChange}
                   /> */}
                   <Switch
@@ -1260,9 +1564,10 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     id="dataProtection"
                     name="dataProtection"
+                    label="Protección de datos"
                     type="string"
                     variant="standard"
-                    value={update.dataProtection}
+                    value={formDataSteps.dataProtection}
                     onChange={handleChange}
                   /> */}
                   <Switch
@@ -1284,9 +1589,10 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     id="dataStandards"
                     name="dataStandards"
+                    label="Estándares de datos"
                     type="string"
                     variant="standard"
-                    value={update.dataStandards}
+                    value={formDataSteps.dataStandards}
                     onChange={handleChange}
                   /> */}
                   <Switch
@@ -1300,7 +1606,7 @@ export default function UpdateCatalogueDialog(props: {
                 </div>
                 <div className="horizontalForm">
                   <p>
-                  Comentarios sobre la protección de datos
+                  Comentarios del origen
                   </p>
                   <TextField
                     autoFocus
@@ -1308,9 +1614,10 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     id="dataProtectionComments"
                     name="dataProtectionComments"
+                    label="Comentarios del origen"
                     type="string"
                     variant="standard"
-                    value={update.dataProtectionComments}
+                    value={formDataSteps.dataProtectionComments}
                     onChange={handleChange}
                   />
                 </div>
@@ -1324,9 +1631,10 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     id="dataAnonymize"
                     name="dataAnonymize"
+                    label="Anonimización de datos"
                     type="string"
                     variant="standard"
-                    value={update.dataAnonymize}
+                    value={formDataSteps.dataAnonymize}
                     onChange={handleChange}
                   /> */}
                   <Switch
@@ -1348,9 +1656,10 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     id="dataQuality"
                     name="dataQuality"
+                    label="Calidad de los datos"
                     type="string"
                     variant="standard"
-                    value={update.dataQuality}
+                    value={formDataSteps.dataQuality}
                     onChange={handleChange}
                   />
                 </div>
@@ -1364,9 +1673,10 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     id="sharingLevel"
                     name="sharingLevel"
+                    label="Nivel de compartición"
                     type="string"
                     variant="standard"
-                    value={update.sharingLevel}
+                    value={formDataSteps.sharingLevel}
                     onChange={handleChange}
                   />
                 </div>
@@ -1380,9 +1690,10 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     id="sharedData"
                     name="sharedData"
+                    label="Datos compartidos"
                     type="string"
                     variant="standard"
-                    value={update.sharedData}
+                    value={formDataSteps.sharedData}
                     onChange={handleChange}
                   /> */}
                   <Switch
@@ -1459,9 +1770,10 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     id="VLCi"
                     name="VLCi"
+                    label="VLCi"
                     type="string"
                     variant="standard"
-                    value={update.VLCi}
+                    value={formDataSteps.VLCi}
                     onChange={handleChange}
                   /> */}
                   <Switch
@@ -1483,9 +1795,10 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     id="ArcGIS"
                     name="ArcGIS"
+                    label="ArcGIS"
                     type="string"
                     variant="standard"
-                    value={update.ArcGIS}
+                    value={formDataSteps.ArcGIS}
                     onChange={handleChange}
                   /> */}
                   <Switch
@@ -1507,9 +1820,10 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     id="Pentaho"
                     name="Pentaho"
+                    label="Pentaho"
                     type="string"
                     variant="standard"
-                    value={update.Pentaho}
+                    value={formDataSteps.Pentaho}
                     onChange={handleChange}
                   /> */}
                   <Switch
@@ -1531,9 +1845,10 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     id="CKAN"
                     name="CKAN"
+                    label="CKAN"
                     type="string"
                     variant="standard"
-                    value={update.CKAN}
+                    value={formDataSteps.CKAN}
                     onChange={handleChange}
                   /> */}
                   <Switch
@@ -1555,9 +1870,10 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     id="MongoDB"
                     name="MongoDB"
+                    label="MongoDB"
                     type="string"
                     variant="standard"
-                    value={update.MongoDB}
+                    value={formDataSteps.MongoDB}
                     onChange={handleChange}
                   /> */}
                   <Switch
@@ -1579,9 +1895,10 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     id="OpenDataSoft"
                     name="OpenDataSoft"
+                    label="OpenDataSoft"
                     type="string"
                     variant="standard"
-                    value={update.OpenDataSoft}
+                    value={formDataSteps.OpenDataSoft}
                     onChange={handleChange}
                   /> */}
                   <Switch
@@ -1603,9 +1920,10 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     id="temporarySolution"
                     name="temporarySolution"
+                    label="Resolución temporal"
                     type="string"
                     variant="standard"
-                    value={update.temporarySolution}
+                    value={formDataSteps.temporarySolution}
                     onChange={handleChange}
                   />
                 </div>
@@ -1619,9 +1937,10 @@ export default function UpdateCatalogueDialog(props: {
                     margin="dense"
                     id="chargeStateComments"
                     name="chargeStateComments"
+                    label="Comentarios sobre el estado de carga"
                     type="string"
                     variant="standard"
-                    value={update.chargeStateComments}
+                    value={formDataSteps.chargeStateComments}
                     onChange={handleChange}
                   />
                 </div>
@@ -1694,21 +2013,6 @@ export default function UpdateCatalogueDialog(props: {
 
                 </DateTimePicker>
               </div>
-              <div className="horizontalForm">
-                <p>
-                {t("columnsNames.lastUpdate")}
-                </p>
-                <DateTimePicker 
-                  format="DD/MM/YYYY hh:mm:ss a"
-                  name="lastUpdate"
-                  value={lastUpdateAlmacenado}
-                  onChange={(e) =>
-                    handleChangeLastUpdate(e)
-                  }
-                  slotProps={{ textField: { variant: "standard", id:"lastUpdate" } }}
-                >
-                </DateTimePicker>
-              </div>
               <div className="horizontalFormSwitch">
                 <p>
                 {t("columnsNames.personalData")}
@@ -1734,9 +2038,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="source"
                   name="source"
+                  label={t("columnsNames.source")}
                   type="string"
                   variant="standard"
-                  value={update.source}
+                  value={formDataSteps.source}
                   onChange={handleChange}
                 />
               </div>
@@ -1750,9 +2055,10 @@ export default function UpdateCatalogueDialog(props: {
                   margin="dense"
                   id="responsibleIdentity"
                   name="responsibleIdentity"
+                  label={t("columnsNames.responsibleIdentity")}
                   type="string"
                   variant="standard"
-                  value={update.responsibleIdentity}
+                  value={formDataSteps.responsibleIdentity}
                   onChange={handleChange}
                 />
               </div>
@@ -1811,8 +2117,7 @@ export default function UpdateCatalogueDialog(props: {
           )}
           </Box>
         </DialogContent>
-        <DialogActions>
-        </DialogActions>
+        <DialogActions></DialogActions>
       </Dialog>
     </LocalizationProvider>
     </ThemeProvider>
