@@ -570,7 +570,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
               <div className="verticalForm">
                 <div className="horizontalForm">
                 <p>
-                {t("columnsNames.title")}
+                {t("columnsNames.title")} *
                 </p>
                 <TextField
                   autoFocus
@@ -588,7 +588,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 </div>
                 <div className="horizontalForm">
                   <p>
-                  {t("columnsNames.description")}
+                  {t("columnsNames.description")} *
                   </p>
                   <TextField
                     autoFocus
@@ -606,7 +606,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 </div>
                 <div className="horizontalForm">
                   <p>
-                  {t("columnsNames.responsibleIdentity")}
+                  {t("columnsNames.responsibleIdentity")} *
                   </p>
                   <TextField
                     autoFocus
@@ -659,7 +659,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 </div>
                 <div className="horizontalForm">
                   <p>
-                  {t("columnsNames.topic")}
+                  {t("columnsNames.topic")} *
                   </p>
                   <TextField
                     autoFocus
@@ -733,7 +733,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
             <div className="verticalForm">
               <div className="horizontalForm">
                 <p>
-                Palabras clave
+                Palabras clave *
                 </p>
                 <TextField
                   autoFocus
@@ -751,7 +751,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
               </div>
               <div className="horizontalForm">
                 <p>
-                Campos mínimos
+                Campos mínimos *
                 </p>
                 <TextField
                   autoFocus
@@ -769,7 +769,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
               </div>
               <div className="horizontalForm">
                 <p>
-                {t("columnsNames.contactPerson")}
+                {t("columnsNames.contactPerson")} *
                 </p>
                 <TextField
                   autoFocus
@@ -835,7 +835,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
               </div>
               <div className="horizontalFormSwitch">
                 <p>
-                Alto valor
+                Alto valor *
                 </p>
                 {/* <TextField
                   autoFocus
@@ -860,7 +860,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
               </div>
               <div className="horizontalFormSwitch">
                 <p>
-                {t("columnsNames.activeAds")}
+                {t("columnsNames.activeAds")} *
                 </p>
                 <FormControl variant="standard">
                   <Switch
@@ -990,7 +990,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
             <div className="verticalForm">
               <div className="horizontalForm">
                 <p>
-                Información geográfica
+                Información geográfica *
                 </p>
                 <TextField
                   autoFocus
@@ -1411,7 +1411,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 </div>
                 <div className="horizontalFormSwitch">
                   <p>
-                  Protección de datos
+                  Protección de datos *
                   </p>
                   {/* <TextField
                     autoFocus
@@ -1520,7 +1520,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 </div>
                 <div className="horizontalForm">
                   <p>
-                  Nivel de compartición
+                  Nivel de compartición *
                   </p>
                   <TextField
                     autoFocus
@@ -1850,23 +1850,55 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
           {step === 7 && ( // VISUALIZACIONES/APLICACIONES CREADAS A PARTIR DEL DATASET
             <form onSubmit={handleSubmit}>
             <div className="verticalForm">
-            <div className="horizontalForm">
-                <p>Fecha de creación</p>
-                <DateTimePicker 
-                  format="DD/MM/YYYY hh:mm:ss a"
-                  name="creationDate"
-                  value={creationDateAlmacenado}
-                  onChange={(e) =>
-                    handleChangeCreationDate(e)
-                  }
-                  slotProps={{ textField: { variant: "standard", id:"creationDate" } }}
-                >
+              <div className="horizontalForm">
+                <p> Producto de datos</p>
+                <TextField
+                    autoFocus
+                    //required
+                    margin="dense"
+                    id="productData"
+                    name="productData"
+                    type="string"
+                    variant="standard"
+                    value={formDataSteps.productData}
+                    onChange={(e) =>
+                      handleChange("productData", e.target.value)
+                    }
+                  />
+              </div>
+              <div className="horizontalForm">
+                <p> Comentarios del producto</p>
+                <TextField
+                    autoFocus
+                    //required
+                    margin="dense"
+                    id="productComments"
+                    name="productComments"
+                    type="string"
+                    variant="standard"
+                    value={formDataSteps.productComments}
+                    onChange={(e) =>
+                      handleChange("productComments", e.target.value)
+                    }
+                  />
+              </div>
+              <div className="horizontalForm">
+                  <p>Fecha de creación *</p>
+                  <DateTimePicker 
+                    format="DD/MM/YYYY hh:mm:ss a"
+                    name="creationDate"
+                    value={creationDateAlmacenado}
+                    onChange={(e) =>
+                      handleChangeCreationDate(e)
+                    }
+                    slotProps={{ textField: { variant: "standard", id:"creationDate" } }}
+                  >
 
-                </DateTimePicker>
+                  </DateTimePicker>
               </div>
               <div className="horizontalForm">
                 <p>
-                {t("columnsNames.lastUpdate")}
+                {t("columnsNames.lastUpdate")} *
                 </p>
                 <DateTimePicker 
                   format="DD/MM/YYYY hh:mm:ss a"

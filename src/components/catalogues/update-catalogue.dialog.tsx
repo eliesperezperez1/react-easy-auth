@@ -1681,6 +1681,34 @@ export default function UpdateCatalogueDialog(props: {
             <form onSubmit={handleSubmit}>
             <div className="verticalForm">
             <div className="horizontalForm">
+                <p> Producto de datos</p>
+                <TextField
+                    autoFocus
+                    //required
+                    margin="dense"
+                    id="productData"
+                    name="productData"
+                    type="string"
+                    variant="standard"
+                    value={update.productData}
+                    onChange={handleChange}
+                  />
+              </div>
+              <div className="horizontalForm">
+                <p> Comentarios del producto</p>
+                <TextField
+                    autoFocus
+                    //required
+                    margin="dense"
+                    id="productComments"
+                    name="productComments"
+                    type="string"
+                    variant="standard"
+                    value={update.productComments}
+                    onChange={handleChange}
+                  />
+              </div>
+            <div className="horizontalForm">
                 <p>Fecha de creación</p>
                 <DateTimePicker 
                   format="DD/MM/YYYY hh:mm:ss a"
@@ -1724,7 +1752,7 @@ export default function UpdateCatalogueDialog(props: {
                   />  
                 </FormControl>
               </div>
-              <div className="horizontalForm">
+              {/* <div className="horizontalForm">
                 <p>
                 {t("columnsNames.source")}
                 </p>
@@ -1739,7 +1767,7 @@ export default function UpdateCatalogueDialog(props: {
                   value={update.source}
                   onChange={handleChange}
                 />
-              </div>
+              </div> */}
               <div className="horizontalForm">
                 <p>
                 {t("columnsNames.responsibleIdentity")}
