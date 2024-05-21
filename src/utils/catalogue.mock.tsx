@@ -61,7 +61,7 @@ export const catalogueMock: Catalogue = {
   sharingLevel: '',
   sharedData: false,
   VLCi: false,
-  ArGIS: false,
+  ArcGIS: false,
   Pentaho: false,
   CKAN: false,
   MongoDB: false,
@@ -73,4 +73,5 @@ export const catalogueMock: Catalogue = {
   creationDate: new Date(),
   deleted: false,
   deletedDate: new Date(),
+  lastUpdate: new Date(),
 };

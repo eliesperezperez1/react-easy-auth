@@ -29,8 +29,11 @@ import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import React from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Dayjs } from "dayjs";
+import { getEntitiesRequest } from "../../api/entities";
+import { Entity } from "../../interfaces/entity.interface";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { TOPIC } from "../../utils/enums/topic.enum";
 export interface UpdateDialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
@@ -43,6 +46,9 @@ export default function UpdateCatalogueDialog(props: {
 }) {
   const [open, setOpen] = useState<boolean>(false);
   const authHeader = useAuthHeader();
+  const [entities, setEntities] = useState<Entity[]>([]);
+  const [entitiesName, setEntitiesName] = useState<string[]>([]);
+  const [deletedEntities, setDeletedEntities] = useState<Entity[]>([]);
   const [update, setUpdate] = useState<UpdateCatalogue>({});
   const [t, i18n] = useTranslation();
   const [step, setStep] = useState(1);
@@ -54,6 +60,23 @@ export default function UpdateCatalogueDialog(props: {
   const [georeference, setGeoreference] = useState("SI");
   const [personalData, setPersonalData] = useState("SI");
   const [activeAds, setActiveAds] = useState("SI");
+  const [masterData, setMasterData] = useState("SI");
+  const [referenceData, setReferenceData] = useState("SI");
+  const [highValue, setHighValue] = useState("SI");
+  const [genderInfo, setGenderInfo] = useState("SI");
+  const [autoAcess, setAutoAcess] = useState("SI");
+  const [RAT, setRAT] = useState("SI");
+  const [dataProtection, setDataProtection] = useState("SI");
+  const [dataStandards, setDataStandards] = useState("SI");
+  const [dataAnonymize, setDataAnonymize] = useState("SI");
+  const [sharedData, setSharedData] = useState("SI");
+  const [VLCi, setVLCi] = useState("SI");
+  const [ArcGIS, setArcGIS] = useState("SI");
+  const [Pentaho, setPentaho] = useState("SI");
+  const [CKAN, setCKAN] = useState("SI");
+  const [MongoDB, setMongoDB] = useState("SI");
+  const [OpenDataSoft, setOpenDataSoft] = useState("SI");
+  const [deleted, setDeleted] = useState("SI");
   const [lastUpdateAlmacenado, setLastUpdate] = React.useState<Dayjs | null>();
   const [creationDateAlmacenado, setCreationDate] =
     React.useState<Dayjs | null>();
@@ -62,15 +85,18 @@ export default function UpdateCatalogueDialog(props: {
   useEffect(() => {
     setUpdate(props.enviar.catalogue);
     setOpen(props.enviar.open);
-   /*  setSensitiveInformation(props.enviar.catalogue.sensitiveInformation);
+    /*
+    setSensitiveInformation(props.enviar.catalogue.sensitiveInformation);
     setIsUsing(props.enviar.catalogue.isUsing);
     setStructured(props.enviar.catalogue.structured);
     setGeoreference(props.enviar.catalogue.georeference);
-    setPersonalData(props.enviar.catalogue.personalData); */
+    setPersonalData(props.enviar.catalogue.personalData);
+    */
     setActiveAds(props.enviar.catalogue.activeAds);
     //setLastUpdate(props.enviar.catalogue.lastUpdate);
     //setCreationDate(props.enviar.catalogue.creationDate);
     setStep(1);
+    getAndSetEntities();
   }, [props.enviar.open, props.enviar.catalogue]);
 
   const handleClose = () => {
@@ -153,11 +179,103 @@ export default function UpdateCatalogueDialog(props: {
       currentStepData.set("activeAds", "SI");
     }
 
-    if (
-      (format !== undefined || format !== null) &&
-      (currentStepData.get("format") !== null ||
-        currentStepData.get("format") !== undefined)
-    ) {
+    if (currentStepData.get("masterData") !== "on") {
+      currentStepData.set("masterData", "NO");
+    } else {
+      currentStepData.set("masterData", "SI");
+    }
+
+    if (currentStepData.get("referenceData") !== "on") {
+      currentStepData.set("referenceData", "NO");
+    } else {
+      currentStepData.set("referenceData", "SI");
+    }
+
+    if (currentStepData.get("highValue") !== "on") {
+      currentStepData.set("highValue", "NO");
+    } else {
+      currentStepData.set("highValue", "SI");
+    }
+
+    if (currentStepData.get("genderInfo") !== "on") {
+      currentStepData.set("genderInfo", "NO");
+    } else {
+      currentStepData.set("genderInfo", "SI");
+    }
+
+    if (currentStepData.get("autoAcess") !== "on") {
+      currentStepData.set("autoAcess", "NO");
+    } else {
+      currentStepData.set("autoAcess", "SI");
+    }
+
+    if (currentStepData.get("RAT") !== "on") {
+      currentStepData.set("RAT", "NO");
+    } else {
+      currentStepData.set("RAT", "SI");
+    }
+
+    if (currentStepData.get("dataProtection") !== "on") {
+      currentStepData.set("dataProtection", "NO");
+    } else {
+      currentStepData.set("dataProtection", "SI");
+    }
+
+    if (currentStepData.get("dataStandards") !== "on") {
+      currentStepData.set("dataStandards", "NO");
+    } else {
+      currentStepData.set("dataStandards", "SI");
+    }
+
+    if (currentStepData.get("dataAnonymize") !== "on") {
+      currentStepData.set("dataAnonymize", "NO");
+    } else {
+      currentStepData.set("dataAnonymize", "SI");
+    }
+
+    if (currentStepData.get("sharedData") !== "on") {
+      currentStepData.set("sharedData", "NO");
+    } else {
+      currentStepData.set("sharedData", "SI");
+    }
+
+    if (currentStepData.get("VLCi") !== "on") {
+      currentStepData.set("VLCi", "NO");
+    } else {
+      currentStepData.set("VLCi", "SI");
+    }
+
+    if (currentStepData.get("ArcGIS") !== "on") {
+      currentStepData.set("ArcGIS", "NO");
+    } else {
+      currentStepData.set("ArcGIS", "SI");
+    }
+
+    if (currentStepData.get("Pentaho") !== "on") {
+      currentStepData.set("Pentaho", "NO");
+    } else {
+      currentStepData.set("Pentaho", "SI");
+    }
+
+    if (currentStepData.get("CKAN") !== "on") {
+      currentStepData.set("CKAN", "NO");
+    } else {
+      currentStepData.set("CKAN", "SI");
+    }
+
+    if (currentStepData.get("MongoDB") !== "on") {
+      currentStepData.set("MongoDB", "NO");
+    } else {
+      currentStepData.set("MongoDB", "SI");
+    }
+
+    if (currentStepData.get("OpenDataSoft") !== "on") {
+      currentStepData.set("OpenDataSoft", "NO");
+    } else {
+      currentStepData.set("OpenDataSoft", "SI");
+    }
+
+    if( (format!==undefined || format !== null) && (currentStepData.get("format")!==null || currentStepData.get("format")!==undefined)){
       const formatosDatos = format.toString();
       const formatosDatosMod = formatosDatos.replace(/,/g, " / ");
       currentStepData.set("format", formatosDatosMod);
@@ -201,67 +319,34 @@ export default function UpdateCatalogueDialog(props: {
   };
 
   const handleSwitch = (nameSwitch: any, event: any) => {
-    switch (nameSwitch) {
+    switch(nameSwitch){
+     
       case "sensitiveInformation":
-        if (sensitiveInformation === "SI") {
-          setSensitiveInformation("NO");
-          setUpdate((prevState) => ({
-            ...prevState,
-            [sensitiveInformation]: "NO",
-          }));
-        } else {
-          setSensitiveInformation("SI");
-          setUpdate((prevState) => ({
-            ...prevState,
-            [sensitiveInformation]: "SI",
-          }));
-        }
-        break;
-      case "isUsing":
-        if (isUsing === "SI") {
-          setIsUsing("NO");
-          setUpdate((prevState) => ({ ...prevState, [isUsing]: "NO" }));
-        } else {
-          setIsUsing("SI");
-          setUpdate((prevState) => ({ ...prevState, [isUsing]: "SI" }));
-        }
-        break;
-      case "structured":
-        if (structured === "SI") {
-          setStructured("NO");
-          setUpdate((prevState) => ({ ...prevState, [structured]: "NO" }));
-        } else {
-          setStructured("SI");
-          setUpdate((prevState) => ({ ...prevState, [structured]: "SI" }));
-        }
-        break;
-      case "georeference":
-        if (georeference === "SI") {
-          setGeoreference("NO");
-          setUpdate((prevState) => ({ ...prevState, [georeference]: "NO" }));
-        } else {
-          setGeoreference("SI");
-          setUpdate((prevState) => ({ ...prevState, [georeference]: "SI" }));
-        }
-        break;
-      case "personalData":
-        if (personalData === "SI") {
-          setPersonalData("NO");
-          setUpdate((prevState) => ({ ...prevState, [personalData]: "NO" }));
-        } else {
-          setPersonalData("SI");
-          setUpdate((prevState) => ({ ...prevState, [personalData]: "SI" }));
-        }
-        break;
-      case "activeAds":
-        if (activeAds === "SI") {
-          setActiveAds("NO");
-          setUpdate((prevState) => ({ ...prevState, [activeAds]: "NO" }));
-        } else {
-          setActiveAds("SI");
-          setUpdate((prevState) => ({ ...prevState, [activeAds]: "SI" }));
-        }
-        break;
+       setSensitiveInformation(sensitiveInformation === "SI" ? "NO" : "SI");
+       console.log(sensitiveInformation); 
+       break;
+       case "isUsing": setIsUsing(isUsing === "SI" ? "NO" : "SI"); break;
+       case "structured": setStructured(structured === "SI" ? "NO" : "SI"); break;
+       case "georeference": setGeoreference(georeference === "SI" ? "NO" : "SI"); break;
+       case "personalData": setPersonalData(personalData === "SI" ? "NO" : "SI"); break;
+       case "activeAds": setActiveAds(activeAds === "SI" ? "NO" : "SI"); break;
+       case "masterData": setMasterData(masterData === "SI" ? "NO" : "SI"); break;
+       case "referenceData": setReferenceData(referenceData === "SI" ? "NO" : "SI"); break;
+       case "highValue": setHighValue(highValue === "SI" ? "NO" : "SI"); break;
+       case "genderInfo": setGenderInfo(genderInfo === "SI" ? "NO" : "SI"); break;
+       case "autoAcess": setAutoAcess(autoAcess === "SI" ? "NO" : "SI"); break;
+       case "RAT": setRAT(RAT === "SI" ? "NO" : "SI"); break;
+       case "dataProtection": setDataProtection(dataProtection === "SI" ? "NO" : "SI"); break;
+       case "dataStandards": setDataStandards(dataStandards === "SI" ? "NO" : "SI"); break;
+       case "dataAnonymize": setDataAnonymize(dataAnonymize === "SI" ? "NO" : "SI"); break;
+       case "sharedData": setSharedData(sharedData === "SI" ? "NO" : "SI"); break;
+       case "VLCi": setVLCi(VLCi === "SI" ? "NO" : "SI"); break;
+       case "ArcGIS": setArcGIS(ArcGIS === "SI" ? "NO" : "SI"); break;
+       case "Pentaho": setPentaho(Pentaho === "SI" ? "NO" : "SI"); break;
+       case "CKAN": setCKAN(CKAN === "SI" ? "NO" : "SI"); break;
+       case "MongoDB": setMongoDB(MongoDB === "SI" ? "NO" : "SI"); break;
+       case "OpenDataSoft": setOpenDataSoft(OpenDataSoft === "SI" ? "NO" : "SI"); break;
+ 
     }
   };
 
@@ -300,6 +385,22 @@ export default function UpdateCatalogueDialog(props: {
     "& .MuiInputBase-root": { border: "none" },
   };
 
+  function getAndSetEntities() {
+    getEntitiesRequest(authHeader())
+      .then((response) => response.json())
+      .then((data) => {
+        let notDeleted = data.filter((d: Entity) => d.deleted !== true).responsibleIdentityES;
+        let deleted = data.filter((d: Entity) => d.deleted === true);
+        //setEntities(notDeleted);
+        setEntitiesName(notDeleted);
+        setDeletedEntities(deleted);
+        
+      })
+      .catch((error) => {
+        console.error('Error fetching entities:', error);
+      });
+  }
+
   return (
     <>
       <ThemeProvider theme={baseTheme(actualTheme)}>
@@ -317,11 +418,11 @@ export default function UpdateCatalogueDialog(props: {
               <div className="dialogContentText">
                 <span>{t("dialog.fillInfo")}</span>
                 <span>
-                  <b>{step}/5</b>
+                  <b>{step}/7</b>
                 </span>
               </div>
               <Box>
-                {step === 1 && (
+                {step === 1 && ( // ESTRUCTURA GENERAL DEL DATASET
                   <form onSubmit={handleNext}>
                     <div className="verticalForm">
                       <div className="horizontalForm">
@@ -332,7 +433,6 @@ export default function UpdateCatalogueDialog(props: {
                           margin="dense"
                           id="title"
                           name="title"
-                          label={t("columnsNames.title")}
                           type="string"
                           variant="standard"
                           value={update.title}
@@ -347,7 +447,6 @@ export default function UpdateCatalogueDialog(props: {
                           margin="dense"
                           id="description"
                           name="description"
-                          label={t("columnsNames.description")}
                           type="string"
                           variant="standard"
                           value={update.description}
@@ -355,7 +454,53 @@ export default function UpdateCatalogueDialog(props: {
                         />
                       </div>
                       <div className="horizontalForm">
+                        <p>{t("columnsNames.responsibleIdentity")}</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="responsibleIdentity"
+                          name="responsibleIdentity"
+                          type="string"
+                          variant="standard"
+                          value={update.responsibleIdentity}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="horizontalForm">
+                        <p>{t("columnsNames.topic")}</p>
+                        <FormControl variant="standard">
+                          <Select
+                            id="topic"
+                            name="topic"
+                            margin="dense"
+                            defaultValue={update.topic}
+                          >
+                            {Object.entries(TOPIC).map(([key, value]) => (
+                              <MenuItem key={key} value={value}>
+                                {value}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </div>
+                      <div className="horizontalForm">
+                        <p>Organismo</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="organism"
+                          name="organism"
+                          type="string"
+                          variant="standard"
+                          value={update.organism}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="horizontalForm">
                         <p>{t("columnsNames.language")}</p>
+
                         <FormControl variant="standard">
                           <Select
                             id="language"
@@ -363,39 +508,12 @@ export default function UpdateCatalogueDialog(props: {
                             margin="dense"
                             defaultValue={update.language}
                             //onChange={(e) => handleChange('language', e.target.value)}
+                            required
                           >
                             <MenuItem value={"es"}>ES</MenuItem>
                             <MenuItem value={"val"}>VAL</MenuItem>
                           </Select>
                         </FormControl>
-                      </div>
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.territorialScope")}</p>
-                        <TextField
-                          autoFocus
-                          margin="dense"
-                          id="territorialScope"
-                          name="territorialScope"
-                          label={t("columnsNames.territorialScope")}
-                          type="string"
-                          variant="standard"
-                          value={update.territorialScope}
-                          onChange={handleChange}
-                        />
-                      </div>
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.temporaryCoverage")}</p>
-                        <TextField
-                          autoFocus
-                          margin="dense"
-                          id="temporaryCoverage"
-                          name="temporaryCoverage"
-                          label={t("columnsNames.temporaryCoverage")}
-                          type="string"
-                          variant="standard"
-                          value={update.temporaryCoverage}
-                          onChange={handleChange}
-                        />
                       </div>
                     </div>
                     <div className="buttonsForm">
@@ -434,36 +552,694 @@ export default function UpdateCatalogueDialog(props: {
                     </div>
                   </form>
                 )}
-                {step === 2 && (
+                {step === 2 && ( // ESTRUCTURA GENERAL DEL DATASET
                   <form onSubmit={handleNext}>
                     <div className="verticalForm">
                       <div className="horizontalForm">
-                        <p>{t("columnsNames.updateFrequency")}</p>
+                        <p>Palabras clave</p>
                         <TextField
                           autoFocus
+                          required
                           margin="dense"
-                          id="updateFrequency"
-                          name="updateFrequency"
-                          label={t("columnsNames.updateFrequency")}
+                          id="keywords"
+                          name="keywords"
                           type="string"
                           variant="standard"
-                          value={update.updateFrequency}
+                          value={update.keyWords}
                           onChange={handleChange}
                         />
                       </div>
                       <div className="horizontalForm">
-                        <p>{t("columnsNames.topic")}</p>
+                        <p>Campos mínimos</p>
                         <TextField
                           autoFocus
+                          required
                           margin="dense"
-                          id="topic"
-                          name="topic"
-                          label={t("columnsNames.topic")}
+                          id="minimumVariables"
+                          name="minimumVariables"
                           type="string"
                           variant="standard"
-                          value={update.topic}
+                          value={update.minimumVariables}
                           onChange={handleChange}
                         />
+                      </div>
+                      <div className="horizontalForm">
+                        <p>{t("columnsNames.contactPerson")}</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="contactPerson"
+                          name="contactPerson"
+                          type="string"
+                          variant="standard"
+                          value={update.contactPerson}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="horizontalFormSwitch">
+                        <p>Dato maestro</p>
+                        <Switch
+                          id="masterData"
+                          name="masterData"
+                          value={masterData}
+                          checked={masterData === "SI"}
+                          onChange={(event) =>
+                            handleSwitch("masterData", event.target.checked)
+                          }
+                          color="primary" // Opcional: ajusta el color del switch
+                        />
+                      </div>
+                      <div className="horizontalFormSwitch">
+                        <p>Dato de referencia</p>
+                        <Switch
+                          id="referenceData"
+                          name="referenceData"
+                          value={referenceData}
+                          checked={referenceData === "SI"}
+                          onChange={(event) =>
+                            handleSwitch("referenceData", event.target.checked)
+                          }
+                          color="primary" // Opcional: ajusta el color del switch
+                        />
+                      </div>
+                      <div className="horizontalFormSwitch">
+                        <p>Alto valor</p>
+                        <Switch
+                          id="highValue"
+                          name="highValue"
+                          value={highValue}
+                          checked={highValue === "SI"}
+                          onChange={(event) =>
+                            handleSwitch("highValue", event.target.checked)
+                          }
+                          color="primary" // Opcional: ajusta el color del switch
+                        />
+                      </div>
+                      <div className="horizontalFormSwitch">
+                        <p>{t("columnsNames.activeAds")}</p>
+                        <FormControl variant="standard">
+                          <Switch
+                            id="activeAds"
+                            name="activeAds"
+                            value={activeAds}
+                            checked={activeAds === "SI"}
+                            onChange={(event) =>
+                              handleSwitch("activeAds", event.target.checked)
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </FormControl>
+                      </div>
+                      <div className="horizontalForm">
+                        <p>Comentarios generales</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="comments"
+                          name="comments"
+                          type="string"
+                          variant="standard"
+                          value={update.comments}
+                          onChange={handleChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="buttonsForm">
+                      <Button
+                        onClick={handleClose}
+                        sx={{
+                          height: 37,
+                          backgroundColor: "#D9D9D9",
+                          color: "#404040",
+                          borderColor: "#404040",
+                          "&:hover": {
+                            borderColor: "#0D0D0D",
+                            backgroundColor: "#0D0D0D",
+                            color: "#f2f2f2",
+                          },
+                        }}
+                      >
+                        {t("dialog.cancel")}
+                      </Button>
+                      <div>
+                        <Button
+                          onClick={handleGoBack}
+                          sx={{
+                            height: 37,
+                            backgroundColor: "#D9D9D9",
+                            color: "#404040",
+                            borderColor: "#404040",
+                            marginRight: 1,
+                            "&:hover": {
+                              borderColor: "#0D0D0D",
+                              backgroundColor: "#0D0D0D",
+                              color: "#f2f2f2",
+                            },
+                          }}
+                        >
+                          Atrás
+                        </Button>
+
+                        <Button
+                          type="submit"
+                          sx={{
+                            height: 37,
+                            backgroundColor: "#D9D9D9",
+                            color: "#404040",
+                            borderColor: "#404040",
+                            "&:hover": {
+                              borderColor: "#0D0D0D",
+                              backgroundColor: "#0D0D0D",
+                              color: "#f2f2f2",
+                            },
+                          }}
+                        >
+                          {t("dialog.next")}
+                        </Button>
+                      </div>
+                    </div>
+                  </form>
+                )}
+                {step === 3 && ( // ESTRUCTURA INTERNA DEL DATASET
+                  <form onSubmit={handleNext}>
+                    <div className="verticalForm">
+                      <div className="horizontalForm">
+                        <p>Información geográfica</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="typeGeo"
+                          name="typeGeo"
+                          type="string"
+                          variant="standard"
+                          value={update.typeGeo}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="horizontalForm">
+                        <p>{t("columnsNames.territorialScope")}</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="territorialScope"
+                          name="territorialScope"
+                          type="string"
+                          variant="standard"
+                          value={update.territorialScope}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="horizontalForm">
+                        <p>{t("columnsNames.temporaryCoverage")}</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="temporaryCoverage"
+                          name="temporaryCoverage"
+                          type="string"
+                          variant="standard"
+                          value={update.temporaryCoverage}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="horizontalFormSwitch">
+                        <p>Información de género</p>
+                        <Switch
+                          id="genderInfo"
+                          name="genderInfo"
+                          value={genderInfo}
+                          checked={genderInfo === "SI"}
+                          onChange={(event) =>
+                            handleSwitch("genderInfo", event.target.checked)
+                          }
+                          color="primary" // Opcional: ajusta el color del switch
+                        />
+                      </div>
+                      <div className="horizontalForm">
+                        <p>Comentario de la estructura</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="structuredComments"
+                          name="structuredComments"
+                          type="string"
+                          variant="standard"
+                          value={update.structuredComments}
+                          onChange={handleChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="buttonsForm">
+                      <Button
+                        onClick={handleClose}
+                        sx={{
+                          height: 37,
+                          backgroundColor: "#D9D9D9",
+                          color: "#404040",
+                          borderColor: "#404040",
+                          "&:hover": {
+                            borderColor: "#0D0D0D",
+                            backgroundColor: "#0D0D0D",
+                            color: "#f2f2f2",
+                          },
+                        }}
+                      >
+                        {t("dialog.cancel")}
+                      </Button>
+                      <div>
+                        <Button
+                          onClick={handleGoBack}
+                          sx={{
+                            height: 37,
+                            backgroundColor: "#D9D9D9",
+                            color: "#404040",
+                            borderColor: "#404040",
+                            marginRight: 1,
+                            "&:hover": {
+                              borderColor: "#0D0D0D",
+                              backgroundColor: "#0D0D0D",
+                              color: "#f2f2f2",
+                            },
+                          }}
+                        >
+                          Atrás
+                        </Button>
+
+                        <Button
+                          type="submit"
+                          sx={{
+                            height: 37,
+                            backgroundColor: "#D9D9D9",
+                            color: "#404040",
+                            borderColor: "#404040",
+                            "&:hover": {
+                              borderColor: "#0D0D0D",
+                              backgroundColor: "#0D0D0D",
+                              color: "#f2f2f2",
+                            },
+                          }}
+                        >
+                          {t("dialog.next")}
+                        </Button>
+                      </div>
+                    </div>
+                  </form>
+                )}
+                {step === 5 && ( // ESTADO DE LA CARGA DEL DATASET EN LAS DIFERENTES PLATAFORMAS
+                  <form onSubmit={handleNext}>
+                    <div className="verticalForm">
+                      <div className="horizontalFormSwitch">
+                        <p>RAT</p>
+                        <Switch
+                          id="RAT"
+                          name="RAT"
+                          value={RAT}
+                          checked={RAT === "SI"}
+                          onChange={(event) =>
+                            handleSwitch("RAT", event.target.checked)
+                          }
+                          color="primary" // Opcional: ajusta el color del switch
+                        />
+                      </div>
+                      <div className="horizontalFormSwitch">
+                        <p>Protección de datos</p>
+                        <Switch
+                          id="dataProtection"
+                          name="dataProtection"
+                          value={dataProtection}
+                          checked={dataProtection === "SI"}
+                          onChange={(event) =>
+                            handleSwitch("dataProtection", event.target.checked)
+                          }
+                          color="primary" // Opcional: ajusta el color del switch
+                        />
+                      </div>
+                      <div className="horizontalFormSwitch">
+                        <p>Estándares de datos</p>
+                        <Switch
+                          id="dataStandards"
+                          name="dataStandards"
+                          value={dataStandards}
+                          checked={dataStandards === "SI"}
+                          onChange={(event) =>
+                            handleSwitch("dataStandards", event.target.checked)
+                          }
+                          color="primary" // Opcional: ajusta el color del switch
+                        />
+                      </div>
+                      <div className="horizontalForm">
+                        <p>Comentarios sobre la protección de datos</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="dataProtectionComments"
+                          name="dataProtectionComments"
+                          type="string"
+                          variant="standard"
+                          value={update.dataProtectionComments}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="horizontalFormSwitch">
+                        <p>Anonimización de datos</p>
+                        <Switch
+                          id="dataAnonymize"
+                          name="dataAnonymize"
+                          value={dataAnonymize}
+                          checked={dataAnonymize === "SI"}
+                          onChange={(event) =>
+                            handleSwitch("dataAnonymize", event.target.checked)
+                          }
+                          color="primary" // Opcional: ajusta el color del switch
+                        />
+                      </div>
+                      <div className="horizontalForm">
+                        <p>Calidad de los datos</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="dataQuality"
+                          name="dataQuality"
+                          type="string"
+                          variant="standard"
+                          value={update.dataQuality}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="horizontalForm">
+                        <p>Nivel de compartición</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="sharingLevel"
+                          name="sharingLevel"
+                          type="string"
+                          variant="standard"
+                          value={update.sharingLevel}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="horizontalFormSwitch">
+                        <p>Datos compartidos</p>
+                        <Switch
+                          id="sharedData"
+                          name="sharedData"
+                          value={sharedData}
+                          checked={sharedData === "SI"}
+                          onChange={(event) =>
+                            handleSwitch("sharedData", event.target.checked)
+                          }
+                          color="primary" // Opcional: ajusta el color del switch
+                        />
+                      </div>
+                    </div>
+                    <div className="buttonsForm">
+                      <Button
+                        onClick={handleClose}
+                        sx={{
+                          height: 37,
+                          backgroundColor: "#D9D9D9",
+                          color: "#404040",
+                          borderColor: "#404040",
+                          "&:hover": {
+                            borderColor: "#0D0D0D",
+                            backgroundColor: "#0D0D0D",
+                            color: "#f2f2f2",
+                          },
+                        }}
+                      >
+                        {t("dialog.cancel")}
+                      </Button>
+                      <div>
+                        <Button
+                          onClick={handleGoBack}
+                          sx={{
+                            height: 37,
+                            backgroundColor: "#D9D9D9",
+                            color: "#404040",
+                            borderColor: "#404040",
+                            marginRight: 1,
+                            "&:hover": {
+                              borderColor: "#0D0D0D",
+                              backgroundColor: "#0D0D0D",
+                              color: "#f2f2f2",
+                            },
+                          }}
+                        >
+                          Atrás
+                        </Button>
+
+                        <Button
+                          type="submit"
+                          sx={{
+                            height: 37,
+                            backgroundColor: "#D9D9D9",
+                            color: "#404040",
+                            borderColor: "#404040",
+                            "&:hover": {
+                              borderColor: "#0D0D0D",
+                              backgroundColor: "#0D0D0D",
+                              color: "#f2f2f2",
+                            },
+                          }}
+                        >
+                          {t("dialog.next")}
+                        </Button>
+                      </div>
+                    </div>
+                  </form>
+                )}
+                {step === 6 && ( // ESTADO DE LA CARGA DEL DATASET EN LAS DIFERENTES PLATAFORMAS
+                  <form onSubmit={handleNext}>
+                    <div className="verticalForm">
+                      <div className="horizontalFormSwitch">
+                        <p>VLCi</p>
+                        {/* <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="VLCi"
+                    name="VLCi"
+                    type="string"
+                    variant="standard"
+                    value={update.VLCi}
+                    onChange={handleChange}
+                  /> */}
+                        <Switch
+                          id="VLCi"
+                          name="VLCi"
+                          value={VLCi}
+                          checked={VLCi === "SI"}
+                          onChange={(event) =>
+                            handleSwitch("VLCi", event.target.checked)
+                          }
+                          color="primary" // Opcional: ajusta el color del switch
+                        />
+                      </div>
+                      <div className="horizontalFormSwitch">
+                        <p>ArcGIS</p>
+                        <Switch
+                          id="ArcGIS"
+                          name="ArcGIS"
+                          value={ArcGIS}
+                          checked={ArcGIS === "SI"}
+                          onChange={(event) =>
+                            handleSwitch("ArcGIS", event.target.checked)
+                          }
+                          color="primary" // Opcional: ajusta el color del switch
+                        />
+                      </div>
+                      <div className="horizontalFormSwitch">
+                        <p>Pentaho</p>
+                        <Switch
+                          id="Pentaho"
+                          name="Pentaho"
+                          value={Pentaho}
+                          checked={Pentaho === "SI"}
+                          onChange={(event) =>
+                            handleSwitch("Pentaho", event.target.checked)
+                          }
+                          color="primary" // Opcional: ajusta el color del switch
+                        />
+                      </div>
+                      <div className="horizontalFormSwitch">
+                        <p>CKAN</p>
+                        <Switch
+                          id="CKAN"
+                          name="CKAN"
+                          value={CKAN}
+                          checked={CKAN === "SI"}
+                          onChange={(event) =>
+                            handleSwitch("CKAN", event.target.checked)
+                          }
+                          color="primary" // Opcional: ajusta el color del switch
+                        />
+                      </div>
+                      <div className="horizontalFormSwitch">
+                        <p>MongoDB</p>
+                        <Switch
+                          id="MongoDB"
+                          name="MongoDB"
+                          value={MongoDB}
+                          checked={MongoDB === "SI"}
+                          onChange={(event) =>
+                            handleSwitch("MongoDB", event.target.checked)
+                          }
+                          color="primary" // Opcional: ajusta el color del switch
+                        />
+                      </div>
+                      <div className="horizontalFormSwitch">
+                        <p>OpenDataSoft</p>
+                        <Switch
+                          id="OpenDataSoft"
+                          name="OpenDataSoft"
+                          value={OpenDataSoft}
+                          checked={OpenDataSoft === "SI"}
+                          onChange={(event) =>
+                            handleSwitch("OpenDataSoft", event.target.checked)
+                          }
+                          color="primary" // Opcional: ajusta el color del switch
+                        />
+                      </div>
+                      <div className="horizontalForm">
+                        <p>Resolución temporal</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="temporarySolution"
+                          name="temporarySolution"
+                          type="string"
+                          variant="standard"
+                          value={update.temporarySolution}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="horizontalForm">
+                        <p>Comentarios sobre el estado de carga</p>
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="chargeStateComments"
+                          name="chargeStateComments"
+                          type="string"
+                          variant="standard"
+                          value={update.chargeStateComments}
+                          onChange={handleChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="buttonsForm">
+                      <Button
+                        onClick={handleClose}
+                        sx={{
+                          height: 37,
+                          backgroundColor: "#D9D9D9",
+                          color: "#404040",
+                          borderColor: "#404040",
+                          "&:hover": {
+                            borderColor: "#0D0D0D",
+                            backgroundColor: "#0D0D0D",
+                            color: "#f2f2f2",
+                          },
+                        }}
+                      >
+                        {t("dialog.cancel")}
+                      </Button>
+                      <div>
+                        <Button
+                          onClick={handleGoBack}
+                          sx={{
+                            height: 37,
+                            backgroundColor: "#D9D9D9",
+                            color: "#404040",
+                            borderColor: "#404040",
+                            marginRight: 1,
+                            "&:hover": {
+                              borderColor: "#0D0D0D",
+                              backgroundColor: "#0D0D0D",
+                              color: "#f2f2f2",
+                            },
+                          }}
+                        >
+                          Atrás
+                        </Button>
+
+                        <Button
+                          type="submit"
+                          sx={{
+                            height: 37,
+                            backgroundColor: "#D9D9D9",
+                            color: "#404040",
+                            borderColor: "#404040",
+                            "&:hover": {
+                              borderColor: "#0D0D0D",
+                              backgroundColor: "#0D0D0D",
+                              color: "#f2f2f2",
+                            },
+                          }}
+                        >
+                          {t("dialog.next")}
+                        </Button>
+                      </div>
+                    </div>
+                  </form>
+                )}
+                {step === 7 && ( // VISUALIZACIONES/APLICACIONES CREADAS A PARTIR DEL DATASET
+                  <form onSubmit={handleSubmit}>
+                    <div className="verticalForm">
+                      <div className="horizontalForm">
+                        <p> Producto de datos</p>
+                        <TextField
+                          autoFocus
+                          //required
+                          margin="dense"
+                          id="productData"
+                          name="productData"
+                          type="string"
+                          variant="standard"
+                          value={update.productData}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="horizontalForm">
+                        <p> Comentarios del producto</p>
+                        <TextField
+                          autoFocus
+                          //required
+                          margin="dense"
+                          id="productComments"
+                          name="productComments"
+                          type="string"
+                          variant="standard"
+                          value={update.productComments}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="horizontalForm">
+                        <p>Fecha de creación</p>
+                        <DateTimePicker
+                          format="DD/MM/YYYY hh:mm:ss a"
+                          name="creationDate"
+                          value={creationDateAlmacenado}
+                          onChange={(e) => handleChangeCreationDate(e)}
+                          slotProps={{
+                            textField: {
+                              variant: "standard",
+                              id: "creationDate",
+                            },
+                          }}
+                        ></DateTimePicker>
                       </div>
                       <div className="horizontalForm">
                         <p>{t("columnsNames.lastUpdate")}</p>
@@ -476,413 +1252,6 @@ export default function UpdateCatalogueDialog(props: {
                             textField: {
                               variant: "standard",
                               id: "lastUpdate",
-                            },
-                          }}
-                        ></DateTimePicker>
-                      </div>
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.format")}</p>
-                        <FormControl variant="standard">
-                          <FormGroup>
-                            <Autocomplete
-                              multiple
-                              id="format"
-                              options={["PDF", "EXCEL", "CSV", "JSON"]}
-                              value={format}
-                              onChange={handleFormat}
-                              disableCloseOnSelect={true}
-                              renderOption={(props, option, { selected }) => (
-                                <li {...props}>
-                                  <FormControlLabel
-                                    control={<Checkbox checked={selected} />}
-                                    label={option}
-                                    sx={{
-                                      color:
-                                        actualTheme === "light"
-                                          ? "black"
-                                          : "white",
-                                    }}
-                                  />
-                                </li>
-                              )}
-                              renderInput={(params) => (
-                                <TextField
-                                  {...params}
-                                  name="format"
-                                  variant="standard"
-                                  placeholder="Select formats"
-                                  sx={{
-                                    color:
-                                      actualTheme === "light"
-                                        ? "black"
-                                        : "white",
-                                  }}
-                                />
-                              )}
-                            />
-                          </FormGroup>
-                        </FormControl>
-                      </div>
-                      <div className="horizontalForm">
-                        <p>Distribución</p>
-                        <TextField
-                          autoFocus
-                          margin="dense"
-                          id="distribution"
-                          name="distribution"
-                          label="Distribución"
-                          type="string"
-                          variant="standard"
-                          value={update.distribution}
-                          onChange={handleChange}
-                        />
-                      </div>
-                    </div>
-                    <div className="buttonsForm">
-                      <Button
-                        onClick={handleClose}
-                        sx={{
-                          height: 37,
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
-                      >
-                        {t("dialog.cancel")}
-                      </Button>
-                      <div>
-                        <Button
-                          onClick={handleGoBack}
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            marginRight: 1,
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          Atrás
-                        </Button>
-
-                        <Button
-                          type="submit"
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          {t("dialog.next")}
-                        </Button>
-                      </div>
-                    </div>
-                  </form>
-                )}
-                {step === 3 && (
-                  <form onSubmit={handleNext}>
-                    <div className="verticalForm">
-                      <div className="horizontalFormSwitch">
-                        <p>{t("columnsNames.sensitiveInformation")}</p>
-                        <FormControl variant="standard">
-                          <Switch
-                            id="sensitiveInformation"
-                            name="sensitiveInformation"
-                            value={sensitiveInformation}
-                            checked={sensitiveInformation === "SI"}
-                            onChange={(event) =>
-                              handleSwitch(
-                                "sensitiveInformation",
-                                event.target.checked
-                              )
-                            }
-                            color="primary" // Opcional: ajusta el color del switch
-                          />
-                        </FormControl>
-                      </div>
-                      <div className="horizontalFormSwitch">
-                        <p>Se está usando</p>
-                        <FormControl variant="standard">
-                          <Switch
-                            id="isUsing"
-                            name="isUsing"
-                            value={isUsing}
-                            checked={isUsing === "SI"}
-                            onChange={(event) =>
-                              handleSwitch("isUsing", event.target.checked)
-                            }
-                            color="primary" // Opcional: ajusta el color del switch
-                          />
-                        </FormControl>
-                      </div>
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.accessType")}</p>
-                        <FormControl variant="standard">
-                          <Select
-                            id="accessType"
-                            name="accessType"
-                            margin="dense"
-                            defaultValue={update.accessType}
-                            onChange={(e) => handleChange}
-                          >
-                            <MenuItem value={"Públic/Público"}>
-                              Público
-                            </MenuItem>
-                            <MenuItem value={"Restringit/Restringido"}>
-                              Restringido
-                            </MenuItem>
-                            <MenuItem value={"Privat/Privado"}>
-                              Privado
-                            </MenuItem>
-                          </Select>
-                        </FormControl>
-                      </div>
-                      <div className="horizontalForm">
-                        <p>Relación interna</p>
-                        <TextField
-                          autoFocus
-                          margin="dense"
-                          id="internalRelationship"
-                          name="internalRelationship"
-                          label="Relación interna"
-                          type="string"
-                          variant="standard"
-                          value={update.internalRelationship}
-                          onChange={handleChange}
-                        />
-                      </div>
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.contactPerson")}</p>
-                        <TextField
-                          autoFocus
-                          margin="dense"
-                          id="contactPerson"
-                          name="contactPerson"
-                          label={t("columnsNames.contactPerson")}
-                          type="string"
-                          variant="standard"
-                          value={update.contactPerson}
-                          onChange={handleChange}
-                        />
-                      </div>
-                    </div>
-                    <div className="buttonsForm">
-                      <Button
-                        onClick={handleClose}
-                        sx={{
-                          height: 37,
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
-                      >
-                        {t("dialog.cancel")}
-                      </Button>
-                      <div>
-                        <Button
-                          onClick={handleGoBack}
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            marginRight: 1,
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          Atrás
-                        </Button>
-
-                        <Button
-                          type="submit"
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          {t("dialog.next")}
-                        </Button>
-                      </div>
-                    </div>
-                  </form>
-                )}
-                {step === 4 && (
-                  <form onSubmit={handleNext}>
-                    <div className="verticalForm">
-                      <div className="horizontalFormSwitch">
-                        <p>Estructurado</p>
-                        <FormControl variant="standard">
-                          <Switch
-                            id="structured"
-                            name="structured"
-                            value={structured}
-                            checked={structured === "SI"}
-                            onChange={(event) =>
-                              handleSwitch("structured", event.target.checked)
-                            }
-                            color="primary" // Opcional: ajusta el color del switch
-                          />
-                        </FormControl>
-                      </div>
-                      <div className="horizontalForm">
-                        <p>Aplicación asociada</p>
-                        <TextField
-                          autoFocus
-                          margin="dense"
-                          id="associatedApplication"
-                          name="associatedApplication"
-                          label="Aplicación asociada"
-                          type="string"
-                          variant="standard"
-                          value={update.associatedApplication}
-                          onChange={handleChange}
-                        />
-                      </div>
-                      <div className="horizontalFormSwitch">
-                        <p>{t("columnsNames.georreference")}</p>
-                        <FormControl variant="standard">
-                          <Switch
-                            id="georeference"
-                            name="georeference"
-                            value={georeference}
-                            checked={georeference === "SI"}
-                            onChange={(event) =>
-                              handleSwitch("georeference", event.target.checked)
-                            }
-                            color="primary" // Opcional: ajusta el color del switch
-                          />
-                        </FormControl>
-                      </div>
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.comments")}</p>
-                        <TextField
-                          autoFocus
-                          margin="dense"
-                          id="comments"
-                          name="comments"
-                          label={t("columnsNames.comments")}
-                          type="string"
-                          variant="standard"
-                          value={update.comments}
-                          onChange={handleChange}
-                        />
-                      </div>
-                      <div className="horizontalForm">
-                        <p>Efecto temporal</p>
-                        <TextField
-                          autoFocus
-                          margin="dense"
-                          id="timmingEffect"
-                          name="timmingEffect"
-                          label="Efecto temporal"
-                          type="string"
-                          variant="standard"
-                          value={update.timmingEffect}
-                          onChange={handleChange}
-                        />
-                      </div>
-                    </div>
-                    <div className="buttonsForm">
-                      <Button
-                        onClick={handleClose}
-                        sx={{
-                          height: 37,
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
-                      >
-                        {t("dialog.cancel")}
-                      </Button>
-                      <div>
-                        <Button
-                          onClick={handleGoBack}
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            marginRight: 1,
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          Atrás
-                        </Button>
-
-                        <Button
-                          type="submit"
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          {t("dialog.next")}
-                        </Button>
-                      </div>
-                    </div>
-                  </form>
-                )}
-                {step === 5 && (
-                  <form onSubmit={handleSubmit}>
-                    <div className="verticalForm">
-                      <div className="horizontalForm">
-                        <p>Fecha de creación</p>
-                        <DateTimePicker
-                          format="DD/MM/YYYY hh:mm:ss a"
-                          name="creationDate"
-                          value={creationDateAlmacenado}
-                          onChange={(e) => handleChangeCreationDate(e)}
-                          slotProps={{
-                            textField: {
-                              variant: "standard",
-                              id: "creationDate",
                             },
                           }}
                         ></DateTimePicker>
@@ -903,20 +1272,6 @@ export default function UpdateCatalogueDialog(props: {
                         </FormControl>
                       </div>
                       <div className="horizontalForm">
-                        <p>{t("columnsNames.source")}</p>
-                        <TextField
-                          autoFocus
-                          margin="dense"
-                          id="source"
-                          name="source"
-                          label={t("columnsNames.source")}
-                          type="string"
-                          variant="standard"
-                          value={update.source}
-                          onChange={handleChange}
-                        />
-                      </div>
-                      <div className="horizontalForm">
                         <p>{t("columnsNames.responsibleIdentity")}</p>
                         <TextField
                           autoFocus
@@ -924,27 +1279,11 @@ export default function UpdateCatalogueDialog(props: {
                           margin="dense"
                           id="responsibleIdentity"
                           name="responsibleIdentity"
-                          label={t("columnsNames.responsibleIdentity")}
                           type="string"
                           variant="standard"
                           value={update.responsibleIdentity}
                           onChange={handleChange}
                         />
-                      </div>
-                      <div className="horizontalFormSwitch">
-                        <p>{t("columnsNames.activeAds")}</p>
-                        <FormControl variant="standard">
-                          <Switch
-                            id="activeAds"
-                            name="activeAds"
-                            value={activeAds}
-                            checked={activeAds === "SI"}
-                            onChange={(event) =>
-                              handleSwitch("activeAds", event.target.checked)
-                            }
-                            color="primary" // Opcional: ajusta el color del switch
-                          />
-                        </FormControl>
                       </div>
                     </div>
                     <div className="buttonsForm">

@@ -17,8 +17,12 @@ export function paletaColores(color: string) {
       return "rgba(212, 212, 212, 1)";
   }
 }
-export function isChecked(p: boolean | undefined) {
-  return p === false ? <CheckIcon></CheckIcon> : <CloseIcon></CloseIcon>;
+export function isChecked(p: boolean | undefined | string) {
+  return p === true || p === "SI" ? (
+    <CheckIcon></CheckIcon>
+  ) : (
+    <CloseIcon></CloseIcon>
+  );
 }
 export function yesOrNo(p: string | undefined) {
   return p === "NO" || undefined ? "error" : "success";

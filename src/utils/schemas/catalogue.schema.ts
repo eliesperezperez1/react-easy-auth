@@ -73,7 +73,7 @@ export class Catalogue {
   @Prop()
   VLCi: boolean;
   @Prop()
-  ArGIS: boolean;
+  ArcGIS: boolean;
   @Prop()
   Pentaho: boolean;
   @Prop()
@@ -96,6 +96,8 @@ export class Catalogue {
   deleted: boolean;
   @Prop()
   deletedDate: Date;
+  @Prop()
+  lastUpdate: Date;
   /*   @Prop()
   timmingEffect: string;
   @Prop()

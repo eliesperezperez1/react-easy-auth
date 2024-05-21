@@ -34,7 +34,7 @@ export interface Catalogue {
   sharingLevel: string;
   sharedData: boolean;
   VLCi: boolean;
-  ArGIS: boolean;
+  ArcGIS: boolean;
   Pentaho: boolean;
   CKAN: boolean;
   MongoDB: boolean;
@@ -46,6 +46,7 @@ export interface Catalogue {
   creationDate: Date;
   deleted: boolean;
   deletedDate: Date;
+  lastUpdate: Date;
 
   /*language: LANGUAGE;
   territorialScope: string;

@@ -34,7 +34,7 @@ import {
 } from "../../utils/functions/table-functions";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
-import { ThemeProvider } from "@mui/material";
+import { Chip, ThemeProvider } from "@mui/material";
 
 function CatalogueList() {
   const authHeader = useAuthHeader();
@@ -66,6 +66,86 @@ function CatalogueList() {
     catalogue: catalogueSelected,
   };
 
+  const columnGroupingModel: GridColumnGroupingModel = [
+    {
+      groupId: "Estructura general del dataset",
+      children: [
+        { field: "title" },
+        { field: "description" },
+        { field: "responsibleIdentity" },
+        { field: "organism" },
+        { field: "topic" },
+        { field: "language" },
+        { field: "keywords" },
+        { field: "minimumVariables" },
+        { field: "contactPerson" },
+        { field: "masterData" },
+        { field: "referenceData" },
+        { field: "highValue" },
+        { field: "activeAds" },
+        { field: "comments" },
+        //{ field: "generalComments" },
+      ],
+    },
+    {
+      groupId: "internalStructure",
+      children: [
+        //{ field: "geographicalInfo" },
+        { field: "typeGeo" },
+        { field: "temporaryCoverage" },
+        //{ field: "temporaryScope" },
+        { field: "genderInfo" },
+        { field: "structuredComments" },
+        //{ field: "structuralComments" },
+      ],
+    },
+    {
+      groupId: "dataOrigin",
+      children: [
+        { field: "associatedApplication" },
+        //{ field: "originApplication" },
+        { field: "autoAcess" },
+        //{ field: "autoAccess" },
+        { field: "originComments" },
+        //{ field: "originDataComments" },
+      ],
+    },
+    {
+      groupId: "datasetChargeState",
+      children: [
+        { field: "RAT" },
+        { field: "dataProtection" },
+        { field: "dataStandars" },
+        //{ field: "dataStandar" },
+        { field: "dataProtectionComments" },
+        //{ field: "protectionDataComments" },
+        { field: "dataAnonymize" },
+        { field: "dataQuality" },
+        { field: "sharingLevel" },
+        { field: "sharedData" },
+        { field: "VLCi" },
+        { field: "ArcGIS" },
+        { field: "Pentaho" },
+        { field: "CKAN" },
+        { field: "MongoDB" },
+        { field: "OpenDataSoft" },
+        { field: "temporarySolution" },
+        //{ field: "temporaryResolution" },
+        { field: "chargeStateComments" },
+        //{ field: "datasetChargeStateComments" },
+      ],
+    },
+    {
+      groupId: "datasetApplicationCreated",
+      children: [
+        { field: "productData" }, 
+        //{ field: "dataProduct" }, 
+        { field: "productComments" }
+      ],
+    },
+  ];
+  /* Definimos las columnas de la tabla */
+  /*
   const columns: GridColDef[] = [
     {
       field: "title",
@@ -426,6 +506,328 @@ function CatalogueList() {
       groupId: "datasetApplicationCreated",
       children: [{ field: "productData" }, { field: "productComments" }],
     },
+  ];*/
+  const columns: GridColDef[] = [
+    {
+      field: "title",
+      headerName: t("columnsNames.title"),
+      width: 200,
+      description: t("tooltipText.title"),
+    },
+    {
+      field: "description",
+      headerName: t("columnsNames.description"),
+      width: 200,
+      description: t("tooltipText.description"),
+    },
+    {
+      field: "responsibleIdentity",
+      headerName: t("columnsNames.responsibleIdentity"),
+      width: 200,
+      description: t("tooltipText.responsibleIdentity"),
+    },
+    {
+      field: "organism",
+      headerName: "Organismo",
+      width: 200,
+      description: "Organismo al que pertenece",
+    },
+    {
+      field: "topic",
+      headerName: t("columnsNames.topic"),
+      width: 200,
+      description: t("tooltipText.topic"),
+    },
+    {
+      field: "language",
+      headerName: "Idioma",
+      width: 70,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <>{valOrEsp(params.value)}</>
+      ),
+      description: t("tooltipText.language"),
+    },
+    {
+      field: "keywords",
+      headerName: "Palabras clave",
+      width: 200,
+      description: "Palabras clave",
+    },
+    {
+      field: "minimumVariables",
+      headerName: "Campos mínimos",
+      width: 200,
+      description: "Campos mínimos que debe incluir el dataset",
+    },
+    {
+      field: "contactPerson",
+      headerName: t("columnsNames.contactPerson"),
+      width: 200,
+      description: t("tooltipText.contactPersonService"),
+    },
+    {
+      field: "masterData",
+      headerName: "Dato maestro",
+      width: 200,
+      renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      description: "Datos referentes a las características básicas del negocio",
+    },
+    {
+      field: "referenceData",
+      headerName: "Dato de referencia",
+      width: 200,
+      renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      description:
+        "Datos que definen el conjunto de valores admisibles en otros campos de datos",
+    },
+    {
+      field: "highValue",
+      headerName: "Alto valor",
+      width: 200,
+   renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      description: "¿Es un dataset de alto valor?",
+    },
+    {
+      field: "activeAds",
+      headerName: t("columnsNames.activeAds"),
+      width: 200,
+   renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      description: t("tooltipText.activeAds"),
+    },
+    {
+      field: "comments",
+      headerName: t("columnsNames.comments"),
+      width: 200,
+      description: t("tooltipText.comments"),
+    },
+
+    {
+      field: "typeGeo",
+      headerName: "Información geográfica",
+      width: 200,
+      description: "¿Qué tipo de información geográfica contiene el dataset?",
+    },
+    {
+      field: "temporaryCoverage",
+      headerName: t("columnsNames.temporaryCoverage"),
+      width: 200,
+      description: t("tooltipText.temporaryCoverage"),
+    },
+
+    {
+      field: "genderInfo",
+      headerName: "Información de género",
+      width: 200,
+   renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      description: "¿¿El dataset dispone de información de género??",
+    },
+    {
+      field: "structuredComments",
+      headerName: "Comentarios de la estructura",
+      width: 200,
+      description: "Comentarios relativos a la estructura interna del dataset",
+    },
+    {
+      field: "associatedApplication",
+      headerName: "Aplicación de origen",
+      width: 200,
+      description: "Nombre de la aplicación de origen de los datos",
+    },
+    {
+      field: "autoAcess",
+      headerName: "Acceso automatizado",
+      width: 200,
+   renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      description:
+        "¿Se puede acceder a los datos de origen de forma automatizada? ",
+    },
+    {
+      field: "originComments",
+      headerName: "Comentarios del origen",
+      width: 200,
+      description: "Comentarios relativos al origen de los datos",
+    },
+    {
+      field: "RAT",
+      headerName: t("columnsNames.RAT"),
+      width: 200,
+   renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      description: t("tooltipText.RAT"),
+    },
+    {
+      field: "dataProtection",
+      headerName: "Protección de datos",
+      width: 200,
+   renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      description:
+        "¿El dataset contiene datos personales protegidos por la LOPD?",
+    },
+    {
+      field: "dataStandards",
+      headerName: "Estándares de datos",
+      width: 200,
+   renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      description:
+        "¿Existen campos del dataset que deberían publicarse por normativa?",
+    },
+    {
+      field: "dataProtectionComments",
+      headerName: "Comentarios del origen",
+      width: 200,
+      description: "Comentarios relativos a la protección de los datos",
+    },
+    {
+      field: "dataAnonymize",
+      headerName: "Anonimización de datos",
+      width: 200,
+   renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      description:
+        "Campos del dataset que requieren ser anonimizados. Separar cada campo con un punto y coma (;)",
+    },
+    {
+      field: "dataQuality",
+      headerName: "Calidad de los datos",
+      width: 200,
+      description:
+        "Valoración numérica de la calidad de los datos (del 1 al 5)",
+    },
+    {
+      field: "sharingLevel",
+      headerName: "Nivel de compartición",
+      width: 200,
+      description:
+        "¿Quién tiene acceso a estos datos dentro de la organización?",
+    },
+    {
+      field: "sharedData",
+      headerName: "Datos compartidos",
+      width: 200,
+   renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      description: "¿Se han compartido estos datos en alguna plataforma?",
+    },
+    {
+      field: "VLCi",
+      headerName: "VLCi",
+      width: 200,
+   renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      description: "¿Está compartido en la plataforma Smart City?",
+    },
+    {
+      field: "ArcGIS",
+      headerName: "ArcGIS",
+      width: 200,
+   renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      description: "¿Está cargado en ArcGIS?",
+    },
+    {
+      field: "Pentaho",
+      headerName: "Pentaho",
+      width: 200,
+   renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      description: "¿Está disponible en Pentaho?",
+    },
+    {
+      field: "CKAN",
+      headerName: "CKAN",
+      width: 200,
+   renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      description: "¿Está cargado en CKAN?",
+    },
+    {
+      field: "MongoDB",
+      headerName: "MongoDB",
+      width: 200,
+   renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      description: "¿Está cargado en MongoDB?",
+    },
+    {
+      field: "OpenDataSoft",
+      headerName: "OpenDataSoft",
+      width: 200,
+   renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      description: "¿Está publiccado en OpenDataSoft?",
+    },
+    {
+      field: "temporarySolution",
+      headerName: "Resolución temporal",
+      width: 200,
+      description: "Frecuencia de actualización del dato",
+    },
+    {
+      field: "chargeStateComments",
+      headerName: "Comentarios sobre el estado de carga",
+      width: 200,
+      description: "Comentarios relativos al estado de carga del dataset",
+    },
+    {
+      field: "productData",
+      headerName: "Producto de datos",
+      width: 200,
+      description: "Nombre del producto de datos",
+    },
+    {
+      field: "productComments",
+      headerName: "Comentarios del producto",
+      width: 200,
+      description: "Comentarios relativo al producto de datos",
+    },
+    /*  {
+      field: 'source',
+      headerName: t('columnsNames.source'),
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => (
+        <a href={params.value}>{params.value}</a>
+      ),
+      description: t('tooltipText.source'),
+    },
+    {
+      field: 'lastUpdate',
+      headerName: t('columnsNames.lastUpdate'),
+      type: 'dateTime',
+      width: 200,
+      valueGetter: ({ value }) => value && new Date(value),
+      description: t('tooltipText.lastUpdate'),
+    },
+    {
+      field: 'territorialScope',
+      headerName: t('columnsNames.territorialScope'),
+      width: 200,
+      description: t('tooltipText.territorialScope'),
+    }, */
   ];
 
   function rowCouldBeSelectable(params: any) {
@@ -527,167 +929,90 @@ function CatalogueList() {
     <>
       <div>
         <ThemeProvider theme={baseTheme(actualTheme)}>
-          <DataGrid
-            apiRef={gridApiRef}
-            rows={rows}
-            columns={columns}
-            columnGroupingModel={[
-              {
-                groupId: "Estructura general del dataset",
-                children: [
-                  { field: "title" },
-                  { field: "description" },
-                  { field: "responsibleIdentity" },
-                  { field: "organism" },
-                  { field: "topic" },
-                  { field: "language" },
-                  { field: "keywords" },
-                  { field: "minimumVariables" },
-                  { field: "contactPerson" },
-                  { field: "masterData" },
-                  { field: "referenceData" },
-                  { field: "highValue" },
-                  { field: "activeAds" },
-                  { field: "comments" },
-                ],
+        <DataGrid
+          apiRef={gridApiRef}
+          rows={rows}
+          columns={columns}
+          columnGroupingModel={columnGroupingModel}
+          sx={{
+            height: 725,
+            width: "100%",
+            backgroundColor: actualTheme==="light" ? "white" : "#252525",
+            color: actualTheme==="light" ? "#252525" : "white",
+            "& .header-theme": {
+              backgroundColor: "lightblue",
+              border: "1px 1px 0px 0px solid black",
+            },
+            "& .MuiDataGrid-row:hover": {
+              color: actualTheme==='light' ? paletaColores("colorTextAlter") : paletaColores("colorBgRowSelectedBorder"),
+              bgcolor: actualTheme==='light' ? paletaColores("colorRowHover") : paletaColores("colorRowHoverDark"),
+              border: "1px solid " + paletaColores("colorBgRowSelectedBorder"),
+            },
+          }}
+          initialState={{
+            pagination: {
+              paginationModel: { pageSize: 25, page: 0 },
+            },
+            filter: {
+              filterModel: {
+                items:
+                  userData.service === RESPONSIBLE_IDENTITY.GENERAL
+                    ? []
+                    : [
+                        {
+                          field: "responsibleIdentity",
+                          operator: "contains",
+                          value: userData.service,
+                        },
+                      ],
+                quickFilterValues: [],
               },
-              {
-                groupId: "internalStructure",
-                children: [
-                  { field: "typeGeo" },
-                  { field: "temporaryScope" },
-                  { field: "genderInfo" },
-                  { field: "structuredComments" },
-                ],
-              },
-              {
-                groupId: "dataOrigin",
-                children: [
-                  { field: "associatedApplication" },
-                  { field: "autoAccess" },
-                  { field: "originComments" },
-                ],
-              },
-              {
-                groupId: "datasetChargeState",
-                children: [
-                  { field: "RAT" },
-                  { field: "dataProtection" },
-                  { field: "dataStandards" },
-                  { field: "dataProtectionComments" },
-                  { field: "dataAnonymize" },
-                  { field: "dataQuality" },
-                  { field: "sharingLevel" },
-                  { field: "sharedData" },
-                  { field: "VLCi" },
-                  { field: "ArcGIS" },
-                  { field: "Pentaho" },
-                  { field: "CKAN" },
-                  { field: "MongoDB" },
-                  { field: "OpenDataSoft" },
-                  { field: "temporarySolution" },
-                  { field: "chargeStateComments" },
-                ],
-              },
-              {
-                groupId: "datasetApplicationCreated",
-                children: [
-                  { field: "productData" },
-                  { field: "productComments" },
-                ],
-              },
-            ]}
-            sx={{
-              height: "100%",
-              width: "100%",
-              backgroundColor: actualTheme === "light" ? "white" : "#252525",
-              color: actualTheme === "light" ? "#252525" : "white",
-              "& .header-theme": {
-                backgroundColor: "lightblue",
-                border: "1px 1px 0px 0px solid black",
-              },
-              "& .MuiDataGrid-row:hover": {
-                color:
-                  actualTheme === "light"
-                    ? paletaColores("colorTextAlter")
-                    : paletaColores("colorBgRowSelectedBorder"),
-                bgcolor:
-                  actualTheme === "light"
-                    ? paletaColores("colorRowHover")
-                    : paletaColores("colorRowHoverDark"),
-                border:
-                  "1px solid " + paletaColores("colorBgRowSelectedBorder"),
-              },
-            }}
-            initialState={{
-              pagination: {
-                paginationModel: { pageSize: 25, page: 0 },
-              },
-              filter: {
-                filterModel: {
-                  items:
-                    userData.service === RESPONSIBLE_IDENTITY.GENERAL
-                      ? []
-                      : [
-                          {
-                            field: "responsibleIdentity",
-                            operator: "contains",
-                            value: userData.service,
-                          },
-                        ],
-                  quickFilterValues: [],
-                },
-              },
-            }}
-            components={{
-              Toolbar: function CustomToolbarComponent() {
-                return (
-                  <CustomToolbar
-                    userData={userData}
-                    deletedTable={deletedTable}
-                    visibleData={gridApiRef}
-                    selectedCatalogues={selectedCatalogues}
-                    deleteRegisters={deleteRegisters}
-                    showshowDeleted={() => {
-                      setDeletedTable(!deletedTable);
-                      showDeleted();
-                    }}
-                    createDialogOpen={() => {
-                      setOpenDialog(true);
-                    }}
-                    getSelectedCatalogues={getSelectedCatalogues}
-                    restoreRegisters={restoreRegisters}
-                  ></CustomToolbar>
-                );
-              },
-              Pagination: CustomPagination,
-            }}
-            getRowId={(row) => row._id}
-            pageSizeOptions={[5, 10]}
-            isRowSelectable={(params) => rowCouldBeSelectable(params)}
-            checkboxSelection={itCouldBeSelectable()}
-            onRowSelectionModelChange={(catalogues) => {
-              let aux = catalogues as string[];
-              setSelectedCatalogues(aux);
-            }}
-            localeText={{
-              toolbarColumns: t("dataTable.columns"),
-              filterPanelColumns: t(
-                "localtext.columnsTexts.filterPanelColumns"
-              ),
-              columnMenuLabel: t("localtext.columnsTexts.columnMenuLabel"),
-              columnsPanelShowAllButton: t(
-                "localtext.columnsTexts.columnsPanelShowAllButton"
-              ),
-              columnsPanelHideAllButton: t(
-                "localtext.columnsTexts.columnsPanelHideAllButton"
-              ),
-              columnsPanelTextFieldLabel: t(
-                "localtext.columnsTexts.columnsPanelTextFieldLabel"
-              ),
-              columnsPanelTextFieldPlaceholder: t(
-                "localtext.columnsTexts.columnsPanelTextFieldPlaceholder"
-              ),
+            },
+          }}
+          components={{
+            Toolbar: function CustomToolbarComponent() {
+              return (
+                <CustomToolbar
+                  userData={userData}
+                  deletedTable={deletedTable}
+                  visibleData={gridApiRef}
+                  selectedCatalogues={selectedCatalogues}
+                  deleteRegisters={deleteRegisters}
+                  showshowDeleted={() => {
+                    setDeletedTable(!deletedTable);
+                    showDeleted();
+                  }}
+                  createDialogOpen={createDialogOpen}
+                  getSelectedCatalogues={getSelectedCatalogues}
+                ></CustomToolbar>
+              );
+            },
+            Pagination: CustomPagination,
+          }}
+          getRowId={(row) => row._id}
+          pageSizeOptions={[5, 10, 25]}
+          isRowSelectable={(params) => rowCouldBeSelectable(params)}
+          checkboxSelection={itCouldBeSelectable()}
+          onRowSelectionModelChange={(catalogues) => {
+            let aux = catalogues as string[];
+            setSelectedCatalogues(aux);
+          }}
+          localeText={{
+            toolbarColumns: t("dataTable.columns"),
+            filterPanelColumns: t("localtext.columnsTexts.filterPanelColumns"),
+            columnMenuLabel: t("localtext.columnsTexts.columnMenuLabel"),
+            columnsPanelShowAllButton: t(
+              "localtext.columnsTexts.columnsPanelShowAllButton"
+            ),
+            columnsPanelHideAllButton: t(
+              "localtext.columnsTexts.columnsPanelHideAllButton"
+            ),
+            columnsPanelTextFieldLabel: t(
+              "localtext.columnsTexts.columnsPanelTextFieldLabel"
+            ),
+            columnsPanelTextFieldPlaceholder: t(
+              "localtext.columnsTexts.columnsPanelTextFieldPlaceholder"
+            ),
 
               toolbarFilters: t("dataTable.filters"),
               filterPanelInputLabel: t(
