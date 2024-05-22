@@ -19,9 +19,9 @@ export function paletaColores(color: string) {
 }
 export function isChecked(p: boolean | undefined | string) {
   return p === true || p === "SI" ? (
-    <CheckIcon></CheckIcon>
+    <CheckIcon color="success"></CheckIcon>
   ) : (
-    <CloseIcon></CloseIcon>
+    <CloseIcon color="error"></CloseIcon>
   );
 }
 export function yesOrNo(p: string | undefined) {

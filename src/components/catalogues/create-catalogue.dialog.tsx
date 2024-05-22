@@ -1,7 +1,6 @@
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
@@ -9,12 +8,8 @@ import { CreateCatalogue } from "../../interfaces/catalogue.interface";
 import { createCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
 import {
-  Autocomplete,
   Box,
-  Checkbox,
   FormControl,
-  FormControlLabel,
-  FormGroup,
   MenuItem,
   Select,
   Switch,
@@ -37,24 +32,13 @@ import { LANGUAGE_FORM } from "../../utils/enums/language-form.enum";
 import { MINIMUM_VALUE } from "../../utils/enums/minimum-value.enum";
 import { GEOGRAPHICAL_INFO } from "../../utils/enums/geographical-info.enum";
 import { TOPIC } from "../../utils/enums/topic.enum";
-
+import { SHARING_LEVEL } from "../../utils/enums/sharing-level.enum";
+import { catalogueMock } from "../../utils/catalogue.mock";
 export interface DialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
   getInfo: () => void;
 }
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-const formatOptions = ["PDF", "EXCEL", "CSV"];
 
 const baseTheme = (actualTheme: any) =>
   createTheme(
@@ -149,97 +133,25 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [t, i18n] = useTranslation();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
-  /* const [formDataSteps, setFormDataSteps] = useState({
-    title: "",
-    description: "",
-    language: "",
-    territorialScope: "",
-    temporaryCoverage: "",
-    updateFrequency: "",
-    topic: "",
-    lastUpdate: "",
-    format: "",
-    distribution: "",
-    sensitiveInformation: "",
-    isUsing: "",
-    accessType: "",
-    internalRelationship: "",
-    contactPerson: "",
-    structured: "",
-    associatedApplication: "",
-    georreference: "",
-    comments: "",
-    timmingEffect: "",
-    creationDate: "",
-    personalData: "",
-    source: "",
-    responsibleIdentity: "",
-    activeAds: "",
-  }); */
-  const [formDataSteps, setFormDataSteps] = useState({
-    title: "",
-    description: "",
-    responsibleIdentity: RESPONSIBLE_IDENTITY.ACTIVITATS,
-    topic: "",
-    territorialScope: "",
-    temporaryCoverage: "",
-    organism: "",
-    language: "",
-    keyWords: "",
-    minimumVariables: "",
-    contactPerson: "",
-    masterData: "",
-    referenceData: "",
-    highValue: "",
-    activeAds: "",
-    comments: "",
-    typeGeo: "",
-    genderInfo: "",
-    structuredComments: "",
-    associatedApplication: "",
-    autoAcess: "",
-    originComments: "",
-    RAT: "",
-    dataProtection: "",
-    dataStandards: "",
-    dataProtectionComments: "",
-    dataAnonymize: "",
-    dataQuality: 0,
-    sharingLevel: "",
-    sharedData: "",
-    VLCi: "",
-    ArcGIS: "",
-    Pentaho: "",
-    CKAN: "",
-    MongoDB: "",
-    OpenDataSoft: "",
-    temporarySolution: "",
-    chargeStateComments: "",
-    productData: "",
-    productComments: "",
-  });
-  const [sensitiveInformation, setSensitiveInformation] = useState("SI");
-  const [isUsing, setIsUsing] = useState("SI");
-  const [structured, setStructured] = useState("SI");
-  const [georeference, setGeoreference] = useState("SI");
-  const [personalData, setPersonalData] = useState("SI");
-  const [activeAds, setActiveAds] = useState("SI");
-  const [masterData, setMasterData] = useState("SI");
-  const [referenceData, setReferenceData] = useState("SI");
-  const [highValue, setHighValue] = useState("SI");
-  const [genderInfo, setGenderInfo] = useState("SI");
-  const [autoAcess, setAutoAcess] = useState("SI");
-  const [RAT, setRAT] = useState("SI");
-  const [dataProtection, setDataProtection] = useState("SI");
-  const [dataStandards, setDataStandards] = useState("SI");
-  const [dataAnonymize, setDataAnonymize] = useState("SI");
-  const [sharedData, setSharedData] = useState("SI");
-  const [VLCi, setVLCi] = useState("SI");
-  const [ArcGIS, setArcGIS] = useState("SI");
-  const [Pentaho, setPentaho] = useState("SI");
-  const [CKAN, setCKAN] = useState("SI");
-  const [MongoDB, setMongoDB] = useState("SI");
-  const [OpenDataSoft, setOpenDataSoft] = useState("SI");
+  const [formDataSteps, setFormDataSteps] = useState(catalogueMock);
+  const [personalData, setPersonalData] = useState(true);
+  const [activeAds, setActiveAds] = useState(true);
+  const [masterData, setMasterData] = useState(true);
+  const [referenceData, setReferenceData] = useState(true);
+  const [highValue, setHighValue] = useState(true);
+  const [genderInfo, setGenderInfo] = useState(true);
+  const [autoAcess, setAutoAcess] = useState(true);
+  const [RAT, setRAT] = useState(true);
+  const [dataProtection, setDataProtection] = useState(true);
+  const [dataStandards, setDataStandards] = useState(true);
+  const [dataAnonymize, setDataAnonymize] = useState(true);
+  const [sharedData, setSharedData] = useState(true);
+  const [VLCi, setVLCi] = useState(true);
+  const [ArcGIS, setArcGIS] = useState(true);
+  const [Pentaho, setPentaho] = useState(true);
+  const [CKAN, setCKAN] = useState(true);
+  const [MongoDB, setMongoDB] = useState(true);
+  const [OpenDataSoft, setOpenDataSoft] = useState(true);
   const [format, setFormat] = React.useState<string[]>([]);
   const [lastUpdateAlmacenado, setLastUpdate] = React.useState<Dayjs | null>();
   const [creationDateAlmacenado, setCreationDate] =
@@ -252,108 +164,61 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
 
   const handleClose = () => {
     setFormData({});
-    /* setFormDataSteps({
-      title: "",
-      description: "",
-      language: "",
-      territorialScope: "",
-      temporaryCoverage: "",
-      updateFrequency: "",
-      topic: "",
-      lastUpdate: "",
-      format: "",
-      distribution: "",
-      sensitiveInformation: "",
-      isUsing: "",
-      accessType: "",
-      internalRelationship: "",
-      contactPerson: "",
-      structured: "",
-      associatedApplication: "",
-      georreference: "",
-      comments: "",
-      timmingEffect: "",
-      creationDate: "",
-      personalData: "",
-      source: "",
-      responsibleIdentity: "",
-      activeAds: "",
-    }); */
     setFormDataSteps({
+      _id: "",
       title: "",
       description: "",
-      responsibleIdentity: RESPONSIBLE_IDENTITY.ACTIVITATS,
-      topic: "",
+      responsibleIdentity: RESPONSIBLE_IDENTITY.accio_cultural,
+      topic: TOPIC.ciencia,
       territorialScope: "",
       temporaryCoverage: "",
-      organism: "",
-      language: "",
+      organism: ORGANISM.alcaldia,
+      language: LANGUAGE_FORM.alt,
       keyWords: "",
-      minimumVariables: "",
+      minimumVariables: MINIMUM_VALUE.mo,
       contactPerson: "",
-      masterData: "",
-      referenceData: "",
-      highValue: "",
-      activeAds: "",
+      masterData: false,
+      referenceData: false,
+      highValue: false,
+      activeAds: false, // boolean
       comments: "",
-      typeGeo: "",
-      genderInfo: "",
+      typeGeo: GEOGRAPHICAL_INFO.barrio,
+      genderInfo: false,
       structuredComments: "",
       associatedApplication: "",
-      autoAcess: "",
+      autoAcess: false,
       originComments: "",
-      RAT: "",
-      dataProtection: "",
-      dataStandards: "",
+      RAT: false,
+      dataProtection: false,
+      dataStandards: false,
       dataProtectionComments: "",
-      dataAnonymize: "",
+      dataAnonymize: false,
       dataQuality: 0,
-      sharingLevel: "",
-      sharedData: "",
-      VLCi: "",
-      ArcGIS: "",
-      Pentaho: "",
-      CKAN: "",
-      MongoDB: "",
-      OpenDataSoft: "",
-      temporarySolution: "",
+      sharingLevel: SHARING_LEVEL.open,
+      sharedData: false,
+      VLCi: false,
+      ArcGIS: false,
+      Pentaho: false,
+      CKAN: false,
+      MongoDB: false,
+      OpenDataSoft: false,
+      temporarySolution: "", // ES UNA ENUM PERO NO SABEMOS CUAL
       chargeStateComments: "",
       productData: "",
       productComments: "",
+      creationDate: new Date(),
+      deleted: false,
+      deletedDate: new Date(),
+      lastUpdate: new Date(),
     });
     setStep(1);
-    setSensitiveInformation("SI");
-    setIsUsing("SI");
-    setStructured("SI");
-    setGeoreference("SI");
-    setPersonalData("SI");
-    setActiveAds("SI");
-    setMasterData("SI");
-    setReferenceData("SI");
-    setHighValue("SI");
-    setActiveAds("SI");
-    setAutoAcess("SI");
-    setRAT("SI");
-    setDataProtection("SI");
-    setDataStandards("SI");
-    setDataAnonymize("SI");
-    setSharedData("SI");
-    setVLCi("SI");
-    setArcGIS("SI");
-    setPentaho("SI");
-    setCKAN("SI");
-    setMongoDB("SI");
-    setOpenDataSoft("SI");
     setFormat([]);
-    setLastUpdate(null);
-    setCreationDate(null);
     setOpen(false);
     props.enviar.closeDialog(false);
   };
 
   const handleFormat = (event: any, newValue: any) => {
     setFormat(newValue);
-    console.log(newValue);
   };
 
   const createCatalogue = (formJson: any) => {
@@ -374,7 +239,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     createCatalogueRequest(create, authHeader())
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        console.log(data, "create catalogue request");
       });
     props.enviar.getInfo();
     handleClose();
@@ -389,137 +254,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
 
     // Collect form data for the current step
     const currentStepData = new FormData(event.currentTarget);
-    if (currentStepData.get("sensitiveInformation") !== "on") {
-      currentStepData.set("sensitiveInformation", "NO");
-    } else {
-      currentStepData.set("sensitiveInformation", "SI");
-    }
-
-    if (currentStepData.get("isUsing") !== "on") {
-      currentStepData.set("isUsing", "NO");
-    } else {
-      currentStepData.set("isUsing", "SI");
-    }
-
-    if (currentStepData.get("structured") !== "on") {
-      currentStepData.set("structured", "NO");
-    } else {
-      currentStepData.set("structured", "SI");
-    }
-
-    if (currentStepData.get("georeference") !== "on") {
-      currentStepData.set("georeference", "NO");
-    } else {
-      currentStepData.set("georeference", "SI");
-    }
-
-    if (currentStepData.get("personalData") !== "on") {
-      currentStepData.set("personalData", "NO");
-    } else {
-      currentStepData.set("personalData", "SI");
-    }
-
-    if (currentStepData.get("activeAds") !== "on") {
-      currentStepData.set("activeAds", "NO");
-    } else {
-      currentStepData.set("activeAds", "SI");
-    }
-
-    if (currentStepData.get("masterData") !== "on") {
-      currentStepData.set("masterData", "NO");
-    } else {
-      currentStepData.set("masterData", "SI");
-    }
-
-    if (currentStepData.get("referenceData") !== "on") {
-      currentStepData.set("referenceData", "NO");
-    } else {
-      currentStepData.set("referenceData", "SI");
-    }
-
-    if (currentStepData.get("highValue") !== "on") {
-      currentStepData.set("highValue", "NO");
-    } else {
-      currentStepData.set("highValue", "SI");
-    }
-
-    if (currentStepData.get("genderInfo") !== "on") {
-      currentStepData.set("genderInfo", "NO");
-    } else {
-      currentStepData.set("genderInfo", "SI");
-    }
-
-    if (currentStepData.get("autoAcess") !== "on") {
-      currentStepData.set("autoAcess", "NO");
-    } else {
-      currentStepData.set("autoAcess", "SI");
-    }
-
-    if (currentStepData.get("RAT") !== "on") {
-      currentStepData.set("RAT", "NO");
-    } else {
-      currentStepData.set("RAT", "SI");
-    }
-
-    if (currentStepData.get("dataProtection") !== "on") {
-      currentStepData.set("dataProtection", "NO");
-    } else {
-      currentStepData.set("dataProtection", "SI");
-    }
-
-    if (currentStepData.get("dataStandards") !== "on") {
-      currentStepData.set("dataStandards", "NO");
-    } else {
-      currentStepData.set("dataStandards", "SI");
-    }
-
-    if (currentStepData.get("dataAnonymize") !== "on") {
-      currentStepData.set("dataAnonymize", "NO");
-    } else {
-      currentStepData.set("dataAnonymize", "SI");
-    }
-
-    if (currentStepData.get("sharedData") !== "on") {
-      currentStepData.set("sharedData", "NO");
-    } else {
-      currentStepData.set("sharedData", "SI");
-    }
-
-    if (currentStepData.get("VLCi") !== "on") {
-      currentStepData.set("VLCi", "NO");
-    } else {
-      currentStepData.set("VLCi", "SI");
-    }
-
-    if (currentStepData.get("ArcGIS") !== "on") {
-      currentStepData.set("ArcGIS", "NO");
-    } else {
-      currentStepData.set("ArcGIS", "SI");
-    }
-
-    if (currentStepData.get("Pentaho") !== "on") {
-      currentStepData.set("Pentaho", "NO");
-    } else {
-      currentStepData.set("Pentaho", "SI");
-    }
-
-    if (currentStepData.get("CKAN") !== "on") {
-      currentStepData.set("CKAN", "NO");
-    } else {
-      currentStepData.set("CKAN", "SI");
-    }
-
-    if (currentStepData.get("MongoDB") !== "on") {
-      currentStepData.set("MongoDB", "NO");
-    } else {
-      currentStepData.set("MongoDB", "SI");
-    }
-
-    if (currentStepData.get("OpenDataSoft") !== "on") {
-      currentStepData.set("OpenDataSoft", "NO");
-    } else {
-      currentStepData.set("OpenDataSoft", "SI");
-    }
 
     if (
       (format !== undefined || format !== null) &&
@@ -561,12 +295,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
         currentStepData.get("creationDate") !== undefined)
     ) {
       const creationDateDatos = creationDateAlmacenado.toString();
-      console.log("CreationDateAlmacenado: " + creationDateAlmacenado);
-      console.log(
-        "CreationDateAlmacenado.ToString(): " +
-          creationDateAlmacenado.toString()
-      );
-      console.log("creationDateDatos" + creationDateDatos);
       currentStepData.set("creationDate", creationDateDatos);
     }
 
@@ -583,84 +311,12 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     const currentStepJson = Object.fromEntries(currentStepData.entries());
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
     const mergedFormData = { ...formData, ...currentStepJson };
-    console.log(mergedFormData);
+    console.log(mergedFormData, "merged form data");
     createCatalogue(mergedFormData);
-  };
-
-  const handleSwitch = (nameSwitch: any, event: any) => {
-    switch (nameSwitch) {
-      case "sensitiveInformation":
-        setSensitiveInformation(sensitiveInformation === "SI" ? "NO" : "SI");
-        console.log(sensitiveInformation);
-        break;
-      case "isUsing":
-        setIsUsing(isUsing === "SI" ? "NO" : "SI");
-        break;
-      case "structured":
-        setStructured(structured === "SI" ? "NO" : "SI");
-        break;
-      case "georeference":
-        setGeoreference(georeference === "SI" ? "NO" : "SI");
-        break;
-      case "personalData":
-        setPersonalData(personalData === "SI" ? "NO" : "SI");
-        break;
-      case "activeAds":
-        setActiveAds(activeAds === "SI" ? "NO" : "SI");
-        break;
-      case "masterData":
-        setMasterData(masterData === "SI" ? "NO" : "SI");
-        break;
-      case "referenceData":
-        setReferenceData(referenceData === "SI" ? "NO" : "SI");
-        break;
-      case "highValue":
-        setHighValue(highValue === "SI" ? "NO" : "SI");
-        break;
-      case "genderInfo":
-        setGenderInfo(genderInfo === "SI" ? "NO" : "SI");
-        break;
-      case "autoAcess":
-        setAutoAcess(autoAcess === "SI" ? "NO" : "SI");
-        break;
-      case "RAT":
-        setRAT(RAT === "SI" ? "NO" : "SI");
-        break;
-      case "dataProtection":
-        setDataProtection(dataProtection === "SI" ? "NO" : "SI");
-        break;
-      case "dataStandards":
-        setDataStandards(dataStandards === "SI" ? "NO" : "SI");
-        break;
-      case "dataAnonymize":
-        setDataAnonymize(dataAnonymize === "SI" ? "NO" : "SI");
-        break;
-      case "sharedData":
-        setSharedData(sharedData === "SI" ? "NO" : "SI");
-        break;
-      case "VLCi":
-        setVLCi(VLCi === "SI" ? "NO" : "SI");
-        break;
-      case "ArcGIS":
-        setArcGIS(ArcGIS === "SI" ? "NO" : "SI");
-        break;
-      case "Pentaho":
-        setPentaho(Pentaho === "SI" ? "NO" : "SI");
-        break;
-      case "CKAN":
-        setCKAN(CKAN === "SI" ? "NO" : "SI");
-        break;
-      case "MongoDB":
-        setMongoDB(MongoDB === "SI" ? "NO" : "SI");
-        break;
-      case "OpenDataSoft":
-        setOpenDataSoft(OpenDataSoft === "SI" ? "NO" : "SI");
-        break;
-    }
+    console.log(mergedFormData);
   };
 
   const handleChange = (field: string, value: string) => {
-    // Update the form data
     setFormDataSteps((prevData) => ({
       ...prevData,
       [field]: value,
@@ -782,13 +438,11 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             margin="dense"
                             defaultValue={formDataSteps.topic}
                           >
-                            {Object.entries(TOPIC).map(
-                              ([key, value]) => (
-                                <MenuItem key={key} value={value}>
-                                  {value}
-                                </MenuItem>
-                              )
-                            )}
+                            {Object.entries(TOPIC).map(([key, value]) => (
+                              <MenuItem key={key} value={value}>
+                                {value}
+                              </MenuItem>
+                            ))}
                           </Select>
                         </FormControl>
                       </div>
@@ -909,9 +563,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           id="masterData"
                           name="masterData"
                           value={masterData}
-                          checked={masterData === "SI"}
+                          checked={masterData}
                           onChange={(event) =>
-                            handleSwitch("masterData", event.target.checked)
+                            setMasterData(event.target.checked)
                           }
                           color="primary" // Opcional: ajusta el color del switch
                         />
@@ -922,9 +576,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           id="referenceData"
                           name="referenceData"
                           value={referenceData}
-                          checked={referenceData === "SI"}
+                          checked={referenceData}
                           onChange={(event) =>
-                            handleSwitch("referenceData", event.target.checked)
+                            setReferenceData(event.target.checked)
                           }
                           color="primary" // Opcional: ajusta el color del switch
                         />
@@ -936,9 +590,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           id="highValue"
                           name="highValue"
                           value={highValue}
-                          checked={highValue === "SI"}
+                          checked={highValue === true}
                           onChange={(event) =>
-                            handleSwitch("highValue", event.target.checked)
+                            setHighValue(event.target.checked)
                           }
                           color="primary" // Opcional: ajusta el color del switch
                         />
@@ -951,9 +605,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             id="activeAds"
                             name="activeAds"
                             value={activeAds}
-                            checked={activeAds === "SI"}
+                            checked={activeAds}
                             onChange={(event) =>
-                              handleSwitch("activeAds", event.target.checked)
+                              setActiveAds(event.target.checked)
                             }
                             color="primary" // Opcional: ajusta el color del switch
                           />
@@ -1011,7 +665,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                         >
                           Atrás
                         </Button>
-
                         <Button
                           type="submit"
                           sx={{
@@ -1092,9 +745,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           id="genderInfo"
                           name="genderInfo"
                           value={genderInfo}
-                          checked={genderInfo === "SI"}
+                          checked={genderInfo === true}
                           onChange={(event) =>
-                            handleSwitch("genderInfo", event.target.checked)
+                            setGenderInfo(event.target.checked)
                           }
                           color="primary" // Opcional: ajusta el color del switch
                         />
@@ -1103,7 +756,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                         <p>Comentario de la estructura</p>
                         <TextField
                           autoFocus
-                          //required
                           margin="dense"
                           id="structuredComments"
                           name="structuredComments"
@@ -1151,7 +803,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                         >
                           Atrás
                         </Button>
-
                         <Button
                           type="submit"
                           sx={{
@@ -1196,24 +847,13 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       </div>
                       <div className="horizontalFormSwitch">
                         <p>Acceso automatizado</p>
-                        {/* <TextField
-                  autoFocus
-                  required
-                  margin="dense"
-                  id="autoAcess"
-                  name="autoAcess"
-                  type="string"
-                  variant="standard"
-                  value={formDataSteps.autoAcess}
-                  onChange={handleChange}
-                /> */}
                         <Switch
                           id="autoAcess"
                           name="autoAcess"
                           value={autoAcess}
-                          checked={autoAcess === "SI"}
+                          checked={autoAcess === true}
                           onChange={(event) =>
-                            handleSwitch("autoAcess", event.target.checked)
+                            setAutoAcess(event.target.checked)
                           }
                           color="primary" // Opcional: ajusta el color del switch
                         />
@@ -1234,70 +874,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           }
                         />
                       </div>
-                      {/*
-              <div className="horizontalFormSwitch">
-                <p>
-                Estructurado
-                </p>
-                <FormControl variant="standard">
-                  <Switch
-                    id="structured"
-                    name="structured"
-                    value={structured}
-                    checked={structured === "SI"}
-                    onChange={(event) => handleSwitch("structured", event.target.checked)} 
-                    color="primary" // Opcional: ajusta el color del switch
-                  />  
-                </FormControl>
-              </div>
-              <div className="horizontalFormSwitch">
-                <p>
-                {t("columnsNames.georreference")}
-                </p>
-                <FormControl variant="standard">
-                  <Switch
-                    id="georeference"
-                    name="georeference"
-                    value={georeference}
-                    checked={georeference === "SI"}
-                    onChange={(event) => handleSwitch("georeference", event.target.checked)} 
-                    color="primary" // Opcional: ajusta el color del switch
-                  />  
-                </FormControl>
-              </div>
-              <div className="horizontalForm">
-                <p>
-                {t("columnsNames.comments")}
-                </p>
-                <TextField
-                  autoFocus
-                  required
-                  margin="dense"
-                  id="comments"
-                  name="comments"
-                  type="string"
-                  variant="standard"
-                  value={formDataSteps.comments}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="horizontalForm">
-                <p>
-                Efecto temporal
-                </p>
-                <TextField
-                  autoFocus
-                  required
-                  margin="dense"
-                  id="timmingEffect"
-                  name="timmingEffect"
-                  type="string"
-                  variant="standard"
-                  value={formDataSteps.timmingEffect}
-                  onChange={handleChange}
-                />
-              </div>
-              */}
                     </div>
                     <div className="buttonsForm">
                       <Button
@@ -1334,7 +910,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                         >
                           Atrás
                         </Button>
-
                         <Button
                           type="submit"
                           sx={{
@@ -1360,73 +935,38 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                     <div className="verticalForm">
                       <div className="horizontalFormSwitch">
                         <p>RAT</p>
-                        {/* <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="RAT"
-                    name="RAT"
-                    type="string"
-                    variant="standard"
-                    value={formDataSteps.RAT}
-                    onChange={handleChange}
-                  /> */}
                         <Switch
                           id="RAT"
                           name="RAT"
                           value={RAT}
-                          checked={RAT === "SI"}
-                          onChange={(event) =>
-                            handleSwitch("RAT", event.target.checked)
-                          }
+                          checked={RAT}
+                          onChange={(event) => setRAT(event.target.checked)}
                           color="primary" // Opcional: ajusta el color del switch
                         />
                       </div>
                       <div className="horizontalFormSwitch">
                         <p>Protección de datos *</p>
-                        {/* <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="dataProtection"
-                    name="dataProtection"
-                    type="string"
-                    variant="standard"
-                    value={formDataSteps.dataProtection}
-                    onChange={handleChange}
-                  /> */}
                         <Switch
                           //required
                           id="dataProtection"
                           name="dataProtection"
                           value={dataProtection}
-                          checked={dataProtection === "SI"}
+                          checked={dataProtection}
                           onChange={(event) =>
-                            handleSwitch("dataProtection", event.target.checked)
+                            setDataProtection(event.target.checked)
                           }
                           color="primary" // Opcional: ajusta el color del switch
                         />
                       </div>
                       <div className="horizontalFormSwitch">
                         <p>Estándares de datos</p>
-                        {/* <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="dataStandards"
-                    name="dataStandards"
-                    type="string"
-                    variant="standard"
-                    value={formDataSteps.dataStandards}
-                    onChange={handleChange}
-                  /> */}
                         <Switch
                           id="dataStandards"
                           name="dataStandards"
                           value={dataStandards}
-                          checked={dataStandards === "SI"}
+                          checked={dataStandards}
                           onChange={(event) =>
-                            handleSwitch("dataStandards", event.target.checked)
+                            setDataStandards(event.target.checked)
                           }
                           color="primary" // Opcional: ajusta el color del switch
                         />
@@ -1452,24 +992,13 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       </div>
                       <div className="horizontalFormSwitch">
                         <p>Anonimización de datos</p>
-                        {/* <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="dataAnonymize"
-                    name="dataAnonymize"
-                    type="string"
-                    variant="standard"
-                    value={formDataSteps.dataAnonymize}
-                    onChange={handleChange}
-                  /> */}
                         <Switch
                           id="dataAnonymize"
                           name="dataAnonymize"
                           value={dataAnonymize}
-                          checked={dataAnonymize === "SI"}
+                          checked={dataAnonymize}
                           onChange={(event) =>
-                            handleSwitch("dataAnonymize", event.target.checked)
+                            setDataAnonymize(event.target.checked)
                           }
                           color="primary" // Opcional: ajusta el color del switch
                         />
@@ -1492,40 +1021,32 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       </div>
                       <div className="horizontalForm">
                         <p>Nivel de compartición *</p>
-                        <TextField
-                          autoFocus
-                          required
-                          margin="dense"
-                          id="sharingLevel"
-                          name="sharingLevel"
-                          type="string"
-                          variant="standard"
-                          value={formDataSteps.sharingLevel}
-                          onChange={(e) =>
-                            handleChange("sharingLevel", e.target.value)
-                          }
-                        />
+                        <FormControl variant="standard">
+                          <Select
+                            id="sharingLevel"
+                            name="sharingLevel"
+                            margin="dense"
+                            defaultValue={formDataSteps.sharingLevel}
+                          >
+                            {Object.entries(SHARING_LEVEL).map(
+                              ([key, value]) => (
+                                <MenuItem key={key} value={value}>
+                                  {value}
+                                </MenuItem>
+                              )
+                            )}
+                          </Select>
+                        </FormControl>
                       </div>
                       <div className="horizontalFormSwitch">
                         <p>Datos compartidos</p>
-                        {/* <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="sharedData"
-                    name="sharedData"
-                    type="string"
-                    variant="standard"
-                    value={formDataSteps.sharedData}
-                    onChange={handleChange}
-                  /> */}
                         <Switch
                           id="sharedData"
                           name="sharedData"
                           value={sharedData}
-                          checked={sharedData === "SI"}
+                          checked={sharedData}
                           onChange={(event) =>
-                            handleSwitch("sharedData", event.target.checked)
+                            setSharedData(event.target.checked)
                           }
                           color="primary" // Opcional: ajusta el color del switch
                         />
@@ -1566,7 +1087,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                         >
                           Atrás
                         </Button>
-
                         <Button
                           type="submit"
                           sx={{
@@ -1592,144 +1112,68 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                     <div className="verticalForm">
                       <div className="horizontalFormSwitch">
                         <p>VLCi</p>
-                        {/* <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="VLCi"
-                    name="VLCi"
-                    type="string"
-                    variant="standard"
-                    value={formDataSteps.VLCi}
-                    onChange={handleChange}
-                  /> */}
                         <Switch
                           id="VLCi"
                           name="VLCi"
                           value={VLCi}
-                          checked={VLCi === "SI"}
-                          onChange={(event) =>
-                            handleSwitch("VLCi", event.target.checked)
-                          }
+                          checked={VLCi}
+                          onChange={(event) => setVLCi(event.target.checked)}
                           color="primary" // Opcional: ajusta el color del switch
                         />
                       </div>
                       <div className="horizontalFormSwitch">
                         <p>ArcGIS</p>
-                        {/* <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="ArcGIS"
-                    name="ArcGIS"
-                    type="string"
-                    variant="standard"
-                    value={formDataSteps.ArcGIS}
-                    onChange={handleChange}
-                  /> */}
                         <Switch
                           id="ArcGIS"
                           name="ArcGIS"
                           value={ArcGIS}
-                          checked={ArcGIS === "SI"}
-                          onChange={(event) =>
-                            handleSwitch("ArcGIS", event.target.checked)
-                          }
+                          checked={ArcGIS === true}
+                          onChange={(event) => setArcGIS(event.target.checked)}
                           color="primary" // Opcional: ajusta el color del switch
                         />
                       </div>
                       <div className="horizontalFormSwitch">
                         <p>Pentaho</p>
-                        {/* <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="Pentaho"
-                    name="Pentaho"
-                    type="string"
-                    variant="standard"
-                    value={formDataSteps.Pentaho}
-                    onChange={handleChange}
-                  /> */}
                         <Switch
                           id="Pentaho"
                           name="Pentaho"
                           value={Pentaho}
-                          checked={Pentaho === "SI"}
-                          onChange={(event) =>
-                            handleSwitch("Pentaho", event.target.checked)
-                          }
+                          checked={Pentaho}
+                          onChange={(event) => setPentaho(event.target.checked)}
                           color="primary" // Opcional: ajusta el color del switch
                         />
                       </div>
                       <div className="horizontalFormSwitch">
                         <p>CKAN</p>
-                        {/* <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="CKAN"
-                    name="CKAN"
-                    type="string"
-                    variant="standard"
-                    value={formDataSteps.CKAN}
-                    onChange={handleChange}
-                  /> */}
                         <Switch
                           id="CKAN"
                           name="CKAN"
                           value={CKAN}
-                          checked={CKAN === "SI"}
-                          onChange={(event) =>
-                            handleSwitch("CKAN", event.target.checked)
-                          }
+                          checked={CKAN}
+                          onChange={(event) => setCKAN(event.target.checked)}
                           color="primary" // Opcional: ajusta el color del switch
                         />
                       </div>
                       <div className="horizontalFormSwitch">
                         <p>MongoDB</p>
-                        {/* <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="MongoDB"
-                    name="MongoDB"
-                    type="string"
-                    variant="standard"
-                    value={formDataSteps.MongoDB}
-                    onChange={handleChange}
-                  /> */}
                         <Switch
                           id="MongoDB"
                           name="MongoDB"
                           value={MongoDB}
-                          checked={MongoDB === "SI"}
-                          onChange={(event) =>
-                            handleSwitch("MongoDB", event.target.checked)
-                          }
+                          checked={MongoDB}
+                          onChange={(event) => setMongoDB(event.target.checked)}
                           color="primary" // Opcional: ajusta el color del switch
                         />
                       </div>
                       <div className="horizontalFormSwitch">
                         <p>OpenDataSoft</p>
-                        {/* <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="OpenDataSoft"
-                    name="OpenDataSoft"
-                    type="string"
-                    variant="standard"
-                    value={formDataSteps.OpenDataSoft}
-                    onChange={handleChange}
-                  /> */}
                         <Switch
                           id="OpenDataSoft"
                           name="OpenDataSoft"
                           value={OpenDataSoft}
-                          checked={OpenDataSoft === "SI"}
+                          checked={OpenDataSoft}
                           onChange={(event) =>
-                            handleSwitch("OpenDataSoft", event.target.checked)
+                            setOpenDataSoft(event.target.checked)
                           }
                           color="primary" // Opcional: ajusta el color del switch
                         />
@@ -1802,7 +1246,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                         >
                           Atrás
                         </Button>
-
                         <Button
                           type="submit"
                           sx={{
@@ -1895,47 +1338,13 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             id="personalData"
                             name="personalData"
                             value={personalData}
-                            checked={personalData === "SI"}
+                            checked={personalData}
                             onChange={(event) =>
-                              handleSwitch("personalData", event.target.checked)
+                              setPersonalData(event.target.checked)
                             }
                             color="primary" // Opcional: ajusta el color del switch
                           />
                         </FormControl>
-                      </div>
-                      {/* <div className="horizontalForm">
-                <p>
-                {t("columnsNames.source")}
-                </p>
-                <TextField
-                  autoFocus
-                  required
-                  margin="dense"
-                  id="source"
-                  name="source"
-                  type="string"
-                  variant="standard"
-                  value={formDataSteps.source}
-                  onChange={(e) =>
-                    handleChange("source", e.target.value)
-                  }
-                />
-              </div> */}
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.responsibleIdentity")}</p>
-                        <TextField
-                          autoFocus
-                          //required
-                          margin="dense"
-                          id="responsibleIdentity"
-                          name="responsibleIdentity"
-                          type="string"
-                          variant="standard"
-                          value={formDataSteps.responsibleIdentity}
-                          onChange={(e) =>
-                            handleChange("responsibleIdentity", e.target.value)
-                          }
-                        />
                       </div>
                     </div>
                     <div className="buttonsForm">
@@ -1996,7 +1405,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 )}
               </Box>
             </DialogContent>
-            <DialogActions></DialogActions>
           </Dialog>
         </LocalizationProvider>
       </ThemeProvider>

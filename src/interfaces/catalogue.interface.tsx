@@ -1,25 +1,30 @@
-import { LANGUAGE } from "../utils/enums/language.enum";
+import { GEOGRAPHICAL_INFO } from "../utils/enums/geographical-info.enum";
+import { LANGUAGE_FORM } from "../utils/enums/language-form.enum";
+import { MINIMUM_VALUE } from "../utils/enums/minimum-value.enum";
+import { ORGANISM } from "../utils/enums/organism.enum";
 import { RESPONSIBLE_IDENTITY } from "../utils/enums/responsible-identity.enum";
+import { SHARING_LEVEL } from "../utils/enums/sharing-level.enum";
+import { TOPIC } from "../utils/enums/topic.enum";
 
 export interface Catalogue {
   _id: string;
   title: string;
   description: string;
   responsibleIdentity: RESPONSIBLE_IDENTITY;
-  topic: string;
+  topic: TOPIC;
   territorialScope: string;
   temporaryCoverage: string;
-  organism: string;
-  language: LANGUAGE;
+  organism: ORGANISM;
+  language: LANGUAGE_FORM;
   keyWords: string;
-  minimumVariables: string;
+  minimumVariables: MINIMUM_VALUE;
   contactPerson: string;
   masterData: boolean;
   referenceData: boolean;
   highValue: boolean;
-  activeAds: string; // boolean
+  activeAds: boolean; // boolean
   comments: string;
-  typeGeo: string;
+  typeGeo: GEOGRAPHICAL_INFO;
   genderInfo: boolean;
   structuredComments: string;
   associatedApplication: string;
@@ -31,7 +36,7 @@ export interface Catalogue {
   dataProtectionComments: string;
   dataAnonymize: boolean;
   dataQuality: number;
-  sharingLevel: string;
+  sharingLevel: SHARING_LEVEL;
   sharedData: boolean;
   VLCi: boolean;
   ArcGIS: boolean;
@@ -47,34 +52,6 @@ export interface Catalogue {
   deleted: boolean;
   deletedDate: Date;
   lastUpdate: Date;
-
-  /*language: LANGUAGE;
-  territorialScope: string;
-  temporaryCoverage: string;
-  updateFrequency: string;
-  topic: TOPIC;
-  lastUpdate: Date;
-  format: string;
-  distribution: string;
-  sensitiveInformation: string;
-  isUsing: string;
-  accessType: string;
-  internalRelationship: string;
-  contactPerson: string;
-  structured: string;
-  associatedApplication: string;
-  georeference: string;
-  comments: string;
-  timmingEffect: string;
-  creationDate: Date;
-  deleted: boolean;
-  deletedDate: Date;
-  personalData: string;
-  activeAds: string;
-  source: string;
-  responsibleIdentity: string;
-  createdAt?: Date;
-  updatedAt?: Date;*/
 }
 
 export type CreateCatalogue = Omit<

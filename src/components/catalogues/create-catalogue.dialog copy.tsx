@@ -9,13 +9,10 @@ import { CreateCatalogue } from "../../interfaces/catalogue.interface";
 import { createCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
 import {
-  Autocomplete,
   Box,
-  Checkbox,
   FormControl,
-  FormControlLabel,
-  FormGroup,
   MenuItem,
+  Rating,
   Select,
   Switch,
   ThemeProvider,
@@ -23,9 +20,9 @@ import {
 import { useTranslation } from "react-i18next";
 import "./create-catalogue.dialog.css";
 import React from "react";
-import { CalendarIcon, DateTimePicker } from "@mui/x-date-pickers";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Dayjs } from "dayjs";
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
@@ -59,74 +56,47 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [t, i18n] = useTranslation();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
-  /* const [formDataSteps, setFormDataSteps] = useState({
+  const [formDataSteps, setFormDataSteps] = useState({
     title: "",
     description: "",
-    language: "",
+    responsibleIdentity: "",
+    topic: "",
     territorialScope: "",
     temporaryCoverage: "",
-    updateFrequency: "",
-    topic: "",
-    lastUpdate: "",
-    format: "",
-    distribution: "",
-    sensitiveInformation: "",
-    isUsing: "",
-    accessType: "",
-    internalRelationship: "",
+    organism: "",
+    language: "",
+    keyWords: "",
+    minimumVariables: "",
     contactPerson: "",
-    structured: "",
-    associatedApplication: "",
-    georreference: "",
-    comments: "",
-    timmingEffect: "",
-    creationDate: "",
-    personalData: "",
-    source: "",
-    responsibleIdentity: "",
+    masterData: "",
+    referenceData: "",
+    highValue: "",
     activeAds: "",
-  }); */
-  const [formDataSteps, setFormDataSteps] = useState({
-    title: '',
-    description: '',
-    responsibleIdentity: '',
-    topic: '',
-    territorialScope: '',
-    temporaryCoverage: '',
-    organism: '',
-    language: '',
-    keyWords: '',
-    minimumVariables: '',
-    contactPerson: '',
-    masterData: '',
-    referenceData: '',
-    highValue: '',
-    activeAds: '',
-    comments: '',
-    typeGeo: '',
-    genderInfo: '',
-    structuredComments: '',
-    associatedApplication: '',
-    autoAcess: '',
-    originComments: '',
-    RAT: '',
-    dataProtection: '',
-    dataStandards: '',
-    dataProtectionComments: '',
-    dataAnonymize: '',
+    comments: "",
+    typeGeo: "",
+    genderInfo: "",
+    structuredComments: "",
+    associatedApplication: "",
+    autoAcess: "",
+    originComments: "",
+    RAT: "",
+    dataProtection: "",
+    dataStandards: "",
+    dataProtectionComments: "",
+    dataAnonymize: "",
     dataQuality: 0,
-    sharingLevel: '',
-    sharedData: '',
-    VLCi: '',
-    ArcGIS: '',
-    Pentaho: '',
-    CKAN: '',
-    MongoDB: '',
-    OpenDataSoft: '',
-    temporarySolution: '',
-    chargeStateComments: '',
-    productData: '',
-    productComments: '',
+    sharingLevel: "",
+    sharedData: "",
+    VLCi: "",
+    ArcGIS: "",
+    Pentaho: "",
+    CKAN: "",
+    MongoDB: "",
+    OpenDataSoft: "",
+    temporarySolution: "",
+    chargeStateComments: "",
+    productData: "",
+    productComments: "",
   });
   const [sensitiveInformation, setSensitiveInformation] = useState("SI");
   const [isUsing, setIsUsing] = useState("SI");
@@ -152,8 +122,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [OpenDataSoft, setOpenDataSoft] = useState("SI");
   const [format, setFormat] = React.useState<string[]>([]);
   const [lastUpdateAlmacenado, setLastUpdate] = React.useState<Dayjs | null>();
-  const [creationDateAlmacenado, setCreationDate] = React.useState<Dayjs | null>();
-  const {actualTheme} = useAlternateTheme();
+  const [creationDateAlmacenado, setCreationDate] =
+    React.useState<Dayjs | null>();
+  const { actualTheme } = useAlternateTheme();
 
   useEffect(() => {
     setOpen(props.enviar.open);
@@ -161,75 +132,48 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
 
   const handleClose = () => {
     setFormData({});
-    /* setFormDataSteps({
+    setFormDataSteps({
       title: "",
       description: "",
-      language: "",
+      responsibleIdentity: "",
+      topic: "",
       territorialScope: "",
       temporaryCoverage: "",
-      updateFrequency: "",
-      topic: "",
-      lastUpdate: "",
-      format: "",
-      distribution: "",
-      sensitiveInformation: "",
-      isUsing: "",
-      accessType: "",
-      internalRelationship: "",
+      organism: "",
+      language: "",
+      keyWords: "",
+      minimumVariables: "",
       contactPerson: "",
-      structured: "",
-      associatedApplication: "",
-      georreference: "",
-      comments: "",
-      timmingEffect: "",
-      creationDate: "",
-      personalData: "",
-      source: "",
-      responsibleIdentity: "",
+      masterData: "",
+      referenceData: "",
+      highValue: "",
       activeAds: "",
-    }); */
-    setFormDataSteps({
-      title: '',
-      description: '',
-      responsibleIdentity: '',
-      topic: '',
-      territorialScope: '',
-      temporaryCoverage: '',
-      organism: '',
-      language: '',
-      keyWords: '',
-      minimumVariables: '',
-      contactPerson: '',
-      masterData: '',
-      referenceData: '',
-      highValue: '',
-      activeAds: '',
-      comments: '',
-      typeGeo: '',
-      genderInfo: '',
-      structuredComments: '',
-      associatedApplication: '',
-      autoAcess: '',
-      originComments: '',
-      RAT: '',
-      dataProtection: '',
-      dataStandards: '',
-      dataProtectionComments: '',
-      dataAnonymize: '',
+      comments: "",
+      typeGeo: "",
+      genderInfo: "",
+      structuredComments: "",
+      associatedApplication: "",
+      autoAcess: "",
+      originComments: "",
+      RAT: "",
+      dataProtection: "",
+      dataStandards: "",
+      dataProtectionComments: "",
+      dataAnonymize: "",
       dataQuality: 0,
-      sharingLevel: '',
-      sharedData: '',
-      VLCi: '',
-      ArcGIS: '',
-      Pentaho: '',
-      CKAN: '',
-      MongoDB: '',
-      OpenDataSoft: '',
-      temporarySolution: '',
-      chargeStateComments: '',
-      productData: '',
-      productComments: '',
-    })
+      sharingLevel: "",
+      sharedData: "",
+      VLCi: "",
+      ArcGIS: "",
+      Pentaho: "",
+      CKAN: "",
+      MongoDB: "",
+      OpenDataSoft: "",
+      temporarySolution: "",
+      chargeStateComments: "",
+      productData: "",
+      productComments: "",
+    });
     setStep(1);
     setSensitiveInformation("SI");
     setIsUsing("SI");
@@ -425,7 +369,8 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     }
 
     if (
-      (lastUpdateAlmacenado !== undefined && lastUpdateAlmacenado !== null) &&
+      lastUpdateAlmacenado !== undefined &&
+      lastUpdateAlmacenado !== null &&
       (currentStepData.get("lastUpdate") !== null ||
         currentStepData.get("lastUpdate") !== undefined)
     ) {
@@ -447,13 +392,17 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const currentStepData = new FormData(event.currentTarget);
     if (
-      (creationDateAlmacenado !== undefined && creationDateAlmacenado !== null) &&
+      creationDateAlmacenado !== undefined &&
+      creationDateAlmacenado !== null &&
       (currentStepData.get("creationDate") !== null ||
         currentStepData.get("creationDate") !== undefined)
     ) {
       const creationDateDatos = creationDateAlmacenado.toString();
       console.log("CreationDateAlmacenado: " + creationDateAlmacenado);
-      console.log("CreationDateAlmacenado.ToString(): " + creationDateAlmacenado.toString());
+      console.log(
+        "CreationDateAlmacenado.ToString(): " +
+          creationDateAlmacenado.toString()
+      );
       console.log("creationDateDatos" + creationDateDatos);
       currentStepData.set("creationDate", creationDateDatos);
     }
@@ -496,166 +445,149 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
         else setActiveAds("SI");
         break;
       case "masterData":
-        if(masterData==="SI") {
+        if (masterData === "SI") {
           setMasterData("NO");
           setUpdate((prevState) => ({ ...prevState, [masterData]: "NO" }));
-        }
-        else {
+        } else {
           setMasterData("SI");
           setUpdate((prevState) => ({ ...prevState, [masterData]: "SI" }));
         }
         break;
       case "referenceData":
-        if(referenceData==="SI") {
+        if (referenceData === "SI") {
           setReferenceData("NO");
           setUpdate((prevState) => ({ ...prevState, [referenceData]: "NO" }));
-        }
-        else {
+        } else {
           setReferenceData("SI");
           setUpdate((prevState) => ({ ...prevState, [referenceData]: "SI" }));
         }
         break;
       case "highValue":
-        if(highValue==="SI") {
+        if (highValue === "SI") {
           setHighValue("NO");
           setUpdate((prevState) => ({ ...prevState, [highValue]: "NO" }));
-        }
-        else {
+        } else {
           setHighValue("SI");
           setUpdate((prevState) => ({ ...prevState, [highValue]: "SI" }));
         }
         break;
       case "genderInfo":
-        if(genderInfo==="SI") {
+        if (genderInfo === "SI") {
           setGenderInfo("NO");
           setUpdate((prevState) => ({ ...prevState, [genderInfo]: "NO" }));
-        }
-        else {
+        } else {
           setGenderInfo("SI");
           setUpdate((prevState) => ({ ...prevState, [genderInfo]: "SI" }));
         }
         break;
       case "autoAcess":
-        if(autoAcess==="SI") {
+        if (autoAcess === "SI") {
           setAutoAcess("NO");
           setUpdate((prevState) => ({ ...prevState, [autoAcess]: "NO" }));
-        }
-        else {
+        } else {
           setAutoAcess("SI");
           setUpdate((prevState) => ({ ...prevState, [autoAcess]: "SI" }));
         }
-      break;
+        break;
       case "RAT":
-      if(RAT==="SI") {
-        setRAT("NO");
-        setUpdate((prevState) => ({ ...prevState, [RAT]: "NO" }));
-      }
-      else {
-        setRAT("SI");
-        setUpdate((prevState) => ({ ...prevState, [RAT]: "SI" }));
-      }
-      break;
+        if (RAT === "SI") {
+          setRAT("NO");
+          setUpdate((prevState) => ({ ...prevState, [RAT]: "NO" }));
+        } else {
+          setRAT("SI");
+          setUpdate((prevState) => ({ ...prevState, [RAT]: "SI" }));
+        }
+        break;
       case "dataProtection":
-      if(dataProtection==="SI") {
-        setDataProtection("NO");
-        setUpdate((prevState) => ({ ...prevState, [dataProtection]: "NO" }));
-      }
-      else {
-        setDataProtection("SI");
-        setUpdate((prevState) => ({ ...prevState, [dataProtection]: "SI" }));
-      }
-      break;
+        if (dataProtection === "SI") {
+          setDataProtection("NO");
+          setUpdate((prevState) => ({ ...prevState, [dataProtection]: "NO" }));
+        } else {
+          setDataProtection("SI");
+          setUpdate((prevState) => ({ ...prevState, [dataProtection]: "SI" }));
+        }
+        break;
       case "dataStandards":
-        if(dataStandards==="SI") {
+        if (dataStandards === "SI") {
           setDataStandards("NO");
           setUpdate((prevState) => ({ ...prevState, [dataStandards]: "NO" }));
-        }
-        else {
+        } else {
           setDataStandards("SI");
           setUpdate((prevState) => ({ ...prevState, [dataStandards]: "SI" }));
         }
         break;
       case "dataAnonymize":
-        if(dataAnonymize==="SI") {
+        if (dataAnonymize === "SI") {
           setDataAnonymize("NO");
           setUpdate((prevState) => ({ ...prevState, [dataAnonymize]: "NO" }));
-        }
-        else {
+        } else {
           setDataAnonymize("SI");
           setUpdate((prevState) => ({ ...prevState, [dataAnonymize]: "SI" }));
         }
         break;
       case "sharedData":
-        if(sharedData==="SI") {
+        if (sharedData === "SI") {
           setSharedData("NO");
           setUpdate((prevState) => ({ ...prevState, [sharedData]: "NO" }));
-        }
-        else {
+        } else {
           setSharedData("SI");
           setUpdate((prevState) => ({ ...prevState, [sharedData]: "SI" }));
         }
         break;
       case "VLCi":
-        if(VLCi==="SI") {
+        if (VLCi === "SI") {
           setVLCi("NO");
           setUpdate((prevState) => ({ ...prevState, [VLCi]: "NO" }));
-        }
-        else {
+        } else {
           setVLCi("SI");
           setUpdate((prevState) => ({ ...prevState, [VLCi]: "SI" }));
         }
         break;
       case "ArcGIS":
-        if(ArcGIS==="SI") {
+        if (ArcGIS === "SI") {
           setArcGIS("NO");
           setUpdate((prevState) => ({ ...prevState, [ArcGIS]: "NO" }));
-        }
-        else {
+        } else {
           setArcGIS("SI");
           setUpdate((prevState) => ({ ...prevState, [ArcGIS]: "SI" }));
         }
         break;
       case "Pentaho":
-        if(Pentaho==="SI") {
+        if (Pentaho === "SI") {
           setPentaho("NO");
           setUpdate((prevState) => ({ ...prevState, [Pentaho]: "NO" }));
-        }
-        else {
+        } else {
           setPentaho("SI");
           setUpdate((prevState) => ({ ...prevState, [Pentaho]: "SI" }));
         }
         break;
       case "CKAN":
-        if(CKAN==="SI") {
+        if (CKAN === "SI") {
           setCKAN("NO");
           setUpdate((prevState) => ({ ...prevState, [CKAN]: "NO" }));
-        }
-        else {
+        } else {
           setCKAN("SI");
           setUpdate((prevState) => ({ ...prevState, [CKAN]: "SI" }));
         }
         break;
       case "MongoDB":
-        if(MongoDB==="SI") {
+        if (MongoDB === "SI") {
           setMongoDB("NO");
           setUpdate((prevState) => ({ ...prevState, [MongoDB]: "NO" }));
-        }
-        else {
+        } else {
           setMongoDB("SI");
           setUpdate((prevState) => ({ ...prevState, [MongoDB]: "SI" }));
         }
         break;
       case "OpenDataSoft":
-        if(VLCi==="SI") {
+        if (VLCi === "SI") {
           setOpenDataSoft("NO");
           setUpdate((prevState) => ({ ...prevState, [OpenDataSoft]: "NO" }));
-        }
-        else {
+        } else {
           setOpenDataSoft("SI");
           setUpdate((prevState) => ({ ...prevState, [OpenDataSoft]: "SI" }));
         }
         break;
-
     }
   };
 
@@ -749,24 +681,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           value={formDataSteps.responsibleIdentity}
                           onChange={handleChange}
                         />
-                        {/* 
-                    <FormControl variant="standard">
-                      <Select
-                        id="responsibleIdentity"
-                        name="responsibleIdentity"
-                        margin="dense"
-                        defaultValue={formDataSteps.responsibleIdentity}
-                        //onChange={(e) => handleChange('language', e.target.value)}
-                        //required
-                      >
-                        {entitiesName.map((entityName, index) => (
-                          <MenuItem key={index} value={entityName}>
-                            {entityName}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                    */}
                       </div>
                       <div className="horizontalForm">
                         <p>{t("columnsNames.topic")}</p>
@@ -991,62 +905,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           onChange={handleChange}
                         />
                       </div>
-                      {/*
-              <div className="horizontalForm">
-                <p>
-                {t("columnsNames.lastUpdate")}
-                </p>
-                <DateTimePicker 
-                  format="DD/MM/YYYY hh:mm:ss a"
-                  name="lastUpdate"
-                  value={lastUpdateAlmacenado}
-                  onChange={(e) =>
-                    handleChangeLastUpdate(e)
-                  }
-                  slotProps={{ textField: { variant: "standard", id:"lastUpdate" } }}
-                >
-                </DateTimePicker>
-              </div>
-              <div className="horizontalForm">
-                <p>
-                {t("columnsNames.format")}
-                </p>
-                <FormControl variant="standard">
-                  <FormGroup>
-                    <Autocomplete
-                      multiple
-                      id="format"
-                      options={['PDF', 'EXCEL', 'CSV', 'JSON']}
-                      value={format}
-                      onChange={handleFormat}
-                      disableCloseOnSelect={true}
-                      renderOption={(props, option, { selected }) => (
-                        <li {...props}>
-                          <FormControlLabel
-                            control={<Checkbox checked={selected} />}
-                            label={option}
-                            sx={{
-                              color: actualTheme === 'light' ? "black" : "white",
-                            }}
-                          />
-                        </li>
-                      )}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          name="format"
-                          variant="standard"
-                          placeholder="Select formats"
-                          sx={{
-                            color: actualTheme === 'light' ? "black" : "white",
-                          }}
-                        />
-                      )}
-                    />
-                  </FormGroup>
-                </FormControl>
-              </div>
-              */}
                     </div>
                     <div className="buttonsForm">
                       <Button
@@ -1413,17 +1271,12 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       </div>
                       <div className="horizontalForm">
                         <p>Calidad de los datos</p>
-                        <TextField
-                          autoFocus
-                          required
-                          margin="dense"
-                          id="dataQuality"
-                          name="dataQuality"
-                          label="Calidad de los datos"
-                          type="string"
-                          variant="standard"
-                          value={formDataSteps.dataQuality}
-                          onChange={handleChange}
+                        <Rating
+                          name="simple-controlled"
+                          value={dataQuality}
+                          onChange={(event, newValue) => {
+                            setValue(newValue);
+                          }}
                         />
                       </div>
                       <div className="horizontalForm">

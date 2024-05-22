@@ -1,52 +1,31 @@
 import { RESPONSIBLE_IDENTITY } from './enums/responsible-identity.enum';
-import { Catalogue } from './schemas/catalogue.schema';
-import { LANGUAGE } from './enums/language.enum';
+import { LANGUAGE_FORM } from './enums/language-form.enum';
+import { Catalogue } from '../interfaces/catalogue.interface';
+import { SHARING_LEVEL } from './enums/sharing-level.enum';
+import { MINIMUM_VALUE } from './enums/minimum-value.enum';
+import { TOPIC } from './enums/topic.enum';
+import { ORGANISM } from './enums/organism.enum';
+import { GEOGRAPHICAL_INFO } from './enums/geographical-info.enum';
 
 export const catalogueMock: Catalogue = {
-  /*   title: '',
-  description: '',
-  language: LANGUAGE.ES,
-  territorialScope: '',
-  temporaryCoverage: '',
-  updateFrequency: '',
-  topic: '',
-  lastUpdate: new Date(),
-  format: '',
-  distribution: '',
-  sensitiveInformation: '',
-  isUsing: '',
-  accessType: '',
-  internalRelationship: '',
-  contactPerson: '',
-  structured: '',
-  associatedApplication: '',
-  georeference: '',
-  comments: '',
-  timmingEffect: '',
-  creationDate: new Date(),
-  deleted: false,
-  deletedDate: new Date(),
-  personalData: '',
-  activeAds: '',
-  source: '',
-  responsibleIdentity: RESPONSIBLE_IDENTITY.GENERAL, */
+  _id: '',
   title: '',
   description: '',
-  responsibleIdentity: RESPONSIBLE_IDENTITY.ACTIVITATS,
-  topic: '',
+  responsibleIdentity: RESPONSIBLE_IDENTITY.accio_cultural,
+  topic: TOPIC.ciencia,
   territorialScope: '',
   temporaryCoverage: '',
-  organism: '',
-  language: LANGUAGE.CA,
+  organism: ORGANISM.alcaldia,
+  language: LANGUAGE_FORM.val,
   keyWords: '',
-  minimumVariables: '',
+  minimumVariables: MINIMUM_VALUE.mo,
   contactPerson: '',
   masterData: false,
   referenceData: false,
   highValue: false,
-  activeAds: '', // boolean
+  activeAds: false, // boolean
   comments: '',
-  typeGeo: '',
+  typeGeo: GEOGRAPHICAL_INFO.barrio,
   genderInfo: false,
   structuredComments: '',
   associatedApplication: '',
@@ -58,7 +37,7 @@ export const catalogueMock: Catalogue = {
   dataProtectionComments: '',
   dataAnonymize: false,
   dataQuality: 0,
-  sharingLevel: '',
+  sharingLevel: SHARING_LEVEL.open,
   sharedData: false,
   VLCi: false,
   ArcGIS: false,
