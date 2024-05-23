@@ -34,6 +34,12 @@ import { Entity } from "../../interfaces/entity.interface";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TOPIC } from "../../utils/enums/topic.enum";
+import { LANGUAGE_FORM } from "../../utils/enums/language-form.enum";
+import { GEOGRAPHICAL_INFO } from "../../utils/enums/geographical-info.enum";
+import { SHARING_LEVEL } from "../../utils/enums/sharing-level.enum";
+import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
+import { ORGANISM } from "../../utils/enums/organism.enum";
+import { MINIMUM_VALUE } from "../../utils/enums/minimum-value.enum";
 export interface UpdateDialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
@@ -46,7 +52,6 @@ export default function UpdateCatalogueDialog(props: {
 }) {
   const [open, setOpen] = useState<boolean>(false);
   const authHeader = useAuthHeader();
-  const [entities, setEntities] = useState<Entity[]>([]);
   const [entitiesName, setEntitiesName] = useState<string[]>([]);
   const [deletedEntities, setDeletedEntities] = useState<Entity[]>([]);
   const [update, setUpdate] = useState<UpdateCatalogue>({});
@@ -54,29 +59,24 @@ export default function UpdateCatalogueDialog(props: {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
   const [format, setFormat] = React.useState<string[]>([]);
-  const [sensitiveInformation, setSensitiveInformation] = useState("SI");
-  const [isUsing, setIsUsing] = useState("SI");
-  const [structured, setStructured] = useState("SI");
-  const [georeference, setGeoreference] = useState("SI");
-  const [personalData, setPersonalData] = useState("SI");
-  const [activeAds, setActiveAds] = useState("SI");
-  const [masterData, setMasterData] = useState("SI");
-  const [referenceData, setReferenceData] = useState("SI");
-  const [highValue, setHighValue] = useState("SI");
-  const [genderInfo, setGenderInfo] = useState("SI");
-  const [autoAcess, setAutoAcess] = useState("SI");
-  const [RAT, setRAT] = useState("SI");
-  const [dataProtection, setDataProtection] = useState("SI");
-  const [dataStandards, setDataStandards] = useState("SI");
-  const [dataAnonymize, setDataAnonymize] = useState("SI");
-  const [sharedData, setSharedData] = useState("SI");
-  const [VLCi, setVLCi] = useState("SI");
-  const [ArcGIS, setArcGIS] = useState("SI");
-  const [Pentaho, setPentaho] = useState("SI");
-  const [CKAN, setCKAN] = useState("SI");
-  const [MongoDB, setMongoDB] = useState("SI");
-  const [OpenDataSoft, setOpenDataSoft] = useState("SI");
-  const [deleted, setDeleted] = useState("SI");
+  const [personalData, setPersonalData] = useState(false);
+  const [activeAds, setActiveAds] = useState(false);
+  const [masterData, setMasterData] = useState(false);
+  const [referenceData, setReferenceData] = useState(false);
+  const [highValue, setHighValue] = useState(false);
+  const [genderInfo, setGenderInfo] = useState(false);
+  const [autoAcess, setAutoAcess] = useState(false);
+  const [RAT, setRAT] = useState(false);
+  const [dataProtection, setDataProtection] = useState(false);
+  const [dataStandards, setDataStandards] = useState(false);
+  const [dataAnonymize, setDataAnonymize] = useState(false);
+  const [sharedData, setSharedData] = useState(false);
+  const [VLCi, setVLCi] = useState(false);
+  const [ArcGIS, setArcGIS] = useState(false);
+  const [Pentaho, setPentaho] = useState(false);
+  const [CKAN, setCKAN] = useState(false);
+  const [MongoDB, setMongoDB] = useState(false);
+  const [OpenDataSoft, setOpenDataSoft] = useState(false);
   const [lastUpdateAlmacenado, setLastUpdate] = React.useState<Dayjs | null>();
   const [creationDateAlmacenado, setCreationDate] =
     React.useState<Dayjs | null>();
@@ -85,16 +85,7 @@ export default function UpdateCatalogueDialog(props: {
   useEffect(() => {
     setUpdate(props.enviar.catalogue);
     setOpen(props.enviar.open);
-    /*
-    setSensitiveInformation(props.enviar.catalogue.sensitiveInformation);
-    setIsUsing(props.enviar.catalogue.isUsing);
-    setStructured(props.enviar.catalogue.structured);
-    setGeoreference(props.enviar.catalogue.georeference);
-    setPersonalData(props.enviar.catalogue.personalData);
-    */
     setActiveAds(props.enviar.catalogue.activeAds);
-    //setLastUpdate(props.enviar.catalogue.lastUpdate);
-    //setCreationDate(props.enviar.catalogue.creationDate);
     setStep(1);
     getAndSetEntities();
   }, [props.enviar.open, props.enviar.catalogue]);
@@ -142,140 +133,11 @@ export default function UpdateCatalogueDialog(props: {
 
     // Collect form data for the current step
     const currentStepData = new FormData(event.currentTarget);
-
-    if (currentStepData.get("sensitiveInformation") !== "on") {
-      currentStepData.set("sensitiveInformation", "NO");
-    } else {
-      currentStepData.set("sensitiveInformation", "SI");
-    }
-
-    if (currentStepData.get("isUsing") !== "on") {
-      currentStepData.set("isUsing", "NO");
-    } else {
-      currentStepData.set("isUsing", "SI");
-    }
-
-    if (currentStepData.get("structured") !== "on") {
-      currentStepData.set("structured", "NO");
-    } else {
-      currentStepData.set("structured", "SI");
-    }
-
-    if (currentStepData.get("georeference") !== "on") {
-      currentStepData.set("georeference", "NO");
-    } else {
-      currentStepData.set("georeference", "SI");
-    }
-
-    if (currentStepData.get("personalData") !== "on") {
-      currentStepData.set("personalData", "NO");
-    } else {
-      currentStepData.set("personalData", "SI");
-    }
-
-    if (currentStepData.get("activeAds") !== "on") {
-      currentStepData.set("activeAds", "NO");
-    } else {
-      currentStepData.set("activeAds", "SI");
-    }
-
-    if (currentStepData.get("masterData") !== "on") {
-      currentStepData.set("masterData", "NO");
-    } else {
-      currentStepData.set("masterData", "SI");
-    }
-
-    if (currentStepData.get("referenceData") !== "on") {
-      currentStepData.set("referenceData", "NO");
-    } else {
-      currentStepData.set("referenceData", "SI");
-    }
-
-    if (currentStepData.get("highValue") !== "on") {
-      currentStepData.set("highValue", "NO");
-    } else {
-      currentStepData.set("highValue", "SI");
-    }
-
-    if (currentStepData.get("genderInfo") !== "on") {
-      currentStepData.set("genderInfo", "NO");
-    } else {
-      currentStepData.set("genderInfo", "SI");
-    }
-
-    if (currentStepData.get("autoAcess") !== "on") {
-      currentStepData.set("autoAcess", "NO");
-    } else {
-      currentStepData.set("autoAcess", "SI");
-    }
-
-    if (currentStepData.get("RAT") !== "on") {
-      currentStepData.set("RAT", "NO");
-    } else {
-      currentStepData.set("RAT", "SI");
-    }
-
-    if (currentStepData.get("dataProtection") !== "on") {
-      currentStepData.set("dataProtection", "NO");
-    } else {
-      currentStepData.set("dataProtection", "SI");
-    }
-
-    if (currentStepData.get("dataStandards") !== "on") {
-      currentStepData.set("dataStandards", "NO");
-    } else {
-      currentStepData.set("dataStandards", "SI");
-    }
-
-    if (currentStepData.get("dataAnonymize") !== "on") {
-      currentStepData.set("dataAnonymize", "NO");
-    } else {
-      currentStepData.set("dataAnonymize", "SI");
-    }
-
-    if (currentStepData.get("sharedData") !== "on") {
-      currentStepData.set("sharedData", "NO");
-    } else {
-      currentStepData.set("sharedData", "SI");
-    }
-
-    if (currentStepData.get("VLCi") !== "on") {
-      currentStepData.set("VLCi", "NO");
-    } else {
-      currentStepData.set("VLCi", "SI");
-    }
-
-    if (currentStepData.get("ArcGIS") !== "on") {
-      currentStepData.set("ArcGIS", "NO");
-    } else {
-      currentStepData.set("ArcGIS", "SI");
-    }
-
-    if (currentStepData.get("Pentaho") !== "on") {
-      currentStepData.set("Pentaho", "NO");
-    } else {
-      currentStepData.set("Pentaho", "SI");
-    }
-
-    if (currentStepData.get("CKAN") !== "on") {
-      currentStepData.set("CKAN", "NO");
-    } else {
-      currentStepData.set("CKAN", "SI");
-    }
-
-    if (currentStepData.get("MongoDB") !== "on") {
-      currentStepData.set("MongoDB", "NO");
-    } else {
-      currentStepData.set("MongoDB", "SI");
-    }
-
-    if (currentStepData.get("OpenDataSoft") !== "on") {
-      currentStepData.set("OpenDataSoft", "NO");
-    } else {
-      currentStepData.set("OpenDataSoft", "SI");
-    }
-
-    if( (format!==undefined || format !== null) && (currentStepData.get("format")!==null || currentStepData.get("format")!==undefined)){
+    if (
+      (format !== undefined || format !== null) &&
+      (currentStepData.get("format") !== null ||
+        currentStepData.get("format") !== undefined)
+    ) {
       const formatosDatos = format.toString();
       const formatosDatosMod = formatosDatos.replace(/,/g, " / ");
       currentStepData.set("format", formatosDatosMod);
@@ -318,38 +180,6 @@ export default function UpdateCatalogueDialog(props: {
     updateCatalogue(mergedFormData);
   };
 
-  const handleSwitch = (nameSwitch: any, event: any) => {
-    switch(nameSwitch){
-     
-      case "sensitiveInformation":
-       setSensitiveInformation(sensitiveInformation === "SI" ? "NO" : "SI");
-       console.log(sensitiveInformation); 
-       break;
-       case "isUsing": setIsUsing(isUsing === "SI" ? "NO" : "SI"); break;
-       case "structured": setStructured(structured === "SI" ? "NO" : "SI"); break;
-       case "georeference": setGeoreference(georeference === "SI" ? "NO" : "SI"); break;
-       case "personalData": setPersonalData(personalData === "SI" ? "NO" : "SI"); break;
-       case "activeAds": setActiveAds(activeAds === "SI" ? "NO" : "SI"); break;
-       case "masterData": setMasterData(masterData === "SI" ? "NO" : "SI"); break;
-       case "referenceData": setReferenceData(referenceData === "SI" ? "NO" : "SI"); break;
-       case "highValue": setHighValue(highValue === "SI" ? "NO" : "SI"); break;
-       case "genderInfo": setGenderInfo(genderInfo === "SI" ? "NO" : "SI"); break;
-       case "autoAcess": setAutoAcess(autoAcess === "SI" ? "NO" : "SI"); break;
-       case "RAT": setRAT(RAT === "SI" ? "NO" : "SI"); break;
-       case "dataProtection": setDataProtection(dataProtection === "SI" ? "NO" : "SI"); break;
-       case "dataStandards": setDataStandards(dataStandards === "SI" ? "NO" : "SI"); break;
-       case "dataAnonymize": setDataAnonymize(dataAnonymize === "SI" ? "NO" : "SI"); break;
-       case "sharedData": setSharedData(sharedData === "SI" ? "NO" : "SI"); break;
-       case "VLCi": setVLCi(VLCi === "SI" ? "NO" : "SI"); break;
-       case "ArcGIS": setArcGIS(ArcGIS === "SI" ? "NO" : "SI"); break;
-       case "Pentaho": setPentaho(Pentaho === "SI" ? "NO" : "SI"); break;
-       case "CKAN": setCKAN(CKAN === "SI" ? "NO" : "SI"); break;
-       case "MongoDB": setMongoDB(MongoDB === "SI" ? "NO" : "SI"); break;
-       case "OpenDataSoft": setOpenDataSoft(OpenDataSoft === "SI" ? "NO" : "SI"); break;
- 
-    }
-  };
-
   const handleFormat = (event: any, newValue: any) => {
     setFormat(newValue);
     console.log(newValue);
@@ -389,15 +219,15 @@ export default function UpdateCatalogueDialog(props: {
     getEntitiesRequest(authHeader())
       .then((response) => response.json())
       .then((data) => {
-        let notDeleted = data.filter((d: Entity) => d.deleted !== true).responsibleIdentityES;
+        let notDeleted = data.filter(
+          (d: Entity) => d.deleted !== true
+        ).responsibleIdentityES;
         let deleted = data.filter((d: Entity) => d.deleted === true);
-        //setEntities(notDeleted);
         setEntitiesName(notDeleted);
         setDeletedEntities(deleted);
-        
       })
       .catch((error) => {
-        console.error('Error fetching entities:', error);
+        console.error("Error fetching entities:", error);
       });
   }
 
@@ -455,17 +285,23 @@ export default function UpdateCatalogueDialog(props: {
                       </div>
                       <div className="horizontalForm">
                         <p>{t("columnsNames.responsibleIdentity")}</p>
-                        <TextField
-                          autoFocus
-                          required
-                          margin="dense"
-                          id="responsibleIdentity"
-                          name="responsibleIdentity"
-                          type="string"
-                          variant="standard"
-                          value={update.responsibleIdentity}
-                          onChange={handleChange}
-                        />
+                        <FormControl variant="standard">
+                          <Select
+                            id="responsibleIdentity"
+                            name="responsibleIdentity"
+                            margin="dense"
+                            defaultValue={update.responsibleIdentity}
+                            required
+                          >
+                            {Object.entries(RESPONSIBLE_IDENTITY).map(
+                              ([key, value]) => (
+                                <MenuItem key={key} value={value}>
+                                  {value}
+                                </MenuItem>
+                              )
+                            )}
+                          </Select>
+                        </FormControl>
                       </div>
                       <div className="horizontalForm">
                         <p>{t("columnsNames.topic")}</p>
@@ -486,17 +322,21 @@ export default function UpdateCatalogueDialog(props: {
                       </div>
                       <div className="horizontalForm">
                         <p>Organismo</p>
-                        <TextField
-                          autoFocus
-                          required
-                          margin="dense"
-                          id="organism"
-                          name="organism"
-                          type="string"
-                          variant="standard"
-                          value={update.organism}
-                          onChange={handleChange}
-                        />
+                        <FormControl variant="standard">
+                          <Select
+                            id="organism"
+                            name="organism"
+                            margin="dense"
+                            defaultValue={update.organism}
+                            required
+                          >
+                            {Object.entries(ORGANISM).map(([key, value]) => (
+                              <MenuItem key={key} value={value}>
+                                {value}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
                       </div>
                       <div className="horizontalForm">
                         <p>{t("columnsNames.language")}</p>
@@ -507,11 +347,15 @@ export default function UpdateCatalogueDialog(props: {
                             name="language"
                             margin="dense"
                             defaultValue={update.language}
-                            //onChange={(e) => handleChange('language', e.target.value)}
                             required
                           >
-                            <MenuItem value={"es"}>ES</MenuItem>
-                            <MenuItem value={"val"}>VAL</MenuItem>
+                            {Object.entries(LANGUAGE_FORM).map(
+                              ([key, value]) => (
+                                <MenuItem key={key} value={value}>
+                                  {value}
+                                </MenuItem>
+                              )
+                            )}
                           </Select>
                         </FormControl>
                       </div>
@@ -582,6 +426,24 @@ export default function UpdateCatalogueDialog(props: {
                           value={update.minimumVariables}
                           onChange={handleChange}
                         />
+                        <FormControl variant="standard">
+                          <Select
+                            id="minimumVariables"
+                            name="minimumVariables"
+                            variant="standard"
+                            value={update.minimumVariables}
+                            defaultValue={update.minimumVariables}
+                            required
+                          >
+                            {Object.entries(MINIMUM_VALUE).map(
+                              ([key, value]) => (
+                                <MenuItem key={key} value={value}>
+                                  {value}
+                                </MenuItem>
+                              )
+                            )}
+                          </Select>
+                        </FormControl>
                       </div>
                       <div className="horizontalForm">
                         <p>{t("columnsNames.contactPerson")}</p>
@@ -603,9 +465,9 @@ export default function UpdateCatalogueDialog(props: {
                           id="masterData"
                           name="masterData"
                           value={masterData}
-                          checked={masterData === "SI"}
+                          checked={masterData}
                           onChange={(event) =>
-                            handleSwitch("masterData", event.target.checked)
+                            setMasterData(event.target.checked)
                           }
                           color="primary" // Opcional: ajusta el color del switch
                         />
@@ -616,9 +478,9 @@ export default function UpdateCatalogueDialog(props: {
                           id="referenceData"
                           name="referenceData"
                           value={referenceData}
-                          checked={referenceData === "SI"}
+                          checked={referenceData}
                           onChange={(event) =>
-                            handleSwitch("referenceData", event.target.checked)
+                            setReferenceData(event.target.checked)
                           }
                           color="primary" // Opcional: ajusta el color del switch
                         />
@@ -629,9 +491,9 @@ export default function UpdateCatalogueDialog(props: {
                           id="highValue"
                           name="highValue"
                           value={highValue}
-                          checked={highValue === "SI"}
+                          checked={highValue}
                           onChange={(event) =>
-                            handleSwitch("highValue", event.target.checked)
+                            setHighValue(event.target.checked)
                           }
                           color="primary" // Opcional: ajusta el color del switch
                         />
@@ -643,9 +505,9 @@ export default function UpdateCatalogueDialog(props: {
                             id="activeAds"
                             name="activeAds"
                             value={activeAds}
-                            checked={activeAds === "SI"}
+                            checked={activeAds}
                             onChange={(event) =>
-                              handleSwitch("activeAds", event.target.checked)
+                              setActiveAds(event.target.checked)
                             }
                             color="primary" // Opcional: ajusta el color del switch
                           />
@@ -727,17 +589,23 @@ export default function UpdateCatalogueDialog(props: {
                     <div className="verticalForm">
                       <div className="horizontalForm">
                         <p>Información geográfica</p>
-                        <TextField
-                          autoFocus
-                          required
-                          margin="dense"
-                          id="typeGeo"
-                          name="typeGeo"
-                          type="string"
-                          variant="standard"
-                          value={update.typeGeo}
-                          onChange={handleChange}
-                        />
+                        <FormControl variant="standard">
+                          <Select
+                            id="typeGeo"
+                            name="typeGeo"
+                            margin="dense"
+                            defaultValue={update.typeGeo}
+                            required
+                          >
+                            {Object.entries(GEOGRAPHICAL_INFO).map(
+                              ([key, value]) => (
+                                <MenuItem key={key} value={value}>
+                                  {value}
+                                </MenuItem>
+                              )
+                            )}
+                          </Select>
+                        </FormControl>
                       </div>
                       <div className="horizontalForm">
                         <p>{t("columnsNames.territorialScope")}</p>
@@ -773,9 +641,9 @@ export default function UpdateCatalogueDialog(props: {
                           id="genderInfo"
                           name="genderInfo"
                           value={genderInfo}
-                          checked={genderInfo === "SI"}
+                          checked={genderInfo}
                           onChange={(event) =>
-                            handleSwitch("genderInfo", event.target.checked)
+                            setGenderInfo(event.target.checked)
                           }
                           color="primary" // Opcional: ajusta el color del switch
                         />
@@ -830,7 +698,6 @@ export default function UpdateCatalogueDialog(props: {
                         >
                           Atrás
                         </Button>
-
                         <Button
                           type="submit"
                           sx={{
@@ -860,10 +727,8 @@ export default function UpdateCatalogueDialog(props: {
                           id="RAT"
                           name="RAT"
                           value={RAT}
-                          checked={RAT === "SI"}
-                          onChange={(event) =>
-                            handleSwitch("RAT", event.target.checked)
-                          }
+                          checked={RAT}
+                          onChange={(event) => setRAT(event.target.checked)}
                           color="primary" // Opcional: ajusta el color del switch
                         />
                       </div>
@@ -873,9 +738,9 @@ export default function UpdateCatalogueDialog(props: {
                           id="dataProtection"
                           name="dataProtection"
                           value={dataProtection}
-                          checked={dataProtection === "SI"}
+                          checked={dataProtection}
                           onChange={(event) =>
-                            handleSwitch("dataProtection", event.target.checked)
+                            setDataProtection(event.target.checked)
                           }
                           color="primary" // Opcional: ajusta el color del switch
                         />
@@ -886,9 +751,9 @@ export default function UpdateCatalogueDialog(props: {
                           id="dataStandards"
                           name="dataStandards"
                           value={dataStandards}
-                          checked={dataStandards === "SI"}
+                          checked={dataStandards}
                           onChange={(event) =>
-                            handleSwitch("dataStandards", event.target.checked)
+                            setDataStandards(event.target.checked)
                           }
                           color="primary" // Opcional: ajusta el color del switch
                         />
@@ -913,9 +778,9 @@ export default function UpdateCatalogueDialog(props: {
                           id="dataAnonymize"
                           name="dataAnonymize"
                           value={dataAnonymize}
-                          checked={dataAnonymize === "SI"}
+                          checked={dataAnonymize}
                           onChange={(event) =>
-                            handleSwitch("dataAnonymize", event.target.checked)
+                            setDataAnonymize(event.target.checked)
                           }
                           color="primary" // Opcional: ajusta el color del switch
                         />
@@ -936,17 +801,23 @@ export default function UpdateCatalogueDialog(props: {
                       </div>
                       <div className="horizontalForm">
                         <p>Nivel de compartición</p>
-                        <TextField
-                          autoFocus
-                          required
-                          margin="dense"
-                          id="sharingLevel"
-                          name="sharingLevel"
-                          type="string"
-                          variant="standard"
-                          value={update.sharingLevel}
-                          onChange={handleChange}
-                        />
+                        <FormControl variant="standard">
+                          <Select
+                            id="sharingLevel"
+                            name="sharingLevel"
+                            margin="dense"
+                            defaultValue={update.sharingLevel}
+                            required
+                          >
+                            {Object.entries(SHARING_LEVEL).map(
+                              ([key, value]) => (
+                                <MenuItem key={key} value={value}>
+                                  {value}
+                                </MenuItem>
+                              )
+                            )}
+                          </Select>
+                        </FormControl>
                       </div>
                       <div className="horizontalFormSwitch">
                         <p>Datos compartidos</p>
@@ -954,9 +825,9 @@ export default function UpdateCatalogueDialog(props: {
                           id="sharedData"
                           name="sharedData"
                           value={sharedData}
-                          checked={sharedData === "SI"}
+                          checked={sharedData}
                           onChange={(event) =>
-                            handleSwitch("sharedData", event.target.checked)
+                            setSharedData(event.target.checked)
                           }
                           color="primary" // Opcional: ajusta el color del switch
                         />
@@ -997,7 +868,6 @@ export default function UpdateCatalogueDialog(props: {
                         >
                           Atrás
                         </Button>
-
                         <Button
                           type="submit"
                           sx={{
@@ -1023,25 +893,12 @@ export default function UpdateCatalogueDialog(props: {
                     <div className="verticalForm">
                       <div className="horizontalFormSwitch">
                         <p>VLCi</p>
-                        {/* <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="VLCi"
-                    name="VLCi"
-                    type="string"
-                    variant="standard"
-                    value={update.VLCi}
-                    onChange={handleChange}
-                  /> */}
                         <Switch
                           id="VLCi"
                           name="VLCi"
                           value={VLCi}
-                          checked={VLCi === "SI"}
-                          onChange={(event) =>
-                            handleSwitch("VLCi", event.target.checked)
-                          }
+                          checked={VLCi}
+                          onChange={(event) => setVLCi(event.target.checked)}
                           color="primary" // Opcional: ajusta el color del switch
                         />
                       </div>
@@ -1051,10 +908,8 @@ export default function UpdateCatalogueDialog(props: {
                           id="ArcGIS"
                           name="ArcGIS"
                           value={ArcGIS}
-                          checked={ArcGIS === "SI"}
-                          onChange={(event) =>
-                            handleSwitch("ArcGIS", event.target.checked)
-                          }
+                          checked={ArcGIS}
+                          onChange={(event) => setArcGIS(event.target.checked)}
                           color="primary" // Opcional: ajusta el color del switch
                         />
                       </div>
@@ -1064,10 +919,8 @@ export default function UpdateCatalogueDialog(props: {
                           id="Pentaho"
                           name="Pentaho"
                           value={Pentaho}
-                          checked={Pentaho === "SI"}
-                          onChange={(event) =>
-                            handleSwitch("Pentaho", event.target.checked)
-                          }
+                          checked={Pentaho}
+                          onChange={(event) => setPentaho(event.target.checked)}
                           color="primary" // Opcional: ajusta el color del switch
                         />
                       </div>
@@ -1077,10 +930,8 @@ export default function UpdateCatalogueDialog(props: {
                           id="CKAN"
                           name="CKAN"
                           value={CKAN}
-                          checked={CKAN === "SI"}
-                          onChange={(event) =>
-                            handleSwitch("CKAN", event.target.checked)
-                          }
+                          checked={CKAN}
+                          onChange={(event) => setCKAN(event.target.checked)}
                           color="primary" // Opcional: ajusta el color del switch
                         />
                       </div>
@@ -1090,10 +941,8 @@ export default function UpdateCatalogueDialog(props: {
                           id="MongoDB"
                           name="MongoDB"
                           value={MongoDB}
-                          checked={MongoDB === "SI"}
-                          onChange={(event) =>
-                            handleSwitch("MongoDB", event.target.checked)
-                          }
+                          checked={MongoDB}
+                          onChange={(event) => setMongoDB(event.target.checked)}
                           color="primary" // Opcional: ajusta el color del switch
                         />
                       </div>
@@ -1103,9 +952,9 @@ export default function UpdateCatalogueDialog(props: {
                           id="OpenDataSoft"
                           name="OpenDataSoft"
                           value={OpenDataSoft}
-                          checked={OpenDataSoft === "SI"}
+                          checked={OpenDataSoft}
                           onChange={(event) =>
-                            handleSwitch("OpenDataSoft", event.target.checked)
+                            setOpenDataSoft(event.target.checked)
                           }
                           color="primary" // Opcional: ajusta el color del switch
                         />
@@ -1202,7 +1051,6 @@ export default function UpdateCatalogueDialog(props: {
                         <p> Producto de datos</p>
                         <TextField
                           autoFocus
-                          //required
                           margin="dense"
                           id="productData"
                           name="productData"
@@ -1216,7 +1064,6 @@ export default function UpdateCatalogueDialog(props: {
                         <p> Comentarios del producto</p>
                         <TextField
                           autoFocus
-                          //required
                           margin="dense"
                           id="productComments"
                           name="productComments"
@@ -1263,27 +1110,13 @@ export default function UpdateCatalogueDialog(props: {
                             id="personalData"
                             name="personalData"
                             value={personalData}
-                            checked={personalData === "SI"}
+                            checked={personalData}
                             onChange={(event) =>
-                              handleSwitch("personalData", event.target.checked)
+                              setPersonalData(event.target.checked)
                             }
                             color="primary" // Opcional: ajusta el color del switch
                           />
                         </FormControl>
-                      </div>
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.responsibleIdentity")}</p>
-                        <TextField
-                          autoFocus
-                          required
-                          margin="dense"
-                          id="responsibleIdentity"
-                          name="responsibleIdentity"
-                          type="string"
-                          variant="standard"
-                          value={update.responsibleIdentity}
-                          onChange={handleChange}
-                        />
                       </div>
                     </div>
                     <div className="buttonsForm">
@@ -1321,7 +1154,6 @@ export default function UpdateCatalogueDialog(props: {
                         >
                           Atrás
                         </Button>
-
                         <Button
                           type="submit"
                           sx={{
@@ -1344,7 +1176,6 @@ export default function UpdateCatalogueDialog(props: {
                 )}
               </Box>
             </DialogContent>
-            <DialogActions></DialogActions>
           </Dialog>
         </LocalizationProvider>
       </ThemeProvider>

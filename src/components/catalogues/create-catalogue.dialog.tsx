@@ -234,8 +234,8 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       deleted,
       deletedDate,
       lastUpdate,
-      creationDate,
     };
+    console.log(create);
     createCatalogueRequest(create, authHeader())
       .then((response) => response.json())
       .then((data) => {
@@ -279,9 +279,29 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     const currentStepJson = Object.fromEntries(currentStepData.entries());
 
     setFormDataSteps((prevData) => ({ ...prevData, ...currentStepJson }));
-
     // Merge current step data with existing form data
-    setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
+    console.log(creationDateAlmacenado);
+    setFormData((prevData) => ({
+      ...prevData,
+      ...currentStepJson,
+      masterData,
+      activeAds,
+      referenceData,
+      highValue,
+      genderInfo,
+      autoAcess,
+      RAT,
+      dataProtection,
+      dataStandards,
+      dataAnonymize,
+      sharedData,
+      VLCi,
+      ArcGIS,
+      Pentaho,
+      CKAN,
+      MongoDB,
+      OpenDataSoft,
+    }));
     console.log(formData);
     setStep(step + 1);
   };
@@ -1307,7 +1327,10 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           format="DD/MM/YYYY hh:mm:ss a"
                           name="creationDate"
                           value={creationDateAlmacenado}
-                          onChange={(e) => handleChangeCreationDate(e)}
+                          onChange={(e) => {
+                            setCreationDate(e);
+                            handleChangeCreationDate(e);
+                          }}
                           slotProps={{
                             textField: {
                               variant: "standard",

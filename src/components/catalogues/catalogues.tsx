@@ -1,7 +1,6 @@
 import {
   DataGrid,
   GridColDef,
-  GridColumnGroupingModel,
   GridRenderCellParams,
   useGridApiRef,
 } from "@mui/x-data-grid";
@@ -64,85 +63,6 @@ function CatalogueList() {
     getInfo: () => getAndSetCatalogues(),
     catalogue: catalogueSelected,
   };
-
-  const columnGroupingModel: GridColumnGroupingModel = [
-    {
-      groupId: "Estructura general del dataset",
-      children: [
-        { field: "title" },
-        { field: "description" },
-        { field: "responsibleIdentity" },
-        { field: "organism" },
-        { field: "topic" },
-        { field: "language" },
-        { field: "keywords" },
-        { field: "minimumVariables" },
-        { field: "contactPerson" },
-        { field: "masterData" },
-        { field: "referenceData" },
-        { field: "highValue" },
-        { field: "activeAds" },
-        { field: "comments" },
-        //{ field: "generalComments" },
-      ],
-    },
-    {
-      groupId: "internalStructure",
-      children: [
-        //{ field: "geographicalInfo" },
-        { field: "typeGeo" },
-        { field: "temporaryCoverage" },
-        //{ field: "temporaryScope" },
-        { field: "genderInfo" },
-        { field: "structuredComments" },
-        //{ field: "structuralComments" },
-      ],
-    },
-    {
-      groupId: "dataOrigin",
-      children: [
-        { field: "associatedApplication" },
-        //{ field: "originApplication" },
-        { field: "autoAcess" },
-        //{ field: "autoAccess" },
-        { field: "originComments" },
-        //{ field: "originDataComments" },
-      ],
-    },
-    {
-      groupId: "datasetChargeState",
-      children: [
-        { field: "RAT" },
-        { field: "dataProtection" },
-        { field: "dataStandars" },
-        //{ field: "dataStandar" },
-        { field: "dataProtectionComments" },
-        //{ field: "protectionDataComments" },
-        { field: "dataAnonymize" },
-        { field: "dataQuality" },
-        { field: "sharingLevel" },
-        { field: "sharedData" },
-        { field: "VLCi" },
-        { field: "ArcGIS" },
-        { field: "Pentaho" },
-        { field: "CKAN" },
-        { field: "MongoDB" },
-        { field: "OpenDataSoft" },
-        { field: "temporarySolution" },
-        //{ field: "temporaryResolution" },
-        { field: "chargeStateComments" },
-        //{ field: "datasetChargeStateComments" },
-      ],
-    },
-    {
-      groupId: "datasetApplicationCreated",
-      children: [
-        { field: "productData" },
-        //{ field: "dataProduct" },
-        { field: "productComments" },
-      ],
-    },
-  ];
 
   const columns: GridColDef[] = [
     {
@@ -550,7 +470,6 @@ function CatalogueList() {
             apiRef={gridApiRef}
             rows={rows}
             columns={columns}
-            columnGroupingModel={columnGroupingModel}
             sx={{
               height: "100%",
               width: "100%",
@@ -580,15 +499,15 @@ function CatalogueList() {
               filter: {
                 filterModel: {
                   items:
-                    userData.service === RESPONSIBLE_IDENTITY.GENERAL
-                      ? []
-                      : [
+                    userData.service !== RESPONSIBLE_IDENTITY.GENERAL
+                      ? [
                           {
                             field: "responsibleIdentity",
                             operator: "contains",
                             value: userData.service,
                           },
-                        ],
+                        ]
+                      : [],
                   quickFilterValues: [],
                 },
               },
