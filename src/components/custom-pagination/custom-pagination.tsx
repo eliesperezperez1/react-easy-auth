@@ -16,16 +16,12 @@ function CustomPagination(props: any) {
       }}
       showFirstButton
       showLastButton
-      /*sx={{
-        color: actualTheme==="light" ? "black" : "white",
-      }}*/
-      // @ts-expect-error
-      renderItem={props2 => 
+     /*  renderItem={(props2) => 
       <PaginationItem {...props2} disableRipple 
         sx={{
           color: actualTheme==="light" ? "black" : "white",
         }} 
-      />}
+      />} */
     />
   );
 }

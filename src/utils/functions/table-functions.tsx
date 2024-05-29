@@ -17,12 +17,37 @@ export function paletaColores(color: string) {
       return "rgba(212, 212, 212, 1)";
   }
 }
+export function arrayCell(params: string[] | undefined | null) {
+  const array = params;
+  if (!array) {
+    return null;
+  } else {
+    return (
+      <div>
+        {array.map((item, index) => (
+          <div key={index}>{item}</div>
+        ))}
+      </div>
+    );
+  }
+}
 export function isChecked(p: boolean | undefined | string) {
-  return p === true || p === "SI" ? (
-    <CheckIcon color="success"></CheckIcon>
-  ) : (
-    <CloseIcon color="error"></CloseIcon>
-  );
+  if (!p) {
+    return <CloseIcon color="error"></CloseIcon>;
+  } else {
+    let aux = p.toString();
+    let aux2 = "SI";
+    let aux3 = "SÍ";
+    let aux4 = "x";
+    return p === true ||
+      aux.toLowerCase().includes(aux2.toLowerCase()) ||
+      aux.toLowerCase().includes(aux3.toLowerCase()) ||
+      aux.toLowerCase().includes(aux4.toLowerCase()) ? (
+      <CheckIcon color="success"></CheckIcon>
+    ) : (
+      <CloseIcon color="error"></CloseIcon>
+    );
+  }
 }
 export function yesOrNo(p: string | undefined) {
   return p === "NO" || undefined ? "error" : "success";

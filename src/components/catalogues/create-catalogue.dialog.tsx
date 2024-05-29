@@ -34,6 +34,7 @@ import { GEOGRAPHICAL_INFO } from "../../utils/enums/geographical-info.enum";
 import { TOPIC } from "../../utils/enums/topic.enum";
 import { SHARING_LEVEL } from "../../utils/enums/sharing-level.enum";
 import { catalogueMock } from "../../utils/catalogue.mock";
+import ButtonsForm, { buttonsFormInfo } from "./buttons-form";
 export interface DialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
@@ -152,10 +153,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [CKAN, setCKAN] = useState(true);
   const [MongoDB, setMongoDB] = useState(true);
   const [OpenDataSoft, setOpenDataSoft] = useState(true);
-  const [format, setFormat] = React.useState<string[]>([]);
-  const [lastUpdateAlmacenado, setLastUpdate] = React.useState<Dayjs | null>();
-  const [creationDateAlmacenado, setCreationDate] =
-    React.useState<Dayjs | null>();
+  const [format, setFormat] = useState<string[]>([]);
+  const [lastUpdateAlmacenado, setLastUpdate] = useState<Dayjs | null>();
+  const [creationDateAlmacenado, setCreationDate] = useState<Dayjs | null>();
   const { actualTheme } = useAlternateTheme();
 
   useEffect(() => {
@@ -221,6 +221,11 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     setFormat(newValue);
   };
 
+  const buttonsFormProps: buttonsFormInfo = {
+    handleClose: () => handleClose(),
+    handleGoBack: () => handleGoBack(),
+  };
+
   const createCatalogue = (formJson: any) => {
     const a = formJson.lastUpdate;
     const b = formJson.creationDate;
@@ -235,7 +240,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       deletedDate,
       lastUpdate,
     };
-    console.log(create);
     createCatalogueRequest(create, authHeader())
       .then((response) => response.json())
       .then((data) => {
@@ -302,7 +306,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       MongoDB,
       OpenDataSoft,
     }));
-    console.log(formData);
     setStep(step + 1);
   };
 
@@ -331,9 +334,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     const currentStepJson = Object.fromEntries(currentStepData.entries());
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
     const mergedFormData = { ...formData, ...currentStepJson };
-    console.log(mergedFormData, "merged form data");
     createCatalogue(mergedFormData);
-    console.log(mergedFormData);
   };
 
   const handleChange = (field: string, value: string) => {
@@ -366,6 +367,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
             open={open}
             onClose={handleClose}
             style={dynamicStyle}
+            maxWidth="lg"
           >
             <DialogTitle style={dynamicStyle}>
               {t("dialog.addRegister")}
@@ -374,476 +376,355 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
               <div className="dialogContentText">
                 <span>{t("dialog.fillInfo")}</span>
                 <span>
-                  <strong>{step}/7</strong>
+                  <strong>{step}/5</strong>
                 </span>
               </div>
               <Box>
                 {step === 1 && ( // ESTRUCTURA GENERAL DEL DATASET
                   <form onSubmit={handleNext}>
-                    <div className="verticalForm">
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.title")} *</p>
-                        <TextField
-                          autoFocus
-                          required
-                          margin="dense"
-                          id="title"
-                          name="title"
-                          type="string"
-                          variant="standard"
-                          value={formDataSteps.title}
-                          onChange={(e) =>
-                            handleChange("title", e.target.value)
-                          }
-                        />
-                      </div>
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.description")} *</p>
-                        <TextField
-                          autoFocus
-                          required
-                          margin="dense"
-                          id="description"
-                          name="description"
-                          type="string"
-                          variant="standard"
-                          value={formDataSteps.description}
-                          onChange={(e) =>
-                            handleChange("description", e.target.value)
-                          }
-                        />
-                      </div>
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.responsibleIdentity")} *</p>
-                        <FormControl variant="standard">
-                          <Select
-                            id="responsibleIdentity"
-                            name="responsibleIdentity"
+                    <div className="grid">
+                      <div className="row">
+                        <div className="horizontalForm">
+                          <p>{t("columnsNames.title")} *</p>
+                          <TextField
+                            autoFocus
+                            required
                             margin="dense"
-                            defaultValue={formDataSteps.responsibleIdentity}
-                          >
-                            {Object.entries(RESPONSIBLE_IDENTITY).map(
-                              ([key, value]) => (
+                            id="title"
+                            name="title"
+                            type="string"
+                            variant="standard"
+                            value={formDataSteps.title}
+                            onChange={(e) =>
+                              handleChange("title", e.target.value)
+                            }
+                          />
+                        </div>
+                        <div className="horizontalForm">
+                          <p>{t("columnsNames.description")} *</p>
+                          <TextField
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="description"
+                            name="description"
+                            type="string"
+                            variant="standard"
+                            value={formDataSteps.description}
+                            onChange={(e) =>
+                              handleChange("description", e.target.value)
+                            }
+                          />
+                        </div>
+                        <div className="horizontalForm">
+                          <p>{t("columnsNames.responsibleIdentity")} *</p>
+                          <FormControl variant="standard">
+                            <Select
+                              id="responsibleIdentity"
+                              name="responsibleIdentity"
+                              margin="dense"
+                              defaultValue={formDataSteps.responsibleIdentity}
+                            >
+                              {Object.entries(RESPONSIBLE_IDENTITY).map(
+                                ([key, value]) => (
+                                  <MenuItem key={key} value={value}>
+                                    {value}
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
+                        </div>
+                        <div className="horizontalForm">
+                          <p>Organismo</p>
+                          <FormControl variant="standard">
+                            <Select
+                              id="organism"
+                              name="organism"
+                              margin="dense"
+                              defaultValue={formDataSteps.organism}
+                            >
+                              {Object.entries(ORGANISM).map(([key, value]) => (
                                 <MenuItem key={key} value={value}>
                                   {value}
                                 </MenuItem>
-                              )
-                            )}
-                          </Select>
-                        </FormControl>
-                      </div>
-                      <div className="horizontalForm">
-                        <p>Organismo</p>
-                        <FormControl variant="standard">
-                          <Select
-                            id="organism"
-                            name="organism"
-                            margin="dense"
-                            defaultValue={formDataSteps.organism}
-                          >
-                            {Object.entries(ORGANISM).map(([key, value]) => (
-                              <MenuItem key={key} value={value}>
-                                {value}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </div>
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.topic")} *</p>
-                        <FormControl variant="standard">
-                          <Select
-                            id="topic"
-                            name="topic"
-                            margin="dense"
-                            defaultValue={formDataSteps.topic}
-                          >
-                            {Object.entries(TOPIC).map(([key, value]) => (
-                              <MenuItem key={key} value={value}>
-                                {value}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </div>
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.language")}</p>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </div>
+                        <div className="horizontalForm">
+                          <p>{t("columnsNames.topic")} *</p>
+                          <FormControl variant="standard">
+                            <Select
+                              id="topic"
+                              name="topic"
+                              margin="dense"
+                              defaultValue={formDataSteps.topic}
+                            >
+                              {Object.entries(TOPIC).map(([key, value]) => (
+                                <MenuItem key={key} value={value}>
+                                  {value}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </div>
+                        <div className="horizontalForm">
+                          <p>{t("columnsNames.language")}</p>
 
-                        <FormControl variant="standard">
-                          <Select
-                            id="language"
-                            name="language"
+                          <FormControl variant="standard">
+                            <Select
+                              id="language"
+                              name="language"
+                              margin="dense"
+                              defaultValue={formDataSteps.language}
+                            >
+                              {Object.entries(LANGUAGE_FORM).map(
+                                ([key, value]) => (
+                                  <MenuItem key={key} value={value}>
+                                    {value}
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="horizontalForm">
+                          <p>Palabras clave *</p>
+                          <TextField
+                            autoFocus
+                            required
                             margin="dense"
-                            defaultValue={formDataSteps.language}
-                          >
-                            {Object.entries(LANGUAGE_FORM).map(
-                              ([key, value]) => (
-                                <MenuItem key={key} value={value}>
-                                  {value}
-                                </MenuItem>
-                              )
-                            )}
-                          </Select>
-                        </FormControl>
-                      </div>
-                    </div>
-                    <div className="buttonsForm">
-                      <Button
-                        onClick={handleClose}
-                        sx={{
-                          height: 37,
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
-                      >
-                        {t("dialog.cancel")}
-                      </Button>
-                      <Button
-                        type="submit"
-                        sx={{
-                          height: 37,
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
-                      >
-                        {t("dialog.next")}
-                      </Button>
-                    </div>
-                  </form>
-                )}
-                {step === 2 && ( // ESTRUCTURA GENERAL DEL DATASET
-                  <form onSubmit={handleNext}>
-                    <div className="verticalForm">
-                      <div className="horizontalForm">
-                        <p>Palabras clave *</p>
-                        <TextField
-                          autoFocus
-                          //required
-                          margin="dense"
-                          id="keywords"
-                          name="keywords"
-                          type="string"
-                          variant="standard"
-                          value={formDataSteps.keyWords}
-                          onChange={(e) =>
-                            handleChange("keyWords", e.target.value)
-                          }
-                        />
-                      </div>
-                      <div className="horizontalForm">
-                        <p>Campos mínimos *</p>
-                        <FormControl variant="standard">
-                          <Select
-                            id="minimumVariables"
-                            name="minimumVariables"
+                            id="keyWords"
+                            name="description"
+                            type="string"
+                            variant="standard"
+                            value={formDataSteps.keyWords}
+                            onChange={(e) =>
+                              handleChange("keyWords", e.target.value)
+                            }
+                          />
+                        </div>
+                        <div className="horizontalForm">
+                          <p>Campos mínimos *</p>
+                          <FormControl variant="standard">
+                            <Select
+                              id="minimumVariables"
+                              name="minimumVariables"
+                              margin="dense"
+                              defaultValue={formDataSteps.minimumVariables}
+                            >
+                              {Object.entries(MINIMUM_VALUE).map(
+                                ([key, value]) => (
+                                  <MenuItem key={key} value={value}>
+                                    {value}
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
+                        </div>
+                        <div className="horizontalForm">
+                          <p>{t("columnsNames.contactPerson")} *</p>
+                          <TextField
+                            autoFocus
+                            required
                             margin="dense"
-                            defaultValue={formDataSteps.minimumVariables}
-                          >
-                            {Object.entries(MINIMUM_VALUE).map(
-                              ([key, value]) => (
-                                <MenuItem key={key} value={value}>
-                                  {value}
-                                </MenuItem>
-                              )
-                            )}
-                          </Select>
-                        </FormControl>
-                      </div>
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.contactPerson")} *</p>
-                        <TextField
-                          autoFocus
-                          required
-                          margin="dense"
-                          id="contactPerson"
-                          name="contactPerson"
-                          type="string"
-                          variant="standard"
-                          value={formDataSteps.contactPerson}
-                          onChange={(e) =>
-                            handleChange("contactPerson", e.target.value)
-                          }
-                        />
-                      </div>
-                      <div className="horizontalFormSwitch">
-                        <p>Dato maestro</p>
-                        <Switch
-                          id="masterData"
-                          name="masterData"
-                          value={masterData}
-                          checked={masterData}
-                          onChange={(event) =>
-                            setMasterData(event.target.checked)
-                          }
-                          color="primary" // Opcional: ajusta el color del switch
-                        />
-                      </div>
-                      <div className="horizontalFormSwitch">
-                        <p>Dato de referencia</p>
-                        <Switch
-                          id="referenceData"
-                          name="referenceData"
-                          value={referenceData}
-                          checked={referenceData}
-                          onChange={(event) =>
-                            setReferenceData(event.target.checked)
-                          }
-                          color="primary" // Opcional: ajusta el color del switch
-                        />
-                      </div>
-                      <div className="horizontalFormSwitch">
-                        <p>Alto valor *</p>
-                        <Switch
-                          //required
-                          id="highValue"
-                          name="highValue"
-                          value={highValue}
-                          checked={highValue === true}
-                          onChange={(event) =>
-                            setHighValue(event.target.checked)
-                          }
-                          color="primary" // Opcional: ajusta el color del switch
-                        />
-                      </div>
-                      <div className="horizontalFormSwitch">
-                        <p>{t("columnsNames.activeAds")} *</p>
-                        <FormControl variant="standard">
+                            id="contactPerson"
+                            name="contactPerson"
+                            type="string"
+                            variant="standard"
+                            value={formDataSteps.contactPerson}
+                            onChange={(e) =>
+                              handleChange("contactPerson", e.target.value)
+                            }
+                          />
+                        </div>
+                        <div className="horizontalFormSwitch">
+                          <p>Dato maestro</p>
                           <Switch
-                            //required
-                            id="activeAds"
-                            name="activeAds"
-                            value={activeAds}
-                            checked={activeAds}
+                            id="masterData"
+                            name="masterData"
+                            value={masterData}
+                            checked={masterData}
                             onChange={(event) =>
-                              setActiveAds(event.target.checked)
+                              setMasterData(event.target.checked)
                             }
                             color="primary" // Opcional: ajusta el color del switch
                           />
-                        </FormControl>
-                      </div>
-                      <div className="horizontalForm">
-                        <p>Comentarios generales</p>
-                        <TextField
-                          autoFocus
-                          //required
-                          margin="dense"
-                          id="comments"
-                          name="comments"
-                          type="string"
-                          variant="standard"
-                          value={formDataSteps.comments}
-                          onChange={(e) =>
-                            handleChange("comments", e.target.value)
-                          }
-                        />
-                      </div>
-                    </div>
-                    <div className="buttonsForm">
-                      <Button
-                        onClick={handleClose}
-                        sx={{
-                          height: 37,
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
-                      >
-                        {t("dialog.cancel")}
-                      </Button>
-                      <div>
-                        <Button
-                          onClick={handleGoBack}
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            marginRight: 1,
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          Atrás
-                        </Button>
-                        <Button
-                          type="submit"
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          {t("dialog.next")}
-                        </Button>
-                      </div>
-                    </div>
-                  </form>
-                )}
-                {step === 3 && ( // ESTRUCTURA INTERNA DEL DATASET
-                  <form onSubmit={handleNext}>
-                    <div className="verticalForm">
-                      <div className="horizontalForm">
-                        <p>Información geográfica *</p>
-                        <FormControl variant="standard">
-                          <Select
-                            id="typeGeo"
-                            name="typeGeo"
+                        </div>
+                        <div className="horizontalFormSwitch">
+                          <p>Dato de referencia</p>
+                          <Switch
+                            id="referenceData"
+                            name="referenceData"
+                            value={referenceData}
+                            checked={referenceData}
+                            onChange={(event) =>
+                              setReferenceData(event.target.checked)
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </div>
+                        <div className="horizontalFormSwitch">
+                          <p>Alto valor *</p>
+                          <Switch
+                            //required
+                            id="highValue"
+                            name="highValue"
+                            value={highValue}
+                            checked={highValue}
+                            onChange={(event) =>
+                              setHighValue(event.target.checked)
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </div>
+                        <div className="horizontalFormSwitch">
+                          <p>{t("columnsNames.activeAds")} *</p>
+                          <FormControl variant="standard">
+                            <Switch
+                              //required
+                              id="activeAds"
+                              name="activeAds"
+                              value={activeAds}
+                              checked={activeAds}
+                              onChange={(event) =>
+                                setActiveAds(event.target.checked)
+                              }
+                              color="primary" // Opcional: ajusta el color del switch
+                            />
+                          </FormControl>
+                        </div>
+                        <div className="horizontalForm">
+                          <p>Comentarios generales</p>
+                          <TextField
+                            autoFocus
+                            //required
                             margin="dense"
-                            defaultValue={formDataSteps.typeGeo}
-                          >
-                            {Object.entries(GEOGRAPHICAL_INFO).map(
-                              ([key, value]) => (
-                                <MenuItem key={key} value={value}>
-                                  {value}
-                                </MenuItem>
-                              )
-                            )}
-                          </Select>
-                        </FormControl>
-                      </div>
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.territorialScope")}</p>
-                        <TextField
-                          autoFocus
-                          //required
-                          margin="dense"
-                          id="territorialScope"
-                          name="territorialScope"
-                          type="string"
-                          variant="standard"
-                          value={formDataSteps.territorialScope}
-                          onChange={(e) =>
-                            handleChange("territorialScope", e.target.value)
-                          }
-                        />
-                      </div>
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.temporaryCoverage")}</p>
-                        <TextField
-                          autoFocus
-                          //required
-                          margin="dense"
-                          id="temporaryCoverage"
-                          name="temporaryCoverage"
-                          type="string"
-                          variant="standard"
-                          value={formDataSteps.temporaryCoverage}
-                          onChange={(e) =>
-                            handleChange("temporaryCoverage", e.target.value)
-                          }
-                        />
-                      </div>
-                      <div className="horizontalFormSwitch">
-                        <p>Información de género</p>
-                        <Switch
-                          id="genderInfo"
-                          name="genderInfo"
-                          value={genderInfo}
-                          checked={genderInfo === true}
-                          onChange={(event) =>
-                            setGenderInfo(event.target.checked)
-                          }
-                          color="primary" // Opcional: ajusta el color del switch
-                        />
-                      </div>
-                      <div className="horizontalForm">
-                        <p>Comentario de la estructura</p>
-                        <TextField
-                          autoFocus
-                          margin="dense"
-                          id="structuredComments"
-                          name="structuredComments"
-                          type="string"
-                          variant="standard"
-                          value={formDataSteps.structuredComments}
-                          onChange={(e) =>
-                            handleChange("structuredComments", e.target.value)
-                          }
-                        />
+                            id="comments"
+                            name="comments"
+                            type="string"
+                            variant="standard"
+                            value={formDataSteps.comments}
+                            onChange={(e) =>
+                              handleChange("comments", e.target.value)
+                            }
+                          />
+                        </div>
+                        <div className="horizontalForm">
+                          <p>Fecha de creación *</p>
+                          <DateTimePicker
+                            format="DD/MM/YYYY hh:mm:ss a"
+                            name="creationDate"
+                            value={creationDateAlmacenado}
+                            onChange={(e) => {
+                              setCreationDate(e);
+                              handleChangeCreationDate(e);
+                            }}
+                            slotProps={{
+                              textField: {
+                                variant: "standard",
+                                id: "creationDate",
+                              },
+                            }}
+                          ></DateTimePicker>
+                        </div>
+                        <div className="horizontalForm">
+                          <p>{t("columnsNames.lastUpdate")} *</p>
+                          <DateTimePicker
+                            format="DD/MM/YYYY hh:mm:ss a"
+                            name="lastUpdate"
+                            value={lastUpdateAlmacenado}
+                            onChange={(e) => handleChangeLastUpdate(e)}
+                            slotProps={{
+                              textField: {
+                                variant: "standard",
+                                id: "lastUpdate",
+                              },
+                            }}
+                          ></DateTimePicker>
+                        </div>
                       </div>
                     </div>
-                    <div className="buttonsForm">
-                      <Button
-                        onClick={handleClose}
-                        sx={{
-                          height: 37,
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
-                      >
-                        {t("dialog.cancel")}
-                      </Button>
-                      <div>
-                        <Button
-                          onClick={handleGoBack}
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            marginRight: 1,
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          Atrás
-                        </Button>
-                        <Button
-                          type="submit"
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          {t("dialog.next")}
-                        </Button>
-                      </div>
-                    </div>
+                    <ButtonsForm info={buttonsFormProps} />
                   </form>
                 )}
-                {step === 4 && ( // APLICACIÓN DE ORIGEN DE LOS DATOS
+                {step === 2 && ( // ESTRUCTURA INTERNA DEL DATASET
+                  <form onSubmit={handleNext}>
+                    <div className="grid">
+                      <div className="row">
+                        <div className="horizontalForm">
+                          <p>Información geográfica *</p>
+                          <FormControl variant="standard">
+                            <Select
+                              id="typeGeo"
+                              name="typeGeo"
+                              margin="dense"
+                              defaultValue={formDataSteps.typeGeo}
+                            >
+                              {Object.entries(GEOGRAPHICAL_INFO).map(
+                                ([key, value]) => (
+                                  <MenuItem key={key} value={value}>
+                                    {value}
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
+                        </div>
+                        <div className="horizontalForm">
+                          <p>{t("columnsNames.temporaryCoverage")}</p>
+                          <TextField
+                            autoFocus
+                            //required
+                            margin="dense"
+                            id="temporaryCoverage"
+                            name="temporaryCoverage"
+                            type="string"
+                            variant="standard"
+                            value={formDataSteps.temporaryCoverage}
+                            onChange={(e) =>
+                              handleChange("temporaryCoverage", e.target.value)
+                            }
+                          />
+                        </div>
+                        <div className="horizontalFormSwitch">
+                          <p>Información de género</p>
+                          <Switch
+                            id="genderInfo"
+                            name="genderInfo"
+                            value={genderInfo}
+                            checked={genderInfo === true}
+                            onChange={(event) =>
+                              setGenderInfo(event.target.checked)
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </div>
+                        <div className="horizontalForm">
+                          <p>Comentario de la estructura</p>
+                          <TextField
+                            autoFocus
+                            margin="dense"
+                            id="structuredComments"
+                            name="structuredComments"
+                            type="string"
+                            variant="standard"
+                            value={formDataSteps.structuredComments}
+                            onChange={(e) =>
+                              handleChange("structuredComments", e.target.value)
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <ButtonsForm info={buttonsFormProps} />
+                  </form>
+                )}
+                {step === 3 && ( // APLICACIÓN DE ORIGEN DE LOS DATOS
                   <form onSubmit={handleNext}>
                     <div className="verticalForm">
                       <div className="horizontalForm">
@@ -895,398 +776,248 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                         />
                       </div>
                     </div>
-                    <div className="buttonsForm">
-                      <Button
-                        onClick={handleClose}
-                        sx={{
-                          height: 37,
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
-                      >
-                        {t("dialog.cancel")}
-                      </Button>
-                      <div>
-                        <Button
-                          onClick={handleGoBack}
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            marginRight: 1,
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          Atrás
-                        </Button>
-                        <Button
-                          type="submit"
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          {t("dialog.next")}
-                        </Button>
-                      </div>
-                    </div>
+                    <ButtonsForm info={buttonsFormProps} />
                   </form>
                 )}
-                {step === 5 && ( // ESTADO DE LA CARGA DEL DATASET EN LAS DIFERENTES PLATAFORMAS
+                {step === 4 && ( // ESTADO DE LA CARGA DEL DATASET EN LAS DIFERENTES PLATAFORMAS
                   <form onSubmit={handleNext}>
-                    <div className="verticalForm">
-                      <div className="horizontalFormSwitch">
-                        <p>RAT</p>
-                        <Switch
-                          id="RAT"
-                          name="RAT"
-                          value={RAT}
-                          checked={RAT}
-                          onChange={(event) => setRAT(event.target.checked)}
-                          color="primary" // Opcional: ajusta el color del switch
-                        />
-                      </div>
-                      <div className="horizontalFormSwitch">
-                        <p>Protección de datos *</p>
-                        <Switch
-                          //required
-                          id="dataProtection"
-                          name="dataProtection"
-                          value={dataProtection}
-                          checked={dataProtection}
-                          onChange={(event) =>
-                            setDataProtection(event.target.checked)
-                          }
-                          color="primary" // Opcional: ajusta el color del switch
-                        />
-                      </div>
-                      <div className="horizontalFormSwitch">
-                        <p>Estándares de datos</p>
-                        <Switch
-                          id="dataStandards"
-                          name="dataStandards"
-                          value={dataStandards}
-                          checked={dataStandards}
-                          onChange={(event) =>
-                            setDataStandards(event.target.checked)
-                          }
-                          color="primary" // Opcional: ajusta el color del switch
-                        />
-                      </div>
-                      <div className="horizontalForm">
-                        <p>Comentarios sobre la protección de datos</p>
-                        <TextField
-                          autoFocus
-                          //required
-                          margin="dense"
-                          id="dataProtectionComments"
-                          name="dataProtectionComments"
-                          type="string"
-                          variant="standard"
-                          value={formDataSteps.dataProtectionComments}
-                          onChange={(e) =>
-                            handleChange(
-                              "dataProtectionComments",
-                              e.target.value
-                            )
-                          }
-                        />
-                      </div>
-                      <div className="horizontalFormSwitch">
-                        <p>Anonimización de datos</p>
-                        <Switch
-                          id="dataAnonymize"
-                          name="dataAnonymize"
-                          value={dataAnonymize}
-                          checked={dataAnonymize}
-                          onChange={(event) =>
-                            setDataAnonymize(event.target.checked)
-                          }
-                          color="primary" // Opcional: ajusta el color del switch
-                        />
-                      </div>
-                      <div className="horizontalForm">
-                        <p>Calidad de los datos</p>
-                        <TextField
-                          autoFocus
-                          //required
-                          margin="dense"
-                          id="dataQuality"
-                          name="dataQuality"
-                          type="string"
-                          variant="standard"
-                          value={formDataSteps.dataQuality}
-                          onChange={(e) =>
-                            handleChange("dataQuality", e.target.value)
-                          }
-                        />
-                      </div>
-                      <div className="horizontalForm">
-                        <p>Nivel de compartición *</p>
-                        <FormControl variant="standard">
-                          <Select
-                            id="sharingLevel"
-                            name="sharingLevel"
+                    <div className="grid">
+                      <div className="row">
+                        <div className="horizontalFormSwitch">
+                          <p>RAT</p>
+                          <Switch
+                            id="RAT"
+                            name="RAT"
+                            value={RAT}
+                            checked={RAT}
+                            onChange={(event) => setRAT(event.target.checked)}
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </div>
+                        <div className="horizontalFormSwitch">
+                          <p>Protección de datos *</p>
+                          <Switch
+                            //required
+                            id="dataProtection"
+                            name="dataProtection"
+                            value={dataProtection}
+                            checked={dataProtection}
+                            onChange={(event) =>
+                              setDataProtection(event.target.checked)
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </div>
+                        <div className="horizontalFormSwitch">
+                          <p>Estándares de datos</p>
+                          <Switch
+                            id="dataStandards"
+                            name="dataStandards"
+                            value={dataStandards}
+                            checked={dataStandards}
+                            onChange={(event) =>
+                              setDataStandards(event.target.checked)
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </div>
+                        <div className="horizontalForm">
+                          <p>Comentarios sobre la protección de datos</p>
+                          <TextField
+                            autoFocus
+                            //required
                             margin="dense"
-                            defaultValue={formDataSteps.sharingLevel}
-                          >
-                            {Object.entries(SHARING_LEVEL).map(
-                              ([key, value]) => (
-                                <MenuItem key={key} value={value}>
-                                  {value}
-                                </MenuItem>
+                            id="dataProtectionComments"
+                            name="dataProtectionComments"
+                            type="string"
+                            variant="standard"
+                            value={formDataSteps.dataProtectionComments}
+                            onChange={(e) =>
+                              handleChange(
+                                "dataProtectionComments",
+                                e.target.value
                               )
-                            )}
-                          </Select>
-                        </FormControl>
+                            }
+                          />
+                        </div>
+                        <div className="horizontalFormSwitch">
+                          <p>Anonimización de datos</p>
+                          <Switch
+                            id="dataAnonymize"
+                            name="dataAnonymize"
+                            value={dataAnonymize}
+                            checked={dataAnonymize}
+                            onChange={(event) =>
+                              setDataAnonymize(event.target.checked)
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </div>
+                        <div className="horizontalForm">
+                          <p>Calidad de los datos</p>
+                          <TextField
+                            autoFocus
+                            //required
+                            margin="dense"
+                            id="dataQuality"
+                            name="dataQuality"
+                            type="string"
+                            variant="standard"
+                            value={formDataSteps.dataQuality}
+                            onChange={(e) =>
+                              handleChange("dataQuality", e.target.value)
+                            }
+                          />
+                        </div>
+                        <div className="horizontalForm">
+                          <p>Nivel de compartición *</p>
+                          <FormControl variant="standard">
+                            <Select
+                              id="sharingLevel"
+                              name="sharingLevel"
+                              margin="dense"
+                              defaultValue={formDataSteps.sharingLevel}
+                            >
+                              {Object.entries(SHARING_LEVEL).map(
+                                ([key, value]) => (
+                                  <MenuItem key={key} value={value}>
+                                    {value}
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
+                        </div>
+                        <div className="horizontalFormSwitch">
+                          <p>Datos compartidos</p>
+                          <Switch
+                            id="sharedData"
+                            name="sharedData"
+                            value={sharedData}
+                            checked={sharedData}
+                            onChange={(event) =>
+                              setSharedData(event.target.checked)
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </div>
                       </div>
-                      <div className="horizontalFormSwitch">
-                        <p>Datos compartidos</p>
-                        <Switch
-                          id="sharedData"
-                          name="sharedData"
-                          value={sharedData}
-                          checked={sharedData}
-                          onChange={(event) =>
-                            setSharedData(event.target.checked)
-                          }
-                          color="primary" // Opcional: ajusta el color del switch
-                        />
+                      <div className="row">
+                        <div className="horizontalFormSwitch">
+                          <p>VLCi</p>
+                          <Switch
+                            id="VLCi"
+                            name="VLCi"
+                            value={VLCi}
+                            checked={VLCi}
+                            onChange={(event) => setVLCi(event.target.checked)}
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </div>
+                        <div className="horizontalFormSwitch">
+                          <p>ArcGIS</p>
+                          <Switch
+                            id="ArcGIS"
+                            name="ArcGIS"
+                            value={ArcGIS}
+                            checked={ArcGIS === true}
+                            onChange={(event) =>
+                              setArcGIS(event.target.checked)
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </div>
+                        <div className="horizontalFormSwitch">
+                          <p>Pentaho</p>
+                          <Switch
+                            id="Pentaho"
+                            name="Pentaho"
+                            value={Pentaho}
+                            checked={Pentaho}
+                            onChange={(event) =>
+                              setPentaho(event.target.checked)
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </div>
+                        <div className="horizontalFormSwitch">
+                          <p>CKAN</p>
+                          <Switch
+                            id="CKAN"
+                            name="CKAN"
+                            value={CKAN}
+                            checked={CKAN}
+                            onChange={(event) => setCKAN(event.target.checked)}
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </div>
+                        <div className="horizontalFormSwitch">
+                          <p>MongoDB</p>
+                          <Switch
+                            id="MongoDB"
+                            name="MongoDB"
+                            value={MongoDB}
+                            checked={MongoDB}
+                            onChange={(event) =>
+                              setMongoDB(event.target.checked)
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </div>
+                        <div className="horizontalFormSwitch">
+                          <p>OpenDataSoft</p>
+                          <Switch
+                            id="OpenDataSoft"
+                            name="OpenDataSoft"
+                            value={OpenDataSoft}
+                            checked={OpenDataSoft}
+                            onChange={(event) =>
+                              setOpenDataSoft(event.target.checked)
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </div>
+                        <div className="horizontalForm">
+                          <p>Resolución temporal</p>
+                          <TextField
+                            autoFocus
+                            //required
+                            margin="dense"
+                            id="temporarySolution"
+                            name="temporarySolution"
+                            type="string"
+                            variant="standard"
+                            value={formDataSteps.temporarySolution}
+                            onChange={(e) =>
+                              handleChange("temporarySolution", e.target.value)
+                            }
+                          />
+                        </div>
+                        <div className="horizontalForm">
+                          <p>Comentarios sobre el estado de carga</p>
+                          <TextField
+                            autoFocus
+                            //required
+                            margin="dense"
+                            id="chargeStateComments"
+                            name="chargeStateComments"
+                            type="string"
+                            variant="standard"
+                            value={formDataSteps.chargeStateComments}
+                            onChange={(e) =>
+                              handleChange(
+                                "chargeStateComments",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <div className="buttonsForm">
-                      <Button
-                        onClick={handleClose}
-                        sx={{
-                          height: 37,
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
-                      >
-                        {t("dialog.cancel")}
-                      </Button>
-                      <div>
-                        <Button
-                          onClick={handleGoBack}
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            marginRight: 1,
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          Atrás
-                        </Button>
-                        <Button
-                          type="submit"
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          {t("dialog.next")}
-                        </Button>
-                      </div>
-                    </div>
-                  </form>
-                )}
-                {step === 6 && ( // ESTADO DE LA CARGA DEL DATASET EN LAS DIFERENTES PLATAFORMAS
-                  <form onSubmit={handleNext}>
-                    <div className="verticalForm">
-                      <div className="horizontalFormSwitch">
-                        <p>VLCi</p>
-                        <Switch
-                          id="VLCi"
-                          name="VLCi"
-                          value={VLCi}
-                          checked={VLCi}
-                          onChange={(event) => setVLCi(event.target.checked)}
-                          color="primary" // Opcional: ajusta el color del switch
-                        />
-                      </div>
-                      <div className="horizontalFormSwitch">
-                        <p>ArcGIS</p>
-                        <Switch
-                          id="ArcGIS"
-                          name="ArcGIS"
-                          value={ArcGIS}
-                          checked={ArcGIS === true}
-                          onChange={(event) => setArcGIS(event.target.checked)}
-                          color="primary" // Opcional: ajusta el color del switch
-                        />
-                      </div>
-                      <div className="horizontalFormSwitch">
-                        <p>Pentaho</p>
-                        <Switch
-                          id="Pentaho"
-                          name="Pentaho"
-                          value={Pentaho}
-                          checked={Pentaho}
-                          onChange={(event) => setPentaho(event.target.checked)}
-                          color="primary" // Opcional: ajusta el color del switch
-                        />
-                      </div>
-                      <div className="horizontalFormSwitch">
-                        <p>CKAN</p>
-                        <Switch
-                          id="CKAN"
-                          name="CKAN"
-                          value={CKAN}
-                          checked={CKAN}
-                          onChange={(event) => setCKAN(event.target.checked)}
-                          color="primary" // Opcional: ajusta el color del switch
-                        />
-                      </div>
-                      <div className="horizontalFormSwitch">
-                        <p>MongoDB</p>
-                        <Switch
-                          id="MongoDB"
-                          name="MongoDB"
-                          value={MongoDB}
-                          checked={MongoDB}
-                          onChange={(event) => setMongoDB(event.target.checked)}
-                          color="primary" // Opcional: ajusta el color del switch
-                        />
-                      </div>
-                      <div className="horizontalFormSwitch">
-                        <p>OpenDataSoft</p>
-                        <Switch
-                          id="OpenDataSoft"
-                          name="OpenDataSoft"
-                          value={OpenDataSoft}
-                          checked={OpenDataSoft}
-                          onChange={(event) =>
-                            setOpenDataSoft(event.target.checked)
-                          }
-                          color="primary" // Opcional: ajusta el color del switch
-                        />
-                      </div>
-                      <div className="horizontalForm">
-                        <p>Resolución temporal</p>
-                        <TextField
-                          autoFocus
-                          //required
-                          margin="dense"
-                          id="temporarySolution"
-                          name="temporarySolution"
-                          type="string"
-                          variant="standard"
-                          value={formDataSteps.temporarySolution}
-                          onChange={(e) =>
-                            handleChange("temporarySolution", e.target.value)
-                          }
-                        />
-                      </div>
-                      <div className="horizontalForm">
-                        <p>Comentarios sobre el estado de carga</p>
-                        <TextField
-                          autoFocus
-                          //required
-                          margin="dense"
-                          id="chargeStateComments"
-                          name="chargeStateComments"
-                          type="string"
-                          variant="standard"
-                          value={formDataSteps.chargeStateComments}
-                          onChange={(e) =>
-                            handleChange("chargeStateComments", e.target.value)
-                          }
-                        />
-                      </div>
-                    </div>
-                    <div className="buttonsForm">
-                      <Button
-                        onClick={handleClose}
-                        sx={{
-                          height: 37,
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
-                      >
-                        {t("dialog.cancel")}
-                      </Button>
-                      <div>
-                        <Button
-                          onClick={handleGoBack}
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            marginRight: 1,
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          Atrás
-                        </Button>
-                        <Button
-                          type="submit"
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          {t("dialog.next")}
-                        </Button>
-                      </div>
+                      <ButtonsForm info={buttonsFormProps} />
                     </div>
                   </form>
                 )}
-                {step === 7 && ( // VISUALIZACIONES/APLICACIONES CREADAS A PARTIR DEL DATASET
+                {step === 5 && ( // VISUALIZACIONES/APLICACIONES CREADAS A PARTIR DEL DATASET
                   <form onSubmit={handleSubmit}>
                     <div className="verticalForm">
                       <div className="horizontalForm">
@@ -1320,39 +1051,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             handleChange("productComments", e.target.value)
                           }
                         />
-                      </div>
-                      <div className="horizontalForm">
-                        <p>Fecha de creación *</p>
-                        <DateTimePicker
-                          format="DD/MM/YYYY hh:mm:ss a"
-                          name="creationDate"
-                          value={creationDateAlmacenado}
-                          onChange={(e) => {
-                            setCreationDate(e);
-                            handleChangeCreationDate(e);
-                          }}
-                          slotProps={{
-                            textField: {
-                              variant: "standard",
-                              id: "creationDate",
-                            },
-                          }}
-                        ></DateTimePicker>
-                      </div>
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.lastUpdate")} *</p>
-                        <DateTimePicker
-                          format="DD/MM/YYYY hh:mm:ss a"
-                          name="lastUpdate"
-                          value={lastUpdateAlmacenado}
-                          onChange={(e) => handleChangeLastUpdate(e)}
-                          slotProps={{
-                            textField: {
-                              variant: "standard",
-                              id: "lastUpdate",
-                            },
-                          }}
-                        ></DateTimePicker>
                       </div>
                       <div className="horizontalFormSwitch">
                         <p>{t("columnsNames.personalData")}</p>

@@ -16,7 +16,7 @@ export interface Catalogue {
   temporaryCoverage: string;
   organism: ORGANISM;
   language: LANGUAGE_FORM;
-  keyWords: string;
+  keyWords: string[];
   minimumVariables: MINIMUM_VALUE;
   contactPerson: string;
   masterData: boolean;

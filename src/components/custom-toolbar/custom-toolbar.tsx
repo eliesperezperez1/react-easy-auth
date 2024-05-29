@@ -63,13 +63,9 @@ function CustomToolbar(props: CustomToolbarProperties) {
                 onClick={props.showshowDeleted}
               >
                 {props.deletedTable === true ? (
-                  <Tooltip title={t("dataTable.showNotDeleted")}>
                     <FolderIcon></FolderIcon>
-                  </Tooltip>
                 ) : (
-                  <Tooltip title={t("dataTable.showDeleted")}>
                     <FolderDeleteIcon></FolderDeleteIcon>
-                  </Tooltip>
                 )}
               </Button>
             </Box>
@@ -77,7 +73,6 @@ function CustomToolbar(props: CustomToolbarProperties) {
         ) : (
           <></>
         )}
-        <Tooltip title={t("tooltipText.column")}>
           <GridToolbarColumnsButton
             sx={{
               height: 37,
@@ -91,8 +86,6 @@ function CustomToolbar(props: CustomToolbarProperties) {
               },
             }}
           />
-        </Tooltip>
-        <Tooltip title={t("tooltipText.filter")}>
           <GridToolbarFilterButton
             sx={{
               height: 37,
@@ -106,8 +99,6 @@ function CustomToolbar(props: CustomToolbarProperties) {
               },
             }}
           />
-        </Tooltip>
-        <Tooltip title={t("tooltipText.density")}>
           <GridToolbarDensitySelector
             sx={{
               height: 37,
@@ -121,10 +112,8 @@ function CustomToolbar(props: CustomToolbarProperties) {
               },
             }}
           />
-        </Tooltip>
         <ExportButton visibleData={props.visibleData} />
 
-        <Tooltip title="Búsqueda rápida">
           <GridToolbarQuickFilter
             sx={{
               height: 33,
@@ -134,7 +123,6 @@ function CustomToolbar(props: CustomToolbarProperties) {
               borderRadius: 1,
             }}
           />
-        </Tooltip>
 
         <div className="customToolbarRightButtons">
           {props.userData.role === ROLE.ADMIN ||

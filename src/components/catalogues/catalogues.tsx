@@ -29,6 +29,8 @@ import {
   paletaColores,
   valOrEsp,
   isChecked,
+  keywordsCell,
+  arrayCell,
 } from "../../utils/functions/table-functions";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
@@ -94,6 +96,9 @@ function CatalogueList() {
       headerName: t("columnsNames.topic"),
       width: 200,
       description: t("tooltipText.topic"),
+      renderCell: (params: GridRenderCellParams<any, string[]>) => {
+        return arrayCell(params.value);
+      },
     },
     {
       field: "language",
@@ -105,10 +110,13 @@ function CatalogueList() {
       description: t("tooltipText.language"),
     },
     {
-      field: "keywords",
+      field: "keyWords",
       headerName: "Palabras clave",
       width: 200,
       description: "Palabras clave",
+      renderCell: (params: GridRenderCellParams<any, string[]>) => {
+        return arrayCell(params.value);
+      },
     },
     {
       field: "minimumVariables",
@@ -503,7 +511,7 @@ function CatalogueList() {
                       ? [
                           {
                             field: "responsibleIdentity",
-                            operator: "contains",
+                            operator: "equals",
                             value: userData.service,
                           },
                         ]

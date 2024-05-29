@@ -1,7 +1,6 @@
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
@@ -12,12 +11,8 @@ import {
 import { updateCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader } from "react-auth-kit";
 import {
-  Autocomplete,
   Box,
-  Checkbox,
   FormControl,
-  FormControlLabel,
-  FormGroup,
   MenuItem,
   Select,
   Switch,
@@ -29,8 +24,6 @@ import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import React from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Dayjs } from "dayjs";
-import { getEntitiesRequest } from "../../api/entities";
-import { Entity } from "../../interfaces/entity.interface";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TOPIC } from "../../utils/enums/topic.enum";
@@ -40,6 +33,7 @@ import { SHARING_LEVEL } from "../../utils/enums/sharing-level.enum";
 import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
 import { ORGANISM } from "../../utils/enums/organism.enum";
 import { MINIMUM_VALUE } from "../../utils/enums/minimum-value.enum";
+import ButtonsForm, { buttonsFormInfo } from "./buttons-form";
 export interface UpdateDialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
@@ -52,8 +46,7 @@ export default function UpdateCatalogueDialog(props: {
 }) {
   const [open, setOpen] = useState<boolean>(false);
   const authHeader = useAuthHeader();
-  const [entitiesName, setEntitiesName] = useState<string[]>([]);
-  const [deletedEntities, setDeletedEntities] = useState<Entity[]>([]);
+
   const [update, setUpdate] = useState<UpdateCatalogue>({});
   const [t, i18n] = useTranslation();
   const [step, setStep] = useState(1);
@@ -65,7 +58,6 @@ export default function UpdateCatalogueDialog(props: {
   const [referenceData, setReferenceData] = useState(false);
   const [highValue, setHighValue] = useState(false);
   const [genderInfo, setGenderInfo] = useState(false);
-  const [autoAcess, setAutoAcess] = useState(false);
   const [RAT, setRAT] = useState(false);
   const [dataProtection, setDataProtection] = useState(false);
   const [dataStandards, setDataStandards] = useState(false);
@@ -77,9 +69,8 @@ export default function UpdateCatalogueDialog(props: {
   const [CKAN, setCKAN] = useState(false);
   const [MongoDB, setMongoDB] = useState(false);
   const [OpenDataSoft, setOpenDataSoft] = useState(false);
-  const [lastUpdateAlmacenado, setLastUpdate] = React.useState<Dayjs | null>();
-  const [creationDateAlmacenado, setCreationDate] =
-    React.useState<Dayjs | null>();
+  const [lastUpdateAlmacenado, setLastUpdate] = useState<Dayjs | null>();
+  const [creationDateAlmacenado, setCreationDate] = useState<Dayjs | null>();
   const { actualTheme } = useAlternateTheme();
 
   useEffect(() => {
@@ -87,7 +78,6 @@ export default function UpdateCatalogueDialog(props: {
     setOpen(props.enviar.open);
     setActiveAds(props.enviar.catalogue.activeAds);
     setStep(1);
-    getAndSetEntities();
   }, [props.enviar.open, props.enviar.catalogue]);
 
   const handleClose = () => {
@@ -95,9 +85,15 @@ export default function UpdateCatalogueDialog(props: {
     setStep(1);
     props.enviar.closeDialog(false);
   };
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setUpdate((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const buttonsFormProps: buttonsFormInfo = {
+    handleClose: () => handleClose(),
+    handleGoBack: () => handleGoBack(),
   };
 
   const updateCatalogue = (formJson: any) => {
@@ -167,7 +163,6 @@ export default function UpdateCatalogueDialog(props: {
 
     // Merge current step data with existing form data
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
-    console.log(formData);
     setStep(step + 1);
   };
 
@@ -176,13 +171,11 @@ export default function UpdateCatalogueDialog(props: {
     const currentStepJson = Object.fromEntries(currentStepData.entries());
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
     const mergedFormData = { ...formData, ...currentStepJson };
-    console.log(mergedFormData);
     updateCatalogue(mergedFormData);
   };
 
   const handleFormat = (event: any, newValue: any) => {
     setFormat(newValue);
-    console.log(newValue);
   };
 
   const handleValuePicker = (picker: any) => {
@@ -215,7 +208,7 @@ export default function UpdateCatalogueDialog(props: {
     "& .MuiInputBase-root": { border: "none" },
   };
 
-  function getAndSetEntities() {
+/*   function getAndSetEntities() {
     getEntitiesRequest(authHeader())
       .then((response) => response.json())
       .then((data) => {
@@ -229,7 +222,7 @@ export default function UpdateCatalogueDialog(props: {
       .catch((error) => {
         console.error("Error fetching entities:", error);
       });
-  }
+  } */
 
   return (
     <>
@@ -240,6 +233,7 @@ export default function UpdateCatalogueDialog(props: {
             open={open}
             onClose={handleClose}
             style={dynamicStyle}
+            maxWidth="lg"
           >
             <DialogTitle style={dynamicStyle}>
               {t("dialog.updateRegister")}
@@ -254,146 +248,264 @@ export default function UpdateCatalogueDialog(props: {
               <Box>
                 {step === 1 && ( // ESTRUCTURA GENERAL DEL DATASET
                   <form onSubmit={handleNext}>
-                    <div className="verticalForm">
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.title")}</p>
-                        <TextField
-                          autoFocus
-                          required
-                          margin="dense"
-                          id="title"
-                          name="title"
-                          type="string"
-                          variant="standard"
-                          value={update.title}
-                          onChange={handleChange}
-                        />
-                      </div>
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.description")}</p>
-                        <TextField
-                          autoFocus
-                          required
-                          margin="dense"
-                          id="description"
-                          name="description"
-                          type="string"
-                          variant="standard"
-                          value={update.description}
-                          onChange={handleChange}
-                        />
-                      </div>
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.responsibleIdentity")}</p>
-                        <FormControl variant="standard">
-                          <Select
-                            id="responsibleIdentity"
-                            name="responsibleIdentity"
-                            margin="dense"
-                            defaultValue={update.responsibleIdentity}
+                    <div className="grid">
+                      <div className="row">
+                        <div className="horizontalForm">
+                          <p>{t("columnsNames.title")} *</p>
+                          <TextField
+                            autoFocus
                             required
-                          >
-                            {Object.entries(RESPONSIBLE_IDENTITY).map(
-                              ([key, value]) => (
+                            margin="dense"
+                            id="title"
+                            name="title"
+                            type="string"
+                            variant="standard"
+                            value={update.title}
+                            onChange={handleChange}
+                          />
+                        </div>
+                        <div className="horizontalForm">
+                          <p>{t("columnsNames.description")} *</p>
+                          <TextField
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="description"
+                            name="description"
+                            type="string"
+                            variant="standard"
+                            value={update.description}
+                            onChange={handleChange}
+                          />
+                        </div>
+                        <div className="horizontalForm">
+                          <p>{t("columnsNames.responsibleIdentity")} *</p>
+                          <FormControl variant="standard">
+                            <Select
+                              id="responsibleIdentity"
+                              name="responsibleIdentity"
+                              margin="dense"
+                              defaultValue={update.responsibleIdentity}
+                            >
+                              {Object.entries(RESPONSIBLE_IDENTITY).map(
+                                ([key, value]) => (
+                                  <MenuItem key={key} value={value}>
+                                    {value}
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
+                        </div>
+                        <div className="horizontalForm">
+                          <p>Organismo</p>
+                          <FormControl variant="standard">
+                            <Select
+                              id="organism"
+                              name="organism"
+                              margin="dense"
+                              defaultValue={update.organism}
+                            >
+                              {Object.entries(ORGANISM).map(([key, value]) => (
                                 <MenuItem key={key} value={value}>
                                   {value}
                                 </MenuItem>
-                              )
-                            )}
-                          </Select>
-                        </FormControl>
-                      </div>
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.topic")}</p>
-                        <FormControl variant="standard">
-                          <Select
-                            id="topic"
-                            name="topic"
-                            margin="dense"
-                            defaultValue={update.topic}
-                          >
-                            {Object.entries(TOPIC).map(([key, value]) => (
-                              <MenuItem key={key} value={value}>
-                                {value}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </div>
-                      <div className="horizontalForm">
-                        <p>Organismo</p>
-                        <FormControl variant="standard">
-                          <Select
-                            id="organism"
-                            name="organism"
-                            margin="dense"
-                            defaultValue={update.organism}
-                            required
-                          >
-                            {Object.entries(ORGANISM).map(([key, value]) => (
-                              <MenuItem key={key} value={value}>
-                                {value}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </div>
-                      <div className="horizontalForm">
-                        <p>{t("columnsNames.language")}</p>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </div>
+                        <div className="horizontalForm">
+                          <p>{t("columnsNames.topic")} *</p>
+                          <FormControl variant="standard">
+                            <Select
+                              id="topic"
+                              name="topic"
+                              margin="dense"
+                              defaultValue={update.topic}
+                            >
+                              {Object.entries(TOPIC).map(([key, value]) => (
+                                <MenuItem key={key} value={value}>
+                                  {value}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </div>
+                        <div className="horizontalForm">
+                          <p>{t("columnsNames.language")}</p>
 
-                        <FormControl variant="standard">
-                          <Select
-                            id="language"
-                            name="language"
-                            margin="dense"
-                            defaultValue={update.language}
+                          <FormControl variant="standard">
+                            <Select
+                              id="language"
+                              name="language"
+                              margin="dense"
+                              defaultValue={update.language}
+                            >
+                              {Object.entries(LANGUAGE_FORM).map(
+                                ([key, value]) => (
+                                  <MenuItem key={key} value={value}>
+                                    {value}
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="horizontalForm">
+                          <p>Palabras clave *</p>
+                          <TextField
+                            autoFocus
                             required
-                          >
-                            {Object.entries(LANGUAGE_FORM).map(
-                              ([key, value]) => (
-                                <MenuItem key={key} value={value}>
-                                  {value}
-                                </MenuItem>
-                              )
-                            )}
-                          </Select>
-                        </FormControl>
+                            margin="dense"
+                            id="keyWords"
+                            name="description"
+                            type="string"
+                            variant="standard"
+                            value={update.keyWords}
+                            onChange={handleChange}
+                          />
+                        </div>
+                        <div className="horizontalForm">
+                          <p>Campos mínimos *</p>
+                          <FormControl variant="standard">
+                            <Select
+                              id="minimumVariables"
+                              name="minimumVariables"
+                              margin="dense"
+                              defaultValue={update.minimumVariables}
+                            >
+                              {Object.entries(MINIMUM_VALUE).map(
+                                ([key, value]) => (
+                                  <MenuItem key={key} value={value}>
+                                    {value}
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
+                        </div>
+                        <div className="horizontalForm">
+                          <p>{t("columnsNames.contactPerson")} *</p>
+                          <TextField
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="contactPerson"
+                            name="contactPerson"
+                            type="string"
+                            variant="standard"
+                            value={update.contactPerson}
+                            onChange={handleChange}
+                          />
+                        </div>
+                        <div className="horizontalFormSwitch">
+                          <p>Dato maestro</p>
+                          <Switch
+                            id="masterData"
+                            name="masterData"
+                            value={masterData}
+                            checked={masterData}
+                            onChange={(event) =>
+                              setMasterData(event.target.checked)
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </div>
+                        <div className="horizontalFormSwitch">
+                          <p>Dato de referencia</p>
+                          <Switch
+                            id="referenceData"
+                            name="referenceData"
+                            value={referenceData}
+                            checked={referenceData}
+                            onChange={(event) =>
+                              setReferenceData(event.target.checked)
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </div>
+                        <div className="horizontalFormSwitch">
+                          <p>Alto valor *</p>
+                          <Switch
+                            //required
+                            id="highValue"
+                            name="highValue"
+                            value={highValue}
+                            checked={highValue}
+                            onChange={(event) =>
+                              setHighValue(event.target.checked)
+                            }
+                            color="primary" // Opcional: ajusta el color del switch
+                          />
+                        </div>
+                        <div className="horizontalFormSwitch">
+                          <p>{t("columnsNames.activeAds")} *</p>
+                          <FormControl variant="standard">
+                            <Switch
+                              //required
+                              id="activeAds"
+                              name="activeAds"
+                              value={activeAds}
+                              checked={activeAds}
+                              onChange={(event) =>
+                                setActiveAds(event.target.checked)
+                              }
+                              color="primary" // Opcional: ajusta el color del switch
+                            />
+                          </FormControl>
+                        </div>
+                        <div className="horizontalForm">
+                          <p>Comentarios generales</p>
+                          <TextField
+                            autoFocus
+                            //required
+                            margin="dense"
+                            id="comments"
+                            name="comments"
+                            type="string"
+                            variant="standard"
+                            value={update.comments}
+                            onChange={handleChange}
+                          />
+                        </div>
+                        <div className="horizontalForm">
+                          <p>Fecha de creación *</p>
+                          <DateTimePicker
+                            format="DD/MM/YYYY hh:mm:ss a"
+                            name="creationDate"
+                            value={creationDateAlmacenado}
+                            onChange={(e) => {
+                              setCreationDate(e);
+                              handleChangeCreationDate(e);
+                            }}
+                            slotProps={{
+                              textField: {
+                                variant: "standard",
+                                id: "creationDate",
+                              },
+                            }}
+                          ></DateTimePicker>
+                        </div>
+                        <div className="horizontalForm">
+                          <p>{t("columnsNames.lastUpdate")} *</p>
+                          <DateTimePicker
+                            format="DD/MM/YYYY hh:mm:ss a"
+                            name="lastUpdate"
+                            value={lastUpdateAlmacenado}
+                            onChange={(e) => handleChangeLastUpdate(e)}
+                            slotProps={{
+                              textField: {
+                                variant: "standard",
+                                id: "lastUpdate",
+                              },
+                            }}
+                          ></DateTimePicker>
+                        </div>
                       </div>
                     </div>
-                    <div className="buttonsForm">
-                      <Button
-                        onClick={handleClose}
-                        sx={{
-                          height: 37,
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
-                      >
-                        {t("dialog.cancel")}
-                      </Button>
-                      <Button
-                        type="submit"
-                        sx={{
-                          height: 37,
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
-                      >
-                        {t("dialog.next")}
-                      </Button>
-                    </div>
+                    <ButtonsForm info={buttonsFormProps} />
                   </form>
                 )}
                 {step === 2 && ( // ESTRUCTURA GENERAL DEL DATASET
@@ -528,60 +640,7 @@ export default function UpdateCatalogueDialog(props: {
                         />
                       </div>
                     </div>
-                    <div className="buttonsForm">
-                      <Button
-                        onClick={handleClose}
-                        sx={{
-                          height: 37,
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
-                      >
-                        {t("dialog.cancel")}
-                      </Button>
-                      <div>
-                        <Button
-                          onClick={handleGoBack}
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            marginRight: 1,
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          Atrás
-                        </Button>
-
-                        <Button
-                          type="submit"
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          {t("dialog.next")}
-                        </Button>
-                      </div>
-                    </div>
+                    <ButtonsForm info={buttonsFormProps} />
                   </form>
                 )}
                 {step === 3 && ( // ESTRUCTURA INTERNA DEL DATASET
@@ -663,59 +722,7 @@ export default function UpdateCatalogueDialog(props: {
                         />
                       </div>
                     </div>
-                    <div className="buttonsForm">
-                      <Button
-                        onClick={handleClose}
-                        sx={{
-                          height: 37,
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
-                      >
-                        {t("dialog.cancel")}
-                      </Button>
-                      <div>
-                        <Button
-                          onClick={handleGoBack}
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            marginRight: 1,
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          Atrás
-                        </Button>
-                        <Button
-                          type="submit"
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          {t("dialog.next")}
-                        </Button>
-                      </div>
-                    </div>
+                    <ButtonsForm info={buttonsFormProps} />
                   </form>
                 )}
                 {step === 5 && ( // ESTADO DE LA CARGA DEL DATASET EN LAS DIFERENTES PLATAFORMAS
@@ -833,59 +840,7 @@ export default function UpdateCatalogueDialog(props: {
                         />
                       </div>
                     </div>
-                    <div className="buttonsForm">
-                      <Button
-                        onClick={handleClose}
-                        sx={{
-                          height: 37,
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
-                      >
-                        {t("dialog.cancel")}
-                      </Button>
-                      <div>
-                        <Button
-                          onClick={handleGoBack}
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            marginRight: 1,
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          Atrás
-                        </Button>
-                        <Button
-                          type="submit"
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          {t("dialog.next")}
-                        </Button>
-                      </div>
-                    </div>
+                    <ButtonsForm info={buttonsFormProps} />
                   </form>
                 )}
                 {step === 6 && ( // ESTADO DE LA CARGA DEL DATASET EN LAS DIFERENTES PLATAFORMAS
@@ -988,60 +943,7 @@ export default function UpdateCatalogueDialog(props: {
                         />
                       </div>
                     </div>
-                    <div className="buttonsForm">
-                      <Button
-                        onClick={handleClose}
-                        sx={{
-                          height: 37,
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
-                      >
-                        {t("dialog.cancel")}
-                      </Button>
-                      <div>
-                        <Button
-                          onClick={handleGoBack}
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            marginRight: 1,
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          Atrás
-                        </Button>
-
-                        <Button
-                          type="submit"
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          {t("dialog.next")}
-                        </Button>
-                      </div>
-                    </div>
+                    <ButtonsForm info={buttonsFormProps} />
                   </form>
                 )}
                 {step === 7 && ( // VISUALIZACIONES/APLICACIONES CREADAS A PARTIR DEL DATASET

@@ -1,14 +1,35 @@
 .verticalForm{
     display: flex;
     flex-direction: column;
+    flex: 1;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-rows: auto;
+    width: 100%; /* Cada fila se ajusta automáticamente a su contenido */
+}
+
+/* Clase para cada fila */
+.row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Dos columnas de igual ancho */
+    gap: 10px; /* Espacio entre columnas */
+    width: 100%;
+}
+
+/* Clase para cada columna */
+.column {
+    box-sizing: border-box; 
+    height: 100%;/* Incluir padding y border en el tamaño total */
 }
 
 .horizontalForm{
   display: flex;
   flex-direction: row;
-  flex: 3;
+  flex: 1;
   width: 100%;
-  /*justify-content: space-between;*/
+  justify-content: space-between;
 }
 
 .horizontalFormSwitch{

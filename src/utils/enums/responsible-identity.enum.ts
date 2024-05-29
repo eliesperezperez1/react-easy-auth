@@ -1,5 +1,5 @@
 export enum RESPONSIBLE_IDENTITY {
-  GENERAL = "General",
+  GENERAL = "general",
   as_juridica = "Assessoria Jurídica",
   bombers = " Departament de Bombers, Prevenció, Intervenció d'Emergències i Protecció Civil",
   alcaldia = "Gabinet d'Alcaldia",
