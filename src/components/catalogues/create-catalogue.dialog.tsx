@@ -228,11 +228,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
 
   const createCatalogue = (formJson: any) => {
     const a = formJson.lastUpdate;
-    const b = formJson.creationDate;
     const deletedDate = new Date();
     const deleted = false;
     const lastUpdate = new Date(a);
-    const creationDate = new Date(b);
     const prueba = formJson as CreateCatalogue;
     const create: CreateCatalogue = {
       ...prueba,
@@ -284,7 +282,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
 
     setFormDataSteps((prevData) => ({ ...prevData, ...currentStepJson }));
     // Merge current step data with existing form data
-    console.log(creationDateAlmacenado);
     setFormData((prevData) => ({
       ...prevData,
       ...currentStepJson,

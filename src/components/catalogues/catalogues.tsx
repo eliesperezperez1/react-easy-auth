@@ -29,7 +29,6 @@ import {
   paletaColores,
   valOrEsp,
   isChecked,
-  keywordsCell,
   arrayCell,
 } from "../../utils/functions/table-functions";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
@@ -40,7 +39,6 @@ function CatalogueList() {
   const authHeader = useAuthHeader();
   const user = useAuthUser();
   const { actualTheme } = useAlternateTheme();
-
   const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
   const [deletedCatalogues, setDeletedCatalogues] = useState<Catalogue[]>([]);
   const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>([]);
@@ -347,7 +345,7 @@ function CatalogueList() {
       renderCell: (params) => {
         return isChecked(params.value);
       },
-      description: "¿Está publiccado en OpenDataSoft?",
+      description: "¿Está publicado en OpenDataSoft?",
     },
     {
       field: "temporarySolution",
@@ -398,6 +396,7 @@ function CatalogueList() {
         }
       });
   }
+
   function getSelectedCatalogues() {
     selectedCatalogues.forEach((sc: any) => {
       getCatalogueRequest(authHeader(), sc)
@@ -459,6 +458,12 @@ function CatalogueList() {
     }
   }, []);
 
+  const getRowClassName = (params: any) => {
+    if (params.row.verified === false) {
+      return "no-verificado";
+    }
+  };
+
   function createDialogOpen() {
     setOpenDialog(true);
   }
@@ -478,6 +483,7 @@ function CatalogueList() {
             apiRef={gridApiRef}
             rows={rows}
             columns={columns}
+            getRowClassName={getRowClassName}
             sx={{
               height: "100%",
               width: "100%",

@@ -112,7 +112,6 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
 
   const createEntity = (formJson: any) => {
     const prueba = formJson as CreateEntity;
-    console.log(prueba);
     const create: CreateEntity = {
       ...prueba,
     };
@@ -143,7 +142,6 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
 
     // Merge current step data with existing form data
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
-    console.log(formData);
     setStep(step + 1);
   };
 

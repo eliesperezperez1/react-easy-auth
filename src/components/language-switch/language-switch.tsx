@@ -26,17 +26,14 @@ function ChangeLanguage() {
       setIdioma(user().user.language === "caES" ? "val" : "es");
     } else {
       setIdioma("es");
-      console.log("sin user");
     }
   }, [user()]);
 
   async function switchVisibleSeleccion() {
-    console.log("hola");
     if (userData === userMock) console.log("igualesss");
 
     if (idioma === "es") {
       setIdioma("val");
-      console.log("Idioma es: Es");
       if (userData !== null && userData !== userMock) {
         updateUserLanguage({ ...userData, language: LANGUAGE.CA }, authHeader())
           .then((response) => response.json())

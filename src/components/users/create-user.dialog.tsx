@@ -3,12 +3,10 @@ import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
 import { CreateUser } from "../../interfaces/user.interface";
 import { registerUser } from "../../api/users";
-import { useAuthHeader } from "react-auth-kit";
 import { Box, ThemeProvider } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import "./create-users.dialog.css";
@@ -25,7 +23,6 @@ export interface DialogData {
 
 export default function CreateUserDialog(props: { enviar: DialogData }) {
   const [open, setOpen] = useState<boolean>(false);
-  const authHeader = useAuthHeader();
   const [t, i18n] = useTranslation();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
@@ -58,15 +55,12 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
   };
 
   const createUser = (formJson: any) => {
-    const a = formJson.lastUpdate;
-    const b = formJson.creationDate;
     const deleted = false;
     const prueba = formJson as CreateUser;
     const create: CreateUser = {
       ...prueba,
       deleted,
     };
-    console.log(create);
     props.enviar.getInfo();
     registerUser(create)
       .then((response) => response.json())
@@ -88,7 +82,6 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
 
     // Merge current step data with existing form data
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
-    console.log(formData);
     setStep(step + 1);
   };
 
@@ -141,11 +134,6 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                     {t("columnsNames.name")}
                     </p>
                     <TextField
-                      /* sx={{
-                        input: {
-                          color: actualTheme==="light" ? "#252525" : "white",
-                        },
-                      }} */
                       autoFocus
                       required
                       margin="dense"
@@ -172,8 +160,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                       value={formDataSteps.surname}
                       onChange={(e) => handleChange('surname', e.target.value)}
                     />
-                  </div>
-                  
+                  </div>                 
                   <div className="horizontalForm">
                     <p>
                     {t("login.email")}
@@ -364,7 +351,6 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                       {t("dialog.addButton")}
                     </Button>
                   </div>
-                  
                 </div>
               </form>
             )}

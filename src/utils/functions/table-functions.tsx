@@ -19,8 +19,14 @@ export function paletaColores(color: string) {
 }
 export function arrayCell(params: string[] | undefined | null) {
   const array = params;
-  if (!array) {
-    return null;
+  if (!array || !Array.isArray(array)) {
+    return typeof array === "string" ? (
+      <>
+        <div>{array}</div>
+      </>
+    ) : (
+      ""
+    );
   } else {
     return (
       <div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useAuthHeader, useAuthUser, useSignIn } from "react-auth-kit";
 import { userMock } from "../../utils/user.mock";
 import { User } from "../../interfaces/user.interface";
@@ -8,7 +8,6 @@ import useAlternateTheme from "./alternateTheme";
 import Luna from "../../assets/moon.svg";
 import Sol from "../../assets/sun.svg";
 import "./darkModeSwitch.css"; 
-import { Switch } from "@mui/material";
 
 
 const DarkModeSwitch = () => {//: React.FC<{ onThemeChange: (themeStatus: string) => void }> = ({ onThemeChange }) => {
@@ -28,8 +27,6 @@ const DarkModeSwitch = () => {//: React.FC<{ onThemeChange: (themeStatus: string
       }, [user()]);
 
     async function switchThemeApp() {
-      console.log("click cambio");
-      console.log("actualTheme: " + actualTheme);
         if(actualTheme==="light"){
             toggleTheme();
             if(userData !== null && userData !== userMock){

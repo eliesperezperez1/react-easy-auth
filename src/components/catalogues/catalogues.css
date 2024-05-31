@@ -23,3 +23,7 @@
 .customToolbarRightButtons button{
     margin-left: 10px;
 }
+.no-verificado {
+  background-color: #f8d7da;
+  color: black; /* rojo claro */
+}

@@ -5,7 +5,6 @@ import { User } from "../../interfaces/user.interface";
 
 const useAlternateTheme = () => {
   const user = useAuthUser();
-  const authHeader = useAuthHeader();
   const [userData, setUserData] = useState<User>(userMock);
   const [actualTheme, setActualTheme] = useState<any>(); // Initialize with default theme
 
@@ -13,7 +12,6 @@ const useAlternateTheme = () => {
     if (user() && user().user) {
       setUserData(user().user);
       setActualTheme(user().user.themeApp);
-      console.log("user().user.themeApp: " + user().user.themeApp);
     } else {
       setActualTheme("light");
     }

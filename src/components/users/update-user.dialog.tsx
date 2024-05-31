@@ -3,7 +3,6 @@ import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
 import {
@@ -38,8 +37,6 @@ export default function UpdateUserDialog(props: {
 
   useEffect(() => {
     setUpdate(props.enviar.user);
-    console.log(props.enviar.user);
-    console.log(update);
     setOpen(props.enviar.open);
     setStep(1);
   }, [props.enviar.open, props.enviar.user]);
@@ -79,7 +76,6 @@ export default function UpdateUserDialog(props: {
 
     // Merge current step data with existing form data
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
-    console.log(formData);
     setStep(step + 1);
   };
 

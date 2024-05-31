@@ -152,7 +152,6 @@ function EntitiesList() {
     getEntitiesRequest(authHeader())
       .then((response) => response.json())
       .then((data) => {
-        console.log(userData);
         let notDeleted = data.filter((d: Entity) => d.deleted !== true);
         let deleted = data.filter((d: Entity) => d.deleted === true);
         setEntities(notDeleted);

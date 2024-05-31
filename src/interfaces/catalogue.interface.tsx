@@ -52,6 +52,7 @@ export interface Catalogue {
   deleted: boolean;
   deletedDate: Date;
   lastUpdate: Date;
+  verified: boolean;
 }
 
 export type CreateCatalogue = Omit<
