@@ -44,6 +44,13 @@ function CatalogueList() {
   const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>([]);
   const [rows, setRows] = useState<Catalogue[]>([]);
   const [deletedTable, setDeletedTable] = useState<boolean>(false);
+  const [notDeletedNotVerified, setNotDeletedNotVerified] = useState<
+    Catalogue[]
+  >([]);
+  const [notDeletedVerified, setNotDeletedVerified] = useState<Catalogue[]>([]);
+  const [deletedNotVerified, setDeletedNotVerified] = useState<Catalogue[]>([]);
+  const [deletedVerified, setDeletedVerified] = useState<Catalogue[]>([]);
+  const [verifiedTable, setverifiedTable] = useState<boolean>(true);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
   const [catalogueSelected, setCatalogueSelected] =
@@ -381,19 +388,39 @@ function CatalogueList() {
     );
   }
 
+  function classifyCatalogues(data: Catalogue[]) {
+    let notDeletedNotVerifiedaux: Catalogue[] = [];
+    let notDeletedVerifiedaux: Catalogue[] = [];
+    let deletedNotVerifiedaux: Catalogue[] = [];
+    let deletedVerifiedaux: Catalogue[] = [];
+    data.forEach((d: Catalogue) => {
+      if (d.deleted) {
+        if (d.hasOwnProperty("verified") && d.verified === false) {
+          deletedNotVerifiedaux.push(d);
+        } else {
+          deletedVerifiedaux.push(d);
+        }
+      } else {
+        if (d.hasOwnProperty("verified") && d.verified === false) {
+          notDeletedNotVerifiedaux.push(d);
+        } else {
+          notDeletedVerifiedaux.push(d);
+        }
+      }
+    });
+    setNotDeletedNotVerified(notDeletedNotVerifiedaux);
+    setNotDeletedVerified(notDeletedVerifiedaux);
+    setDeletedNotVerified(deletedNotVerifiedaux);
+    setDeletedVerified(deletedVerifiedaux);
+  }
+
   function getAndSetCatalogues() {
     getCataloguesRequest(authHeader())
       .then((response) => response.json())
       .then((data) => {
-        let notDeleted = data.filter((d: Catalogue) => d.deleted !== true);
-        let deleted = data.filter((d: Catalogue) => d.deleted === true);
-        setCatalogues(notDeleted);
-        setDeletedCatalogues(deleted);
-        if (deletedTable) {
-          setRows(deleted);
-        } else {
-          setRows(notDeleted);
-        }
+        setCatalogues(data);
+        classifyCatalogues(data);
+        showDeleted();
       });
   }
 
@@ -409,11 +436,15 @@ function CatalogueList() {
   }
 
   function showDeleted() {
-    if (!deletedTable) {
-      setRows(deletedCatalogues);
-    } else {
-      setRows(catalogues);
-    }
+    setRows(
+      deletedTable
+        ? verifiedTable
+          ? deletedVerified
+          : deletedNotVerified
+        : verifiedTable
+        ? notDeletedVerified
+        : notDeletedNotVerified
+    );
   }
 
   function deleteRegisters() {
@@ -456,7 +487,7 @@ function CatalogueList() {
       }
       getAndSetCatalogues();
     }
-  }, []);
+  }, [rows]);
 
   const getRowClassName = (params: any) => {
     if (params.row.verified === false) {
@@ -532,11 +563,16 @@ function CatalogueList() {
                   <CustomToolbar
                     userData={userData}
                     deletedTable={deletedTable}
+                    verifiedTable={verifiedTable}
                     visibleData={gridApiRef}
                     selectedCatalogues={selectedCatalogues}
                     deleteRegisters={deleteRegisters}
                     showshowDeleted={() => {
                       setDeletedTable(!deletedTable);
+                      showDeleted();
+                    }}
+                    showVerified={() => {
+                      setverifiedTable(!verifiedTable);
                       showDeleted();
                     }}
                     restoreRegisters={restoreRegisters}
