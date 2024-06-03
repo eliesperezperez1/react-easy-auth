@@ -240,7 +240,7 @@ function EntitiesList() {
           rows={rows}
           columns={columns}
           sx={{
-            height: 700,
+            height: "100%",
             width: "100%",
             backgroundColor: actualTheme==="light" ? "white" : "#252525",
             color: actualTheme==="light" ? "#252525" : "white",
@@ -263,7 +263,7 @@ function EntitiesList() {
           }}
           initialState={{
             pagination: {
-              paginationModel: { pageSize: 10, page: 0 },
+              paginationModel: { pageSize: 20, page: 0 },
             },
             filter: {
               filterModel: {
@@ -290,6 +290,7 @@ function EntitiesList() {
                   visibleData={gridApiRef}
                   selectedCatalogues={selectedEntities}
                   deleteRegisters={deleteRegisters}
+                  isCatalogues={false}
                   showshowDeleted={() => {
                     setDeletedTable(!deletedTable);
                     showDeleted();
@@ -304,7 +305,7 @@ function EntitiesList() {
             Pagination: CustomPagination,
           }}
           getRowId={(row) => row._id}
-          pageSizeOptions={[5, 10]}
+          pageSizeOptions={[5, 10, 20]}
           checkboxSelection={itCouldBeSelectable()}
           isRowSelectable={(params) => rowCouldBeSelectable(params)}
           onRowSelectionModelChange={(entities) => {

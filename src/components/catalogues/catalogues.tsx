@@ -34,6 +34,7 @@ import {
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
 import { Rating, ThemeProvider } from "@mui/material";
+import { refreshODSRequest } from "../../api/ods";
 
 function CatalogueList() {
   const authHeader = useAuthHeader();
@@ -388,6 +389,15 @@ function CatalogueList() {
     );
   }
 
+  async function refreshODS() {
+    await refreshODSRequest(authHeader())
+      .then((response) => response.json())
+      .then(() => {
+        getAndSetCatalogues();
+      });
+    classifyCatalogues(catalogues);
+  }
+
   function classifyCatalogues(data: Catalogue[]) {
     let notDeletedNotVerifiedaux: Catalogue[] = [];
     let notDeletedVerifiedaux: Catalogue[] = [];
@@ -412,15 +422,14 @@ function CatalogueList() {
     setNotDeletedVerified(notDeletedVerifiedaux);
     setDeletedNotVerified(deletedNotVerifiedaux);
     setDeletedVerified(deletedVerifiedaux);
+    showDeleted();
   }
 
-  function getAndSetCatalogues() {
-    getCataloguesRequest(authHeader())
+  async function getAndSetCatalogues() {
+    await getCataloguesRequest(authHeader())
       .then((response) => response.json())
       .then((data) => {
         setCatalogues(data);
-        classifyCatalogues(data);
-        showDeleted();
       });
   }
 
@@ -487,7 +496,11 @@ function CatalogueList() {
       }
       getAndSetCatalogues();
     }
-  }, [rows]);
+  }, []);
+
+  useEffect(() => {
+    classifyCatalogues(catalogues);
+  }, [catalogues]);
 
   const getRowClassName = (params: any) => {
     if (params.row.verified === false) {
@@ -571,10 +584,12 @@ function CatalogueList() {
                       setDeletedTable(!deletedTable);
                       showDeleted();
                     }}
+                    isCatalogues={true}
                     showVerified={() => {
                       setverifiedTable(!verifiedTable);
                       showDeleted();
                     }}
+                    refreshODS={refreshODS}
                     restoreRegisters={restoreRegisters}
                     createDialogOpen={createDialogOpen}
                     getSelectedCatalogues={getSelectedCatalogues}

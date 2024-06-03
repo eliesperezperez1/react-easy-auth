@@ -21,11 +21,15 @@ import { useTranslation } from "react-i18next";
 import { MutableRefObject } from "react";
 import { GridApiCommunity } from "@mui/x-data-grid/models/api/gridApiCommunity";
 import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
+import ods from "../../assets/ods.svg";
+import ods3 from "../../assets/ods3.svg";
+
 
 export interface CustomToolbarProperties {
   userData: User;
   deletedTable: boolean;
   verifiedTable?: boolean;
+  isCatalogues?: boolean;
   visibleData: MutableRefObject<GridApiCommunity>;
   selectedCatalogues: any[];
   deleteRegisters: () => void;
@@ -34,10 +38,26 @@ export interface CustomToolbarProperties {
   createDialogOpen: () => void;
   getSelectedCatalogues: () => void;
   restoreRegisters?: () => void;
+  refreshODS?: () => void;
 }
 
 const buttonStyles = {
   height: 37,
+  backgroundColor: "#D9D9D9",
+  color: "#404040",
+  borderColor: "#404040",
+  "&:hover": {
+    borderColor: "#0D0D0D",
+    backgroundColor: "#0D0D0D",
+    color: "#f2f2f2",
+  },
+  "&.Mui-disabled": {
+    color: "darkgrey",
+  },
+};
+
+const odsStyles = {
+  height: 60,
   backgroundColor: "#D9D9D9",
   color: "#404040",
   borderColor: "#404040",
@@ -59,21 +79,21 @@ function CustomToolbar(props: CustomToolbarProperties) {
     verifiedTable,
     selectedCatalogues,
     visibleData,
+    isCatalogues,
     showVerified,
     showshowDeleted,
     restoreRegisters,
     createDialogOpen,
     getSelectedCatalogues,
     deleteRegisters,
+    refreshODS
   } = props;
-
   const isAdminOrSuperAdmin =
     userData.role === ROLE.ADMIN || userData.role === ROLE.SUPER_ADMIN;
   const isNotViewer = userData.role !== ROLE.VIEWER;
   const isTransparencia =
     userData.service === RESPONSIBLE_IDENTITY.GENERAL ||
     userData.service === RESPONSIBLE_IDENTITY.transparencia;
-
   return (
     <GridToolbarContainer sx={{ color: "#404040" }}>
       {isNotViewer && (
@@ -90,20 +110,37 @@ function CustomToolbar(props: CustomToolbarProperties) {
               {deletedTable ? <FolderIcon /> : <FolderDeleteIcon />}
             </Button>
           </Box>
-          {isTransparencia && (
-            <Box
-              className="Tabla"
-              sx={{ display: "flex", alignItems: "center" }}
+        </FormControl>
+      )}
+      {isTransparencia && isNotViewer && isCatalogues && (
+        <FormControl>
+          <Box className="Tabla" sx={{ display: "flex", alignItems: "center" }}>
+            <Button
+              sx={buttonStyles}
+              id="demo-select-small"
+              onClick={showVerified}
             >
-              <Button
-                sx={buttonStyles}
-                id="demo-select-small"
-                onClick={showVerified}
-              >
-                {verifiedTable === false ? <RemoveDoneIcon /> : <DoneAllIcon />}
-              </Button>
-            </Box>
-          )}
+              {verifiedTable === false ? <RemoveDoneIcon /> : <DoneAllIcon />}
+            </Button>
+          </Box>
+          <Box className="Tabla" sx={{ display: "flex", alignItems: "center" }}>
+            <Button
+              sx={odsStyles}
+              id="demo-select-small"
+              onClick={refreshODS}
+            >
+              <img
+                src={ods3}
+                alt="Image"
+                style={{
+                  objectFit: "cover",
+                  objectPosition: "left",
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            </Button>
+          </Box>
         </FormControl>
       )}
       <GridToolbarColumnsButton sx={buttonStyles} />
