@@ -30,7 +30,6 @@ import {
   valOrEsp,
 } from "../../utils/functions/table-functions";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
-import { grey } from "@mui/material/colors";
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
 
 function UserList() {

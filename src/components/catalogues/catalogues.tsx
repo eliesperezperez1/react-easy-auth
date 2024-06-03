@@ -33,7 +33,7 @@ import {
 } from "../../utils/functions/table-functions";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
-import { Rating, ThemeProvider } from "@mui/material";
+import { Backdrop, CircularProgress, Rating, ThemeProvider } from "@mui/material";
 import { refreshODSRequest } from "../../api/ods";
 
 function CatalogueList() {
@@ -512,12 +512,25 @@ function CatalogueList() {
     setOpenDialog(true);
   }
 
-  if (!catalogues.length)
+  if (!catalogues.length) {
     return (
       <span className="text-center text-xl font-bold my-4">
         {t("dataTable.noCatalogues")}
       </span>
     );
+  }
+
+    if (!rows.length) {
+      return (
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={true}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      );
+    }
+
 
   return (
     <>
