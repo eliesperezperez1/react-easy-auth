@@ -2,6 +2,7 @@ import { ReactComponent as Val } from "../../assets/val.svg";
 import { ReactComponent as Esp } from "../../assets/esp.svg";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import { LANGUAGE_FORM } from "../enums/language-form.enum";
 
 export function paletaColores(color: string) {
   switch (color) {
@@ -59,7 +60,12 @@ export function yesOrNo(p: string | undefined) {
   return p === "NO" || undefined ? "error" : "success";
 }
 export function valOrEsp(p: string | undefined) {
-  return p === "VAL" || undefined ? <Val /> : <Esp />;
+  const val = "val";
+  if (p) {
+    return p.toLowerCase().includes(val.toLowerCase()) ? <Val /> : <Esp />;
+  } else {
+    return <Val />;
+  }
 }
 export function getTopicColor(topic: string | undefined) {
   switch (topic) {

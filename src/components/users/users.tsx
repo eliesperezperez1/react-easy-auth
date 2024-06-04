@@ -4,9 +4,7 @@ import {
   GridRenderCellParams,
   useGridApiRef,
 } from "@mui/x-data-grid";
-import {
-  ThemeProvider, 
-} from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import { useEffect, useState } from "react";
 import { User } from "../../interfaces/user.interface";
 import {
@@ -46,8 +44,8 @@ function UserList() {
   const [openMenuExportar, setOpenMenuExportar] = useState<boolean>(false);
   const [userSelected, setUserSelected] = useState<User>(userMock);
   const [userData, setUserData] = useState<User>(userMock);
-  const {actualTheme} = useAlternateTheme();
-  
+  const { actualTheme } = useAlternateTheme();
+
   const datosDialog: DialogData = {
     open: openDialog,
     closeDialog: (close: boolean) => setOpenDialog(close),
@@ -61,7 +59,7 @@ function UserList() {
     getInfo: () => getAndSetUsers(),
     user: userSelected,
   };
-  
+
   const columns: GridColDef[] = [
     { field: "name", headerName: t("columnsNames.name"), width: 200 },
     {
@@ -186,139 +184,152 @@ function UserList() {
     <>
       <div>
         <ThemeProvider theme={baseTheme(actualTheme)}>
-        <DataGrid
-          apiRef={gridApiRef}
-          rows={rows}
-          columns={columns}
-          sx={{
-            height: 700,
-            width: "100%",
-            backgroundColor: actualTheme==="light" ? "white" : "#252525",
-            color: actualTheme==="light" ? "#252525" : "white",
-            "& .header-theme": {
-              backgroundColor: "lightblue",
-              border: "1px 1px 0px 0px solid black",
-            },
-            "& .MuiDataGrid-row:hover": {
-              color: actualTheme==='light' ? paletaColores("colorTextAlter") : paletaColores("colorBgRowSelectedBorder"),
-              bgcolor: actualTheme==='light' ? paletaColores("colorRowHover") : paletaColores("colorRowHoverDark"),
-              border: "1px solid " + paletaColores("colorBgRowSelectedBorder"),
-            },
-          }}
-          initialState={{
-            pagination: {
-              paginationModel: { pageSize: 25, page: 0 },
-            },
-            filter: {
-              filterModel: {
-                items: [],
-                quickFilterValues: [],
+          <DataGrid
+            apiRef={gridApiRef}
+            rows={rows}
+            columns={columns}
+            sx={{
+              height: "100%",
+              width: "100%",
+              backgroundColor: actualTheme === "light" ? "white" : "#252525",
+              color: actualTheme === "light" ? "#252525" : "white",
+              "& .header-theme": {
+                backgroundColor: "lightblue",
+                border: "1px 1px 0px 0px solid black",
               },
-            },
-          }}
-          components={{
-            Toolbar: function CustomToolbarComponent() {
-              return (
-                <CustomToolbar
-                  userData={userData}
-                  deletedTable={deletedTable}
-                  visibleData={gridApiRef}
-                  selectedCatalogues={selectedUsers}
-                  deleteRegisters={deleteRegisters}
-                  showshowDeleted={() => {
-                    setDeletedTable(!deletedTable);
-                    showDeleted();
-                  }}
-                  createDialogOpen={() => {
-                    setOpenDialog(true);
-                  }}
-                  getSelectedCatalogues={getSelectedUsers}
-                ></CustomToolbar>
-              );
-            },
-            Pagination: CustomPagination,
-          }}
-          getRowId={(row) => row._id}
-          pageSizeOptions={[5, 10]}
-          checkboxSelection={itCouldBeSelectable()}
-          isRowSelectable={(params) => rowCouldBeSelectable(params)}
-          onRowSelectionModelChange={(users) => {
-            let aux = users as string[];
-            setSelectedUsers(aux);
-          }}
-          localeText={{
-            toolbarColumns: t("dataTable.columns"),
-            filterPanelColumns: t("localtext.columnsTexts.filterPanelColumns"),
-            columnMenuLabel: t("localtext.columnsTexts.columnMenuLabel"),
-            columnsPanelShowAllButton: t(
-              "localtext.columnsTexts.columnsPanelShowAllButton"
-            ),
-            columnsPanelHideAllButton: t(
-              "localtext.columnsTexts.columnsPanelHideAllButton"
-            ),
-            columnsPanelTextFieldLabel: t(
-              "localtext.columnsTexts.columnsPanelTextFieldLabel"
-            ),
-            columnsPanelTextFieldPlaceholder: t(
-              "localtext.columnsTexts.columnsPanelTextFieldPlaceholder"
-            ),
+              "& .MuiDataGrid-row:hover": {
+                color:
+                  actualTheme === "light"
+                    ? paletaColores("colorTextAlter")
+                    : paletaColores("colorBgRowSelectedBorder"),
+                bgcolor:
+                  actualTheme === "light"
+                    ? paletaColores("colorRowHover")
+                    : paletaColores("colorRowHoverDark"),
+                border:
+                  "1px solid " + paletaColores("colorBgRowSelectedBorder"),
+              },
+            }}
+            initialState={{
+              pagination: {
+                paginationModel: { pageSize: 25, page: 0 },
+              },
+              filter: {
+                filterModel: {
+                  items: [],
+                  quickFilterValues: [],
+                },
+              },
+            }}
+            components={{
+              Toolbar: function CustomToolbarComponent() {
+                return (
+                  <CustomToolbar
+                    userData={userData}
+                    deletedTable={deletedTable}
+                    visibleData={gridApiRef}
+                    selectedCatalogues={selectedUsers}
+                    deleteRegisters={deleteRegisters}
+                    showshowDeleted={() => {
+                      setDeletedTable(!deletedTable);
+                      showDeleted();
+                    }}
+                    createDialogOpen={() => {
+                      setOpenDialog(true);
+                    }}
+                    getSelectedCatalogues={getSelectedUsers}
+                  ></CustomToolbar>
+                );
+              },
+              Pagination: CustomPagination,
+            }}
+            getRowId={(row) => row._id}
+            pageSizeOptions={[5, 10]}
+            checkboxSelection={itCouldBeSelectable()}
+            isRowSelectable={(params) => rowCouldBeSelectable(params)}
+            onRowSelectionModelChange={(users) => {
+              let aux = users as string[];
+              setSelectedUsers(aux);
+            }}
+            localeText={{
+              toolbarColumns: t("dataTable.columns"),
+              filterPanelColumns: t(
+                "localtext.columnsTexts.filterPanelColumns"
+              ),
+              columnMenuLabel: t("localtext.columnsTexts.columnMenuLabel"),
+              columnsPanelShowAllButton: t(
+                "localtext.columnsTexts.columnsPanelShowAllButton"
+              ),
+              columnsPanelHideAllButton: t(
+                "localtext.columnsTexts.columnsPanelHideAllButton"
+              ),
+              columnsPanelTextFieldLabel: t(
+                "localtext.columnsTexts.columnsPanelTextFieldLabel"
+              ),
+              columnsPanelTextFieldPlaceholder: t(
+                "localtext.columnsTexts.columnsPanelTextFieldPlaceholder"
+              ),
 
-            toolbarFilters: t("dataTable.filters"),
-            filterPanelInputLabel: t(
-              "localtext.filterTexts.filterPanelInputLabel"
-            ),
-            filterPanelInputPlaceholder: t(
-              "localtext.filterTexts.filterPanelInputPlaceholder"
-            ),
-            filterPanelOperator: t("localtext.filterTexts.filterPanelOperator"),
-            filterOperatorContains: t(
-              "localtext.filterTexts.filterOperatorContains"
-            ),
-            filterOperatorEquals: t(
-              "localtext.filterTexts.filterOperatorEquals"
-            ),
-            filterOperatorStartsWith: t(
-              "localtext.filterTexts.filterOperatorStartsWith"
-            ),
-            filterOperatorEndsWith: t(
-              "localtext.filterTexts.filterOperatorEndsWith"
-            ),
-            filterOperatorIs: t("localtext.filterTexts.filterOperatorIs"),
-            filterOperatorNot: t("localtext.filterTexts.filterOperatorNot"),
-            filterOperatorAfter: t("localtext.filterTexts.filterOperatorAfter"),
-            filterOperatorOnOrAfter: t(
-              "localtext.filterTexts.filterOperatorOnOrAfter"
-            ),
-            filterOperatorBefore: t(
-              "localtext.filterTexts.filterOperatorBefore"
-            ),
-            filterOperatorOnOrBefore: t(
-              "localtext.filterTexts.filterOperatorOnOrBefore"
-            ),
-            filterOperatorIsEmpty: t(
-              "localtext.filterTexts.filterOperatorIsEmpty"
-            ),
-            filterOperatorIsNotEmpty: t(
-              "localtext.filterTexts.filterOperatorIsNotEmpty"
-            ),
-            filterOperatorIsAnyOf: t(
-              "localtext.filterTexts.filterOperatorIsAnyOf"
-            ),
+              toolbarFilters: t("dataTable.filters"),
+              filterPanelInputLabel: t(
+                "localtext.filterTexts.filterPanelInputLabel"
+              ),
+              filterPanelInputPlaceholder: t(
+                "localtext.filterTexts.filterPanelInputPlaceholder"
+              ),
+              filterPanelOperator: t(
+                "localtext.filterTexts.filterPanelOperator"
+              ),
+              filterOperatorContains: t(
+                "localtext.filterTexts.filterOperatorContains"
+              ),
+              filterOperatorEquals: t(
+                "localtext.filterTexts.filterOperatorEquals"
+              ),
+              filterOperatorStartsWith: t(
+                "localtext.filterTexts.filterOperatorStartsWith"
+              ),
+              filterOperatorEndsWith: t(
+                "localtext.filterTexts.filterOperatorEndsWith"
+              ),
+              filterOperatorIs: t("localtext.filterTexts.filterOperatorIs"),
+              filterOperatorNot: t("localtext.filterTexts.filterOperatorNot"),
+              filterOperatorAfter: t(
+                "localtext.filterTexts.filterOperatorAfter"
+              ),
+              filterOperatorOnOrAfter: t(
+                "localtext.filterTexts.filterOperatorOnOrAfter"
+              ),
+              filterOperatorBefore: t(
+                "localtext.filterTexts.filterOperatorBefore"
+              ),
+              filterOperatorOnOrBefore: t(
+                "localtext.filterTexts.filterOperatorOnOrBefore"
+              ),
+              filterOperatorIsEmpty: t(
+                "localtext.filterTexts.filterOperatorIsEmpty"
+              ),
+              filterOperatorIsNotEmpty: t(
+                "localtext.filterTexts.filterOperatorIsNotEmpty"
+              ),
+              filterOperatorIsAnyOf: t(
+                "localtext.filterTexts.filterOperatorIsAnyOf"
+              ),
 
-            toolbarDensity: t("dataTable.density"),
-            toolbarDensityCompact: t(
-              "localtext.densityTexts.toolbarDensityCompact"
-            ),
-            toolbarDensityStandard: t(
-              "localtext.densityTexts.toolbarDensityStandard"
-            ),
-            toolbarDensityComfortable: t(
-              "localtext.densityTexts.toolbarDensityComfortable"
-            ),
+              toolbarDensity: t("dataTable.density"),
+              toolbarDensityCompact: t(
+                "localtext.densityTexts.toolbarDensityCompact"
+              ),
+              toolbarDensityStandard: t(
+                "localtext.densityTexts.toolbarDensityStandard"
+              ),
+              toolbarDensityComfortable: t(
+                "localtext.densityTexts.toolbarDensityComfortable"
+              ),
 
-            toolbarQuickFilterPlaceholder: t("dataTable.quickFilter"),
-          }}
-        />
+              toolbarQuickFilterPlaceholder: t("dataTable.quickFilter"),
+            }}
+          />
         </ThemeProvider>
       </div>
       <CreateUserDialog enviar={datosDialog}></CreateUserDialog>

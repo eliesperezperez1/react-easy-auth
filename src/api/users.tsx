@@ -74,13 +74,14 @@ export const getUserRequest = async (id: string, refreshToken: string) =>
     },
   });
 
-export const registerUser = async (User: CreateUser) =>
+export const registerUser = async (User: CreateUser, refreshToken: string) =>
   fetch(`${API}/auth/register`, {
     method: "POST",
     body: JSON.stringify(User),
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Content-Type": "application/json",
+      Authorization: refreshToken,
     },
   });
 
