@@ -74,6 +74,7 @@ function ExportButton(props: ExportButtonProps) {
             marginRight: "5px",
             marginTop: "5px",
             marginBottom: "5px",
+            marginLeft: "5px",
             "&:hover": {
               borderColor: "#0D0D0D",
               backgroundColor: "#0D0D0D",
@@ -124,6 +125,7 @@ function ExportButton(props: ExportButtonProps) {
             backgroundColor: "#D9D9D9",
             color: "#404040",
             borderColor: "#404040",
+            marginLeft: "5px",
             "&:hover": {
               borderColor: "#0D0D0D",
               backgroundColor: "#0D0D0D",

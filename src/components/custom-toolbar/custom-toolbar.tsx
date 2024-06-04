@@ -22,7 +22,7 @@ import { MutableRefObject } from "react";
 import { GridApiCommunity } from "@mui/x-data-grid/models/api/gridApiCommunity";
 import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
 import ods3 from "../../assets/ods3.svg";
-
+import "./custom-toolbar.css";
 export interface CustomToolbarProperties {
   userData: User;
   deletedTable: boolean;
@@ -44,6 +44,7 @@ const buttonStyles = {
   backgroundColor: "#D9D9D9",
   color: "#404040",
   borderColor: "#404040",
+  "margin-left": "5px",
   "&:hover": {
     borderColor: "#0D0D0D",
     backgroundColor: "#0D0D0D",
@@ -78,97 +79,90 @@ function CustomToolbar(props: CustomToolbarProperties) {
   const isTransparencia =
     userData.service === RESPONSIBLE_IDENTITY.GENERAL ||
     userData.service === RESPONSIBLE_IDENTITY.transparencia;
-  return (
-    <GridToolbarContainer sx={{ color: "#404040" }}>
-      <FormControl>
-        <Box className="Tabla" sx={{ display: "flex", alignItems: "center" }}>
-          {isTransparencia && isNotViewer && isCatalogues && (
-            <Button
-              sx={{ ...buttonStyles, margin: "5px" }}
-              onClick={refreshODS}
-            >
-              <img
-                src={ods3}
-                alt="odslogo"
-                style={{
-                  objectFit: "cover",
-                  objectPosition: "left",
-                  width: "50%",
-                  height: "50%",
-                }}
-              />
-            </Button>
-          )}
-          {isTransparencia && isNotViewer && isCatalogues && (
-            <Button
-              sx={{ ...buttonStyles, "margin-left": "5px" }}
-              id="verify"
-              onClick={showVerified}
-            >
-              {verifiedTable === false ? <DoneAllIcon /> : <RemoveDoneIcon />}
-            </Button>
-          )}
-          {isNotViewer && (
-            <Button
-              sx={{ ...buttonStyles, margin: "5px" }}
-              id="demo-select-small"
-              onClick={showshowDeleted}
-            >
-              {deletedTable ? <FolderIcon /> : <FolderDeleteIcon />}
-            </Button>
-          )}
-        </Box>
-      </FormControl>
-      <GridToolbarColumnsButton
-        sx={{ ...buttonStyles, "margin-left": "20px" }}
-      />
-      <GridToolbarFilterButton sx={buttonStyles} />
-      <GridToolbarDensitySelector sx={buttonStyles} />
-      <ExportButton visibleData={visibleData} />
-      <GridToolbarQuickFilter
-        sx={{ ...buttonStyles, height: 33, borderRadius: 1 }}
-      />
-      <div className="customToolbarRightButtons">
-        {isAdminOrSuperAdmin &&
-          (deletedTable ? (
-            <Button
-              disabled={selectedCatalogues.length <= 0}
-              startIcon={<RestoreIcon />}
-              sx={buttonStyles}
-              onClick={restoreRegisters}
-            >
-              Restaurar
-            </Button>
-          ) : (
-            <>
-              <Button
-                startIcon={<AddIcon />}
-                onClick={createDialogOpen}
-                sx={buttonStyles}
-              >
-                {t("dataTable.addDataset")}
-              </Button>
-              <Button
-                disabled={selectedCatalogues.length <= 0}
-                startIcon={<EditIcon />}
-                sx={buttonStyles}
-                onClick={getSelectedCatalogues}
-              >
-                Editar
-              </Button>
-              <Button
-                disabled={selectedCatalogues.length <= 0}
-                startIcon={<DeleteIcon />}
-                sx={buttonStyles}
-                onClick={deleteRegisters}
-              >
-                Eliminar
-              </Button>
-            </>
-          ))}
-      </div>
-    </GridToolbarContainer>
-  );
+ return (
+   <GridToolbarContainer
+     sx={{ color: "#404040", display: "flex", justifyContent: "space-between" }}
+   >
+     <Box className="Tabla" sx={{ display: "flex", alignItems: "center" }}>
+       {isTransparencia && isNotViewer && isCatalogues && (
+         <Button sx={buttonStyles} onClick={refreshODS}>
+           <img
+             src={ods3}
+             alt="odslogo"
+             style={{
+               objectFit: "cover",
+               objectPosition: "left",
+               width: "50%",
+               height: "50%",
+             }}
+           />
+         </Button>
+       )}
+       {isTransparencia && isNotViewer && isCatalogues && (
+         <Button sx={buttonStyles} id="verify" onClick={showVerified}>
+           {verifiedTable === false ? <DoneAllIcon /> : <RemoveDoneIcon />}
+         </Button>
+       )}
+       {isNotViewer && (
+         <Button sx={buttonStyles} onClick={showshowDeleted}>
+           {deletedTable ? <FolderIcon /> : <FolderDeleteIcon />}
+         </Button>
+       )}
+     </Box>
+     <Box sx={{ display: "flex", alignItems: "center" }}>
+       <GridToolbarColumnsButton sx={buttonStyles} />
+       <GridToolbarFilterButton sx={buttonStyles} />
+       <GridToolbarDensitySelector sx={buttonStyles} />
+       <ExportButton visibleData={visibleData}/>
+       <GridToolbarQuickFilter
+         sx={{ ...buttonStyles, height: 33, borderRadius: 1 }}
+       />
+     </Box>
+     <Box
+       className="rightButtons"
+       sx={{ display: "flex", alignItems: "center" }}
+     >
+       {isAdminOrSuperAdmin &&
+         (deletedTable ? (
+           <Button
+             disabled={selectedCatalogues.length <= 0}
+             startIcon={<RestoreIcon />}
+             sx={buttonStyles}
+             onClick={restoreRegisters}
+           >
+             Restaurar
+           </Button>
+         ) : (
+           <>
+             <Button
+               startIcon={<AddIcon />}
+               onClick={createDialogOpen}
+               sx={buttonStyles}
+             >
+               {t("dataTable.addDataset")}
+             </Button>
+             <Button
+               disabled={selectedCatalogues.length <= 0}
+               startIcon={<EditIcon />}
+               sx={buttonStyles}
+               onClick={getSelectedCatalogues}
+             >
+               Editar
+             </Button>
+             <Button
+               disabled={selectedCatalogues.length <= 0}
+               startIcon={<DeleteIcon />}
+               sx={buttonStyles}
+               onClick={deleteRegisters}
+             >
+               Eliminar
+             </Button>
+           </>
+         ))}
+     </Box>
+   </GridToolbarContainer>
+ );
+
 }
 
 export default CustomToolbar;

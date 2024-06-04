@@ -36,9 +36,12 @@ import baseTheme from "../darkModeSwitch/darkmodeTheme";
 import {
   Backdrop,
   CircularProgress,
+  IconButton,
   Rating,
+  Snackbar,
   ThemeProvider,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import { refreshODSRequest } from "../../api/ods";
 
 function CatalogueList() {
@@ -61,6 +64,7 @@ function CatalogueList() {
   const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
   const [catalogueSelected, setCatalogueSelected] =
     useState<Catalogue>(catalogueMock);
+  const [openSnackBar, setOpenSnackBar] = useState<boolean>(false);
   const [userData, setUserData] = useState<User>(userMock);
   const gridApiRef = useGridApiRef();
 
@@ -400,13 +404,15 @@ function CatalogueList() {
       .then(() => {
         getAndSetCatalogues();
       });
+    setOpenSnackBar(true);
+    console.log(openSnackBar);
     classifyCatalogues(catalogues);
   }
 
   useEffect(() => {
-    if(deletedTable){
+    if (deletedTable) {
       showDeleted();
-    }else{
+    } else {
       showNotDeleted();
     }
   }, [deletedTable, verifiedTable]);
@@ -458,22 +464,10 @@ function CatalogueList() {
   }
 
   function showDeleted() {
-    console.log(
-      deletedTable,
-      verifiedTable,
-      deletedNotVerified,
-      deletedVerified
-    );
     setRows(verifiedTable ? deletedVerified : deletedNotVerified);
   }
 
   function showNotDeleted() {
-    console.log(
-      deletedTable,
-      verifiedTable,
-      notDeletedNotVerified,
-      notDeletedVerified
-    );
     setRows(verifiedTable ? notDeletedVerified : notDeletedNotVerified);
   }
 
@@ -735,6 +729,26 @@ function CatalogueList() {
       </div>
       <CreateCatalogueDialog enviar={datosDialog}></CreateCatalogueDialog>
       <UpdateCatalogueDialog enviar={datosUpdateDialog}></UpdateCatalogueDialog>
+      <Snackbar
+        open={openSnackBar}
+        autoHideDuration={6000}
+        onClose={() => {
+          setOpenSnackBar(false);
+        }}
+        message="Note archived"
+        action={
+          <>
+            <IconButton
+              size="small"
+              aria-label="close"
+              color="inherit"
+              onClick={() => setOpenSnackBar(false)}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </>
+        }
+      />
     </>
   );
 }
