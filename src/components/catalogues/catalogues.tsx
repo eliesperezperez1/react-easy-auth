@@ -33,7 +33,12 @@ import {
 } from "../../utils/functions/table-functions";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
-import { Backdrop, CircularProgress, Rating, ThemeProvider } from "@mui/material";
+import {
+  Backdrop,
+  CircularProgress,
+  Rating,
+  ThemeProvider,
+} from "@mui/material";
 import { refreshODSRequest } from "../../api/ods";
 
 function CatalogueList() {
@@ -398,6 +403,14 @@ function CatalogueList() {
     classifyCatalogues(catalogues);
   }
 
+  useEffect(() => {
+    if(deletedTable){
+      showDeleted();
+    }else{
+      showNotDeleted();
+    }
+  }, [deletedTable, verifiedTable]);
+
   function classifyCatalogues(data: Catalogue[]) {
     let notDeletedNotVerifiedaux: Catalogue[] = [];
     let notDeletedVerifiedaux: Catalogue[] = [];
@@ -422,7 +435,7 @@ function CatalogueList() {
     setNotDeletedVerified(notDeletedVerifiedaux);
     setDeletedNotVerified(deletedNotVerifiedaux);
     setDeletedVerified(deletedVerifiedaux);
-    showDeleted();
+    showNotDeleted();
   }
 
   async function getAndSetCatalogues() {
@@ -445,15 +458,23 @@ function CatalogueList() {
   }
 
   function showDeleted() {
-    setRows(
-      deletedTable
-        ? verifiedTable
-          ? deletedVerified
-          : deletedNotVerified
-        : verifiedTable
-        ? notDeletedVerified
-        : notDeletedNotVerified
+    console.log(
+      deletedTable,
+      verifiedTable,
+      deletedNotVerified,
+      deletedVerified
     );
+    setRows(verifiedTable ? deletedVerified : deletedNotVerified);
+  }
+
+  function showNotDeleted() {
+    console.log(
+      deletedTable,
+      verifiedTable,
+      notDeletedNotVerified,
+      notDeletedVerified
+    );
+    setRows(verifiedTable ? notDeletedVerified : notDeletedNotVerified);
   }
 
   function deleteRegisters() {
@@ -468,6 +489,12 @@ function CatalogueList() {
       }
     });
     getAndSetCatalogues();
+    classifyCatalogues(catalogues);
+    if (deletedTable) {
+      showDeleted();
+    } else {
+      showNotDeleted();
+    }
   }
 
   function itCouldBeSelectable() {
@@ -512,25 +539,23 @@ function CatalogueList() {
     setOpenDialog(true);
   }
 
-  if (!catalogues.length) {
+  /*   if (!catalogues.length) {
     return (
       <span className="text-center text-xl font-bold my-4">
         {t("dataTable.noCatalogues")}
       </span>
     );
+  } */
+  if (!catalogues.length) {
+    return (
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={true}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
   }
-
-    if (!rows.length) {
-      return (
-        <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={true}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
-      );
-    }
-
 
   return (
     <>
@@ -595,12 +620,20 @@ function CatalogueList() {
                     deleteRegisters={deleteRegisters}
                     showshowDeleted={() => {
                       setDeletedTable(!deletedTable);
-                      showDeleted();
+                      if (!deletedTable) {
+                        showDeleted();
+                      } else {
+                        showNotDeleted();
+                      }
                     }}
                     isCatalogues={true}
                     showVerified={() => {
                       setverifiedTable(!verifiedTable);
-                      showDeleted();
+                      if (deletedTable) {
+                        showDeleted();
+                      } else {
+                        showNotDeleted();
+                      }
                     }}
                     refreshODS={refreshODS}
                     restoreRegisters={restoreRegisters}

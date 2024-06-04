@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, Tooltip } from "@mui/material";
+import { Box, Button, FormControl } from "@mui/material";
 import {
   GridToolbarColumnsButton,
   GridToolbarContainer,
@@ -21,9 +21,7 @@ import { useTranslation } from "react-i18next";
 import { MutableRefObject } from "react";
 import { GridApiCommunity } from "@mui/x-data-grid/models/api/gridApiCommunity";
 import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
-import ods from "../../assets/ods.svg";
 import ods3 from "../../assets/ods3.svg";
-
 
 export interface CustomToolbarProperties {
   userData: User;
@@ -56,21 +54,6 @@ const buttonStyles = {
   },
 };
 
-const odsStyles = {
-  height: 60,
-  backgroundColor: "#D9D9D9",
-  color: "#404040",
-  borderColor: "#404040",
-  "&:hover": {
-    borderColor: "#0D0D0D",
-    backgroundColor: "#0D0D0D",
-    color: "#f2f2f2",
-  },
-  "&.Mui-disabled": {
-    color: "darkgrey",
-  },
-};
-
 function CustomToolbar(props: CustomToolbarProperties) {
   const { t } = useTranslation();
   const {
@@ -86,8 +69,9 @@ function CustomToolbar(props: CustomToolbarProperties) {
     createDialogOpen,
     getSelectedCatalogues,
     deleteRegisters,
-    refreshODS
+    refreshODS,
   } = props;
+
   const isAdminOrSuperAdmin =
     userData.role === ROLE.ADMIN || userData.role === ROLE.SUPER_ADMIN;
   const isNotViewer = userData.role !== ROLE.VIEWER;
@@ -96,54 +80,48 @@ function CustomToolbar(props: CustomToolbarProperties) {
     userData.service === RESPONSIBLE_IDENTITY.transparencia;
   return (
     <GridToolbarContainer sx={{ color: "#404040" }}>
-      {isNotViewer && (
-        <FormControl
-          sx={{ m: 1, minWidth: 120, color: "#404040" }}
-          size="small"
-        >
-          <Box className="Tabla" sx={{ display: "flex", alignItems: "center" }}>
+      <FormControl>
+        <Box className="Tabla" sx={{ display: "flex", alignItems: "center" }}>
+          {isTransparencia && isNotViewer && isCatalogues && (
             <Button
-              sx={buttonStyles}
+              sx={{ ...buttonStyles, margin: "5px" }}
+              onClick={refreshODS}
+            >
+              <img
+                src={ods3}
+                alt="odslogo"
+                style={{
+                  objectFit: "cover",
+                  objectPosition: "left",
+                  width: "50%",
+                  height: "50%",
+                }}
+              />
+            </Button>
+          )}
+          {isTransparencia && isNotViewer && isCatalogues && (
+            <Button
+              sx={{ ...buttonStyles, "margin-left": "5px" }}
+              id="verify"
+              onClick={showVerified}
+            >
+              {verifiedTable === false ? <DoneAllIcon /> : <RemoveDoneIcon />}
+            </Button>
+          )}
+          {isNotViewer && (
+            <Button
+              sx={{ ...buttonStyles, margin: "5px" }}
               id="demo-select-small"
               onClick={showshowDeleted}
             >
               {deletedTable ? <FolderIcon /> : <FolderDeleteIcon />}
             </Button>
-          </Box>
-        </FormControl>
-      )}
-      {isTransparencia && isNotViewer && isCatalogues && (
-        <FormControl>
-          <Box className="Tabla" sx={{ display: "flex", alignItems: "center" }}>
-            <Button
-              sx={buttonStyles}
-              id="demo-select-small"
-              onClick={showVerified}
-            >
-              {verifiedTable === false ? <RemoveDoneIcon /> : <DoneAllIcon />}
-            </Button>
-          </Box>
-          <Box className="Tabla" sx={{ display: "flex", alignItems: "center" }}>
-            <Button
-              sx={odsStyles}
-              id="demo-select-small"
-              onClick={refreshODS}
-            >
-              <img
-                src={ods3}
-                alt="Image"
-                style={{
-                  objectFit: "cover",
-                  objectPosition: "left",
-                  width: "100%",
-                  height: "100%",
-                }}
-              />
-            </Button>
-          </Box>
-        </FormControl>
-      )}
-      <GridToolbarColumnsButton sx={buttonStyles} />
+          )}
+        </Box>
+      </FormControl>
+      <GridToolbarColumnsButton
+        sx={{ ...buttonStyles, "margin-left": "20px" }}
+      />
       <GridToolbarFilterButton sx={buttonStyles} />
       <GridToolbarDensitySelector sx={buttonStyles} />
       <ExportButton visibleData={visibleData} />
