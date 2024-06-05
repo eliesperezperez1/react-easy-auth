@@ -2,7 +2,6 @@ import { ReactComponent as Val } from "../../assets/val.svg";
 import { ReactComponent as Esp } from "../../assets/esp.svg";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
-import { LANGUAGE_FORM } from "../enums/language-form.enum";
 
 export function paletaColores(color: string) {
   switch (color) {
