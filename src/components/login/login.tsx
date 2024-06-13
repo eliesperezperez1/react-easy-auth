@@ -33,34 +33,36 @@ function Login(props: any) {
     setError("");
 
     try {
-      const response = await axios.post(API + "/auth/login", values);
-      if (response.data.status === 403) {
+      const response = await fetch(API + "/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify(values),
+      });
+      const data = await response.json();
+      if (data.status === 403) {
         setError("User not found");
         setOpen(true);
-      } else if (response.data.status === 203) {
+      } else if (data.status === 203) {
         setError("Credentials are not correct");
         setOpen(true);
       } else {
         signIn({
-          token: response.data.token,
+          token: data.token,
           expiresIn: 3600,
           tokenType: "Bearer",
-          authState: { user: response.data.user, id: response.data.id },
+          authState: { user: data.user, id: data.id },
         });
         navigate("/catalogues");
       }
     } catch (err) {
       setOpen(true);
-      if (err && err instanceof AxiosError) {
-        let allErrors = err.response.data.message.map((word: any) => {
-          if (!word) return word;
-          return word[0].toUpperCase() + word.substr(1).toLowerCase() + "\n";
-        });
-        setError(allErrors);
-      } else if (err && err instanceof Error) setError(err.message);
-
+      if (err instanceof Error) setError(err.message);
       console.log("Error: ", err);
     }
+
   };
 
   const formik = useFormik({
