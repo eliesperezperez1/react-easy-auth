@@ -9,6 +9,7 @@ export const getCataloguesRequest = async (refreshToken: string) =>
     method: "GET",
     headers: {
       Authorization: refreshToken,
+        "Access-Control-Allow-Origin": "*",
     },
   });
 
@@ -22,6 +23,7 @@ export const createCatalogueRequest = async (
     headers: {
       "Content-Type": "application/json",
       Authorization: refreshToken,
+      "Access-Control-Allow-Origin": "*",
     },
   });
 

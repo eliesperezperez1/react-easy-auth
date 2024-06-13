@@ -6,6 +6,7 @@ export const getEntitiesRequest = async (refreshToken: string) =>
     method: "GET",
     headers: {
       Authorization: refreshToken,
+      "Access-Control-Allow-Origin": "*",
     },
   });
 
@@ -19,6 +20,7 @@ export const createEntityRequest = async (
     headers: {
       "Content-Type": "application/json",
       Authorization: refreshToken,
+      "Access-Control-Allow-Origin": "*",
     },
   });
 

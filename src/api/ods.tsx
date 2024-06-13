@@ -5,5 +5,6 @@ export const refreshODSRequest = async (refreshToken: string) =>
     method: "GET",
     headers: {
       Authorization: refreshToken,
+      "Access-Control-Allow-Origin": "*",
     },
   });
