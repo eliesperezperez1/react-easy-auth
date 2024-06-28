@@ -94,7 +94,7 @@ export default function UpdateUserDialog(props: {
   const dynamicStyle = {
     backgroundColor: actualTheme === "light" ? "white" : "#252525",
     color: actualTheme === "light" ? "#252525" : "white",
-    "& .MuiInputBase-root": { border: "none" },
+    "& .MuiInputBaseRoot": { border: "none" },
   };
 
   return (
@@ -111,7 +111,7 @@ export default function UpdateUserDialog(props: {
         sx={{
           "& .MuiTextField-root": { m: 1, width: "20ch" },
           "& .MuiFormControl-root": { m: 1, width: "20ch" },
-          "&. MuiInputBase-root": { m: 1, width: "20ch" },
+          "&. MuiInputBaseRoot": { m: 1, width: "20ch" },
         }}
       >
         <DialogTitle 

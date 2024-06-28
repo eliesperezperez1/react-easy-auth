@@ -23,7 +23,7 @@ import baseTheme from "../darkModeSwitch/darkmodeTheme";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import React from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TOPIC } from "../../utils/enums/topic.enum";
@@ -69,14 +69,36 @@ export default function UpdateCatalogueDialog(props: {
   const [CKAN, setCKAN] = useState(false);
   const [MongoDB, setMongoDB] = useState(false);
   const [OpenDataSoft, setOpenDataSoft] = useState(false);
-  const [lastUpdateAlmacenado, setLastUpdate] = useState<Dayjs | null>();
-  const [creationDateAlmacenado, setCreationDate] = useState<Dayjs | null>();
+  const [lastUpdateAlmacenado, setLastUpdate] = useState<Dayjs>();
+  const [creationDateAlmacenado, setCreationDate] = useState<Dayjs>();
   const { actualTheme } = useAlternateTheme();
 
   useEffect(() => {
+    console.log(props.enviar.catalogue);
     setUpdate(props.enviar.catalogue);
     setOpen(props.enviar.open);
     setActiveAds(props.enviar.catalogue.activeAds);
+    setMasterData(props.enviar.catalogue.masterData);
+    setReferenceData(props.enviar.catalogue.referenceData);
+    setHighValue(props.enviar.catalogue.highValue);
+    setGenderInfo(props.enviar.catalogue.genderInfo);
+    setRAT(props.enviar.catalogue.RAT);
+    setDataProtection(props.enviar.catalogue.dataProtection);
+    setDataStandards(props.enviar.catalogue.dataStandards);
+    setDataAnonymize(props.enviar.catalogue.dataAnonymize);
+    setSharedData(props.enviar.catalogue.sharedData);
+    setVLCi(props.enviar.catalogue.VLCi);
+    setArcGIS(props.enviar.catalogue.ArcGIS);
+    setPentaho(props.enviar.catalogue.Pentaho);
+    setCKAN(props.enviar.catalogue.CKAN);
+    setMongoDB(props.enviar.catalogue.MongoDB);
+    setOpenDataSoft(props.enviar.catalogue.OpenDataSoft);
+    if(update.lastUpdate !== undefined && update.lastUpdate !== null){
+      setLastUpdate(dayjs(update.lastUpdate.toString()));
+    }
+    if(update.creationDate !== undefined && update.creationDate !== null){
+      setCreationDate(dayjs(update.creationDate.toString()));
+    }
     setStep(1);
   }, [props.enviar.open, props.enviar.catalogue]);
 
@@ -89,6 +111,63 @@ export default function UpdateCatalogueDialog(props: {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setUpdate((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = event.target;
+    setUpdate((prevState) => ({ ...prevState, [name]: checked }));
+    switch (name) {
+      case "activeAds":
+        setActiveAds(checked);
+        break;
+      case "masterData":
+        setMasterData(checked);
+        break;
+      case "referenceData":
+        setReferenceData(checked);
+        break;
+      case "highValue":
+        setHighValue(checked);
+        break;
+      case "genderInfo":
+        setGenderInfo(checked);
+        break;
+      case "RAT":
+        setRAT(checked);
+        break;
+      case "dataProtection":
+        setDataProtection(checked);
+        break;
+      case "dataStandards":
+        setDataStandards(checked);
+        break;
+      case "dataAnonymize":
+        setDataAnonymize(checked);
+        break;
+      case "sharedData":
+        setSharedData(checked);
+        break;
+      case "VLCi":
+        setVLCi(checked);
+        break;
+      case "ArcGIS":
+        setArcGIS(checked);
+        break;
+      case "Pentaho":
+        setPentaho(checked);
+        break;
+      case "CKAN":
+        setCKAN(checked);
+        break;
+      case "MongoDB":
+        setMongoDB(checked);
+        break;
+      case "OpenDataSoft":
+        setOpenDataSoft(checked);
+        break;
+      default:
+        break;
+    }
   };
 
   const buttonsFormProps: buttonsFormInfo = {
@@ -163,6 +242,42 @@ export default function UpdateCatalogueDialog(props: {
 
     // Merge current step data with existing form data
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
+    console.log(masterData,
+      activeAds,
+      referenceData,
+      highValue,
+      genderInfo,
+      RAT,
+      dataProtection,
+      dataStandards,
+      dataAnonymize,
+      sharedData,
+      VLCi,
+      ArcGIS,
+      Pentaho,
+      CKAN,
+      MongoDB,
+      OpenDataSoft);
+    setFormData((prevData) => ({
+      ...prevData,
+      ...currentStepJson,
+      masterData,
+      activeAds,
+      referenceData,
+      highValue,
+      genderInfo,
+      RAT,
+      dataProtection,
+      dataStandards,
+      dataAnonymize,
+      sharedData,
+      VLCi,
+      ArcGIS,
+      Pentaho,
+      CKAN,
+      MongoDB,
+      OpenDataSoft,
+    }));
     setStep(step + 1);
   };
 
@@ -205,7 +320,7 @@ export default function UpdateCatalogueDialog(props: {
   const dynamicStyle = {
     backgroundColor: actualTheme === "light" ? "white" : "#252525",
     color: actualTheme === "light" ? "#252525" : "white",
-    "& .MuiInputBase-root": { border: "none" },
+    "& .MuiInputBaseRoot": { border: "none" },
   };
 
   return (
@@ -344,7 +459,7 @@ export default function UpdateCatalogueDialog(props: {
                             required
                             margin="dense"
                             id="keyWords"
-                            name="description"
+                            name="keywords"
                             type="string"
                             variant="standard"
                             value={update.keyWords}
@@ -740,7 +855,7 @@ export default function UpdateCatalogueDialog(props: {
                             id="ArcGIS"
                             name="ArcGIS"
                             value={ArcGIS}
-                            checked={ArcGIS === true}
+                            checked={ArcGIS}
                             onChange={(event) =>
                               setArcGIS(event.target.checked)
                             }

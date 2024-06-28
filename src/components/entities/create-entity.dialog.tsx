@@ -169,7 +169,7 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
   const dynamicStyle = {
     backgroundColor: actualTheme === "light" ? "white" : "#252525",
     color: actualTheme === "light" ? "#252525" : "white",
-    "& .MuiInputBase-root": { border: "none" },
+    "& .MuiInputBaseRoot": { border: "none" },
   };
 
   return (
@@ -185,7 +185,7 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
           color: actualTheme==="light" ? "#252525" : "white",
           "& .MuiTextField-root": { m: 1, width: "20ch" },
           "& .MuiFormControl-root": { m: 1, width: "20ch" },
-          "& .MuiInputBase-root": { m: 1, width: "20ch", border: "none" },
+          "& .MuiInputBaseRoot": { m: 1, width: "20ch", border: "none" },
         }}
       >
         <DialogTitle
@@ -475,7 +475,7 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
           sx={{
             backgroundColor: actualTheme==="light" ? "white" : "#252525",
             color: actualTheme==="light" ? "#252525" : "white",
-            "& .MuiInputBase-root": { border: "none" },
+            "& .MuiInputBaseRoot": { border: "none" },
           }}
         >
         </DialogActions>

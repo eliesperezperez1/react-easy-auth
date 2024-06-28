@@ -21,7 +21,7 @@ import "./create-catalogue.dialog.css";
 import React from "react";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import { grey } from "@mui/material/colors";
 import { esES } from "@mui/x-data-grid/locales";
@@ -154,8 +154,8 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [MongoDB, setMongoDB] = useState(true);
   const [OpenDataSoft, setOpenDataSoft] = useState(true);
   const [format, setFormat] = useState<string[]>([]);
-  const [lastUpdateAlmacenado, setLastUpdate] = useState<Dayjs | null>();
-  const [creationDateAlmacenado, setCreationDate] = useState<Dayjs | null>();
+  const [lastUpdateAlmacenado, setLastUpdate] = useState<Dayjs>(dayjs("Wed, 26 Jun 2024 22:00:00 GMT"));
+  const [creationDateAlmacenado, setCreationDate] = useState<Dayjs>(dayjs("Wed, 26 Jun 2024 22:00:00 GMT"));
   const { actualTheme } = useAlternateTheme();
 
   useEffect(() => {
@@ -174,7 +174,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       temporaryCoverage: "",
       organism: ORGANISM.alcaldia,
       language: LANGUAGE_FORM.alt,
-      keyWords: "",
+      keyWords: [],
       minimumVariables: MINIMUM_VALUE.mo,
       contactPerson: "",
       masterData: false,
@@ -228,15 +228,18 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
 
   const createCatalogue = (formJson: any) => {
     const a = formJson.lastUpdate;
+    const b = formJson.creationDate;
     const deletedDate = new Date();
     const deleted = false;
     const lastUpdate = new Date(a);
+    const creationDate = new Date(b);
     const prueba = formJson as CreateCatalogue;
     const create: CreateCatalogue = {
       ...prueba,
       deleted,
       deletedDate,
       lastUpdate,
+      creationDate,
     };
     createCatalogueRequest(create, authHeader())
       .then((response) => response.json())
@@ -268,6 +271,16 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     }
 
     if (
+      creationDateAlmacenado !== undefined &&
+      creationDateAlmacenado !== null &&
+      (currentStepData.get("creationDate") !== null ||
+        currentStepData.get("creationDate") !== undefined)
+    ) {
+      const creationDateDatos = creationDateAlmacenado.toString();
+      currentStepData.set("creationDate", creationDateDatos);
+    }
+
+    if (
       lastUpdateAlmacenado !== undefined &&
       lastUpdateAlmacenado !== null &&
       (currentStepData.get("lastUpdate") !== null ||
@@ -281,6 +294,24 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     const currentStepJson = Object.fromEntries(currentStepData.entries());
 
     setFormDataSteps((prevData) => ({ ...prevData, ...currentStepJson }));
+    console.log(
+        "masterData:" + masterData,
+        "activeAds: " + activeAds,
+        "referenceData: " + referenceData,
+        "highValue: " + highValue,
+        "genderInfo: " + genderInfo,
+        "RAT: " + RAT,
+        "dataProtection: " + dataProtection,
+        "dataStandards: " + dataStandards,
+        "dataAnonymize: " + dataAnonymize,
+        "sharedData: " + sharedData,
+        "VLCi: " + VLCi,
+        "ArcGIS: " + ArcGIS,
+        "Pentaho: " + Pentaho,
+        "CKAN: " + CKAN,
+        "MongoDB: " + MongoDB,
+        "OpenDataSoft: " + OpenDataSoft,
+    );
     // Merge current step data with existing form data
     setFormData((prevData) => ({
       ...prevData,
@@ -352,7 +383,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const dynamicStyle = {
     backgroundColor: actualTheme === "light" ? "white" : "#252525",
     color: actualTheme === "light" ? "#252525" : "white",
-    "& .MuiInputBase-root": { border: "none" },
+    "& .MuiInputBaseRoot": { border: "none" },
   };
 
   return (
@@ -495,7 +526,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             required
                             margin="dense"
                             id="keyWords"
-                            name="description"
+                            name="keywords"
                             type="string"
                             variant="standard"
                             value={formDataSteps.keyWords}
@@ -917,7 +948,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             id="ArcGIS"
                             name="ArcGIS"
                             value={ArcGIS}
-                            checked={ArcGIS === true}
+                            checked={ArcGIS}
                             onChange={(event) =>
                               setArcGIS(event.target.checked)
                             }
