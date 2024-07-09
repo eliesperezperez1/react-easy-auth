@@ -58,6 +58,7 @@ export default function UpdateCatalogueDialog(props: {
   const [referenceData, setReferenceData] = useState(false);
   const [highValue, setHighValue] = useState(false);
   const [genderInfo, setGenderInfo] = useState(false);
+  const [autoAcess, setAutoAcess] = useState(false);
   const [RAT, setRAT] = useState(false);
   const [dataProtection, setDataProtection] = useState(false);
   const [dataStandards, setDataStandards] = useState(false);
@@ -82,6 +83,7 @@ export default function UpdateCatalogueDialog(props: {
     setReferenceData(props.enviar.catalogue.referenceData);
     setHighValue(props.enviar.catalogue.highValue);
     setGenderInfo(props.enviar.catalogue.genderInfo);
+    setAutoAcess(props.enviar.catalogue.autoAcess);
     setRAT(props.enviar.catalogue.RAT);
     setDataProtection(props.enviar.catalogue.dataProtection);
     setDataStandards(props.enviar.catalogue.dataStandards);
@@ -94,10 +96,14 @@ export default function UpdateCatalogueDialog(props: {
     setMongoDB(props.enviar.catalogue.MongoDB);
     setOpenDataSoft(props.enviar.catalogue.OpenDataSoft);
     if(update.lastUpdate !== undefined && update.lastUpdate !== null){
-      setLastUpdate(dayjs(update.lastUpdate.toString()));
+      //setLastUpdate(dayjs(update.lastUpdate.toString()));
+      console.log("lastUpdate: " + props.enviar.catalogue.lastUpdate);
+      setLastUpdate(dayjs(props.enviar.catalogue.lastUpdate));
     }
     if(update.creationDate !== undefined && update.creationDate !== null){
-      setCreationDate(dayjs(update.creationDate.toString()));
+      //setCreationDate(dayjs(update.creationDate.toString()));
+      console.log("creationDate: " + props.enviar.catalogue.creationDate);
+      setCreationDate(dayjs(props.enviar.catalogue.creationDate));
     }
     setStep(1);
   }, [props.enviar.open, props.enviar.catalogue]);
@@ -252,6 +258,7 @@ export default function UpdateCatalogueDialog(props: {
       dataStandards,
       dataAnonymize,
       sharedData,
+      autoAcess,
       VLCi,
       ArcGIS,
       Pentaho,
@@ -293,7 +300,7 @@ export default function UpdateCatalogueDialog(props: {
     setFormat(newValue);
   };
 
-  const handleValuePicker = (picker: any) => {
+  /* const handleValuePicker = (picker: any) => {
     if (picker === "lastUpdate") {
       if (update.lastUpdate !== undefined) {
         const dateObject = new Date(update.lastUpdate);
@@ -307,7 +314,7 @@ export default function UpdateCatalogueDialog(props: {
         return formattedDate;
       }
     }
-  };
+  }; */
 
   const handleChangeLastUpdate = (value: any) => {
     setLastUpdate(value);
@@ -459,7 +466,7 @@ export default function UpdateCatalogueDialog(props: {
                             required
                             margin="dense"
                             id="keyWords"
-                            name="keywords"
+                            name="keyWords"
                             type="string"
                             variant="standard"
                             value={update.keyWords}
@@ -541,7 +548,7 @@ export default function UpdateCatalogueDialog(props: {
                         </div>
                         <div className="horizontalFormSwitch">
                           <p>{t("columnsNames.activeAds")} *</p>
-                          <FormControl variant="standard">
+                          {/* <FormControl variant="standard"> */}
                             <Switch
                               //required
                               id="activeAds"
@@ -553,7 +560,7 @@ export default function UpdateCatalogueDialog(props: {
                               }
                               color="primary" // Opcional: ajusta el color del switch
                             />
-                          </FormControl>
+                          {/* </FormControl> */}
                         </div>
                         <div className="horizontalForm">
                           <p>Comentarios generales</p>
@@ -575,7 +582,7 @@ export default function UpdateCatalogueDialog(props: {
                             format="DD/MM/YYYY hh:mm:ss a"
                             name="creationDate"
                             defaultValue={creationDateAlmacenado}
-                            onChange={(e) => {
+                            onChange={(e: any) => {
                               setCreationDate(e);
                               handleChangeCreationDate(e);
                             }}
@@ -697,9 +704,9 @@ export default function UpdateCatalogueDialog(props: {
                         <Switch
                           id="autoAcess"
                           name="autoAcess"
-                          value={update.autoAcess}
-                          checked={update.autoAcess}
-                          onChange={handleChange}
+                          value={autoAcess}
+                          checked={autoAcess}
+                          onChange={(event) => setAutoAcess(event.target.checked)}
                           color="primary" // Opcional: ajusta el color del switch
                         />
                       </div>

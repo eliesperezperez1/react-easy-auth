@@ -289,12 +289,24 @@ const dataset = [
       y2: 488.06,
     },
   ];
+  const consumoElectricoFecha = [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021];
+  const consumoElectricoValor = [4.01, 3.79, 3.88, 3.67, 3.45, 3.5, 3.6, 3.41, 3.52, 3.6, 3.53, 3.53, 3.48];
 
   const valueFormatter = (value: number | null) => `${value}mm`;
 
   return (
     <>
-      <BarChart
+      <LineChart
+        xAxis={[{ data: consumoElectricoFecha }]}
+        series={[
+          {
+            data: consumoElectricoValor,
+          },
+        ]}
+        width={500}
+        height={300}
+      />
+      {/*<BarChart
         dataset={dataset}
         yAxis={[
           { scaleType: "band", dataKey: "month" },
@@ -369,6 +381,7 @@ const dataset = [
           },
         ]}
       />
+      */}
     </>
   );
 }

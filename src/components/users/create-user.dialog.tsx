@@ -39,11 +39,11 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
     password: "",
     language: "",
     role: "",
-    service: "",
+    service: RESPONSIBLE_IDENTITY,
     themeApp: "",
   });
   const { actualTheme } = useAlternateTheme();
-
+  const isPasswordValid = formDataSteps.password.length >= 8;
   useEffect(() => {
     setOpen(props.enviar.open);
   });
@@ -122,6 +122,32 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
     color: actualTheme === "light" ? "#252525" : "white",
     "& .MuiInputBaseRoot": { border: "none" },
   };
+
+  /*const renderResponsibleIdentity = () => {
+    const menuItems = Object.entries(RESPONSIBLE_IDENTITY).map(
+      ([key, value]) => {
+        if (value === RESPONSIBLE_IDENTITY.GENERAL) {
+          return null;
+        }
+        return (
+          <MenuItem key={key} value={value}>
+            {value}
+          </MenuItem>
+        );
+      }
+    );
+    if (
+      formDataSteps.service &&
+      !Object.values(RESPONSIBLE_IDENTITY).includes(formDataSteps.service)
+    ) {
+      menuItems.push(
+        <MenuItem key="custom" value={formDataSteps.service.toString}>
+          {formDataSteps.service.toString()}
+        </MenuItem>
+      );
+    }
+    return menuItems;
+  };*/
 
   return (
     <>
@@ -203,10 +229,17 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                           name="password"
                           type="password"
                           variant="standard"
+                          helperText="La contraseña debe contener 8-13 caracteres"
                           value={formDataSteps.password}
                           onChange={(e) =>
                             handleChange("password", e.target.value)
                           }
+                          sx={{
+                            "& .MuiFormHelperText-root": {
+                              color: formDataSteps.password.length >= 8 && formDataSteps.password.length <= 13 ? "#00ff00" : "#ff0000"
+                            },
+                          }}
+                          inputProps={{ maxLength: 13 }}
                         />
                       </div>
                     </div>
@@ -229,6 +262,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                       </Button>
                       <Button
                         type="submit"
+                        disabled={!isPasswordValid}
                         sx={{
                           height: 37,
                           backgroundColor: "#D9D9D9",
@@ -303,6 +337,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                           margin="dense"
                           defaultValue={formDataSteps.service}
                         >
+                          {/*{renderResponsibleIdentity()}*/}
                           {Object.entries(RESPONSIBLE_IDENTITY).map(
                             ([key, value]) => (
                               <MenuItem key={key} value={value}>

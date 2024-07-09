@@ -47,6 +47,8 @@
 
 .horizontalForm > :last-child{
   flex: 2;
+  overflow: hidden;
+  width: 150px;
 }
 
 .horizontalFormSwitch > :last-child{ 

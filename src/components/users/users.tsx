@@ -26,6 +26,7 @@ import {
   paletaColores,
   yesOrNo,
   valOrEsp,
+  isChecked,
 } from "../../utils/functions/table-functions";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
@@ -50,6 +51,7 @@ function UserList() {
     open: openDialog,
     closeDialog: (close: boolean) => setOpenDialog(close),
     getInfo: () => getAndSetUsers(),
+    
   };
 
   const [t, i18n] = useTranslation();
@@ -58,6 +60,22 @@ function UserList() {
     closeDialog: (close: boolean) => setOpenUpdateDialog(close),
     getInfo: () => getAndSetUsers(),
     user: userSelected,
+  };
+
+  
+  const roleDisplayMap = {
+    'super-admin': 'Administrador General',
+    'admin': 'Administrador',
+    'viewer': 'Visualizador',
+    'super-viewer': 'Visualizador General',
+  };
+  
+  const renderRoleCell = (params: GridRenderCellParams<any, string>) => {
+    var displayRole: any = 'Sin rol';
+    if(params.value != undefined || params.value != null){
+      displayRole = roleDisplayMap[params.value] || params.value || 'Sin rol';
+    }
+    return <Chip label={displayRole} />;
   };
 
   const columns: GridColDef[] = [
@@ -85,6 +103,7 @@ function UserList() {
       field: "role",
       headerName: t("columnsNames.role"),
       width: 200,
+      renderCell: renderRoleCell,
     },
     {
       field: "service",
@@ -95,11 +114,14 @@ function UserList() {
       field: "deleted",
       headerName: t("columnsNames.deleted"),
       width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
+      renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      /* renderCell: (params: GridRenderCellParams<any, string>) => (
         <>
           <Chip label={params.value} color={yesOrNo(params.value)} />
         </>
-      ),
+      ), */
     },
   ];
 

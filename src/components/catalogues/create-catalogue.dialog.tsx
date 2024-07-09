@@ -154,8 +154,8 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [MongoDB, setMongoDB] = useState(true);
   const [OpenDataSoft, setOpenDataSoft] = useState(true);
   const [format, setFormat] = useState<string[]>([]);
-  const [lastUpdateAlmacenado, setLastUpdate] = useState<Dayjs>(dayjs("Wed, 26 Jun 2024 22:00:00 GMT"));
-  const [creationDateAlmacenado, setCreationDate] = useState<Dayjs>(dayjs("Wed, 26 Jun 2024 22:00:00 GMT"));
+  const [lastUpdateAlmacenado, setLastUpdate] = useState<Dayjs>(dayjs("Mon, 01 Jan 2024 00:00:00 GMT"));
+  const [creationDateAlmacenado, setCreationDate] = useState<Dayjs>(dayjs("Mon, 01 Jan 2024 00:00:00 GMT"));
   const { actualTheme } = useAlternateTheme();
 
   useEffect(() => {
@@ -210,6 +210,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       deleted: false,
       deletedDate: new Date(),
       lastUpdate: new Date(),
+      verified: true,
     });
     setStep(1);
     setFormat([]);
@@ -233,6 +234,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     const deleted = false;
     const lastUpdate = new Date(a);
     const creationDate = new Date(b);
+    const verified = true;
     const prueba = formJson as CreateCatalogue;
     const create: CreateCatalogue = {
       ...prueba,
@@ -240,6 +242,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       deletedDate,
       lastUpdate,
       creationDate,
+      verified,
     };
     createCatalogueRequest(create, authHeader())
       .then((response) => response.json())
@@ -612,7 +615,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                         </div>
                         <div className="horizontalFormSwitch">
                           <p>{t("columnsNames.activeAds")} *</p>
-                          <FormControl variant="standard">
+                          {/* <FormControl variant="standard"> */}
                             <Switch
                               //required
                               id="activeAds"
@@ -624,7 +627,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                               }
                               color="primary" // Opcional: ajusta el color del switch
                             />
-                          </FormControl>
+                          {/* </FormControl> */}
                         </div>
                         <div className="horizontalForm">
                           <p>Comentarios generales</p>
@@ -648,7 +651,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             format="DD/MM/YYYY hh:mm:ss a"
                             name="creationDate"
                             value={creationDateAlmacenado}
-                            onChange={(e) => {
+                            onChange={(e: any) => {
                               setCreationDate(e);
                               handleChangeCreationDate(e);
                             }}
@@ -780,7 +783,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           id="autoAcess"
                           name="autoAcess"
                           value={autoAcess}
-                          checked={autoAcess === true}
+                          checked={autoAcess}
                           onChange={(event) =>
                             setAutoAcess(event.target.checked)
                           }
