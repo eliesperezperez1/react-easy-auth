@@ -43,6 +43,9 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { refreshODSRequest } from "../../api/ods";
+import { ORGANISM } from "../../utils/enums/organism.enum";
+import { MINIMUM_VALUE } from "../../utils/enums/minimum-value.enum";
+import { TOPIC } from "../../utils/enums/topic.enum";
 
 function CatalogueList() {
   const authHeader = useAuthHeader();
@@ -87,33 +90,47 @@ function CatalogueList() {
       headerName: t("columnsNames.title"),
       width: 200,
       description: t("tooltipText.title"),
+      type: "string",
     },
     {
       field: "description",
       headerName: t("columnsNames.description"),
       width: 200,
       description: t("tooltipText.description"),
+      type: "string",
     },
     {
       field: "responsibleIdentity",
       headerName: t("columnsNames.responsibleIdentity"),
       width: 200,
       description: t("tooltipText.responsibleIdentity"),
+     /*  type: "singleSelect",
+      valueOptions: Object.entries(RESPONSIBLE_IDENTITY).map(([key, value]) => {
+        return value;
+      }), */
     },
     {
       field: "organism",
       headerName: "Organismo",
       width: 200,
       description: "Organismo al que pertenece",
+      type: "singleSelect",
+      valueOptions: Object.entries(ORGANISM).map(([key, value]) => {
+        return value;
+      }),
     },
     {
       field: "topic",
       headerName: t("columnsNames.topic"),
       width: 200,
       description: t("tooltipText.topic"),
-      renderCell: (params: GridRenderCellParams<any, string[]>) => {
+      /*    renderCell: (params: GridRenderCellParams<any, string[]>) => {
         return arrayCell(params.value);
-      },
+      }, */
+      type: "singleSelect",
+      valueOptions: Object.entries(TOPIC).map(([key, value]) => {
+        return value;
+      }),
     },
     {
       field: "language",
@@ -138,6 +155,10 @@ function CatalogueList() {
       headerName: "Campos mínimos",
       width: 200,
       description: "Campos mínimos que debe incluir el dataset",
+      type: "singleSelect",
+      valueOptions: Object.entries(MINIMUM_VALUE).map(([key, value]) => {
+        return value;
+      }),
     },
     {
       field: "contactPerson",
@@ -153,6 +174,7 @@ function CatalogueList() {
         return isChecked(params.value);
       },
       description: "Datos referentes a las características básicas del negocio",
+      type: "boolean",
     },
     {
       field: "referenceData",
@@ -181,6 +203,7 @@ function CatalogueList() {
         return isChecked(params.value);
       },
       description: t("tooltipText.activeAds"),
+      type: "boolean",
     },
     {
       field: "comments",
@@ -232,10 +255,11 @@ function CatalogueList() {
       },
       description:
         "¿Se puede acceder a los datos de origen de forma automatizada? ",
+      type: "boolean",
     },
     {
       field: "originComments",
-      headerName: "Comentarios del origen",
+      headerName: t("columnsNames.originComments"),
       width: 200,
       description: "Comentarios relativos al origen de los datos",
     },
@@ -247,36 +271,39 @@ function CatalogueList() {
         return isChecked(params.value);
       },
       description: t("tooltipText.RAT"),
+      type: "boolean",
     },
     {
       field: "dataProtection",
-      headerName: "Protección de datos",
+      headerName: t("columnsNames.dataProtection"),
       width: 200,
       renderCell: (params) => {
         return isChecked(params.value);
       },
       description:
         "¿El dataset contiene datos personales protegidos por la LOPD?",
+      type: "boolean",
     },
     {
       field: "dataStandards",
-      headerName: "Estándares de datos",
+      headerName: t("columnsNames.dataStandards"),
       width: 200,
       renderCell: (params) => {
         return isChecked(params.value);
       },
       description:
         "¿Existen campos del dataset que deberían publicarse por normativa?",
+      type: "boolean",
     },
     {
       field: "dataProtectionComments",
-      headerName: "Comentarios del origen",
+      headerName: t("columnsNames.dataStandards"),
       width: 200,
       description: "Comentarios relativos a la protección de los datos",
     },
     {
       field: "dataAnonymize",
-      headerName: "Anonimización de datos",
+      headerName: t("columnsNames.dataStandards"),
       width: 200,
       renderCell: (params) => {
         return isChecked(params.value);
@@ -286,29 +313,31 @@ function CatalogueList() {
     },
     {
       field: "dataQuality",
-      headerName: "Calidad de los datos",
+      headerName: t("columnsNames.dataQuality"),
       width: 200,
       renderCell: (params) => {
         return <Rating name="read-only" value={params.value} readOnly />;
       },
       description:
         "Valoración numérica de la calidad de los datos (del 1 al 5)",
+      type: "number",
     },
     {
       field: "sharingLevel",
-      headerName: "Nivel de compartición",
+      headerName: t("columnsNames.sharingLevel"),
       width: 200,
       description:
         "¿Quién tiene acceso a estos datos dentro de la organización?",
     },
     {
       field: "sharedData",
-      headerName: "Datos compartidos",
+      headerName: t("columnsNames.sharedData"),
       width: 200,
       renderCell: (params) => {
         return isChecked(params.value);
       },
       description: "¿Se han compartido estos datos en alguna plataforma?",
+      type: "boolean",
     },
     {
       field: "VLCi",
@@ -318,6 +347,7 @@ function CatalogueList() {
         return isChecked(params.value);
       },
       description: "¿Está compartido en la plataforma Smart City?",
+      type: "boolean",
     },
     {
       field: "ArcGIS",
@@ -327,6 +357,7 @@ function CatalogueList() {
         return isChecked(params.value);
       },
       description: "¿Está cargado en ArcGIS?",
+      type: "boolean",
     },
     {
       field: "Pentaho",
@@ -336,6 +367,7 @@ function CatalogueList() {
         return isChecked(params.value);
       },
       description: "¿Está disponible en Pentaho?",
+      type: "boolean",
     },
     {
       field: "CKAN",
@@ -345,6 +377,7 @@ function CatalogueList() {
         return isChecked(params.value);
       },
       description: "¿Está cargado en CKAN?",
+      type: "boolean",
     },
     {
       field: "MongoDB",
@@ -354,6 +387,7 @@ function CatalogueList() {
         return isChecked(params.value);
       },
       description: "¿Está cargado en MongoDB?",
+      type: "boolean",
     },
     {
       field: "OpenDataSoft",
@@ -363,28 +397,33 @@ function CatalogueList() {
         return isChecked(params.value);
       },
       description: "¿Está publicado en OpenDataSoft?",
+      type: "boolean",
     },
     {
       field: "temporarySolution",
-      headerName: "Resolución temporal",
+      headerName: t("columnsNames.temporarySolution"),
       width: 200,
       description: "Frecuencia de actualización del dato",
+      renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      type: "boolean",
     },
     {
       field: "chargeStateComments",
-      headerName: "Comentarios sobre el estado de carga",
+      headerName: t("columnsNames.chargeStateComments"),
       width: 200,
       description: "Comentarios relativos al estado de carga del dataset",
     },
     {
       field: "productData",
-      headerName: "Producto de datos",
+      headerName: t("columnsNames.productData"),
       width: 200,
       description: "Nombre del producto de datos",
     },
     {
       field: "productComments",
-      headerName: "Comentarios del producto",
+      headerName: t("columnsNames.productComments"),
       width: 200,
       description: "Comentarios relativo al producto de datos",
     },
@@ -405,7 +444,6 @@ function CatalogueList() {
         getAndSetCatalogues();
       });
     setOpenSnackBar(true);
-    console.log(openSnackBar);
     classifyCatalogues(catalogues);
   }
 
@@ -415,7 +453,7 @@ function CatalogueList() {
     } else {
       showNotDeleted();
     }
-  }, [deletedTable, verifiedTable]);
+  }, [deletedTable, verifiedTable, showDeleted, showNotDeleted]);
 
   function classifyCatalogues(data: Catalogue[]) {
     let notDeletedNotVerifiedaux: Catalogue[] = [];
@@ -517,7 +555,7 @@ function CatalogueList() {
       }
       getAndSetCatalogues();
     }
-  }, []);
+  }, [user()]);
 
   useEffect(() => {
     classifyCatalogues(catalogues);

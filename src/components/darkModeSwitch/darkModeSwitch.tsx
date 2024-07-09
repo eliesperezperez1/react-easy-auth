@@ -21,13 +21,10 @@ const DarkModeSwitch = () => {
   useEffect(() => {
     if (user() && user().user) {
       setUserData(user().user);
-    } else {
-      console.log("sin user");
     }
   }, [user()]);
 
   async function switchThemeApp() {
-    console.log("llega", actualTheme, user().user);
     if (actualTheme === "light") {
       toggleTheme();
       if (userData !== null && userData !== userMock) {

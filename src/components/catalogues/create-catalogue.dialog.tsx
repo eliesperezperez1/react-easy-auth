@@ -1,4 +1,3 @@
-import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
@@ -6,11 +5,13 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
 import { CreateCatalogue } from "../../interfaces/catalogue.interface";
 import { createCatalogueRequest } from "../../api/catalogues";
-import { useAuthHeader } from "react-auth-kit";
+import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import {
   Box,
+  Chip,
   FormControl,
   MenuItem,
+  Rating,
   Select,
   Switch,
   ThemeProvider,
@@ -19,12 +20,6 @@ import {
 import { useTranslation } from "react-i18next";
 import "./create-catalogue.dialog.css";
 import React from "react";
-import { DateTimePicker } from "@mui/x-date-pickers";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { Dayjs } from "dayjs";
-import useAlternateTheme from "../darkModeSwitch/alternateTheme";
-import { grey } from "@mui/material/colors";
-import { esES } from "@mui/x-data-grid/locales";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
 import { ORGANISM } from "../../utils/enums/organism.enum";
@@ -35,102 +30,22 @@ import { TOPIC } from "../../utils/enums/topic.enum";
 import { SHARING_LEVEL } from "../../utils/enums/sharing-level.enum";
 import { catalogueMock } from "../../utils/catalogue.mock";
 import ButtonsForm, { buttonsFormInfo } from "./buttons-form";
+import CancelIcon from "@mui/icons-material/Cancel";
+import { getDynamicStyle } from "../../utils/functions/table-functions";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import { LocalizationProvider, esES } from "@mui/x-date-pickers";
+import { grey } from "@mui/material/colors";
+
 export interface DialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
   getInfo: () => void;
 }
 
-const baseTheme = (actualTheme: any) =>
-  createTheme(
-    {
-      typography: {
-        fontFamily: "Montserrat",
-      },
-      components: {
-        MuiTextField: {
-          styleOverrides: {
-            root: {
-              color: actualTheme === "light" ? "black" : "white",
-            },
-          },
-        },
-        MuiCssBaseline: {
-          styleOverrides: `
-        @font-face {
-          font-family: 'Montserrat';
-          src: url(https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap);
-        }
-      `,
-        },
-        MuiInput: {
-          styleOverrides: {
-            root: {
-              color: actualTheme === "light" ? "black" : "white",
-            },
-          },
-        },
-        MuiSelect: {
-          defaultProps: {
-            variant: "standard", // Set the default variant (outlined, filled, standard)
-          },
-          styleOverrides: {
-            icon: {
-              color: actualTheme === "light" ? "black" : "white", // Set the color of the dropdown arrow icon
-            },
-            // Add other styles as needed
-          },
-        },
-        MuiMenuList: {
-          styleOverrides: {
-            root: {
-              //backgroundColor: actualTheme === 'light' ? "white" : "black",
-              color: actualTheme === "light" ? "black" : "white",
-            },
-          },
-        },
-        MuiMenuItem: {
-          styleOverrides: {
-            root: {
-              //backgroundColor: actualTheme === 'light' ? "white" : "black",
-              color: actualTheme === "light" ? "black" : "white",
-            },
-          },
-        },
-      },
-      palette: {
-        mode: actualTheme === "light" ? "light" : "dark",
-        ...(actualTheme === "light"
-          ? {
-              // palette values for light mode
-              primary: grey,
-              divider: grey[800],
-              text: {
-                primary: grey[900],
-                secondary: grey[800],
-              },
-            }
-          : {
-              // palette values for dark mode
-              primary: grey,
-              divider: grey[800],
-              background: {
-                default: grey[800],
-                paper: grey[900],
-              },
-              text: {
-                primary: grey[100],
-                secondary: grey[800],
-              },
-            }),
-      },
-    },
-    esES
-  );
-
 export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [open, setOpen] = useState<boolean>(false);
   const authHeader = useAuthHeader();
+  const userData = useAuthUser();
   const [t, i18n] = useTranslation();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
@@ -154,89 +69,159 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [MongoDB, setMongoDB] = useState(true);
   const [OpenDataSoft, setOpenDataSoft] = useState(true);
   const [format, setFormat] = useState<string[]>([]);
-  const [lastUpdateAlmacenado, setLastUpdate] = useState<Dayjs | null>();
-  const [creationDateAlmacenado, setCreationDate] = useState<Dayjs | null>();
+  const [chips, setChips] = useState<string[]>([]);
+  const [inputValue, setInputValue] = useState<string>("");
   const { actualTheme } = useAlternateTheme();
+  const dynamicStyle = getDynamicStyle(actualTheme);
+  const baseTheme = (actualTheme: any) =>
+    createTheme(
+      {
+        typography: {
+          fontFamily: "Montserrat",
+        },
+        components: {
+          MuiTextField: {
+            styleOverrides: {
+              root: {
+                color: actualTheme === "light" ? "black" : "white",
+              },
+            },
+          },
+          MuiCssBaseline: {
+            styleOverrides: `
+        @font-face {
+          font-family: 'Montserrat';
+          src: url(https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap);
+        }
+      `,
+          },
+          MuiInput: {
+            styleOverrides: {
+              root: {
+                color: actualTheme === "light" ? "black" : "white",
+              },
+            },
+          },
+          MuiSelect: {
+            defaultProps: {
+              variant: "standard",
+            },
+            styleOverrides: {
+              icon: {
+                color: actualTheme === "light" ? "black" : "white",
+              },
+            },
+          },
+          MuiMenuList: {
+            styleOverrides: {
+              root: {
+                color: actualTheme === "light" ? "black" : "white",
+              },
+            },
+          },
+          MuiMenuItem: {
+            styleOverrides: {
+              root: {
+                color: actualTheme === "light" ? "black" : "white",
+              },
+            },
+          },
+        },
+        palette: {
+          mode: actualTheme === "light" ? "light" : "dark",
+          ...(actualTheme === "light"
+            ? {
+                primary: grey,
+                divider: grey[800],
+                text: {
+                  primary: grey[900],
+                  secondary: grey[800],
+                },
+              }
+            : {
+                primary: grey,
+                divider: grey[800],
+                background: {
+                  default: grey[800],
+                  paper: grey[900],
+                },
+                text: {
+                  primary: grey[100],
+                  secondary: grey[800],
+                },
+              }),
+        },
+      },
+      esES
+    );
 
   useEffect(() => {
     setOpen(props.enviar.open);
   }, [props]);
 
+  const renderResponsibleIdentity = () => {
+    const menuItems = Object.entries(RESPONSIBLE_IDENTITY).map(
+      ([key, value]) => {
+        if (value === RESPONSIBLE_IDENTITY.GENERAL) {
+          return null;
+        }
+        return (
+          <MenuItem key={key} value={value}>
+            {value}
+          </MenuItem>
+        );
+      }
+    );
+    return menuItems;
+  };
+
   const handleClose = () => {
     setFormData({});
-    setFormDataSteps({
-      _id: "",
-      title: "",
-      description: "",
-      responsibleIdentity: RESPONSIBLE_IDENTITY.accio_cultural,
-      topic: TOPIC.ciencia,
-      territorialScope: "",
-      temporaryCoverage: "",
-      organism: ORGANISM.alcaldia,
-      language: LANGUAGE_FORM.alt,
-      keyWords: "",
-      minimumVariables: MINIMUM_VALUE.mo,
-      contactPerson: "",
-      masterData: false,
-      referenceData: false,
-      highValue: false,
-      activeAds: false, // boolean
-      comments: "",
-      typeGeo: GEOGRAPHICAL_INFO.barrio,
-      genderInfo: false,
-      structuredComments: "",
-      associatedApplication: "",
-      autoAcess: false,
-      originComments: "",
-      RAT: false,
-      dataProtection: false,
-      dataStandards: false,
-      dataProtectionComments: "",
-      dataAnonymize: false,
-      dataQuality: 0,
-      sharingLevel: SHARING_LEVEL.open,
-      sharedData: false,
-      VLCi: false,
-      ArcGIS: false,
-      Pentaho: false,
-      CKAN: false,
-      MongoDB: false,
-      OpenDataSoft: false,
-      temporarySolution: "", // ES UNA ENUM PERO NO SABEMOS CUAL
-      chargeStateComments: "",
-      productData: "",
-      productComments: "",
-      creationDate: new Date(),
-      deleted: false,
-      deletedDate: new Date(),
-      lastUpdate: new Date(),
-    });
+    setFormDataSteps(catalogueMock);
     setStep(1);
     setFormat([]);
     setOpen(false);
     props.enviar.closeDialog(false);
   };
 
-  const handleFormat = (event: any, newValue: any) => {
-    setFormat(newValue);
-  };
-
   const buttonsFormProps: buttonsFormInfo = {
     handleClose: () => handleClose(),
     handleGoBack: () => handleGoBack(),
+    step: step,
+    isUpdate: false,
+  };
+  const handleChangeKeyWords = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    if (value.endsWith(";")) {
+      const newChip = value.slice(0, -1).trim();
+      if (newChip) {
+        setChips((prevChips) => {
+          if (!prevChips.includes(newChip)) {
+            return [...prevChips, newChip];
+          } else {
+            return prevChips;
+          }
+        });
+        setFormDataSteps({ ...formDataSteps, keyWords: [...chips] });
+      }
+      setInputValue("");
+    } else {
+      setInputValue(value);
+    }
+  };
+
+  const handleDeleteKeyWords = (chipToDelete: string) => {
+    setChips((chips) => chips.filter((chip) => chip !== chipToDelete));
   };
 
   const createCatalogue = (formJson: any) => {
-    const a = formJson.lastUpdate;
     const deletedDate = new Date();
     const deleted = false;
-    const lastUpdate = new Date(a);
     const prueba = formJson as CreateCatalogue;
     const create: CreateCatalogue = {
       ...prueba,
       deleted,
       deletedDate,
-      lastUpdate,
     };
     createCatalogueRequest(create, authHeader())
       .then((response) => response.json())
@@ -250,11 +235,12 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const handleGoBack = () => {
     setStep(step - 1);
   };
+  const isGeneralOrTrans =
+    userData().user.service === RESPONSIBLE_IDENTITY.GENERAL ||
+    userData().user.service === RESPONSIBLE_IDENTITY.transparencia;
 
   const handleNext = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    // Collect form data for the current step
     const currentStepData = new FormData(event.currentTarget);
 
     if (
@@ -267,21 +253,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       currentStepData.set("format", formatosDatosMod);
     }
 
-    if (
-      lastUpdateAlmacenado !== undefined &&
-      lastUpdateAlmacenado !== null &&
-      (currentStepData.get("lastUpdate") !== null ||
-        currentStepData.get("lastUpdate") !== undefined)
-    ) {
-      const lastUpdateDatos = lastUpdateAlmacenado.toString();
-      currentStepData.set("lastUpdate", lastUpdateDatos);
-    }
-
     //--------------------------------------------------------------------
     const currentStepJson = Object.fromEntries(currentStepData.entries());
-
     setFormDataSteps((prevData) => ({ ...prevData, ...currentStepJson }));
-    // Merge current step data with existing form data
     setFormData((prevData) => ({
       ...prevData,
       ...currentStepJson,
@@ -308,51 +282,17 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const currentStepData = new FormData(event.currentTarget);
-    if (
-      creationDateAlmacenado !== undefined &&
-      creationDateAlmacenado !== null &&
-      (currentStepData.get("creationDate") !== null ||
-        currentStepData.get("creationDate") !== undefined)
-    ) {
-      const creationDateDatos = creationDateAlmacenado.toString();
-      currentStepData.set("creationDate", creationDateDatos);
-    }
-
-    if (
-      lastUpdateAlmacenado !== undefined &&
-      lastUpdateAlmacenado !== null &&
-      (currentStepData.get("lastUpdate") !== null ||
-        currentStepData.get("lastUpdate") !== undefined)
-    ) {
-      const lastUpdateDatos = lastUpdateAlmacenado.toString();
-      currentStepData.set("lastUpdate", lastUpdateDatos);
-    }
-
     const currentStepJson = Object.fromEntries(currentStepData.entries());
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
     const mergedFormData = { ...formData, ...currentStepJson };
     createCatalogue(mergedFormData);
   };
 
-  const handleChange = (field: string, value: string) => {
+  const handleChange = (field: string, value: any) => {
     setFormDataSteps((prevData) => ({
       ...prevData,
       [field]: value,
     }));
-  };
-
-  const handleChangeLastUpdate = (value: any) => {
-    setLastUpdate(value);
-  };
-
-  const handleChangeCreationDate = (value: any) => {
-    setCreationDate(value);
-  };
-
-  const dynamicStyle = {
-    backgroundColor: actualTheme === "light" ? "white" : "#252525",
-    color: actualTheme === "light" ? "#252525" : "white",
-    "& .MuiInputBase-root": { border: "none" },
   };
 
   return (
@@ -377,12 +317,12 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                 </span>
               </div>
               <Box>
-                {step === 1 && ( // ESTRUCTURA GENERAL DEL DATASET
+                {step === 1 && (
                   <form onSubmit={handleNext}>
                     <div className="grid">
                       <div className="row">
                         <div className="horizontalForm">
-                          <p>{t("columnsNames.title")} *</p>
+                          <p>{t("columnsNames.title")}*</p>
                           <TextField
                             autoFocus
                             required
@@ -398,7 +338,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           />
                         </div>
                         <div className="horizontalForm">
-                          <p>{t("columnsNames.description")} *</p>
+                          <p>{t("columnsNames.description")}*</p>
                           <TextField
                             autoFocus
                             required
@@ -414,26 +354,21 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           />
                         </div>
                         <div className="horizontalForm">
-                          <p>{t("columnsNames.responsibleIdentity")} *</p>
+                          <p>{t("columnsNames.responsibleIdentity")}*</p>
                           <FormControl variant="standard">
                             <Select
                               id="responsibleIdentity"
                               name="responsibleIdentity"
                               margin="dense"
-                              defaultValue={formDataSteps.responsibleIdentity}
+                              defaultValue={userData().user.service}
+                              disabled={!isGeneralOrTrans}
                             >
-                              {Object.entries(RESPONSIBLE_IDENTITY).map(
-                                ([key, value]) => (
-                                  <MenuItem key={key} value={value}>
-                                    {value}
-                                  </MenuItem>
-                                )
-                              )}
+                              {renderResponsibleIdentity()}
                             </Select>
                           </FormControl>
                         </div>
                         <div className="horizontalForm">
-                          <p>Organismo</p>
+                          <p>{t("columnsNames.organism")}</p>
                           <FormControl variant="standard">
                             <Select
                               id="organism"
@@ -450,7 +385,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           </FormControl>
                         </div>
                         <div className="horizontalForm">
-                          <p>{t("columnsNames.topic")} *</p>
+                          <p>{t("columnsNames.topic")}*</p>
                           <FormControl variant="standard">
                             <Select
                               id="topic"
@@ -468,7 +403,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                         </div>
                         <div className="horizontalForm">
                           <p>{t("columnsNames.language")}</p>
-
                           <FormControl variant="standard">
                             <Select
                               id="language"
@@ -489,23 +423,39 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       </div>
                       <div className="row">
                         <div className="horizontalForm">
-                          <p>Palabras clave *</p>
-                          <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="keyWords"
-                            name="description"
-                            type="string"
-                            variant="standard"
-                            value={formDataSteps.keyWords}
-                            onChange={(e) =>
-                              handleChange("keyWords", e.target.value)
-                            }
-                          />
+                          <p>{t("columnsNames.keyWords")}*</p>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column-reverse",
+                            }}
+                          >
+                            <TextField
+                              autoFocus
+                              margin="dense"
+                              id="keyWords"
+                              name="keyWords"
+                              type="string"
+                              variant="standard"
+                              value={inputValue}
+                              onChange={handleChangeKeyWords}
+                            />
+                            <Box
+                              sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}
+                            >
+                              {chips.map((chip, index) => (
+                                <Chip
+                                  key={index}
+                                  label={chip}
+                                  onDelete={() => handleDeleteKeyWords(chip)}
+                                  deleteIcon={<CancelIcon />}
+                                />
+                              ))}
+                            </Box>
+                          </Box>
                         </div>
                         <div className="horizontalForm">
-                          <p>Campos mínimos *</p>
+                          <p>{t("columnsNames.minimumVariables")}</p>
                           <FormControl variant="standard">
                             <Select
                               id="minimumVariables"
@@ -524,7 +474,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           </FormControl>
                         </div>
                         <div className="horizontalForm">
-                          <p>{t("columnsNames.contactPerson")} *</p>
+                          <p>{t("columnsNames.contactPerson")}*</p>
                           <TextField
                             autoFocus
                             required
@@ -540,7 +490,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           />
                         </div>
                         <div className="horizontalFormSwitch">
-                          <p>Dato maestro</p>
+                          <p>{t("columnsNames.masterData")}*</p>
                           <Switch
                             id="masterData"
                             name="masterData"
@@ -553,7 +503,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           />
                         </div>
                         <div className="horizontalFormSwitch">
-                          <p>Dato de referencia</p>
+                          <p>{t("columnsNames.referenceData")}*</p>
                           <Switch
                             id="referenceData"
                             name="referenceData"
@@ -566,7 +516,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           />
                         </div>
                         <div className="horizontalFormSwitch">
-                          <p>Alto valor *</p>
+                          <p>{t("columnsNames.highValue")}*</p>
                           <Switch
                             //required
                             id="highValue"
@@ -580,7 +530,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           />
                         </div>
                         <div className="horizontalFormSwitch">
-                          <p>{t("columnsNames.activeAds")} *</p>
+                          <p>{t("columnsNames.activeAds")}*</p>
                           <FormControl variant="standard">
                             <Switch
                               //required
@@ -596,7 +546,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           </FormControl>
                         </div>
                         <div className="horizontalForm">
-                          <p>Comentarios generales</p>
+                          <p>{t("columnsNames.comments")}</p>
                           <TextField
                             autoFocus
                             //required
@@ -611,39 +561,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             }
                           />
                         </div>
-                        <div className="horizontalForm">
-                          <p>Fecha de creación *</p>
-                          <DateTimePicker
-                            format="DD/MM/YYYY hh:mm:ss a"
-                            name="creationDate"
-                            value={creationDateAlmacenado}
-                            onChange={(e) => {
-                              setCreationDate(e);
-                              handleChangeCreationDate(e);
-                            }}
-                            slotProps={{
-                              textField: {
-                                variant: "standard",
-                                id: "creationDate",
-                              },
-                            }}
-                          ></DateTimePicker>
-                        </div>
-                        <div className="horizontalForm">
-                          <p>{t("columnsNames.lastUpdate")} *</p>
-                          <DateTimePicker
-                            format="DD/MM/YYYY hh:mm:ss a"
-                            name="lastUpdate"
-                            value={lastUpdateAlmacenado}
-                            onChange={(e) => handleChangeLastUpdate(e)}
-                            slotProps={{
-                              textField: {
-                                variant: "standard",
-                                id: "lastUpdate",
-                              },
-                            }}
-                          ></DateTimePicker>
-                        </div>
                       </div>
                     </div>
                     <ButtonsForm info={buttonsFormProps} />
@@ -654,7 +571,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                     <div className="grid">
                       <div className="row">
                         <div className="horizontalForm">
-                          <p>Información geográfica *</p>
+                          <p>{t("columnsNames.typeGeo")}</p>
                           <FormControl variant="standard">
                             <Select
                               id="typeGeo"
@@ -676,7 +593,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           <p>{t("columnsNames.temporaryCoverage")}</p>
                           <TextField
                             autoFocus
-                            //required
                             margin="dense"
                             id="temporaryCoverage"
                             name="temporaryCoverage"
@@ -689,7 +605,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           />
                         </div>
                         <div className="horizontalFormSwitch">
-                          <p>Información de género</p>
+                          <p>{t("columnsNames.genderInfo")}</p>
                           <Switch
                             id="genderInfo"
                             name="genderInfo"
@@ -702,7 +618,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           />
                         </div>
                         <div className="horizontalForm">
-                          <p>Comentario de la estructura</p>
+                          <p>{t("columnsNames.structuredComments")}</p>
                           <TextField
                             autoFocus
                             margin="dense"
@@ -721,14 +637,13 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                     <ButtonsForm info={buttonsFormProps} />
                   </form>
                 )}
-                {step === 3 && ( // APLICACIÓN DE ORIGEN DE LOS DATOS
+                {step === 3 && (
                   <form onSubmit={handleNext}>
                     <div className="verticalForm">
                       <div className="horizontalForm">
-                        <p>Aplicación de origen</p>
+                        <p>{t("columnsNames.associatedApplication")}</p>
                         <TextField
                           autoFocus
-                          //required
                           margin="dense"
                           id="associatedApplication"
                           name="associatedApplication"
@@ -744,7 +659,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                         />
                       </div>
                       <div className="horizontalFormSwitch">
-                        <p>Acceso automatizado</p>
+                        <p>{t("columnsNames.autoAcess")}</p>
                         <Switch
                           id="autoAcess"
                           name="autoAcess"
@@ -753,11 +668,11 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           onChange={(event) =>
                             setAutoAcess(event.target.checked)
                           }
-                          color="primary" // Opcional: ajusta el color del switch
+                          color="primary"
                         />
                       </div>
                       <div className="horizontalForm">
-                        <p>Comentarios del origen</p>
+                        <p>{t("columnsNames.originComments")}</p>
                         <TextField
                           autoFocus
                           //required
@@ -776,7 +691,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                     <ButtonsForm info={buttonsFormProps} />
                   </form>
                 )}
-                {step === 4 && ( // ESTADO DE LA CARGA DEL DATASET EN LAS DIFERENTES PLATAFORMAS
+                {step === 4 && (
                   <form onSubmit={handleNext}>
                     <div className="grid">
                       <div className="row">
@@ -788,11 +703,11 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             value={RAT}
                             checked={RAT}
                             onChange={(event) => setRAT(event.target.checked)}
-                            color="primary" // Opcional: ajusta el color del switch
+                            color="primary"
                           />
                         </div>
                         <div className="horizontalFormSwitch">
-                          <p>Protección de datos *</p>
+                          <p>{t("columnsNames.dataProtection")}</p>
                           <Switch
                             //required
                             id="dataProtection"
@@ -802,11 +717,11 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             onChange={(event) =>
                               setDataProtection(event.target.checked)
                             }
-                            color="primary" // Opcional: ajusta el color del switch
+                            color="primary"
                           />
                         </div>
                         <div className="horizontalFormSwitch">
-                          <p>Estándares de datos</p>
+                          <p>{t("columnsNames.dataStandards")}</p>
                           <Switch
                             id="dataStandards"
                             name="dataStandards"
@@ -815,14 +730,13 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             onChange={(event) =>
                               setDataStandards(event.target.checked)
                             }
-                            color="primary" // Opcional: ajusta el color del switch
+                            color="primary"
                           />
                         </div>
                         <div className="horizontalForm">
-                          <p>Comentarios sobre la protección de datos</p>
+                          <p>{t("columnsNames.dataProtectionComments")}</p>
                           <TextField
                             autoFocus
-                            //required
                             margin="dense"
                             id="dataProtectionComments"
                             name="dataProtectionComments"
@@ -838,7 +752,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           />
                         </div>
                         <div className="horizontalFormSwitch">
-                          <p>Anonimización de datos</p>
+                          <p>{t("columnsNames.dataAnonymize")}</p>
                           <Switch
                             id="dataAnonymize"
                             name="dataAnonymize"
@@ -847,27 +761,20 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             onChange={(event) =>
                               setDataAnonymize(event.target.checked)
                             }
-                            color="primary" // Opcional: ajusta el color del switch
+                            color="primary"
                           />
                         </div>
                         <div className="horizontalForm">
-                          <p>Calidad de los datos</p>
-                          <TextField
-                            autoFocus
-                            //required
-                            margin="dense"
-                            id="dataQuality"
-                            name="dataQuality"
-                            type="string"
-                            variant="standard"
+                          <p>{t("columnsNames.dataQuality")}</p>
+                          <Rating
                             value={formDataSteps.dataQuality}
-                            onChange={(e) =>
-                              handleChange("dataQuality", e.target.value)
+                            onChange={(e, value) =>
+                              handleChange("dataQuality", value)
                             }
                           />
                         </div>
                         <div className="horizontalForm">
-                          <p>Nivel de compartición *</p>
+                          <p>{t("columnsNames.sharingLevel")}</p>
                           <FormControl variant="standard">
                             <Select
                               id="sharingLevel"
@@ -886,7 +793,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           </FormControl>
                         </div>
                         <div className="horizontalFormSwitch">
-                          <p>Datos compartidos</p>
+                          <p>{t("columnsNames.sharedData")}</p>
                           <Switch
                             id="sharedData"
                             name="sharedData"
@@ -895,7 +802,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             onChange={(event) =>
                               setSharedData(event.target.checked)
                             }
-                            color="primary" // Opcional: ajusta el color del switch
+                            color="primary"
                           />
                         </div>
                       </div>
@@ -908,7 +815,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             value={VLCi}
                             checked={VLCi}
                             onChange={(event) => setVLCi(event.target.checked)}
-                            color="primary" // Opcional: ajusta el color del switch
+                            color="primary"
                           />
                         </div>
                         <div className="horizontalFormSwitch">
@@ -921,7 +828,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             onChange={(event) =>
                               setArcGIS(event.target.checked)
                             }
-                            color="primary" // Opcional: ajusta el color del switch
+                            color="primary"
                           />
                         </div>
                         <div className="horizontalFormSwitch">
@@ -934,7 +841,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             onChange={(event) =>
                               setPentaho(event.target.checked)
                             }
-                            color="primary" // Opcional: ajusta el color del switch
+                            color="primary"
                           />
                         </div>
                         <div className="horizontalFormSwitch">
@@ -945,7 +852,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             value={CKAN}
                             checked={CKAN}
                             onChange={(event) => setCKAN(event.target.checked)}
-                            color="primary" // Opcional: ajusta el color del switch
+                            color="primary"
                           />
                         </div>
                         <div className="horizontalFormSwitch">
@@ -958,7 +865,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             onChange={(event) =>
                               setMongoDB(event.target.checked)
                             }
-                            color="primary" // Opcional: ajusta el color del switch
+                            color="primary"
                           />
                         </div>
                         <div className="horizontalFormSwitch">
@@ -971,14 +878,13 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             onChange={(event) =>
                               setOpenDataSoft(event.target.checked)
                             }
-                            color="primary" // Opcional: ajusta el color del switch
+                            color="primary"
                           />
                         </div>
                         <div className="horizontalForm">
-                          <p>Resolución temporal</p>
+                          <p>{t("columnsNames.temporarySolution")}</p>
                           <TextField
                             autoFocus
-                            //required
                             margin="dense"
                             id="temporarySolution"
                             name="temporarySolution"
@@ -991,10 +897,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           />
                         </div>
                         <div className="horizontalForm">
-                          <p>Comentarios sobre el estado de carga</p>
+                          <p>{t("columnsNames.chargeStateComments")}</p>
                           <TextField
                             autoFocus
-                            //required
                             margin="dense"
                             id="chargeStateComments"
                             name="chargeStateComments"
@@ -1014,14 +919,13 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                     </div>
                   </form>
                 )}
-                {step === 5 && ( // VISUALIZACIONES/APLICACIONES CREADAS A PARTIR DEL DATASET
+                {step === 5 && (
                   <form onSubmit={handleSubmit}>
                     <div className="verticalForm">
                       <div className="horizontalForm">
-                        <p> Producto de datos</p>
+                        <p>{t("columnsNames.productData")}</p>
                         <TextField
                           autoFocus
-                          //required
                           margin="dense"
                           id="productData"
                           name="productData"
@@ -1034,10 +938,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                         />
                       </div>
                       <div className="horizontalForm">
-                        <p> Comentarios del producto</p>
+                        <p>{t("columnsNames.productComments")}</p>
                         <TextField
                           autoFocus
-                          //required
                           margin="dense"
                           id="productComments"
                           name="productComments"
@@ -1060,65 +963,12 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             onChange={(event) =>
                               setPersonalData(event.target.checked)
                             }
-                            color="primary" // Opcional: ajusta el color del switch
+                            color="primary"
                           />
                         </FormControl>
                       </div>
                     </div>
-                    <div className="buttonsForm">
-                      <Button
-                        onClick={handleClose}
-                        sx={{
-                          height: 37,
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
-                      >
-                        {t("dialog.cancel")}
-                      </Button>
-                      <div>
-                        <Button
-                          onClick={handleGoBack}
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            marginRight: 1,
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          Atrás
-                        </Button>
-
-                        <Button
-                          type="submit"
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
-                          {t("dialog.addButton")}
-                        </Button>
-                      </div>
-                    </div>
+                    <ButtonsForm info={buttonsFormProps} />
                   </form>
                 )}
               </Box>

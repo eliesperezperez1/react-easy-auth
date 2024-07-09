@@ -94,7 +94,7 @@ export default function UpdateUserDialog(props: {
   const dynamicStyle = {
     backgroundColor: actualTheme === "light" ? "white" : "#252525",
     color: actualTheme === "light" ? "#252525" : "white",
-    "& .MuiInputBase-root": { border: "none" },
+    "& .MuiInputBaseRoot": { border: "none" },
   };
 
   return (

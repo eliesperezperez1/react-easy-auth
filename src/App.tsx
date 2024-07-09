@@ -1,6 +1,6 @@
 import "./App.css";
 import styled from "styled-components";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { Login } from "./components/login/login";
 import { Home } from "./components/home/home";
 import { RequireAuth, useAuthUser } from "react-auth-kit";
@@ -11,6 +11,7 @@ import Menu, { ChangeLanguageEvent } from "./components/menu/menu";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { caES, esES } from "@mui/material/locale";
 import { GraphList } from "./components/graphs/graphs";
+import { useEffect } from "react";
 
 const AppContainer = styled.div`
   width: 100%;
@@ -59,7 +60,14 @@ function App() {
     },
     esES
   );
+  const navigate = useNavigate();
   const userAuth = useAuthUser();
+
+  useEffect(() => {
+    if (!userAuth()) {
+      navigate("/login");
+    }
+  }, [userAuth, navigate]);
 
   return (
     <ThemeProvider

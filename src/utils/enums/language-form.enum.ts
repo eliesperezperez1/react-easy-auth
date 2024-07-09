@@ -1,5 +1,5 @@
 export enum LANGUAGE_FORM {
-  cas = "Castellano",
-  val = "Valencià",
+  esES = "Castellano",
+  caES = "Valencià",
   alt = "Otro",
 }

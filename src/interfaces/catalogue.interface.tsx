@@ -17,7 +17,7 @@ export interface Catalogue {
   organism: ORGANISM;
   language: LANGUAGE_FORM;
   keyWords: string[];
-  minimumVariables: MINIMUM_VALUE;
+  minimumVariables: MINIMUM_VALUE | undefined;
   contactPerson: string;
   masterData: boolean;
   referenceData: boolean;
@@ -35,7 +35,7 @@ export interface Catalogue {
   dataStandards: boolean;
   dataProtectionComments: string;
   dataAnonymize: boolean;
-  dataQuality: number;
+  dataQuality: number | null;
   sharingLevel: SHARING_LEVEL;
   sharedData: boolean;
   VLCi: boolean;
@@ -48,10 +48,8 @@ export interface Catalogue {
   chargeStateComments: string;
   productData: string;
   productComments: string;
-  creationDate: Date;
   deleted: boolean;
   deletedDate: Date;
-  lastUpdate: Date;
   verified: boolean;
 }
 

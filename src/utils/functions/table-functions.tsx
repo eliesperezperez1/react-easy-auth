@@ -2,6 +2,17 @@ import { ReactComponent as Val } from "../../assets/val.svg";
 import { ReactComponent as Esp } from "../../assets/esp.svg";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import { createTheme } from "baseui/themes";
+import { grey } from "@mui/material/colors";
+import { esES } from "@mui/x-data-grid";
+
+export function getDynamicStyle(actualTheme: any){
+  return {
+    backgroundColor: actualTheme === "light" ? "white" : "#252525",
+    color: actualTheme === "light" ? "#252525" : "white",
+    "& .MuiInputBaseRoot": { border: "none" }
+  }
+};
 
 export function paletaColores(color: string) {
   switch (color) {

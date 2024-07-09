@@ -9,7 +9,6 @@ import {
 
 import { useSignIn } from "react-auth-kit";
 import { useFormik } from "formik";
-import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API } from "../../utils/constants";
@@ -49,6 +48,7 @@ function Login(props: any) {
         setError("Credentials are not correct");
         setOpen(true);
       } else {
+        console.log(data);
         signIn({
           token: data.token,
           expiresIn: 3600,
@@ -60,9 +60,7 @@ function Login(props: any) {
     } catch (err) {
       setOpen(true);
       if (err instanceof Error) setError(err.message);
-      console.log("Error: ", err);
     }
-
   };
 
   const formik = useFormik({
@@ -103,6 +101,7 @@ function Login(props: any) {
               clearOnEscape
               size="large"
               type="password"
+              min={8}
             />
           </InputWrapper>
           <InputWrapper>
@@ -113,17 +112,17 @@ function Login(props: any) {
               isLoading={formik.isSubmitting}
             >
               {t("login.botonIniciar")}
-              <Snackbar open={open} onClose={handleClose}>
-                <Alert
-                  onClose={handleClose}
-                  severity="error"
-                  variant="filled"
-                  sx={{ width: "100%" }}
-                >
-                  {error}
-                </Alert>
-              </Snackbar>
             </Button>
+            <Snackbar open={open} onClose={handleClose}>
+              <Alert
+                onClose={handleClose}
+                severity="error"
+                variant="filled"
+                sx={{ width: "100%" }}
+              >
+                {error}
+              </Alert>
+            </Snackbar>
           </InputWrapper>
         </form>
       </InnerContainer>

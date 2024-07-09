@@ -110,7 +110,6 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
   };
 
   const handleChange = (field: string, value: string) => {
-    // Update the form data
     setFormDataSteps((prevData) => ({
       ...prevData,
       [field]: value,
@@ -120,7 +119,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
   const dynamicStyle = {
     backgroundColor: actualTheme === "light" ? "white" : "#252525",
     color: actualTheme === "light" ? "#252525" : "white",
-    "& .MuiInputBase-root": { border: "none" },
+    "& .MuiInputBaseRoot": { border: "none" },
   };
 
   return (
@@ -187,6 +186,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                           name="email"
                           type="email"
                           variant="standard"
+                          aria-invalid={formDataSteps.email.length < 8}
                           value={formDataSteps.email}
                           onChange={(e) =>
                             handleChange("email", e.target.value)
