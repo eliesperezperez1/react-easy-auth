@@ -2,7 +2,7 @@ import { Button, ClickAwayListener, Fade, Tooltip } from "@mui/material";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import { MutableRefObject, useState } from "react";
+import { MutableRefObject, useEffect, useState } from "react";
 import { GridApiCommunity } from "@mui/x-data-grid/models/api/gridApiCommunity";
 import { gridFilteredSortedRowIdsSelector, gridVisibleColumnFieldsSelector } from '@mui/x-data-grid';
 
@@ -12,6 +12,7 @@ export interface ExportButtonProps {
 
 function ExportButton({ visibleData }: ExportButtonProps) {
   const [openMenuExportar, setOpenMenuExportar] = useState(false);
+  useEffect(() => {}, [visibleData])
 
   const getVisibleData = () => {
     const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(visibleData);

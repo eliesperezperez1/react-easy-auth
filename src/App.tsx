@@ -12,6 +12,7 @@ import { ThemeProvider, createTheme } from "@mui/material";
 import { caES, esES } from "@mui/material/locale";
 import { GraphList } from "./components/graphs/graphs";
 import { useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 
 const AppContainer = styled.div`
   width: 100%;
@@ -22,6 +23,29 @@ function App() {
   const change: ChangeLanguageEvent = {
     change: () => changeComponentLanguageApp(),
   };
+
+  function getCookie(name: string) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+  }
+
+  const token = getCookie("token");
+
+  function isTokenExpired(token: string) {
+    try {
+      const decoded = jwtDecode(token);
+      const flag = decoded.exp < Date.now() / 1000;
+      if(flag){
+        document.cookie =
+          "_auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      }
+      return flag;
+    } catch (err) {
+      console.error("Error decodificando el token", err);
+      return false;
+    }
+  }
 
   const changeComponentLanguageApp = () => {};
   const themeCat = createTheme(
@@ -64,10 +88,12 @@ function App() {
   const userAuth = useAuthUser();
 
   useEffect(() => {
-    if (!userAuth()) {
+    const token = getCookie("_auth");
+    if (isTokenExpired(token)) {
       navigate("/login");
     }
-  }, [userAuth, navigate]);
+  }, [navigate]);
+
 
   return (
     <ThemeProvider
