@@ -104,14 +104,14 @@ function CatalogueList() {
       headerName: t("columnsNames.responsibleIdentity"),
       width: 200,
       description: t("tooltipText.responsibleIdentity"),
-     /*  type: "singleSelect",
+      /*  type: "singleSelect",
       valueOptions: Object.entries(RESPONSIBLE_IDENTITY).map(([key, value]) => {
         return value;
       }), */
     },
     {
       field: "organism",
-      headerName: "Organismo",
+      headerName: t("columnsNames.organism"),
       width: 200,
       description: "Organismo al que pertenece",
       type: "singleSelect",
@@ -152,7 +152,7 @@ function CatalogueList() {
     },
     {
       field: "minimumVariables",
-      headerName: "Campos mínimos",
+      headerName: t("columnsNames.minimumVariables"),
       width: 200,
       description: "Campos mínimos que debe incluir el dataset",
       type: "singleSelect",
@@ -168,7 +168,7 @@ function CatalogueList() {
     },
     {
       field: "masterData",
-      headerName: "Dato maestro",
+      headerName: t("columnsNames.masterData"),
       width: 200,
       renderCell: (params) => {
         return isChecked(params.value);
@@ -178,7 +178,7 @@ function CatalogueList() {
     },
     {
       field: "referenceData",
-      headerName: "Dato de referencia",
+      headerName: t("columnsNames.referenceData"),
       width: 200,
       renderCell: (params) => {
         return isChecked(params.value);
@@ -188,7 +188,7 @@ function CatalogueList() {
     },
     {
       field: "highValue",
-      headerName: "Alto valor",
+      headerName: t("columnsNames.highValue"),
       width: 200,
       renderCell: (params) => {
         return isChecked(params.value);
@@ -214,7 +214,7 @@ function CatalogueList() {
 
     {
       field: "typeGeo",
-      headerName: "Información geográfica",
+      headerName: t("columnsNames.typeGeo"),
       width: 200,
       description: "¿Qué tipo de información geográfica contiene el dataset?",
     },
@@ -227,7 +227,7 @@ function CatalogueList() {
 
     {
       field: "genderInfo",
-      headerName: "Información de género",
+      headerName: t("columnsNames.genderInfo"),
       width: 200,
       renderCell: (params) => {
         return isChecked(params.value);
@@ -236,19 +236,19 @@ function CatalogueList() {
     },
     {
       field: "structuredComments",
-      headerName: "Comentarios de la estructura",
+      headerName: t("columnsNames.structuredComments"),
       width: 200,
       description: "Comentarios relativos a la estructura interna del dataset",
     },
     {
       field: "associatedApplication",
-      headerName: "Aplicación de origen",
+      headerName: t("columnsNames.associatedApplication"),
       width: 200,
       description: "Nombre de la aplicación de origen de los datos",
     },
     {
       field: "autoAcess",
-      headerName: "Acceso automatizado",
+      headerName: t("columnsNames.autoAcess"),
       width: 200,
       renderCell: (params) => {
         return isChecked(params.value);
