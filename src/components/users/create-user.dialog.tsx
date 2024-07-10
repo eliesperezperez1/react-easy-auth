@@ -204,6 +204,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                           type="password"
                           variant="standard"
                           value={formDataSteps.password}
+                          inputProps={{ minLength: 8 }}
                           onChange={(e) =>
                             handleChange("password", e.target.value)
                           }
@@ -272,6 +273,12 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                           name="language"
                           margin="dense"
                           defaultValue={formDataSteps.language}
+                          onChange={(event) => {
+                            setFormDataSteps({
+                              ...formDataSteps,
+                              language: event.target.value as LANGUAGE_FORM,
+                            });
+                          }}
                         >
                           {Object.entries(LANGUAGE_FORM).map(([key, value]) => (
                             <MenuItem key={key} value={key}>
@@ -302,6 +309,13 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                           name="service"
                           margin="dense"
                           defaultValue={formDataSteps.service}
+                          onChange={(event) => {
+                            setFormDataSteps({
+                              ...formDataSteps,
+                              service: event.target
+                                .value as RESPONSIBLE_IDENTITY,
+                            });
+                          }}
                         >
                           {Object.entries(RESPONSIBLE_IDENTITY).map(
                             ([key, value]) => (

@@ -308,6 +308,12 @@ export default function UpdateCatalogueDialog(props: {
                               margin="dense"
                               defaultValue={update.responsibleIdentity}
                               disabled={!isGeneralOrTrans}
+                              onChange={(event) => {
+                                setUpdate({
+                                  ...update,
+                                  responsibleIdentity: event.target.value as RESPONSIBLE_IDENTITY,
+                                });
+                              }}
                             >
                               {renderResponsibleIdentity()}
                             </Select>
