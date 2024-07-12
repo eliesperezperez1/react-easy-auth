@@ -13,7 +13,6 @@ import {
   updateUserRequest,
 } from "../../api/users";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
-import Chip from "@mui/material/Chip";
 import { useTranslation } from "react-i18next";
 import "./users.css";
 import CreateUserDialog, { DialogData } from "./create-user.dialog";
@@ -24,8 +23,8 @@ import CustomToolbar from "../custom-toolbar/custom-toolbar";
 import CustomPagination from "../custom-pagination/custom-pagination";
 import {
   paletaColores,
-  yesOrNo,
   valOrEsp,
+  iconRole,
 } from "../../utils/functions/table-functions";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
@@ -41,7 +40,6 @@ function UserList() {
   const [deletedTable, setDeletedTable] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
-  const [openMenuExportar, setOpenMenuExportar] = useState<boolean>(false);
   const [userSelected, setUserSelected] = useState<User>(userMock);
   const [userData, setUserData] = useState<User>(userMock);
   const { actualTheme } = useAlternateTheme();
@@ -85,22 +83,14 @@ function UserList() {
       field: "role",
       headerName: t("columnsNames.role"),
       width: 200,
+      renderCell: (params: GridRenderCellParams<any, string>) => 
+        iconRole(params.value)
     },
     {
       field: "service",
       headerName: t("columnsNames.responsibleIdentity"),
       width: 200,
-    },
-    {
-      field: "deleted",
-      headerName: t("columnsNames.deleted"),
-      width: 200,
-      renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ),
-    },
+    }
   ];
 
   function getAndSetUsers() {
@@ -160,7 +150,7 @@ function UserList() {
   useEffect(() => {
     setUserData(user().user);
     getAndSetUsers();
-  }, []);
+  }, [user()]);
 
   function itCouldBeSelectable() {
     return userData.role === ROLE.ADMIN || userData.role === ROLE.SUPER_ADMIN;

@@ -101,6 +101,7 @@
         "updateButton": "Actualizar",
         "addButton": "Añadir registro",
         "next": "Siguiente",
+        "back": "Atrás",
         "addEntityButton": "Añadir servicio",
         "titleEmpty": "Título vacío. Por favor, rellénalo para poder continuar. ",
         "registerQuestion": "Crear cuenta",
@@ -190,5 +191,18 @@
         "contactPersonService": "Persona de contacto del servicio",
         "topicService": "Área a la que corresponde el servicio",
         "emailService": "Correo electrónico del servicio"
+    },
+    "enums": {
+        "roles": {
+            "super-admin": "Administrador global",
+            "super-viewer": "Visor global",
+            "viewer": "Visor",
+            "admin": "Administrador"
+        },
+        "language": {
+            "esES": "Castellano",
+            "caES": "Valenciano",
+            "alt": "Otro"
+        }
     }
 }

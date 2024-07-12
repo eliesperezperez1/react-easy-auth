@@ -101,6 +101,7 @@
         "updateButton": "Actualitzar",
         "addButton": "Afegir registre",
         "next": "Següent",
+        "back": "Darrere",
         "addEntityButton": "Afegir servici",
         "titleEmpty": "Títol buit. Per favor, emplena-ho per a poder continuar. ",
         "registerQuestion": "Crear compte",
@@ -171,7 +172,7 @@
         "dataFiability": "¿Com de fiables son aquestes dades?",
         "comments": "Comentaris de qualsevol aspecte del conjunt de dades",
         "RAT": "Víncul a la informació disponible del Registre de activitats de tratament",
-        "territorialScope":"¿En quin lloc es recollix aquesta informació?",
+        "territorialScope": "¿En quin lloc es recollix aquesta informació?",
         "temporaryCoverage": "¿Desde quan es recollix aquesta informació?",
         "repositoryStorage": "El repositori on es guarda la informació",
         "repositoryStorageURL": "Enllaç al repositori on es guarda la informació",
@@ -190,5 +191,18 @@
         "contactPersonService": "Persona de contacte del servici",
         "topicService": "Àrea a la que correspon el servici",
         "emailService": "Correu electrònic del servici"
+    },
+    "enums": {
+        "roles": {
+            "super-admin": "Administrador global",
+            "super-viewer": "Visualitzador global",
+            "viewer": "Visualitzador",
+            "admin": "Administrador"
+        },
+        "language": {
+            "esES": "Castellà",
+            "caES": "Valencià",
+            "alt": "Altre"
+        }
     }
 }
