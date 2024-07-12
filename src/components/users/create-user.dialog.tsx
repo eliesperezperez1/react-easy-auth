@@ -7,7 +7,14 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
 import { CreateUser } from "../../interfaces/user.interface";
 import { registerUser } from "../../api/users";
-import { Box, MenuItem, Select, ThemeProvider } from "@mui/material";
+import {
+  Box,
+  MenuItem,
+  Select,
+  ThemeProvider,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
 import { useTranslation } from "react-i18next";
 import "./create-users.dialog.css";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -17,8 +24,10 @@ import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
 import { LANGUAGE_FORM } from "../../utils/enums/language-form.enum";
 import { ROLE } from "../../utils/enums/role.enum";
-import { useAuthHeader } from "react-auth-kit";
-
+import { useAuthHeader, useAuthUser } from "react-auth-kit";
+import { buttonStyle } from "../../utils/functions/table-functions";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 export interface DialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
@@ -27,6 +36,7 @@ export interface DialogData {
 
 export default function CreateUserDialog(props: { enviar: DialogData }) {
   const authHeader = useAuthHeader();
+  const user = useAuthUser();
   const [open, setOpen] = useState<boolean>(false);
   const [t, i18n] = useTranslation();
   const [step, setStep] = useState(1);
@@ -42,6 +52,11 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
     service: "",
     themeApp: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleTogglePassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
   const { actualTheme } = useAlternateTheme();
 
   useEffect(() => {
@@ -115,7 +130,49 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
       [field]: value,
     }));
   };
+  const renderService = () => {
+    const menuItems = Object.entries(RESPONSIBLE_IDENTITY).map(
+      ([key, value]) => {
+        if (
+          value === RESPONSIBLE_IDENTITY.GENERAL &&
+          user().user.role !== ROLE.SUPER_ADMIN
+        ) {
+          return null;
+        }
+        return (
+          <MenuItem key={key} value={value}>
+            {value}
+          </MenuItem>
+        );
+      }
+    );
+    return menuItems;
+  };
 
+  const renderRole = () => {
+    const menuItems = Object.entries(ROLE).map(([key, value]) => {
+      if (value === ROLE.SUPER_ADMIN && user().user.role !== ROLE.SUPER_ADMIN) {
+        return null;
+      }
+      return (
+        <MenuItem key={key} value={value}>
+          {t("enums.roles." + value)}
+        </MenuItem>
+      );
+    });
+    return menuItems;
+  };
+
+  const renderLanguage = () => {
+    const menuItems = Object.entries(LANGUAGE_FORM).map(([key, value]) => {
+      return (
+        <MenuItem key={key} value={key}>
+          {t("enums.language." + key)}
+        </MenuItem>
+      );
+    });
+    return menuItems;
+  };
   const dynamicStyle = {
     backgroundColor: actualTheme === "light" ? "white" : "#252525",
     color: actualTheme === "light" ? "#252525" : "white",
@@ -196,52 +253,42 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                       <div className="horizontalForm">
                         <p>{t("login.password")}</p>
                         <TextField
-                          autoFocus
+                          variant="standard"
                           required
-                          margin="dense"
                           id="password"
                           name="password"
-                          type="password"
-                          variant="standard"
-                          value={formDataSteps.password}
-                          inputProps={{ minLength: 8 }}
+                          type={showPassword ? "text" : "password"}
                           onChange={(e) =>
                             handleChange("password", e.target.value)
                           }
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton
+                                  aria-label="toggle password visibility"
+                                  onClick={handleTogglePassword}
+                                  onMouseDown={(e) => e.preventDefault()}
+                                >
+                                  {showPassword ? (
+                                    <VisibilityIcon />
+                                  ) : (
+                                    <VisibilityOffIcon />
+                                  )}
+                                </IconButton>
+                              </InputAdornment>
+                            ),
+                          }}
                         />
                       </div>
                     </div>
                     <div className="buttonsForm">
                       <Button
                         onClick={handleClose}
-                        sx={{
-                          height: 37,
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
+                        sx={buttonStyle}
                       >
                         {t("dialog.cancel")}
                       </Button>
-                      <Button
-                        type="submit"
-                        sx={{
-                          height: 37,
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
-                      >
+                      <Button type="submit" sx={buttonStyle}>
                         {t("dialog.next")}
                       </Button>
                     </div>
@@ -272,6 +319,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                           id="language"
                           name="language"
                           margin="dense"
+                          variant="standard"
                           defaultValue={formDataSteps.language}
                           onChange={(event) => {
                             setFormDataSteps({
@@ -280,11 +328,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                             });
                           }}
                         >
-                          {Object.entries(LANGUAGE_FORM).map(([key, value]) => (
-                            <MenuItem key={key} value={key}>
-                              {value}
-                            </MenuItem>
-                          ))}
+                          {renderLanguage()}
                         </Select>
                       </div>
                       <div className="horizontalForm">
@@ -293,13 +337,16 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                           id="role"
                           name="role"
                           margin="dense"
+                          variant="standard"
                           defaultValue={formDataSteps.role}
+                          onChange={(event) => {
+                            setFormDataSteps({
+                              ...formDataSteps,
+                              role: event.target.value as ROLE,
+                            });
+                          }}
                         >
-                          {Object.entries(ROLE).map(([key, value]) => (
-                            <MenuItem key={key} value={value}>
-                              {value}
-                            </MenuItem>
-                          ))}
+                          {renderRole()}
                         </Select>
                       </div>
                       <div className="horizontalForm">
@@ -308,6 +355,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                           id="service"
                           name="service"
                           margin="dense"
+                          variant="standard"
                           defaultValue={formDataSteps.service}
                           onChange={(event) => {
                             setFormDataSteps({
@@ -317,64 +365,22 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                             });
                           }}
                         >
-                          {Object.entries(RESPONSIBLE_IDENTITY).map(
-                            ([key, value]) => (
-                              <MenuItem key={key} value={value}>
-                                {value}
-                              </MenuItem>
-                            )
-                          )}
+                          {renderService()}
                         </Select>
                       </div>
                     </div>
                     <div className="buttonsForm">
-                      <Button
-                        onClick={handleClose}
-                        sx={{
-                          height: 37,
-                          backgroundColor: "#D9D9D9",
-                          color: "#404040",
-                          borderColor: "#404040",
-                          "&:hover": {
-                            borderColor: "#0D0D0D",
-                            backgroundColor: "#0D0D0D",
-                            color: "#f2f2f2",
-                          },
-                        }}
-                      >
+                      <Button onClick={handleClose} sx={buttonStyle}>
                         {t("dialog.cancel")}
                       </Button>
                       <div>
                         <Button
                           onClick={handleGoBack}
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
+                          sx={{ ...buttonStyle, marginRight: "5px" }}
                         >
-                          Atrás
+                          {t("dialog.back")}
                         </Button>
-                        <Button
-                          type="submit"
-                          sx={{
-                            height: 37,
-                            backgroundColor: "#D9D9D9",
-                            color: "#404040",
-                            borderColor: "#404040",
-                            "&:hover": {
-                              borderColor: "#0D0D0D",
-                              backgroundColor: "#0D0D0D",
-                              color: "#f2f2f2",
-                            },
-                          }}
-                        >
+                        <Button type="submit" sx={buttonStyle}>
                           {t("dialog.addButton")}
                         </Button>
                       </div>

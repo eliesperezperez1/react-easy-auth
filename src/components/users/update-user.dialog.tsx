@@ -115,7 +115,7 @@ export default function UpdateUserDialog(props: { enviar: UpdateDialogData }) {
       }
       return (
         <MenuItem key={key} value={value}>
-          {t("enums.roles" + "." + value)}
+          {t("enums.roles." + value)}
         </MenuItem>
       );
     });
@@ -126,7 +126,7 @@ export default function UpdateUserDialog(props: { enviar: UpdateDialogData }) {
       const menuItems = Object.entries(LANGUAGE_FORM).map(([key, value]) => {
         return (
           <MenuItem key={key} value={key}>
-            {t("enums.language" + "." + key)}
+            {t("enums.language." + key)}
           </MenuItem>
         );
       });
@@ -189,7 +189,6 @@ export default function UpdateUserDialog(props: { enviar: UpdateDialogData }) {
                   <b>{step}/2</b>
                 </span>
               </div>
-
               <Box>
                 {step === 1 && (
                   <form onSubmit={handleNext}>
@@ -254,16 +253,15 @@ export default function UpdateUserDialog(props: { enviar: UpdateDialogData }) {
                         <p>{t("login.password")}</p>
                         <TextField
                           variant="standard"
+                          required
                           id="password"
                           name="password"
                           type={showPassword ? "text" : "password"}
                           onChange={handleChange}
                           InputProps={{
-                            minLength: 8,
                             endAdornment: (
                               <InputAdornment position="end">
                                 <IconButton
-                                  aria-label="toggle password visibility"
                                   onClick={handleTogglePassword}
                                   onMouseDown={(e) => e.preventDefault()}
                                 >
@@ -315,6 +313,7 @@ export default function UpdateUserDialog(props: { enviar: UpdateDialogData }) {
                         <Select
                           id="role"
                           name="role"
+                          required
                           margin="dense"
                           variant="standard"
                           defaultValue={update.role}
@@ -332,6 +331,7 @@ export default function UpdateUserDialog(props: { enviar: UpdateDialogData }) {
                         <p>{t("columnsNames.responsibleIdentity")}</p>
                         <Select
                           id="service"
+                          required
                           name="service"
                           margin="dense"
                           variant="standard"
