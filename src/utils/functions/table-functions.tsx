@@ -2,9 +2,13 @@ import { ReactComponent as Val } from "../../assets/val.svg";
 import { ReactComponent as Esp } from "../../assets/esp.svg";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
-import { createTheme } from "baseui/themes";
-import { grey } from "@mui/material/colors";
-import { esES } from "@mui/x-data-grid";
+import { ROLE } from "../enums/role.enum";
+import { Chip } from "@mui/material";
+import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+
 
 export function getDynamicStyle(actualTheme: any){
   return {
@@ -48,6 +52,19 @@ export function arrayCell(params: string[] | undefined | null) {
     );
   }
 }
+
+export const buttonStyle = {
+  height: 37,
+  backgroundColor: "#D9D9D9",
+  color: "#404040",
+  borderColor: "#404040",
+  "&:hover": {
+    borderColor: "#0D0D0D",
+    backgroundColor: "#0D0D0D",
+    color: "#f2f2f2",
+  },
+};
+
 export function isChecked(p: boolean | undefined | string) {
   if (!p) {
     return <CloseIcon color="error"></CloseIcon>;
@@ -75,6 +92,20 @@ export function valOrEsp(p: string | undefined) {
     return p.toLowerCase().includes(val.toLowerCase()) ? <Val /> : <Esp />;
   } else {
     return <Val />;
+  }
+}
+export function iconRole(role: string | undefined) {
+  switch (role) {
+    case ROLE.SUPER_ADMIN:
+      return <Chip icon={<VerifiedUserIcon />} color="info" label="Superadministrador" />;
+    case ROLE.ADMIN:
+      return (
+        <Chip icon={<AdminPanelSettingsIcon />} color="warning" label="Administrador" />
+      );
+    case ROLE.SUPER_VIEWER:
+      return <Chip icon={<RemoveRedEyeIcon />} color="secondary" label="Supervisor" />;
+    case ROLE.VIEWER:
+      return <Chip icon={<VisibilityIcon />} color="success" label="Visor" />;
   }
 }
 export function getTopicColor(topic: string | undefined) {

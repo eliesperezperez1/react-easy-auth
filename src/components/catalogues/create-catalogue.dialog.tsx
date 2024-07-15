@@ -374,6 +374,13 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                               margin="dense"
                               defaultValue={userData().user.service}
                               disabled={!isGeneralOrTrans}
+                              onChange={(event) => {
+                                setFormDataSteps({
+                                  ...formDataSteps,
+                                  responsibleIdentity: event.target
+                                    .value as RESPONSIBLE_IDENTITY,
+                                });
+                              }}
                             >
                               {renderResponsibleIdentity()}
                             </Select>
@@ -387,6 +394,12 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                               name="organism"
                               margin="dense"
                               defaultValue={formDataSteps.organism}
+                              onChange={(event) => {
+                                setFormDataSteps({
+                                  ...formDataSteps,
+                                  organism: event.target.value as ORGANISM,
+                                });
+                              }}
                             >
                               {Object.entries(ORGANISM).map(([key, value]) => (
                                 <MenuItem key={key} value={value}>
@@ -404,6 +417,12 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                               name="topic"
                               margin="dense"
                               defaultValue={formDataSteps.topic}
+                              onChange={(event) => {
+                                setFormDataSteps({
+                                  ...formDataSteps,
+                                  topic: event.target.value as TOPIC,
+                                });
+                              }}
                             >
                               {Object.entries(TOPIC).map(([key, value]) => (
                                 <MenuItem key={key} value={value}>
@@ -421,6 +440,12 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                               name="language"
                               margin="dense"
                               defaultValue={formDataSteps.language}
+                              onChange={(event) => {
+                                setFormDataSteps({
+                                  ...formDataSteps,
+                                  language: event.target.value as LANGUAGE_FORM,
+                                });
+                              }}
                             >
                               {Object.entries(LANGUAGE_FORM).map(
                                 ([key, value]) => (
@@ -800,6 +825,13 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                               name="sharingLevel"
                               margin="dense"
                               defaultValue={formDataSteps.sharingLevel}
+                              onChange={(event) => {
+                                setFormDataSteps({
+                                  ...formDataSteps,
+                                  sharingLevel: event.target
+                                    .value as SHARING_LEVEL,
+                                });
+                              }}
                             >
                               {Object.entries(SHARING_LEVEL).map(
                                 ([key, value]) => (

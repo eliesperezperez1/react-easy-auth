@@ -4,7 +4,7 @@ import {
   GridRenderCellParams,
   useGridApiRef,
 } from "@mui/x-data-grid";
-import { ThemeProvider } from "@mui/material";
+import { Chip, ThemeProvider } from "@mui/material";
 import { useEffect, useState } from "react";
 import { User } from "../../interfaces/user.interface";
 import {
@@ -13,7 +13,6 @@ import {
   updateUserRequest,
 } from "../../api/users";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
-import Chip from "@mui/material/Chip";
 import { useTranslation } from "react-i18next";
 import "./users.css";
 import CreateUserDialog, { DialogData } from "./create-user.dialog";
@@ -24,8 +23,8 @@ import CustomToolbar from "../custom-toolbar/custom-toolbar";
 import CustomPagination from "../custom-pagination/custom-pagination";
 import {
   paletaColores,
-  yesOrNo,
   valOrEsp,
+  iconRole,
   isChecked,
 } from "../../utils/functions/table-functions";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
@@ -42,7 +41,6 @@ function UserList() {
   const [deletedTable, setDeletedTable] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
-  const [openMenuExportar, setOpenMenuExportar] = useState<boolean>(false);
   const [userSelected, setUserSelected] = useState<User>(userMock);
   const [userData, setUserData] = useState<User>(userMock);
   const { actualTheme } = useAlternateTheme();
@@ -102,6 +100,8 @@ function UserList() {
       headerName: t("columnsNames.role"),
       width: 200,
       renderCell: renderRoleCell,
+      //renderCell: (params: GridRenderCellParams<any, string>) => 
+      //  iconRole(params.value)
     },
     {
       field: "service",
@@ -180,7 +180,7 @@ function UserList() {
   useEffect(() => {
     setUserData(user().user);
     getAndSetUsers();
-  }, []);
+  }, [user()]);
 
   function itCouldBeSelectable() {
     return userData.role === ROLE.ADMIN || userData.role === ROLE.SUPER_ADMIN;

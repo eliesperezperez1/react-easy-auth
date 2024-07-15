@@ -1,5 +1,3 @@
-import { useAuthHeader, useAuthUser } from "react-auth-kit";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   BarChart,
@@ -16,10 +14,19 @@ import {
 } from "@mui/x-charts";
 
 function GraphList() {
-  const authHeader = useAuthHeader();
-  const navigate = useNavigate();
-  const authUser = useAuthUser();
   const [t, i18n] = useTranslation();
+  const getGastoOrdinario2224 = () =>
+    fetch(
+      `https://valencia.opendatasoft.com//api/explore/v2.1/catalog/datasets/estructura-del-gasto-ordinario/records`,
+      {
+        method: "GET",
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        return data;
+      });
+
   const chartSetting = {
     xAxis: [
       {
@@ -29,92 +36,92 @@ function GraphList() {
     width: 500,
     height: 400,
   };
-const dataset = [
-  {
-    london: 59,
-    paris: 57,
-    newYork: 86,
-    seoul: 21,
-    month: "Jan",
-  },
-  {
-    london: 50,
-    paris: 52,
-    newYork: 78,
-    seoul: 28,
-    month: "Fev",
-  },
-  {
-    london: 47,
-    paris: 53,
-    newYork: 106,
-    seoul: 41,
-    month: "Mar",
-  },
-  {
-    london: 54,
-    paris: 56,
-    newYork: 92,
-    seoul: 73,
-    month: "Apr",
-  },
-  {
-    london: 57,
-    paris: 69,
-    newYork: 92,
-    seoul: 99,
-    month: "May",
-  },
-  {
-    london: 60,
-    paris: 63,
-    newYork: 103,
-    seoul: 144,
-    month: "June",
-  },
-  {
-    london: 59,
-    paris: 60,
-    newYork: 105,
-    seoul: 319,
-    month: "July",
-  },
-  {
-    london: 65,
-    paris: 60,
-    newYork: 106,
-    seoul: 249,
-    month: "Aug",
-  },
-  {
-    london: 51,
-    paris: 51,
-    newYork: 95,
-    seoul: 131,
-    month: "Sept",
-  },
-  {
-    london: 60,
-    paris: 65,
-    newYork: 97,
-    seoul: 55,
-    month: "Oct",
-  },
-  {
-    london: 67,
-    paris: 64,
-    newYork: 76,
-    seoul: 48,
-    month: "Nov",
-  },
-  {
-    london: 61,
-    paris: 70,
-    newYork: 103,
-    seoul: 25,
-    month: "Dec",
-  },
-];
+  const dataset = [
+    {
+      london: 59,
+      paris: 57,
+      newYork: 86,
+      seoul: 21,
+      month: "Jan",
+    },
+    {
+      london: 50,
+      paris: 52,
+      newYork: 78,
+      seoul: 28,
+      month: "Fev",
+    },
+    {
+      london: 47,
+      paris: 53,
+      newYork: 106,
+      seoul: 41,
+      month: "Mar",
+    },
+    {
+      london: 54,
+      paris: 56,
+      newYork: 92,
+      seoul: 73,
+      month: "Apr",
+    },
+    {
+      london: 57,
+      paris: 69,
+      newYork: 92,
+      seoul: 99,
+      month: "May",
+    },
+    {
+      london: 60,
+      paris: 63,
+      newYork: 103,
+      seoul: 144,
+      month: "June",
+    },
+    {
+      london: 59,
+      paris: 60,
+      newYork: 105,
+      seoul: 319,
+      month: "July",
+    },
+    {
+      london: 65,
+      paris: 60,
+      newYork: 106,
+      seoul: 249,
+      month: "Aug",
+    },
+    {
+      london: 51,
+      paris: 51,
+      newYork: 95,
+      seoul: 131,
+      month: "Sept",
+    },
+    {
+      london: 60,
+      paris: 65,
+      newYork: 97,
+      seoul: 55,
+      month: "Oct",
+    },
+    {
+      london: 67,
+      paris: 64,
+      newYork: 76,
+      seoul: 48,
+      month: "Nov",
+    },
+    {
+      london: 61,
+      paris: 70,
+      newYork: 103,
+      seoul: 25,
+      month: "Dec",
+    },
+  ];
   const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
   const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
   const xLabels = [
@@ -289,16 +296,20 @@ const dataset = [
       y2: 488.06,
     },
   ];
-
+  console.log(getGastoOrdinario2224());
   const valueFormatter = (value: number | null) => `${value}mm`;
 
   return (
     <>
+      <iframe
+        src="https://valencia.opendatasoft.com/explore/embed/dataset/precio-de-compra-en-idealista/map/?location=10,39.42291,-0.35395&basemap=e4bf90&static=false&datasetcard=false&scrollWheelZoom=false"
+        width="400"
+        height="300"
+        frameBorder="0"
+      ></iframe>
       <BarChart
         dataset={dataset}
-        yAxis={[
-          { scaleType: "band", dataKey: "month" },
-        ]}
+        yAxis={[{ scaleType: "band", dataKey: "month" }]}
         series={[
           { dataKey: "seoul", label: "Seoul rainfall", valueFormatter },
           { dataKey: "paris", label: "Paris rainfall", valueFormatter },

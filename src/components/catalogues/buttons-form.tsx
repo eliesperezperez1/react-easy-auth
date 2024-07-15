@@ -1,6 +1,7 @@
 import { Button } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import "./create-catalogue.dialog.css";
+import { buttonStyle } from "../../utils/functions/table-functions";
 
 export interface buttonsFormInfo {
   handleClose: () => void;
@@ -9,17 +10,7 @@ export interface buttonsFormInfo {
   step: number;
 }
 
-const buttonStyle = {
-  height: 37,
-  backgroundColor: "#D9D9D9",
-  color: "#404040",
-  borderColor: "#404040",
-  "&:hover": {
-    borderColor: "#0D0D0D",
-    backgroundColor: "#0D0D0D",
-    color: "#f2f2f2",
-  },
-};
+
 
 export default function ButtonsForm(props: { info: buttonsFormInfo }) {
   const [t, i18n] = useTranslation();

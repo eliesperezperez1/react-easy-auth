@@ -101,6 +101,7 @@
         "updateButton": "Actualizar",
         "addButton": "Añadir registro",
         "next": "Siguiente",
+        "back": "Atrás",
         "addEntityButton": "Añadir servicio",
         "titleEmpty": "Título vacío. Por favor, rellénalo para poder continuar. ",
         "registerQuestion": "Crear cuenta",
@@ -228,5 +229,18 @@
         "productData": "Nombre del producto de datos",
         "productComments": "Comentarios relativo al producto de datos"
         
+    },
+    "enums": {
+        "roles": {
+            "super-admin": "Administrador global",
+            "super-viewer": "Visor global",
+            "viewer": "Visor",
+            "admin": "Administrador"
+        },
+        "language": {
+            "esES": "Castellano",
+            "caES": "Valenciano",
+            "alt": "Otro"
+        }
     }
 }
