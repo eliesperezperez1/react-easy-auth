@@ -113,7 +113,7 @@ function CatalogueList() {
       field: "organism",
       headerName: t("columnsNames.organism"),
       width: 200,
-      description: "Organismo al que pertenece",
+      description: t("tooltipText.organism"),
       type: "singleSelect",
       valueOptions: Object.entries(ORGANISM).map(([key, value]) => {
         return value;
@@ -143,9 +143,9 @@ function CatalogueList() {
     },
     {
       field: "keyWords",
-      headerName: "Palabras clave",
+      headerName: t("columnsNames.keyWords"),
       width: 200,
-      description: "Palabras clave",
+      description: t("tooltipText.keyWords"),
       renderCell: (params: GridRenderCellParams<any, string[]>) => {
         return arrayCell(params.value);
       },
@@ -154,7 +154,7 @@ function CatalogueList() {
       field: "minimumVariables",
       headerName: t("columnsNames.minimumVariables"),
       width: 200,
-      description: "Campos mínimos que debe incluir el dataset",
+      description: t("tooltipText.minimumVariables"),
       type: "singleSelect",
       valueOptions: Object.entries(MINIMUM_VALUE).map(([key, value]) => {
         return value;
@@ -173,7 +173,7 @@ function CatalogueList() {
       renderCell: (params) => {
         return isChecked(params.value);
       },
-      description: "Datos referentes a las características básicas del negocio",
+      description: t("tooltipText.masterData"),
       type: "boolean",
     },
     {
@@ -184,7 +184,7 @@ function CatalogueList() {
         return isChecked(params.value);
       },
       description:
-        "Datos que definen el conjunto de valores admisibles en otros campos de datos",
+      t("tooltipText.referenceData"),
     },
     {
       field: "highValue",
@@ -193,7 +193,7 @@ function CatalogueList() {
       renderCell: (params) => {
         return isChecked(params.value);
       },
-      description: "¿Es un dataset de alto valor?",
+      description: t("tooltipText.highValue"),
     },
     {
       field: "activeAds",
@@ -216,7 +216,7 @@ function CatalogueList() {
       field: "typeGeo",
       headerName: t("columnsNames.typeGeo"),
       width: 200,
-      description: "¿Qué tipo de información geográfica contiene el dataset?",
+      description: t("tooltipText.typeGeo"),
     },
     {
       field: "temporaryCoverage",
@@ -232,19 +232,19 @@ function CatalogueList() {
       renderCell: (params) => {
         return isChecked(params.value);
       },
-      description: "¿¿El dataset dispone de información de género??",
+      description: t("tooltipText.genderInfo"),
     },
     {
       field: "structuredComments",
       headerName: t("columnsNames.structuredComments"),
       width: 200,
-      description: "Comentarios relativos a la estructura interna del dataset",
+      description: t("tooltipText.structuredComments"),
     },
     {
       field: "associatedApplication",
       headerName: t("columnsNames.associatedApplication"),
       width: 200,
-      description: "Nombre de la aplicación de origen de los datos",
+      description: t("tooltipText.associatedApplication"),
     },
     {
       field: "autoAcess",
@@ -253,15 +253,14 @@ function CatalogueList() {
       renderCell: (params) => {
         return isChecked(params.value);
       },
-      description:
-        "¿Se puede acceder a los datos de origen de forma automatizada? ",
+      description: t("tooltipText.autoAcess"),
       type: "boolean",
     },
     {
       field: "originComments",
       headerName: t("columnsNames.originComments"),
       width: 200,
-      description: "Comentarios relativos al origen de los datos",
+      description: t("tooltipText.originComments"),
     },
     {
       field: "RAT",
@@ -280,8 +279,7 @@ function CatalogueList() {
       renderCell: (params) => {
         return isChecked(params.value);
       },
-      description:
-        "¿El dataset contiene datos personales protegidos por la LOPD?",
+      description: t("tooltipText.dataProtection"),
       type: "boolean",
     },
     {
@@ -291,25 +289,23 @@ function CatalogueList() {
       renderCell: (params) => {
         return isChecked(params.value);
       },
-      description:
-        "¿Existen campos del dataset que deberían publicarse por normativa?",
+      description: t("tooltipText.dataStandards"),
       type: "boolean",
     },
     {
       field: "dataProtectionComments",
-      headerName: t("columnsNames.dataStandards"),
+      headerName: t("columnsNames.dataProtectionComments"),
       width: 200,
-      description: "Comentarios relativos a la protección de los datos",
+      description: t("tooltipText.dataProtectionComments"),
     },
     {
       field: "dataAnonymize",
-      headerName: t("columnsNames.dataStandards"),
+      headerName: t("columnsNames.dataAnonymize"),
       width: 200,
       renderCell: (params) => {
         return isChecked(params.value);
       },
-      description:
-        "Campos del dataset que requieren ser anonimizados. Separar cada campo con un punto y coma (;)",
+      description: t("tooltipText.dataAnonymize"),
     },
     {
       field: "dataQuality",
@@ -318,16 +314,14 @@ function CatalogueList() {
       renderCell: (params) => {
         return <Rating name="read-only" value={params.value} readOnly />;
       },
-      description:
-        "Valoración numérica de la calidad de los datos (del 1 al 5)",
+      description: t("tooltipText.dataQuality"),
       type: "number",
     },
     {
       field: "sharingLevel",
       headerName: t("columnsNames.sharingLevel"),
       width: 200,
-      description:
-        "¿Quién tiene acceso a estos datos dentro de la organización?",
+      description: t("tooltipText.sharingLevel"),
     },
     {
       field: "sharedData",
@@ -336,7 +330,7 @@ function CatalogueList() {
       renderCell: (params) => {
         return isChecked(params.value);
       },
-      description: "¿Se han compartido estos datos en alguna plataforma?",
+      description: t("tooltipText.sharedData"),
       type: "boolean",
     },
     {
@@ -346,7 +340,7 @@ function CatalogueList() {
       renderCell: (params) => {
         return isChecked(params.value);
       },
-      description: "¿Está compartido en la plataforma Smart City?",
+      description: t("tooltipText.VLCi"),
       type: "boolean",
     },
     {
@@ -356,7 +350,7 @@ function CatalogueList() {
       renderCell: (params) => {
         return isChecked(params.value);
       },
-      description: "¿Está cargado en ArcGIS?",
+      description: t("tooltipText.ArcGIS"),
       type: "boolean",
     },
     {
@@ -366,7 +360,7 @@ function CatalogueList() {
       renderCell: (params) => {
         return isChecked(params.value);
       },
-      description: "¿Está disponible en Pentaho?",
+      description: t("tooltipText.Pentaho"),
       type: "boolean",
     },
     {
@@ -376,7 +370,7 @@ function CatalogueList() {
       renderCell: (params) => {
         return isChecked(params.value);
       },
-      description: "¿Está cargado en CKAN?",
+      description: t("tooltipText.CKAN"),
       type: "boolean",
     },
     {
@@ -386,7 +380,7 @@ function CatalogueList() {
       renderCell: (params) => {
         return isChecked(params.value);
       },
-      description: "¿Está cargado en MongoDB?",
+      description: t("tooltipText.MongoDB"),
       type: "boolean",
     },
     {
@@ -396,14 +390,14 @@ function CatalogueList() {
       renderCell: (params) => {
         return isChecked(params.value);
       },
-      description: "¿Está publicado en OpenDataSoft?",
+      description: t("tooltipText.OpenDataSoft"),
       type: "boolean",
     },
     {
       field: "temporarySolution",
       headerName: t("columnsNames.temporarySolution"),
       width: 200,
-      description: "Frecuencia de actualización del dato",
+      description: t("tooltipText.temporarySolution"),
       renderCell: (params) => {
         return isChecked(params.value);
       },
@@ -413,19 +407,19 @@ function CatalogueList() {
       field: "chargeStateComments",
       headerName: t("columnsNames.chargeStateComments"),
       width: 200,
-      description: "Comentarios relativos al estado de carga del dataset",
+      description: t("tooltipText.chargeStateComments"),
     },
     {
       field: "productData",
       headerName: t("columnsNames.productData"),
       width: 200,
-      description: "Nombre del producto de datos",
+      description: t("tooltipText.productData"),
     },
     {
       field: "productComments",
       headerName: t("columnsNames.productComments"),
       width: 200,
-      description: "Comentarios relativo al producto de datos",
+      description: t("tooltipText.productComments"),
     },
   ];
 
@@ -622,7 +616,7 @@ function CatalogueList() {
             }}
             initialState={{
               pagination: {
-                paginationModel: { pageSize: 25, page: 0 },
+                paginationModel: { pageSize: 10, page: 0 },
               },
               filter: {
                 filterModel: {
@@ -759,8 +753,13 @@ function CatalogueList() {
               toolbarDensityComfortable: t(
                 "localtext.densityTexts.toolbarDensityComfortable"
               ),
-
               toolbarQuickFilterPlaceholder: t("dataTable.quickFilter"),
+              columnMenuSortAsc: t("localtext.columnMenu.columnMenuSortAsc"),
+              columnMenuSortDesc: t("localtext.columnMenu.columnMenuSortDesc"),
+              columnMenuFilter: t("localtext.columnMenu.columnMenuFilter"),
+              columnMenuHideColumn: t("localtext.columnMenu.columnMenuHideColumn"),
+              columnMenuManageColumns: t("localtext.columnMenu.columnMenuManageColumns"),
+              columnHeaderSortIconLabel: t("localtext.columnMenu.columnHeaderSortIconLabel"),
             }}
           />
         </ThemeProvider>

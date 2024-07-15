@@ -15,6 +15,7 @@ import {
   Select,
   Switch,
   ThemeProvider,
+  Typography,
   createTheme,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -71,6 +72,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [format, setFormat] = useState<string[]>([]);
   const [chips, setChips] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
+  const [dataQuality, setDataQuality] = useState(0);
   const { actualTheme } = useAlternateTheme();
   const dynamicStyle = getDynamicStyle(actualTheme);
   const baseTheme = (actualTheme: any) =>
@@ -220,6 +222,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     const prueba = formJson as CreateCatalogue;
     const create: CreateCatalogue = {
       ...prueba,
+      dataQuality,
       deleted,
       deletedDate,
     };
@@ -229,6 +232,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
         console.log(data, "create catalogue request");
       });
     props.enviar.getInfo();
+    
     handleClose();
   };
 
@@ -289,11 +293,19 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   };
 
   const handleChange = (field: string, value: any) => {
+    if(field==="dataQuality"){
+      setDataQuality(value);
+      console.log("dataQuality:" + value);
+    } 
     setFormDataSteps((prevData) => ({
       ...prevData,
       [field]: value,
     }));
   };
+
+  //const labels = ['Poor', 'Fair', 'Average', 'Good', 'Excellent'];
+  const labels = ['', '', '', '', ''];
+  const [hover, setHover] = useState(-1);
 
   return (
     <>
@@ -764,14 +776,21 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             color="primary"
                           />
                         </div>
-                        <div className="horizontalForm">
+                        <div className="horizontalFormStars">
                           <p>{t("columnsNames.dataQuality")}</p>
                           <Rating
                             value={formDataSteps.dataQuality}
+                            precision={1}
                             onChange={(e, value) =>
                               handleChange("dataQuality", value)
                             }
+                            onChangeActive={(event, newHover) => {
+                              setHover(newHover);
+                            }}
                           />
+                          {formDataSteps.dataQuality !== null && (
+                            <Typography ml={2}>{labels[hover !== -1 ? hover : formDataSteps.dataQuality]}</Typography>
+                          )}
                         </div>
                         <div className="horizontalForm">
                           <p>{t("columnsNames.sharingLevel")}</p>

@@ -10,6 +10,7 @@ import { userMock } from "../../utils/user.mock";
 import { User } from "../../interfaces/user.interface";
 import { updateUserLanguage } from "../../api/users";
 import { LANGUAGE } from "../../utils/enums/language.enum";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 
 function ChangeLanguage() {
   const user = useAuthUser();
@@ -19,6 +20,7 @@ function ChangeLanguage() {
   const [idioma, setIdioma] = useState("es");
   const imagenes = [ValImage, CasImage];
   const [userData, setUserData] = useState<User>(userMock);
+  const { actualTheme } = useAlternateTheme();
 
   useEffect(() => {
     if (user() && user().user) {
@@ -81,8 +83,10 @@ function ChangeLanguage() {
         width: "35px",
         padding: 0,
         backgroundImage: "transparent",
-        borderRadius: 50,
+        borderRadius: 45,
         overflow: "hidden",
+        borderColor: actualTheme === "light" ? "#252525" : "white",
+        borderWidth: 2,
       }}
     >
       <img

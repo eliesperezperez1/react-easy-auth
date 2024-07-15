@@ -39,15 +39,14 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
     password: "",
     language: "",
     role: "",
-    service: "",
+    service: RESPONSIBLE_IDENTITY,
     themeApp: "",
   });
   const { actualTheme } = useAlternateTheme();
-
+  const isPasswordValid = formDataSteps.password.length >= 8;
   useEffect(() => {
     setOpen(props.enviar.open);
   });
-
   const handleClose = () => {
     setFormDataSteps({
       name: "",
@@ -203,10 +202,17 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                           name="password"
                           type="password"
                           variant="standard"
+                          helperText="La contraseña debe contener 8-13 caracteres"
                           value={formDataSteps.password}
                           onChange={(e) =>
                             handleChange("password", e.target.value)
                           }
+                          sx={{
+                            "& .MuiFormHelperText-root": {
+                              color: formDataSteps.password.length >= 8 && formDataSteps.password.length <= 13 ? "#00ff00" : "#ff0000"
+                            },
+                          }}
+                          inputProps={{ maxLength: 13 }}
                         />
                       </div>
                     </div>
@@ -229,6 +235,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                       </Button>
                       <Button
                         type="submit"
+                        disabled={!isPasswordValid}
                         sx={{
                           height: 37,
                           backgroundColor: "#D9D9D9",

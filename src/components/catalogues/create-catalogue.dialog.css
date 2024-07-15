@@ -41,6 +41,25 @@
   /*justify-content: space-between;*/
 }
 
+.horizontalFormStars{
+  display: flex;
+  flex-direction: row;
+  flex: 3;
+  width: 100%;
+  position: relative;
+ /* background-color: aqua;
+ */
+}
+
+.horizontalFormStars :last-child{
+  /*background-color: aqua;*/
+
+  flex: 3 ;
+  width: auto;
+  margin-left: 30px;
+  margin-top: 10px;
+}
+
 .horizontalForm p, .horizontalFormSwitch p{
   flex: 1;
 }

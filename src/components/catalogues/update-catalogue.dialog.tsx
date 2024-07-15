@@ -17,6 +17,7 @@ import {
   Select,
   Switch,
   ThemeProvider,
+  Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
@@ -192,7 +193,7 @@ export default function UpdateCatalogueDialog(props: {
   };
 
   const updateCatalogue = (formJson: any) => {
-    const b = formJson.creationDate;
+    //const b = formJson.creationDate;
     const deletedDate = new Date();
     const deleted = false;
     const prueba = formJson as UpdateCatalogue;
@@ -244,6 +245,8 @@ export default function UpdateCatalogueDialog(props: {
   };
 
   const dynamicStyle = getDynamicStyle(actualTheme);
+  const labels = ['', '', '', '', ''];
+  const [hover, setHover] = useState(-1);
 
   return (
     <>
@@ -713,14 +716,21 @@ export default function UpdateCatalogueDialog(props: {
                             color="primary" // Opcional: ajusta el color del switch
                           />
                         </div>
-                        <div className="horizontalForm">
+                        <div className="horizontalFormStars">
                           <p>{t("columnsNames.dataQuality")}</p>
                           <Rating
                             value={update.dataQuality}
+                            precision={1}
                             onChange={(event, newValue) => {
                               setUpdate({ ...update, dataQuality: newValue });
                             }}
+                            onChangeActive={(event, newHover) => {
+                              setHover(newHover);
+                            }}
                           />
+                          {update.dataQuality !== null && update.dataQuality !== undefined && (
+                            <Typography ml={2}>{labels[hover !== -1 ? hover : update.dataQuality]}</Typography>
+                          )}
                         </div>
                         <div className="horizontalForm">
                           <p>{t("columnsNames.sharingLevel")}</p>

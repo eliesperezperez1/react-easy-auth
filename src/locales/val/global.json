@@ -148,6 +148,14 @@
             "toolbarDensityCompact": "Compacte",
             "toolbarDensityStandard": "Estàndard",
             "toolbarDensityComfortable": "Ample"
+        },
+        "columnMenu":{
+            "columnMenuSortAsc": "Orde ascendent",
+            "columnMenuSortDesc": "Orde descendent",
+            "columnMenuFilter": "Filtrar",
+            "columnMenuHideColumn": "Ocultar columnes",
+            "columnMenuManageColumns": "Gestionar columnes",
+            "columnHeaderSortIconLabel": "Ordenar"
         }
     },
     "tooltipText": {
@@ -189,6 +197,35 @@
         "responsibleIdentityService": "Nom del servici",
         "contactPersonService": "Persona de contacte del servici",
         "topicService": "Àrea a la que correspon el servici",
-        "emailService": "Correu electrònic del servici"
+        "emailService": "Correu electrònic del servici",
+        "organism": "Organisme al que perteneix",
+        "keyWords": "Paraules o conjunt de paraules que servix per a identificar el dataset",
+        "minimumVariables": "Camps mínims que ha d'incloure el dataset",
+        "masterData": "¿Es una dada usada per toda la organizació?",
+        "referenceData": "¿Es una dada que usan altres conjunts de dades?",
+        "highValue": "¿Es una dada de alt valor?",
+        "typeGeo": "¿Quin tipus d'informació geográfica conte el dataset?",
+        "genderInfo": "¿El dataset conte informació sobre el sexe?",
+        "structuredComments": "Comentaris sobre l'estructura interna del dataset",
+        "associatedApplication": "Nom de l'aplicació d'origen de les dades",
+        "autoAcess": "¿Es pot accedir automàticament a les dades d'origen?",
+        "originComments": "Comentaris sobre l'origen",
+        "dataProtection": "¿El dataset conte dades personals protegides per la LOPD?",
+        "dataStandards": "¿Existixen camps del dataset que han de ser publicats per normativa?",
+        "dataProtectionComments": "Comentaris sobre la protecció de dades",
+        "dataAnonymize": "Camps del dataser que han de ser anonimitzats. Separar cada camp amb un punt i coma (;)",
+        "dataQuality": "Valoració numérica de la qualitat de les dades (del 1 al 5)",
+        "sharingLevel": "¿Qui te acces a aquestes dades dins de la organització?",
+        "sharedData": "¿S'han compartit aquestes dades en alguna plataforma?",
+        "VLCi": "¿Està compartit en la plataforma Smart City?",
+        "ArcGIS": "¿Està cargat en ArcGIS?",
+        "Pentaho": "¿Està disponible en Pentaho?",
+        "CKAN": "¿Està cargat en CKAN?",
+        "MongoDB": "¿Està cargat en MongoDB?",
+        "OpenDataSoft": "¿Està publicat en OpenDataSoft?",
+        "temporarySolution": "Freqüencia d'actualizació de les dades",
+        "chargeStateComments": "Comentaris relatius al estat de carga del dataset",
+        "productData": "Nom del producte de dades",
+        "productComments": "Comentaris relatius al producte de dades"
     }
 }
