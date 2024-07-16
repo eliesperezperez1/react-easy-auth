@@ -99,28 +99,28 @@ function UserList() {
       field: "role",
       headerName: t("columnsNames.role"),
       width: 200,
-      renderCell: renderRoleCell,
-      //renderCell: (params: GridRenderCellParams<any, string>) => 
-      //  iconRole(params.value)
+      //renderCell: renderRoleCell,
+      renderCell: (params: GridRenderCellParams<any, string>) => 
+        iconRole(params.value)
     },
     {
       field: "service",
       headerName: t("columnsNames.responsibleIdentity"),
       width: 200,
     },
-    {
+    /*{
       field: "deleted",
       headerName: t("columnsNames.deleted"),
       width: 200,
       renderCell: (params) => {
         return isChecked(params.value);
       },
-      /* renderCell: (params: GridRenderCellParams<any, string>) => (
-        <>
-          <Chip label={params.value} color={yesOrNo(params.value)} />
-        </>
-      ), */
-    },
+      // renderCell: (params: GridRenderCellParams<any, string>) => (
+      //  <>
+      //    <Chip label={params.value} color={yesOrNo(params.value)} />
+      //  </>
+      //), 
+    },*/
   ];
 
   function getAndSetUsers() {
