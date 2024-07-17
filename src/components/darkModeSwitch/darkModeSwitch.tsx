@@ -71,8 +71,10 @@ const DarkModeSwitch = () => {
         width: "35px",
         padding: 0,
         backgroundImage: "transparent",
-        borderRadius: 50,
+        borderRadius: 45,
         overflow: "hidden",
+        borderColor: actualTheme === "light" ? "#252525" : "white",
+        borderWidth: 2,
       }}
     >
       <img

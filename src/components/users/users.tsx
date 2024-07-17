@@ -4,7 +4,7 @@ import {
   GridRenderCellParams,
   useGridApiRef,
 } from "@mui/x-data-grid";
-import { ThemeProvider } from "@mui/material";
+import { Chip, ThemeProvider } from "@mui/material";
 import { useEffect, useState } from "react";
 import { User } from "../../interfaces/user.interface";
 import {
@@ -25,6 +25,7 @@ import {
   paletaColores,
   valOrEsp,
   iconRole,
+  isChecked,
 } from "../../utils/functions/table-functions";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
@@ -57,6 +58,21 @@ function UserList() {
     getInfo: () => getAndSetUsers(),
     user: userSelected,
   };
+  
+  const roleDisplayMap = {
+    'super-admin': 'Administrador General',
+    'admin': 'Administrador',
+    'viewer': 'Visualizador',
+    'super-viewer': 'Visualizador General',
+  };
+  
+  const renderRoleCell = (params: GridRenderCellParams<any, string>) => {
+    var displayRole: any = 'Sin rol';
+    if(params.value != undefined || params.value != null){
+      displayRole = roleDisplayMap[params.value] || params.value || 'Sin rol';
+    }
+    return <Chip label={displayRole} />;
+  };
 
   const columns: GridColDef[] = [
     { field: "name", headerName: t("columnsNames.name"), width: 200 },
@@ -83,6 +99,7 @@ function UserList() {
       field: "role",
       headerName: t("columnsNames.role"),
       width: 200,
+      //renderCell: renderRoleCell,
       renderCell: (params: GridRenderCellParams<any, string>) => 
         iconRole(params.value)
     },
@@ -90,7 +107,20 @@ function UserList() {
       field: "service",
       headerName: t("columnsNames.responsibleIdentity"),
       width: 200,
-    }
+    },
+    /*{
+      field: "deleted",
+      headerName: t("columnsNames.deleted"),
+      width: 200,
+      renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      // renderCell: (params: GridRenderCellParams<any, string>) => (
+      //  <>
+      //    <Chip label={params.value} color={yesOrNo(params.value)} />
+      //  </>
+      //), 
+    },*/
   ];
 
   function getAndSetUsers() {

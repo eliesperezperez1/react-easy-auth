@@ -49,7 +49,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
     password: "",
     language: "",
     role: "",
-    service: "",
+    service: RESPONSIBLE_IDENTITY,
     themeApp: "",
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -58,11 +58,10 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
   const { actualTheme } = useAlternateTheme();
-
+  const isPasswordValid = formDataSteps.password.length >= 8;
   useEffect(() => {
     setOpen(props.enviar.open);
   });
-
   const handleClose = () => {
     setFormDataSteps({
       name: "",
@@ -72,7 +71,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
       password: "",
       language: "",
       role: "",
-      service: "",
+      service: RESPONSIBLE_IDENTITY,
       themeApp: "",
     });
     setFormData({});
@@ -258,9 +257,17 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                           id="password"
                           name="password"
                           type={showPassword ? "text" : "password"}
+                          helperText="La contraseña debe contener 8-13 caracteres"
+                          value={formDataSteps.password}
                           onChange={(e) =>
                             handleChange("password", e.target.value)
                           }
+                          sx={{
+                            "& .MuiFormHelperText-root": {
+                              color: formDataSteps.password.length >= 8 && formDataSteps.password.length <= 13 ? "#00ff00" : "#ff0000"
+                            },
+                          }}
+                          inputProps={{ maxLength: 13 }}
                           InputProps={{
                             endAdornment: (
                               <InputAdornment position="end">
@@ -288,7 +295,22 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                       >
                         {t("dialog.cancel")}
                       </Button>
-                      <Button type="submit" sx={buttonStyle}>
+                      <Button
+                        type="submit"
+                        disabled={!isPasswordValid}
+                        //sx={buttonStyle}
+                        sx={{
+                          height: 37,
+                          backgroundColor: "#D9D9D9",
+                          color: "#404040",
+                          borderColor: "#404040",
+                          "&:hover": {
+                            borderColor: "#0D0D0D",
+                            backgroundColor: "#0D0D0D",
+                            color: "#f2f2f2",
+                          },
+                        }}
+                      >
                         {t("dialog.next")}
                       </Button>
                     </div>

@@ -67,6 +67,7 @@ body {
     color:black;
     font-weight: bold;
     text-decoration: underline;
+    cursor: pointer;
 }
 @media (max-width: 768px) {
   .nav-elements ul li:not(:last-child) {

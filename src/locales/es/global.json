@@ -149,6 +149,14 @@
             "toolbarDensityCompact": "Compacto",
             "toolbarDensityStandard": "Estándar",
             "toolbarDensityComfortable": "Amplio"
+        },
+        "columnMenu":{
+            "columnMenuSortAsc": "Orden ascendente",
+            "columnMenuSortDesc": "Orden descendente",
+            "columnMenuFilter": "Filtrar",
+            "columnMenuHideColumn": "Ocultar columna",
+            "columnMenuManageColumns": "Gestionar columnas",
+            "columnHeaderSortIconLabel": "Ordenar"
         }
     },
     "tooltipText": {
@@ -190,7 +198,37 @@
         "responsibleIdentityService": "Nombre del servicio",
         "contactPersonService": "Persona de contacto del servicio",
         "topicService": "Área a la que corresponde el servicio",
-        "emailService": "Correo electrónico del servicio"
+        "emailService": "Correo electrónico del servicio",
+        "organism": "Organismo al que pertenece",
+        "keyWords": "Palabras o conjuntos de palabras que sirven para identificar el dataset",
+        "minimumVariables": "Campos mínimos que debe incluir el dataset",
+        "masterData": "¿Es un dato usado por toda la organización?",
+        "referenceData": "¿Es un dato que usan otros conjuntos de datos?",
+        "highValue": "¿Es un dato de alto valor?",
+        "typeGeo": "¿Qué tipo de información geográfica contiene el dataset?",
+        "genderInfo": "¿El dataset contiene información de género?",
+        "structuredComments": "Comentarios relativos a la estructura interna del dataset",
+        "associatedApplication": "Nombre de la aplicación de origen de los datos",
+        "autoAcess": "¿Se puede acceder a los datos de origen de forma automatizada?",
+        "originComments": "Comentarios relativos al origen de los datos",
+        "dataProtection": "¿El dataset contiene datos personales protegidos por la LOPD?",
+        "dataStandards": "¿Existen campos del dataset que deberían publicarse por normativa?",
+        "dataProtectionComments": "Comentarios relativos a la protección de los datos",
+        "dataAnonymize": "Campos del dataset que requieren ser anonimizados. Separar cada campo con un punto y coma (;)",
+        "dataQuality": "Valoración numérica de la calidad de los datos (del 1 al 5)",
+        "sharingLevel": "¿Quién tiene acceso a estos datos dentro de la organización?",
+        "sharedData": "¿Se han compartido estos datos en alguna plataforma?",
+        "VLCi": "¿Está compartido en la plataforma Smart City?",
+        "ArcGIS": "¿Está cargado en ArcGIS?",
+        "Pentaho": "¿Está disponible en Pentaho?",
+        "CKAN": "¿Está cargado en CKAN?",
+        "MongoDB": "¿Está cargado en MongoDB?",
+        "OpenDataSoft": "¿Está publicado en OpenDataSoft?",
+        "temporarySolution": "Frecuencia de actualización del dato",
+        "chargeStateComments": "Comentarios relativos al estado de carga del dataset",
+        "productData": "Nombre del producto de datos",
+        "productComments": "Comentarios relativo al producto de datos"
+        
     },
     "enums": {
         "roles": {

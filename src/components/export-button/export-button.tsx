@@ -4,6 +4,7 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { MutableRefObject, useEffect, useState } from "react";
 import { GridApiCommunity } from "@mui/x-data-grid/models/api/gridApiCommunity";
+import { gridFilteredSortedRowIdsSelector, gridVisibleColumnFieldsSelector } from '@mui/x-data-grid';
 
 export interface ExportButtonProps {
   visibleData: MutableRefObject<GridApiCommunity>;
@@ -14,24 +15,19 @@ function ExportButton({ visibleData }: ExportButtonProps) {
   useEffect(() => {}, [visibleData])
 
   const getVisibleData = () => {
-    const rowIds = visibleData.current.getAllRowIds();
-    const rowModels = rowIds.map((id) => visibleData.current.getRow(id));
-    const visibleColumns = visibleData.current
-      .getVisibleColumns()
-      .map((column) => column.field);
+    const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(visibleData);
+    const visibleColumnsField = gridVisibleColumnFieldsSelector(visibleData);
 
-    return rowModels.map((obj) => {
-      const newObj = { ...obj };
-      delete newObj._id;
-
-      Object.keys(newObj).forEach((key) => {
-        if (!visibleColumns.includes(key)) {
-          delete newObj[key];
-        }
+    // Format the data. Here we only keep the value
+    const data = filteredSortedRowIds.map((id) => {
+      const row: any = {};
+      visibleColumnsField.forEach((field) => {
+        row[field] = visibleData.current.getCellParams(id, field).value;
       });
-
-      return newObj;
+      return row;
     });
+
+    return data;
   };
 
   const handleExport = (type: "xlsx" | "json") => {
