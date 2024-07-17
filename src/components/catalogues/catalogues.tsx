@@ -104,10 +104,6 @@ function CatalogueList() {
       headerName: t("columnsNames.responsibleIdentity"),
       width: 200,
       description: t("tooltipText.responsibleIdentity"),
-      /*  type: "singleSelect",
-      valueOptions: Object.entries(RESPONSIBLE_IDENTITY).map(([key, value]) => {
-        return value;
-      }), */
     },
     {
       field: "organism",
@@ -123,10 +119,6 @@ function CatalogueList() {
       field: "topic",
       headerName: t("columnsNames.topic"),
       width: 200,
-      description: t("tooltipText.topic"),
-      /*    renderCell: (params: GridRenderCellParams<any, string[]>) => {
-        return arrayCell(params.value);
-      }, */
       type: "singleSelect",
       valueOptions: Object.entries(TOPIC).map(([key, value]) => {
         return value;
@@ -404,10 +396,7 @@ function CatalogueList() {
       headerName: t("columnsNames.temporarySolution"),
       width: 200,
       description: "Frecuencia de actualización del dato",
-      renderCell: (params) => {
-        return isChecked(params.value);
-      },
-      type: "boolean",
+      type: "string",
     },
     {
       field: "chargeStateComments",
@@ -571,13 +560,6 @@ function CatalogueList() {
     setOpenDialog(true);
   }
 
-  /*   if (!catalogues.length) {
-    return (
-      <span className="text-center text-xl font-bold my-4">
-        {t("dataTable.noCatalogues")}
-      </span>
-    );
-  } */
   if (!catalogues.length) {
     return (
       <Backdrop
