@@ -12,9 +12,52 @@ import {
   Gauge,
   ScatterChart,
 } from "@mui/x-charts";
+import { useEffect, useState } from "react";
+import { Catalogue } from "../../interfaces/catalogue.interface";
+import { getCataloguesRequest } from "../../api/catalogues";
+import { userMock } from "../../utils/user.mock";
+import { User } from "../../interfaces/user.interface";
+import { useAuthHeader, useAuthUser } from "react-auth-kit";
+import { LANGUAGE_FORM } from "../../utils/enums/language-form.enum";
+import { Button } from "baseui/button";
+import { SelectDropdown } from "baseui/select";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+
+
 
 function GraphList() {
+  const authHeader = useAuthHeader();
+  const user = useAuthUser();
   const [t, i18n] = useTranslation();
+  const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
+  const [userData, setUserData] = useState<User>(userMock);
+  const [firstCount, setFirstCount] = useState(0);
+  const [secondCount, setSecondCount] = useState(0);
+  const [nullCount, setNullCount] = useState(0);
+  const [textoDropdown, setTextoDropdown] = useState("Seleccionar");
+  const [pie1, setPie1] = useState("");
+  const [pie2, setPie2] = useState("");
+  const [pie3, setPie3] = useState("");
+
+
+  async function getAndSetCatalogues() {
+    await getCataloguesRequest(authHeader())
+      .then((response) => response.json())
+      .then((data) => {
+        setCatalogues(data);
+      });
+  }
+
+  useEffect(() => {
+    if (user() !== null) {
+      const a = user() ? user().user : userMock;
+      if (a) {
+        setUserData(a);
+      }
+      getAndSetCatalogues();
+    }
+  }, [user()]);
+
   const getGastoOrdinario2224 = () =>
     fetch(
       `https://valencia.opendatasoft.com//api/explore/v2.1/catalog/datasets/estructura-del-gasto-ordinario/records`,
@@ -26,6 +69,78 @@ function GraphList() {
       .then((data) => {
         return data;
       });
+
+  function getLanguages() {
+    var firstCount = 0;
+    var secondCount = 0;
+    var nullCount = 0;
+
+    for(var i = 0; i < catalogues.length; i++) {
+      var aux = catalogues[i].language;
+      if(aux!==null && aux!== undefined && aux.toString() === "VAL") {
+        secondCount++;
+      } else if(aux!==null && aux!== undefined){
+        firstCount++;
+      } else {
+        nullCount++;
+      }
+    }
+
+    setFirstCount(firstCount);
+    setSecondCount(secondCount);
+    setNullCount(nullCount);
+    setPie1("Castellano");
+    setPie2("Valenciano");
+    setPie3("Nulo");
+  }
+
+  function getHighValue(){
+
+  }
+
+  function selectData(functionName: string){
+    
+    //var firstCount = 0;
+    //var secondCount = 0;
+    //var nullCount = 0;
+    var datos = [0, 0, 0]; 
+
+    var columnNameVar: keyof Catalogue = "language";
+    
+    switch(functionName){
+      case "idioma":
+        columnNameVar = "language";
+        setTextoDropdown("");
+        getLanguages();
+        break;
+      case "altoValor":
+        columnNameVar = "highValue";
+        break;
+    }
+
+    if(columnNameVar !== "language") {
+      for(var i = 0; i < catalogues.length; i++) {
+        var aux = catalogues[i][columnNameVar];
+        if(aux!==null && aux!== undefined && aux === true) {
+          datos[0]++;
+        } else if(aux!==null && aux!== undefined){
+          datos[1]++;
+        } else {
+          datos[2]++;
+        }
+      }
+
+      setFirstCount(datos[0]);
+      setSecondCount(datos[1]);
+      setNullCount(datos[2]);
+      
+      setPie1("SI");
+      setPie2("NO");
+      setPie3("NULO");
+    };
+    
+    
+  }
 
   const chartSetting = {
     xAxis: [
@@ -299,14 +414,63 @@ function GraphList() {
   console.log(getGastoOrdinario2224());
   const valueFormatter = (value: number | null) => `${value}mm`;
 
+  
+
+
   return (
     <>
+      {/*<PieChart
+        series={[
+          {
+            data: [
+              { id: 0, value: firstCount, label: "Español" },
+              { id: 1, value: secondCount, label: "Valenciano" },
+              { id: 2, value: nullCount, label: "Null" },
+            ],
+          },
+        ]}
+        width={400}
+        height={200}
+      />  */}    
+
+      <BarChart
+        xAxis={[
+          {
+            scaleType: 'band',
+            data: [pie1, pie2, pie3],
+          }
+        ]}
+        width={500}
+        height={300}
+        series={[
+          { 
+            data: [firstCount, secondCount, nullCount],
+          }
+        ]}
+      />
+
+      {/* <Button onClick={() =>getLanguages()}>Get Languages count</Button> */}
+      
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">Age</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={textoDropdown}
+          onChange={(event) => selectData(event.target.value)}
+        >
+          <MenuItem value={"idioma"}>Idioma</MenuItem>
+          <MenuItem value={"altoValor"}>Alto Valor</MenuItem>
+        </Select>
+      </FormControl>
+{/*
       <iframe
         src="https://valencia.opendatasoft.com/explore/embed/dataset/precio-de-compra-en-idealista/map/?location=10,39.42291,-0.35395&basemap=e4bf90&static=false&datasetcard=false&scrollWheelZoom=false"
         width="400"
         height="300"
         frameBorder="0"
       ></iframe>
+*/}
       <BarChart
         dataset={dataset}
         yAxis={[{ scaleType: "band", dataKey: "month" }]}
@@ -385,3 +549,11 @@ function GraphList() {
 }
 
 export { GraphList };
+  function authHeader(): string {
+    throw new Error("Function not implemented.");
+  }
+
+function user() {
+  throw new Error("Function not implemented.");
+}
+
