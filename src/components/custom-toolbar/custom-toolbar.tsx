@@ -119,7 +119,11 @@ function CustomToolbar(props: CustomToolbarProperties) {
         <GridToolbarDensitySelector sx={buttonStyles} />
         <ExportButton visibleData={visibleData} />
         <GridToolbarQuickFilter
-          sx={{ ...buttonStyles, height: 33, borderRadius: 1 }}
+          sx={{
+            ...buttonStyles,
+            height: 33,
+            borderRadius: 1,
+          }}
         />
       </Box>
       <Box

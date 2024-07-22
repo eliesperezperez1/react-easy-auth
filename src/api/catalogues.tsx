@@ -77,3 +77,11 @@ export const getCatalogueRequest = async (refreshToken: string, id: string) =>
       "Access-Control-Allow-Origin": "*",
     },
   });
+export const getHighValue = async (refreshToken: string) =>
+  fetch(`${API}/catalogue/highValue`, {
+    method: "GET",
+    headers: {
+      Authorization: refreshToken,
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
