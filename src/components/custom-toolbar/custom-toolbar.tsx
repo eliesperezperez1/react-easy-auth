@@ -1,4 +1,4 @@
-import { Box, Button, FormControl } from "@mui/material";
+import { Box, Button, FormControl, styled } from "@mui/material";
 import {
   GridToolbarColumnsButton,
   GridToolbarContainer,
@@ -18,11 +18,16 @@ import RemoveDoneIcon from "@mui/icons-material/RemoveDone";
 import { ROLE } from "../../utils/enums/role.enum";
 import { User } from "../../interfaces/user.interface";
 import { useTranslation } from "react-i18next";
-import { MutableRefObject } from "react";
+import { MutableRefObject, useState } from "react";
 import { GridApiCommunity } from "@mui/x-data-grid/models/api/gridApiCommunity";
 import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
 import ods3 from "../../assets/ods3.svg";
+import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import { ThemeProvider } from '@mui/material/styles';
 import "./custom-toolbar.css";
+import { BorderColor } from "@mui/icons-material";
+import quickFilterTheme from "./quickFilterTheme";
+import quickFilterHoverTheme from "./quickFilterHoverTheme";
 export interface CustomToolbarProperties {
   userData: User;
   deletedTable: boolean;
@@ -39,24 +44,14 @@ export interface CustomToolbarProperties {
   refreshODS?: () => void;
 }
 
-const buttonStyles = {
-  height: 37,
-  backgroundColor: "#D9D9D9",
-  color: "#404040",
-  borderColor: "#404040",
-  marginLeft: "5px",
-  "&:hover": {
-    borderColor: "#0D0D0D",
-    backgroundColor: "#0D0D0D",
-    color: "#f2f2f2",
-  },
-  "&.Mui-disabled": {
-    color: "darkgrey",
-  },
-};
+
+
+
 
 function CustomToolbar(props: CustomToolbarProperties) {
   const { t } = useTranslation();
+  const { actualTheme } = useAlternateTheme();
+  const [theme, setTheme] = useState(quickFilterTheme(actualTheme));
   const {
     userData,
     deletedTable,
@@ -73,12 +68,40 @@ function CustomToolbar(props: CustomToolbarProperties) {
     refreshODS,
   } = props;
 
+  const buttonStyles = {
+    height: 37,
+    backgroundColor: "#D9D9D9",
+    color: "#404040",
+    borderColor: "#404040",
+    marginLeft: "5px",
+    "&:hover": {
+      borderColor: "#0D0D0D",
+      backgroundColor: "#0D0D0D",
+      color: "#f2f2f2",
+    },
+    "&.Mui-disabled": {
+      color: "darkgrey",
+    },
+  };
+
+  const quickFilterStyle = {
+    height: 37,
+    backgroundColor: "#D9D9D9",
+    "&:hover": {
+      backgroundColor: "#0D0D0D",
+    },
+    "&.Mui-disabled": {
+      color: "darkgrey",
+    },
+  };
+
   const isAdminOrSuperAdmin =
     userData.role === ROLE.ADMIN || userData.role === ROLE.SUPER_ADMIN;
   const isNotViewer = userData.role !== ROLE.VIEWER;
   const isTransparencia =
     userData.service === RESPONSIBLE_IDENTITY.GENERAL ||
     userData.service === RESPONSIBLE_IDENTITY.transparencia;
+
   return (
     <GridToolbarContainer
       sx={{
@@ -117,14 +140,14 @@ function CustomToolbar(props: CustomToolbarProperties) {
         <GridToolbarColumnsButton sx={buttonStyles} />
         <GridToolbarFilterButton sx={buttonStyles} />
         <GridToolbarDensitySelector sx={buttonStyles} />
-        <ExportButton visibleData={visibleData} />
-        <GridToolbarQuickFilter
-          sx={{
-            ...buttonStyles,
-            height: 33,
-            borderRadius: 1,
-          }}
-        />
+        <ExportButton visibleData={visibleData} /> 
+        <ThemeProvider theme={theme}>
+          <GridToolbarQuickFilter 
+            sx={{ ...quickFilterStyle, marginLeft: "5px", height: 33, borderRadius: 1, }}
+            onMouseEnter={() => setTheme(quickFilterHoverTheme(actualTheme))}
+            onMouseLeave={() => setTheme(quickFilterTheme(actualTheme))}
+          />
+        </ThemeProvider>
       </Box>
       <Box
         className="rightButtons"
