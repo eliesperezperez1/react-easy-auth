@@ -27,8 +27,6 @@ function GraphList() {
   const user = useAuthUser();
   const { actualTheme } = useAlternateTheme();
   const dynamicStyle = {
-    //backgroundColor: userData.themeApp === 'light' ? 'white' : 'black',
-    //color: userData.themeApp === 'light' ? 'black' : 'white',
     backgroundColor: actualTheme === "light" ? "white" : "#252525",
     color: actualTheme === "light" ? "#252525" : "white",
   };
