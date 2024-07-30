@@ -10,6 +10,12 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 
+/**
+ * Returns a dynamic style object based on the given theme.
+ *
+ * @param {any} actualTheme - The current theme. Can be either "light" or any other value.
+ * @return {object} The dynamic style object.
+ */
 export function getDynamicStyle(actualTheme: any){
   return {
     backgroundColor: actualTheme === "light" ? "white" : "#252525",
@@ -18,6 +24,12 @@ export function getDynamicStyle(actualTheme: any){
   }
 };
 
+/**
+ * Returns a color value based on the given color name.
+ *
+ * @param {string} color - The name of the color.
+ * @return {string} The color value.
+ */
 export function paletaColores(color: string) {
   switch (color) {
     case "colorTextAlter":
@@ -32,6 +44,13 @@ export function paletaColores(color: string) {
       return "rgba(212, 212, 212, 1)";
   }
 }
+/**
+ * Renders an array of strings as a series of divs. If the input is not an array or is null or undefined,
+ * it renders a single div with the input string, or an empty string if the input is not a string.
+ *
+ * @param {string[] | undefined | null} params - The array of strings to render.
+ * @return {JSX.Element} The rendered array of divs.
+ */
 export function arrayCell(params: string[] | undefined | null) {
   const array = params;
   if (!array || !Array.isArray(array)) {
@@ -65,6 +84,12 @@ export const buttonStyle = {
   },
 };
 
+/**
+ * Renders a CheckIcon or CloseIcon based on the value of the input.
+ *
+ * @param {boolean | undefined | string} p - The input value.
+ * @return {JSX.Element} The rendered CheckIcon or CloseIcon.
+ */
 export function isChecked(p: boolean | undefined | string) {
   if (!p) {
     return <CloseIcon color="error"></CloseIcon>;
@@ -83,9 +108,23 @@ export function isChecked(p: boolean | undefined | string) {
     );
   }
 }
+/**
+ * Determines the color based on the input string.
+ *
+ * @param {string | undefined} p - The input string to check.
+ * @return {"error" | "success"} - The color based on the input.
+ */
 export function yesOrNo(p: string | undefined) {
   return p === "NO" || undefined ? "error" : "success";
 }
+/**
+ * Renders a <Val /> component if the input string is 'val' or contains 'val', 
+ * otherwise renders an <Esp /> component. If the input string is undefined, 
+ * it also renders a <Val /> component.
+ *
+ * @param {string | undefined} p - The input string to check.
+ * @return {JSX.Element} The rendered <Val /> or <Esp /> component.
+ */
 export function valOrEsp(p: string | undefined) {
   const val = "val";
   if (p) {
@@ -94,6 +133,12 @@ export function valOrEsp(p: string | undefined) {
     return <Val />;
   }
 }
+/**
+ * Returns a Chip component representing the role of a user.
+ *
+ * @param {string | undefined} role - The role of the user.
+ * @return {JSX.Element} The Chip component representing the user's role.
+ */
 export function iconRole(role: string | undefined) {
   switch (role) {
     case ROLE.SUPER_ADMIN:
@@ -108,6 +153,12 @@ export function iconRole(role: string | undefined) {
       return <Chip icon={<VisibilityIcon />} color="success" label="Visor" />;
   }
 }
+/**
+ * Returns an object containing the background color and text color for a given topic.
+ *
+ * @param {string | undefined} topic - The topic to get the color for.
+ * @return {Object} An object with the backgroundColor and color properties.
+ */
 export function getTopicColor(topic: string | undefined) {
   switch (topic) {
     case "Sector Público":
@@ -138,6 +189,12 @@ export function getTopicColor(topic: string | undefined) {
       return { backgroundColor: "#FFFFFF", color: "black" };
   }
 }
+/**
+ * Generates a Google Maps URL for a given location.
+ *
+ * @param {string | undefined} location - The location to generate the URL for.
+ * @return {string} The generated Google Maps URL, or an empty string if the location is undefined.
+ */
 export function getLocationUrl(location: string | undefined) {
   return !!location
     ? "https://www.google.com/maps/search/?api=1&query=" +

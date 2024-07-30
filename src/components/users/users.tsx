@@ -29,6 +29,11 @@ import {
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
 
+/**
+ * Renders a list of users in the datagrid with their information and allows for CRUD operations.
+ *
+ * @return {JSX.Element} The rendered user list component.
+ */
 function UserList() {
   const authHeader = useAuthHeader();
   const user = useAuthUser();
@@ -103,6 +108,14 @@ function UserList() {
     }
   }, [datosDialog.getInfo, datosUpdateDialog.getInfo]);
 
+  /**
+   * Retrieves users from the server using the auth header and updates the state with the received data.
+   * The function filters the data to separate not-deleted and deleted users and sets the state accordingly.
+   * If the 'deletedTable' state is true, the rows state is set to the deleted users, 
+   * otherwise it is set to the not-deleted users.
+   *
+   * @return {void}
+   */
   function getAndSetUsers() {
     getUsersRequest(authHeader())
       .then((response) => response.json())
@@ -118,6 +131,14 @@ function UserList() {
         }
       });
   }
+/**
+ * Retrieves selected users from the server based on the provided selectedUsers array.
+ * For each selected user, it makes a request to the server using the getUserRequest function.
+ * Once the response is received, it parses the JSON data and updates the userSelected state.
+ * Additionally, it sets the openUpdateDialog state to true.
+ *
+ * @return {void}
+ */
   function getSelectedUsers() {
     selectedUsers.forEach((sc) => {
       getUserRequest(sc, authHeader())
@@ -129,6 +150,13 @@ function UserList() {
     });
   }
 
+/**
+ * Sets the rows state to either the deletedUsers or users array based on the value of the 
+ * 'deletedTable' state. So if 'deletedTable' is true, the rows state is set to the deleted users,
+ * otherwise it is set to the not-deleted users.
+ *
+ * @return {void}
+ */
   function showDeleted() {
     if (!deletedTable) {
       setRows(deletedUsers);
@@ -137,6 +165,11 @@ function UserList() {
     }
   }
 
+/**
+ * Deletes the selected users and updates the user data.
+ *
+ * @return {void}
+ */
   function deleteRegisters() {
     selectedUsers.forEach((sc: string) => {
       let cata = users.find((v) => v._id === sc);
@@ -147,6 +180,11 @@ function UserList() {
     getAndSetUsers();
   }
 
+/**
+ * Restores the selected users by updating their deleted status to false and fetching the updated user data.
+ *
+ * @return {void} This function does not return anything.
+ */
   function restoreRegisters() {
     selectedUsers.forEach((sc: string) => {
       let cata = deletedUsers.find((v) => v._id === sc);
@@ -162,10 +200,21 @@ function UserList() {
     getAndSetUsers();
   }, []);
 
+/**
+ * Determines if something could be selectable based on the current user role.
+ *
+ * @return {boolean} Returns true if the user has the role of admin or super admin, otherwise false.
+ */
   function itCouldBeSelectable() {
     return userData.role === ROLE.ADMIN || userData.role === ROLE.SUPER_ADMIN;
   }
 
+/**
+ * Determines if a row could be selectable based on the user's role and the row's responsible identity.
+ *
+ * @param {any} params - The parameters passed to the function.
+ * @return {boolean} Returns true if the row could be selectable, otherwise false.
+ */
   function rowCouldBeSelectable(params: any) {
     return (
       (userData.role === ROLE.ADMIN &&

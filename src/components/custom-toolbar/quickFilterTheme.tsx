@@ -1,7 +1,7 @@
 import { createTheme } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { esES } from '@mui/x-data-grid';
-/*
+/**
  * Creates a theme with custom typography, font family, and color palette for when the user is not hovering the component.
  *
  * @param {any} actualTheme - The actual theme object.

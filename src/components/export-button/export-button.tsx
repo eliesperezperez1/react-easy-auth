@@ -10,10 +10,21 @@ export interface ExportButtonProps {
   visibleData: MutableRefObject<GridApiCommunity>;
 }
 
+/**
+ * Renders an ExportButton component that allows the user to export data in either XLSX or JSON format.
+ *
+ * @param {ExportButtonProps} visibleData - The visible data to be exported.
+ * @return {JSX.Element} The rendered ExportButton component.
+ */
 function ExportButton({ visibleData }: ExportButtonProps) {
   const [openMenuExportar, setOpenMenuExportar] = useState(false);
   useEffect(() => {}, [visibleData])
 
+/**
+ * Retrieves the visible data from the grid and formats it into an array of objects.
+ *
+ * @return {Array<Object>} An array of objects representing the visible data, with each object containing the values of the visible columns.
+ */
   const getVisibleData = () => {
     const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(visibleData);
     const visibleColumnsField = gridVisibleColumnFieldsSelector(visibleData);
@@ -30,6 +41,12 @@ function ExportButton({ visibleData }: ExportButtonProps) {
     return data;
   };
 
+/**
+ * Handles the export of data in either XLSX or JSON format. After exporting, the menu is closed.
+ *
+ * @param {string} type - The type of export, either "xlsx" or "json".
+ * @return {void} This function does not return anything.
+ */
   const handleExport = (type: "xlsx" | "json") => {
     const dataShowed = getVisibleData();
 

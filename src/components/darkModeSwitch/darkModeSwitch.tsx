@@ -9,6 +9,12 @@ import Luna from "../../assets/moon.svg";
 import Sol from "../../assets/sun.svg";
 import "./darkModeSwitch.css";
 
+/**
+ * Renders a dark mode switch button that toggles between light and dark themes.
+ * The button updates the user's theme preference in the backend and refreshes the token.
+ *
+ * @return {JSX.Element} The dark mode switch button.
+ */
 const DarkModeSwitch = () => {
   //: React.FC<{ onThemeChange: (themeStatus: string) => void }> = ({ onThemeChange }) => {
   const user = useAuthUser();
@@ -24,6 +30,13 @@ const DarkModeSwitch = () => {
     }
   }, [user()]);
 
+  /**
+   * Asynchronously switches the theme of the application between light and dark.
+   * If the current theme is light, it toggles the theme to dark and updates the user's theme preference in the backend.
+   * If the current theme is dark, it toggles the theme to light and updates the user's theme preference in the backend.
+   *
+   * @return {Promise<void>} A promise that resolves when the theme has been successfully updated.
+   */
   async function switchThemeApp() {
     if (actualTheme === "light") {
       toggleTheme();

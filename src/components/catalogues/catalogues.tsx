@@ -47,6 +47,14 @@ import { ORGANISM } from "../../utils/enums/organism.enum";
 import { MINIMUM_VALUE } from "../../utils/enums/minimum-value.enum";
 import { TOPIC } from "../../utils/enums/topic.enum";
 
+/**
+ * Renders a CatalogueList component that displays a table of catalogues.
+ * The component fetches catalogues from the server and displays them in a DataGrid component.
+ * It also provides functionality to delete, restore, and update catalogues.
+ * The component uses various hooks and custom components to manage state and render the table.
+ *
+ * @return {JSX.Element} The rendered CatalogueList component.
+ */
 function CatalogueList() {
   const authHeader = useAuthHeader();
   const user = useAuthUser();
@@ -77,6 +85,7 @@ function CatalogueList() {
     getInfo: () => getAndSetCatalogues(),
   };
   const [t, i18n] = useTranslation();
+  
   const datosUpdateDialog: UpdateDialogData = {
     open: openUpdateDialog,
     closeDialog: (close: boolean) => setOpenUpdateDialog(close),
@@ -412,6 +421,12 @@ function CatalogueList() {
     },
   ];
 
+/**
+ * Determines if a row could be selectable based on the user's role and the row's responsible identity.
+ *
+ * @param {any} params - The parameters passed to the function.
+ * @return {boolean} Returns true if the row could be selectable, otherwise false.
+ */
   function rowCouldBeSelectable(params: any) {
     return (
       (userData.role === ROLE.ADMIN &&
@@ -420,6 +435,11 @@ function CatalogueList() {
     );
   }
 
+/**
+ * Gets the new catalogues from OpenDataSoft and updates the catalogues.
+ *
+ * @return {Promise<void>} A promise that resolves when the refresh is complete and the catalogues are updated.
+ */
   async function refreshODS() {
     await refreshODSRequest(authHeader())
       .then((response) => response.json())
@@ -438,6 +458,12 @@ function CatalogueList() {
     }
   }, [deletedTable, verifiedTable, showDeleted, showNotDeleted]);
 
+/**
+ * Classifies the catalogues based on their deleted and verified status.
+ *
+ * @param {Catalogue[]} data - The array of catalogues to be classified.
+ * @return {void} This function does not return anything.
+ */
   function classifyCatalogues(data: Catalogue[]) {
     let notDeletedNotVerifiedaux: Catalogue[] = [];
     let notDeletedVerifiedaux: Catalogue[] = [];
@@ -465,6 +491,12 @@ function CatalogueList() {
     showNotDeleted();
   }
 
+/**
+ * Asynchronously fetches catalogues from the server using the auth header and updates the catalogue's array
+ * with the received data.
+ *
+ * @return {Promise<void>} A Promise that resolves when the catalogues are fetched and the state is updated.
+ */
   async function getAndSetCatalogues() {
     await getCataloguesRequest(authHeader())
       .then((response) => response.json())
@@ -473,6 +505,12 @@ function CatalogueList() {
       });
   }
 
+/**
+ * Retrieves the selected catalogues by making a request to the server for each catalogue ID in the `selectedCatalogues` array.
+ * Updates the state with the received data and opens the update dialog.
+ *
+ * @return {void} This function does not return anything.
+ */
   function getSelectedCatalogues() {
     selectedCatalogues.forEach((sc: any) => {
       getCatalogueRequest(authHeader(), sc)
@@ -484,14 +522,34 @@ function CatalogueList() {
     });
   }
 
+/**
+ * Sets the rows array to either the `deletedVerified` or `deletedNotVerified` array
+ * depending on the value of the `verifiedTable` state.
+ *
+ * @return {void} This function does not return anything.
+ */
   function showDeleted() {
     setRows(verifiedTable ? deletedVerified : deletedNotVerified);
   }
 
+/**
+ * Sets the rows array to either the `notDeletedVerified` or `notDeletedNotVerified` array
+ * depending on the value of the `verifiedTable` state.
+ *
+ * @return {void} This function does not return anything.
+ */
   function showNotDeleted() {
     setRows(verifiedTable ? notDeletedVerified : notDeletedNotVerified);
   }
 
+/**
+ * Deletes the selected catalogues and updates the state with the new catalogue data. Then,
+ * calls `getAndSetCatalogues` to fetch the updated catalogues, also it classifies the new 
+ * catalogues and calls `showDeleted` or `showNotDeleted` depending on the value of the
+ * `deletedTable` state.
+ *
+ * @return {void} This function does not return anything.
+ */
   function deleteRegisters() {
     selectedCatalogues.forEach((sc: string) => {
       let cata = catalogues.find((v: any) => v._id === sc);
@@ -512,10 +570,21 @@ function CatalogueList() {
     }
   }
 
+/**
+ * Determines if something could be selected based on the current user role which can be either admin or super admin.
+ *
+ * @return {boolean} Returns true if the user has the role of admin or super admin, otherwise false.
+ */
   function itCouldBeSelectable() {
     return userData.role === ROLE.ADMIN || userData.role === ROLE.SUPER_ADMIN;
   }
 
+/**
+ * Restores the selected catalogues by updating their deleted status to false and 
+ * fetching the updated catalogues. Then, it updates the catalogues array calling `getAndSetCatalogues`.
+ *
+ * @return {void} This function does not return anything.
+ */
   function restoreRegisters() {
     selectedCatalogues.forEach((sc: string) => {
       let cata = deletedCatalogues.find((v: any) => v._id === sc);
@@ -544,12 +613,23 @@ function CatalogueList() {
     classifyCatalogues(catalogues);
   }, [catalogues]);
 
+/**
+ * Returns the CSS class name for a row in the table, based on the value of the 'verified' field in the row data.
+ *
+ * @param {any} params - The parameters passed to the function.
+ * @return {string} The CSS class name for the row.
+ */
   const getRowClassName = (params: any) => {
     if (params.row.verified === false) {
       return "no-verificado";
     }
   };
 
+  /**
+   * Opens the dialog by setting the `openDialog` state to `true`.
+   *
+   * @return {void} This function does not return anything.
+   */
   function createDialogOpen() {
     setOpenDialog(true);
   }

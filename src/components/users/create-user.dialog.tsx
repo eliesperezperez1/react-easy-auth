@@ -34,6 +34,17 @@ export interface DialogData {
   getInfo: () => void;
 }
 
+/**
+ * Renders a dialog for creating a new user. The dialog consists of two steps:
+ * Step 1: Collects user information such as name, surname, email, password, and language.
+ * Step 2: Collects additional user information such as username, role, and responsible identity.
+ *
+ * @param {Object} props - The component props.
+ * @param {Function} props.enviar.open - A function to open the dialog.
+ * @param {Function} props.enviar.closeDialog - A function to close the dialog.
+ * @param {Function} props.enviar.getInfo - A function to retrieve user information.
+ * @return {JSX.Element} The rendered dialog component.
+ */
 export default function CreateUserDialog(props: { enviar: DialogData }) {
   const authHeader = useAuthHeader();
   const user = useAuthUser();
@@ -54,14 +65,28 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
   });
   const [showPassword, setShowPassword] = useState(false);
 
+  /**
+   * Toggles the visibility of the password.
+   *
+   * @return {void} This function does not return anything.
+   */
   const handleTogglePassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
+
   const { actualTheme } = useAlternateTheme();
+
   const isPasswordValid = formDataSteps.password.length >= 8;
+
   useEffect(() => {
     setOpen(props.enviar.open);
   });
+  
+/**
+ * Resets the form data, closes the dialog, and calls the closeDialog function.
+ *
+ * @return {void}
+ */
   const handleClose = () => {
     setFormDataSteps({
       name: "",
@@ -80,6 +105,12 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
     props.enviar.closeDialog(false);
   };
 
+/**
+ * Creates a user with the provided form data.
+ *
+ * @param {any} formJson - The JSON object containing the user's data.
+ * @return {void}
+ */
   const createUser = (formJson: any) => {
     const deleted = false;
     const prueba = formJson as CreateUser;
@@ -99,6 +130,13 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
     handleClose();
   };
 
+/**
+ * Handles the next step in the form submission process. First collects the form data 
+ * for the current step, then merges it with the existing form data, and finally updates the step.
+ *
+ * @param {React.FormEvent<HTMLFormElement>} event - The form submission event.
+ * @return {void} This function does not return anything.
+ */
   const handleNext = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -111,6 +149,13 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
     setStep(step + 1);
   };
 
+  /**
+   * Handles the form submission for the current step, merges the current step data with the existing form data,
+   * and creates a user with the merged data.
+   *
+   * @param {React.FormEvent<HTMLFormElement>} event - The form submission event.
+   * @return {void} This function does not return anything.
+   */
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const currentStepData = new FormData(event.currentTarget);
     const currentStepJson = Object.fromEntries(currentStepData.entries());
@@ -119,16 +164,34 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
     createUser(mergedFormData);
   };
 
+  /**
+   * Decrements the step value by 1, returning to the previous step in the form.
+   *
+   * @return {void} This function does not return anything.
+   */
   const handleGoBack = () => {
     setStep(step - 1);
   };
 
+  /**
+   * Updates the form data steps with the provided field and value.
+   *
+   * @param {string} field - The name of the field to update.
+   * @param {string} value - The new value for the field.
+   * @return {void} This function does not return anything.
+   */
   const handleChange = (field: string, value: string) => {
     setFormDataSteps((prevData) => ({
       ...prevData,
       [field]: value,
     }));
   };
+  /**
+   * Renders a list of MenuItem components based on the values of the RESPONSIBLE_IDENTITY enum.
+   * Excludes the GENERAL value from the list if the user's role is not SUPER_ADMIN.
+   *
+   * @return {JSX.Element[]} An array of MenuItem components.
+   */
   const renderService = () => {
     const menuItems = Object.entries(RESPONSIBLE_IDENTITY).map(
       ([key, value]) => {
@@ -148,6 +211,12 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
     return menuItems;
   };
 
+/**
+ * Renders a list of MenuItem components based on the values of the ROLE object.
+ * Excludes the SUPER_ADMIN value from the list if the user's role is not SUPER_ADMIN.
+ *
+ * @return {JSX.Element[]} An array of MenuItem components.
+ */
   const renderRole = () => {
     const menuItems = Object.entries(ROLE).map(([key, value]) => {
       if (value === ROLE.SUPER_ADMIN && user().user.role !== ROLE.SUPER_ADMIN) {
@@ -162,6 +231,11 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
     return menuItems;
   };
 
+/**
+ * Renders a list of MenuItem components based on the values of the LANGUAGE_FORM object.
+ *
+ * @return {JSX.Element[]} An array of JSX elements representing the language options.
+ */
   const renderLanguage = () => {
     const menuItems = Object.entries(LANGUAGE_FORM).map(([key, value]) => {
       return (

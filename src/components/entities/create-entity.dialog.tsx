@@ -23,6 +23,13 @@ export interface DialogData {
   getInfo: () => void;
 }
 
+/**
+ * Creates a base theme for the application based on the provided actualTheme, and changes
+ * the color palette based on the actualTheme.
+ *
+ * @param {any} actualTheme - The actual theme object.
+ * @return {object} The created base theme object.
+ */
 const baseTheme = (actualTheme: any) =>
   createTheme(
     {
@@ -77,6 +84,14 @@ const baseTheme = (actualTheme: any) =>
     esES
   );
 
+/**
+ * Renders a dialog for creating an entity.
+ *
+ * @param {Object} props - The properties for the dialog.
+ * @param {Function} props.enviar.closeDialog - Function to close the dialog.
+ * @param {Function} props.enviar.getInfo - Function to get information.
+ * @return {JSX.Element} The rendered dialog component.
+ */
 export default function CreateEntityDialog(props: { enviar: DialogData }) {
   const [open, setOpen] = useState<boolean>(false);
   const authHeader = useAuthHeader();
@@ -97,7 +112,11 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
   useEffect(() => {
     setOpen(props.enviar.open);
   });
-
+  /**
+   * Handles the close event of the dialog. Resets steps, the form data and closes the dialog.
+   *
+   * @return {void} 
+   */
   const handleClose = () => {
     setFormData({});
     setFormDataSteps({
@@ -113,6 +132,12 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
     props.enviar.closeDialog(false);
   };
 
+/**
+ * Creates a new entity using the provided form data and sends a request to the server to create it.
+ *
+ * @param {any} formJson - The form data to create the entity with.
+ * @return {Promise<void>} A promise that resolves when the entity is created.
+ */
   const createEntity = (formJson: any) => {
     const prueba = formJson as CreateEntity;
     const create: CreateEntity = {
@@ -134,6 +159,13 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
   }
   */
 
+/**
+ * Handles the next step in the form submission process. First collects the form data 
+ * for the current step, then merges it with the existing form data, and finally updates the step.
+ *
+ * @param {React.FormEvent<HTMLFormElement>} event - The form submission event.
+ * @return {void} This function does not return anything.
+ */
   const handleNext = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -148,6 +180,13 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
     setStep(step + 1);
   };
 
+/**
+ * Handles the form submission for the current step. Collects the form data for the current step, 
+ * merges it with the existing form data, and creates the entity.
+ *
+ * @param {React.FormEvent<HTMLFormElement>} event - The form submission event.
+ * @return {void} This function does not return anything.
+ */
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const currentStepData = new FormData(event.currentTarget);
     const currentStepJson = Object.fromEntries(currentStepData.entries());
@@ -156,10 +195,22 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
     createEntity(mergedFormData);
   };
 
+  /**
+   * Decrements the step value by 1, returning to the previous step in the dialog.
+   *
+   * @return {void} This function does not return anything.
+   */
   const handleGoBack = () => {
     setStep(step - 1);
   };
 
+  /**
+   * Updates the form data with the provided field and value.
+   *
+   * @param {string} field - The name of the field to update.
+   * @param {string} value - The new value for the field.
+   * @return {void} This function does not return anything.
+   */
   const handleChange = (field: string, value: string) => {
     // Update the form data
     setFormDataSteps((prevData) => ({

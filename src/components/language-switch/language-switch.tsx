@@ -12,6 +12,12 @@ import { updateUserLanguage } from "../../api/users";
 import { LANGUAGE } from "../../utils/enums/language.enum";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 
+/**
+ * Component that returns a button that allows the user to change the language 
+ * using the library i18next.
+ *
+ * @return {JSX.Element} The button component that triggers the language change.
+ */
 function ChangeLanguage() {
   const user = useAuthUser();
   const authHeader = useAuthHeader();
@@ -31,6 +37,13 @@ function ChangeLanguage() {
     }
   }, [user()]);
 
+  /**
+   * Asynchronously switches the language to either "val" or "es" based on the current language value.
+   * If the user data is not equal to the user mock, it updates the user's language in the database and signs in the user with the new language.
+   * Then, it calls the changeI18 function to update the i18next language.
+   *
+   * @return {Promise<void>} A Promise that resolves when the language has been switched and the user has been signed in.
+   */
   async function switchVisibleSeleccion() {
     if (userData === userMock) console.log("igualesss");
 
@@ -71,9 +84,15 @@ function ChangeLanguage() {
     }
     await changeI18();
   }
+/**
+ * Asynchronously changes the language of the i18n library to the specified language.
+ *
+ * @return {Promise<void>} A Promise that resolves when the language has been changed.
+ */
   async function changeI18() {
     await i18n.changeLanguage(idioma);
   }
+
   return (
     <button
       id="buttonChangeLanguage"

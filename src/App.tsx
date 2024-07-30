@@ -19,11 +19,22 @@ const AppContainer = styled.div`
   height: 100%;
 `;
 
+/**
+ * Renders the main application component.
+ *
+ * @return {JSX.Element} The main application component.
+ */
 function App() {
   const change: ChangeLanguageEvent = {
     change: () => changeComponentLanguageApp(),
   };
 
+/**
+ * Retrieves the value of a cookie by its name.
+ *
+ * @param {string} name - The name of the cookie.
+ * @return {string | undefined} The value of the cookie, or undefined if the cookie does not exist.
+ */
   function getCookie(name: string) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -32,6 +43,13 @@ function App() {
 
   const token = getCookie("token");
 
+/**
+ * Checks if a JWT token is expired by decoding it and comparing the expiration time with the current time.
+ * If the token is expired, it clears the "_auth" cookie.
+ *
+ * @param {string} token - The JWT token to check.
+ * @return {boolean} Returns true if the token is expired, false otherwise.
+ */
   function isTokenExpired(token: string) {
     try {
       const decoded = jwtDecode(token);

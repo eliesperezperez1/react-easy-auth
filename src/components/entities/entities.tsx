@@ -30,6 +30,13 @@ import CustomToolbar from "../custom-toolbar/custom-toolbar";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
 
+/**
+ * Renders a list of entities with a DataGrid component that displays the entities' contact person, location, topic, responsible identity, phone number, and email. 
+ * Allows the user to filter and select entities, as well as view deleted entities and restore them. 
+ * Also allows the user to create and update entities.
+ *
+ * @return {JSX.Element} The rendered component
+ */
 function EntitiesList() {
   const authHeader = useAuthHeader();
   const user = useAuthUser();
@@ -140,6 +147,12 @@ function EntitiesList() {
     },
   ];
 
+/**
+ * Determines if a row could be selectable based on the user's role and the row's responsible identity.
+ *
+ * @param {any} params - The parameters passed to the function.
+ * @return {boolean} Returns true if the row could be selectable, otherwise false.
+ */
   function rowCouldBeSelectable(params: any) {
     return (
       (userData.role === ROLE.ADMIN &&
@@ -147,7 +160,12 @@ function EntitiesList() {
       userData.role === ROLE.SUPER_ADMIN
     );
   }
-
+/**
+ * Asynchronously fetches entities from the server using the auth header and updates the entities array
+ * with the received data.
+ *
+ * @return {Promise<void>} A Promise that resolves when the entities are fetched and the state is updated.
+ */
   function getAndSetEntities() {
     getEntitiesRequest(authHeader())
       .then((response) => response.json())
@@ -163,6 +181,13 @@ function EntitiesList() {
         }
       });
   }
+/**
+ * Retrieves the selected entities by making a request to the server for each entity ID 
+ * in the `selectedEntities` array.
+ * Updates the state with the received data and opens the update dialog.
+ *
+ * @return {void} This function does not return anything.
+ */
   function getSelectedEntities() {
     selectedEntities.forEach((sc) => {
       getEntityRequest(authHeader(), sc)
@@ -173,7 +198,13 @@ function EntitiesList() {
         });
     });
   }
-
+  /**
+   * Toggles the display of deleted entities in the table by setting the rows array to 
+   * either the `deletedVerified` or `deletedNotVerified` array 0depending on the value 
+   * of the `verifiedTable` state.
+   *
+   * @return {void} This function does not return anything.
+   */
   function showDeleted() {
     if (!deletedTable) {
       setRows(deletedEntities);
@@ -181,11 +212,23 @@ function EntitiesList() {
       setRows(entities);
     }
   }
-
+/**
+ * Determines if something could be selected based on the current user role which can be either admin or super admin.
+ *
+ * @return {boolean} Returns true if the user has the role of admin or super admin, otherwise false.
+ */
   function itCouldBeSelectable() {
     return userData.role === ROLE.ADMIN || userData.role === ROLE.SUPER_ADMIN;
   }
 
+/**
+ * Deletes the selected entities and updates the state with the new entity data. Then,
+ * calls `getAndSetEntities` to fetch the updated entities, also it classifies the new 
+ * entities and calls `showDeleted` or `showNotDeleted` depending on the value of the
+ * `deletedTable` state.
+ *
+ * @return {void} This function does not return anything.
+ */
   function deleteRegisters() {
     selectedEntities.forEach((sc: string) => {
       let cata = entities.find((v) => v._id === sc);
@@ -200,6 +243,12 @@ function EntitiesList() {
     getAndSetEntities();
   }
 
+/**
+ * Restores the selected entities by updating their deleted status to false and 
+ * fetching the updated entities. Then, it updates the entities array calling `getAndSeEntities`.
+ *
+ * @return {void} This function does not return anything.
+ */
   function restoreRegisters() {
     selectedEntities.forEach((sc: string) => {
       let cata = deletedEntities.find((v) => v._id === sc);

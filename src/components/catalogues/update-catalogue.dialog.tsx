@@ -43,7 +43,15 @@ export interface UpdateDialogData {
   getInfo: () => void;
   catalogue: Catalogue;
 }
-
+/**
+ * Renders a dialog for updating a catalogue.
+ *
+ * @param {object} props - The props object containing the enviar property.
+ * @param {object} props.enviar - The enviar object containing the catalogue and open properties.
+ * @param {object} props.enviar.catalogue - The catalogue object to be updated.
+ * @param {boolean} props.enviar.open - The open state of the dialog.
+ * @return {JSX.Element} The rendered UpdateCatalogueDialog component.
+ */
 export default function UpdateCatalogueDialog(props: {
   enviar: UpdateDialogData;
 }) {
@@ -87,12 +95,23 @@ export default function UpdateCatalogueDialog(props: {
     }
   }, [props.enviar.open, props.enviar.catalogue]);
 
+  /**
+   * Handles the close event of the dialog. Resets steps and closes the dialog.
+   *
+   * @return {void} No return value.
+   */
   const handleClose = () => {
     setOpen(false);
     setStep(1);
     props.enviar.closeDialog(false);
   };
 
+  /**
+   * Updates the state with the new value of the input field.
+   *
+   * @param {ChangeEvent<HTMLInputElement>} event - The event triggered by the input field change.
+   * @return {void} This function does not return anything.
+   */
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setUpdate((prevState) => ({ ...prevState, [name]: value }));
@@ -108,6 +127,12 @@ export default function UpdateCatalogueDialog(props: {
     userData().user.service === RESPONSIBLE_IDENTITY.GENERAL ||
     userData().user.service === RESPONSIBLE_IDENTITY.transparencia;
 
+  /**
+   * Renders a list of MenuItem components based on the values of the RESPONSIBLE_IDENTITY enum.
+   * Excludes the GENERAL value from the list.
+   *
+   * @return {JSX.Element[]} An array of MenuItem components.
+   */
   const renderResponsibleIdentity = () => {
     const menuItems = Object.entries(RESPONSIBLE_IDENTITY).map(
       ([key, value]) => {
@@ -133,6 +158,15 @@ export default function UpdateCatalogueDialog(props: {
     }
     return menuItems;
   };
+  /**
+   * Handles the change event of the input field for keywords. If the input value ends with a semicolon,
+   * it creates a new chip by removing the semicolon and trimming any whitespace, and adds it to the list of chips.
+   * If the chip is not already in the list, it updates the form data steps with the new list of chips.
+   * Finally, it clears the input value.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The change event triggered by the input field.
+   * @return {void} This function does not return anything.
+   */
   const handleChangeKeyWords = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     if (value.endsWith(";")) {
@@ -153,10 +187,23 @@ export default function UpdateCatalogueDialog(props: {
     }
   };
 
+/**
+ * Removes a chip from the list of chips by filtering out the chip to delete.
+ *
+ * @param {string} chipToDelete - The chip to be removed from the list of chips.
+ * @return {void} This function does not return anything.
+ */
   const handleDeleteKeyWords = (chipToDelete: string) => {
     setChips((chips) => chips.filter((chip) => chip !== chipToDelete));
   };
 
+/**
+ * Renders a list of MenuItem components based on the values of the ORGANISM enum.
+ * If the update.organism value is not included in the enum values, a custom 
+ * MenuItem component is added.
+ *
+ * @return {JSX.Element[]} An array of MenuItem components.
+ */
   const renderOrganism = () => {
     const menuItems = Object.entries(ORGANISM).map(([key, value]) => {
       return (
@@ -174,6 +221,14 @@ export default function UpdateCatalogueDialog(props: {
     }
     return menuItems;
   };
+  
+  /**
+   * Renders a list of MenuItem components based on the values of the TOPIC enum.
+   * If the update.topic value is not included in the enum values, a custom 
+   * MenuItem component is added.
+   *
+   * @return {JSX.Element[]} An array of MenuItem components.
+   */
   const renderTopic = () => {
     const menuItems = Object.entries(TOPIC).map(([key, value]) => {
       return (
@@ -192,6 +247,12 @@ export default function UpdateCatalogueDialog(props: {
     return menuItems;
   };
 
+  /**
+   * Updates a catalogue with the provided form data and sends a request to the server to update it.
+   *
+   * @param {any} formJson - The form data to update the catalogue with.
+   * @return {void} This function does not return anything.
+   */
   const updateCatalogue = (formJson: any) => {
     //const b = formJson.creationDate;
     const deletedDate = new Date();
@@ -213,10 +274,22 @@ export default function UpdateCatalogueDialog(props: {
     handleClose();
   };
 
+  /**
+   * Decrements the step value by 1, returning to the previous step in the dialog.
+   *
+   * @return {void} This function does not return anything.
+   */
   const handleGoBack = () => {
     setStep(step - 1);
   };
 
+  /**
+   * Handles the next step in the form submission process. First handles the format field,
+   * then updates the form data with the new step data, and finally opens the next step.
+   *
+   * @param {React.FormEvent<HTMLFormElement>} event - The form submission event.
+   * @return {void} This function does not return anything.
+   */
   const handleNext = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -236,6 +309,13 @@ export default function UpdateCatalogueDialog(props: {
     setStep(step + 1);
   };
 
+  /**
+   * Handles the form submission for the current step. Collects the form data for the 
+   * current step, merges it with the existing form data, and updates the catalogue.
+   *
+   * @param {React.FormEvent<HTMLFormElement>} event - The form submission event.
+   * @return {void} This function does not return anything.
+   */
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const currentStepData = new FormData(event.currentTarget);
     const currentStepJson = Object.fromEntries(currentStepData.entries());

@@ -2,6 +2,13 @@ import { createTheme } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { esES } from '@mui/x-data-grid';
 
+/**
+ * Creates a base theme for the application based on the provided actualTheme, and change
+ * the color palette based on the actualTheme.
+ *
+ * @param {any} actualTheme - The actual theme object.
+ * @return {object} The created base theme object.
+ */
 const baseTheme = (actualTheme:any) => createTheme(
     {
       typography: {

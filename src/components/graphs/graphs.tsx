@@ -17,6 +17,11 @@ import baseTheme from "../darkModeSwitch/darkmodeTheme";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
+/**
+ * Renders a list of graphs based on the catalogues data. The first graph is a pie chart that displays the count of unique values in the `responsibleIdentity` property of the `catalogues` array. The second graph is a bar chart that displays the count of catalogues for each unique value in the `responsibleIdentity` property.
+ *
+ * @return {JSX.Element} The rendered list of graphs.
+ */
 function GraphList() {
   const [t, i18n] = useTranslation();
   const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
@@ -45,6 +50,13 @@ function GraphList() {
     backgroundColor: "red",
   };
 
+  /**
+   * Filters the catalogues based on the provided filter value. If no filter is provided,
+   * all catalogues are returned. Otherwise, only catalogues with a matching responsibleIdentity
+   * value are included in the filtered result.
+   *
+   * @return {void} This function does not return a value.
+   */
   function filterCatalogues() {
     setFilteredCatalogues(
       filter === undefined
@@ -53,6 +65,15 @@ function GraphList() {
     );
   }
 
+/**
+ * Counts the unique values in the `responsibleIdentity` property of the `catalogues` array.
+ * Filters out any catalogues with a `verified` property of `false` or a `responsibleIdentity`
+ * of `RESPONSIBLE_IDENTITY.GENERAL`. Then, it counts the occurrences of each unique value
+ * and returns an array of objects with `label` and `value` properties.
+ *
+ * @return {Array<{label: string, value: number}>} An array of objects with `label` and `value`
+ * properties, where `label` is the unique value and `value` is the number of occurrences.
+ */
   function contarValoresUnicos() {
     const contador = {};
     const filtrCatalogues = catalogues.filter(
@@ -72,6 +93,11 @@ function GraphList() {
     setResults(resultado);
   }
 
+  /**
+   * Asynchronously fetches catalogues from the server using the auth header and updates the catalogues state with the received data.
+   *
+   * @return {Promise<void>} A Promise that resolves when the catalogues are fetched and the state is updated.
+   */
   async function getAndSetCatalogues() {
     await getCataloguesRequest(authHeader())
       .then((response) => response.json())

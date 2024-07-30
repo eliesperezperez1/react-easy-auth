@@ -22,6 +22,16 @@ export interface UpdateDialogData {
   entity: Entity;
 }
 
+/**
+ * Renders a dialog for updating an entity.
+ *
+ * @param {Object} props - The component props.
+ * @param {Function} props.enviar.closeDialog - Function to close the dialog.
+ * @param {Function} props.enviar.getInfo - Function to get entity info.
+ * @param {Object} props.enviar.entity - The entity to be updated.
+ * @param {boolean} props.enviar.open - Flag indicating if the dialog is open.
+ * @return {JSX.Element} The rendered dialog component.
+ */
 export default function UpdateEntityDialog(props: {
   enviar: UpdateDialogData;
 }) {
@@ -38,17 +48,35 @@ export default function UpdateEntityDialog(props: {
     setOpen(props.enviar.open);
   }, [props.enviar.open, props.enviar.entity]);
 
+  /**
+   * Handles the close event of the dialog. Resets steps and closes the dialog.
+   *
+   * @return {void} 
+   */
   const handleClose = () => {
     setFormData({});
     setStep(1);
     setOpen(false);
     props.enviar.closeDialog(false);
   };
+  
+  /**
+   * Updates the state with the new value of the input field.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The event triggered by the input field change.
+   * @return {void} This function does not return anything.
+   */
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setUpdate((prevState) => ({ ...prevState, [name]: value }));
   };
 
+/**
+ * Updates the entity with the provided form data.
+ *
+ * @param {any} formJson - The form data to update the entity with.
+ * @return {Promise<void>} A promise that resolves when the entity is updated.
+ */
   const updateEntity = (formJson: any) => {
     const prueba = formJson as UpdateEntity;
     setUpdate(prueba);
@@ -59,6 +87,13 @@ export default function UpdateEntityDialog(props: {
     handleClose();
   };
 
+/**
+ * Handles the next step in the form submission process. First collects the form data 
+ * for the current step, then merges it with the existing form data, and finally updates the step.
+ *
+ * @param {React.FormEvent<HTMLFormElement>} event - The form submission event.
+ * @return {void} This function does not return anything.
+ */
   const handleNext = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // Collect form data for the current step
@@ -72,6 +107,13 @@ export default function UpdateEntityDialog(props: {
     setStep(step + 1);
   };
 
+/**
+ * Handles the form submission for the current step. Collects the form data for the current step, 
+ * merges it with the existing form data, and updates the entity.
+ *
+ * @param {React.FormEvent<HTMLFormElement>} event - The form submission event.
+ * @return {void} This function does not return anything.
+ */
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const currentStepData = new FormData(event.currentTarget);
     const currentStepJson = Object.fromEntries(currentStepData.entries());
@@ -80,6 +122,11 @@ export default function UpdateEntityDialog(props: {
     updateEntity(mergedFormData);
   };
 
+  /**
+   * Decrements the step value by 1, returning to the previous step in the dialog.
+   *
+   * @return {void} This function does not return anything.
+   */
   const handleGoBack = () => {
     setStep(step - 1);
   };

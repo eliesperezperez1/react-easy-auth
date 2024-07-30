@@ -48,6 +48,13 @@ export interface CustomToolbarProperties {
 
 
 
+/**
+ * Renders the custom toolbar for the data grid. The buttons are rendered depending on the 
+ * user's role.
+ *
+ * @param {CustomToolbarProperties} props - The properties for the custom toolbar.
+ * @return {JSX.Element} The custom toolbar component.
+ */
 function CustomToolbar(props: CustomToolbarProperties) {
   const { t } = useTranslation();
   const { actualTheme } = useAlternateTheme();

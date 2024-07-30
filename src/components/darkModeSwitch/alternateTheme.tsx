@@ -3,6 +3,11 @@ import { useAuthHeader, useAuthUser, useSignIn } from "react-auth-kit";
 import { userMock } from "../../utils/user.mock";
 import { User } from "../../interfaces/user.interface";
 
+/**
+ * Custom hook to manage the theme of the application.
+ *
+ * @return {Object} An object containing the current theme and a function to toggle the theme.
+ */
 const useAlternateTheme = () => {
   const user = useAuthUser();
   const [userData, setUserData] = useState<User>(userMock);
@@ -17,6 +22,11 @@ const useAlternateTheme = () => {
     }
   }, [user()]);
 
+  /**
+   * Toggles the theme between 'light' and 'dark'.
+   *
+   * @return {void} This function does not return anything.
+   */
   const toggleTheme = () => {
     setActualTheme(actualTheme === 'light' ? 'dark' : 'light');
   };

@@ -19,16 +19,42 @@ import { Alert } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import ChangeLanguage from "../language-switch/language-switch";
 
+/**
+ * Renders a login form that allows users to authenticate with the application.
+ *
+ * @param {any} props - The props passed to the component.
+ * @return {JSX.Element} The rendered login form.
+ */
 function Login(props: any) {
   const [error, setError] = useState("");
   const signIn = useSignIn();
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
   const [open, setOpen] = useState<boolean>(false);
+  
+  /**
+   * Closes the component by setting the open state to false.
+   *
+   * @return {void} 
+   */
   const handleClose = () => {
     setOpen(false);
   };
   
+  /**
+   * Submits the login form by sending a POST request to the API endpoint
+   * "/auth/login" with the provided values. If the request is successful,
+   * it signs in the user and navigates to the "/catalogues" page. If the
+   * request fails with a status code of 403, it sets an error message
+   * indicating that the user was not found. If the request fails with a
+   * status code of 203, it sets an error message indicating that the
+   * credentials are not correct. If an error occurs during the request,
+   * it sets an error message based on the error message received.
+   *
+   * @param {any} values - The form values to be sent in the request.
+   * @return {Promise<void>} - A promise that resolves when the request is
+   * completed.
+   */
   const onSubmit = async (values: any) => {
     setError("");
 
@@ -64,15 +90,15 @@ function Login(props: any) {
     }
   };
 
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    onSubmit,
-  });
+  const formik = useFormik({ 
+    initialValues: { 
+      email: "", 
+      password: "", 
+    }, 
+    onSubmit, 
+  }); 
 
-  return (
+  return ( 
     <Container>
       <InnerContainer className="inner-container">
         <LanguageFlag>

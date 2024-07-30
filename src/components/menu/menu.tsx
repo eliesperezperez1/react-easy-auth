@@ -15,6 +15,14 @@ import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 export interface ChangeLanguageEvent {
   change: () => void;
 }
+/**
+ * Renders the navigation menu component with dynamic styling based on the current theme.
+ *
+ * @param {Object} props - The props object containing the change event.
+ * @param {Function} props.change - The change event function.
+ * @return {JSX.Element} The navigation menu component.
+ */
+
 const Menu = (props: { change: ChangeLanguageEvent }) => {
   const singOut = useSignOut();
   const navigate = useNavigate();
@@ -24,25 +32,45 @@ const Menu = (props: { change: ChangeLanguageEvent }) => {
   const { actualTheme } = useAlternateTheme();
   const [userData, setUserData] = useState<User>(userMock);
 
+  /**
+   * Toggles the visibility of the navbar.
+   *
+   * @return {void} No return value.
+   */
   const handleShowNavbar = () => {
     setShowNavbar(!showNavbar);
   };
+
+  /**
+   * Logs out the user and navigates to the login page.
+   *
+   * @return {void} No return value.
+   */
   const logout = () => {
     singOut();
     navigate("/login");
   };
+
+  /**
+   * Executes the change function from the props object.
+   *
+   * @return {void} No return value.
+   */
   const sendToApp = () => {
     props.change.change();
   };
+
   const dynamicStyle = {
     //backgroundColor: userData.themeApp === 'light' ? 'white' : 'black',
     //color: userData.themeApp === 'light' ? 'black' : 'white',
     backgroundColor: actualTheme === "light" ? "white" : "#252525",
     color: actualTheme === "light" ? "#252525" : "white",
   };
+
   useEffect(() => {
     setUserData(user().user);
   });
+
   return (
     <nav className="navbar" style={dynamicStyle}>
       <div className="container" style={dynamicStyle}>

@@ -43,6 +43,19 @@ export interface DialogData {
   getInfo: () => void;
 }
 
+/*
+ * Renders a dialog for creating a new catalogue.
+ *
+ * This component is used to create a new catalogue by displaying a dialog with a form for inputting catalogue data.
+ * The dialog is controlled by the `enviar` prop, which contains the necessary data and functions to manage the dialog state.
+ *
+ * @param {Object} props - The component props.
+ * @param {DialogData} props.enviar - The dialog data.
+ * @param {boolean} props.enviar.open - Whether the dialog is open or not.
+ * @param {Function} props.enviar.closeDialog - A function to close the dialog.
+ * @param {Function} props.enviar.getInfo - A function to get information.
+ * @return {JSX.Element} The rendered dialog component.
+ */
 export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [open, setOpen] = useState<boolean>(false);
   const authHeader = useAuthHeader();
@@ -75,6 +88,12 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [dataQuality, setDataQuality] = useState(0);
   const { actualTheme } = useAlternateTheme();
   const dynamicStyle = getDynamicStyle(actualTheme);
+/**
+ * Returns a custom Material-UI theme based on the given theme mode.
+ *
+ * @param {any} actualTheme - The theme mode, either "light" or "dark".
+ * @return {Theme} The custom Material-UI theme.
+ */
   const baseTheme = (actualTheme: any) =>
     createTheme(
       {
@@ -161,6 +180,12 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     setOpen(props.enviar.open);
   }, [props]);
 
+  /**
+   * Renders a list of MenuItem components based on the values of the RESPONSIBLE_IDENTITY enum.
+   * Excludes the GENERAL value from the list.
+   *
+   * @return {JSX.Element[]} An array of MenuItem components.
+   */
   const renderResponsibleIdentity = () => {
     const menuItems = Object.entries(RESPONSIBLE_IDENTITY).map(
       ([key, value]) => {
@@ -177,6 +202,11 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     return menuItems;
   };
 
+  /**
+   * Handles the close event of the dialog. Resets form data, steps, format, and closes the dialog.
+   *
+   * @return {void} No return value.
+   */
   const handleClose = () => {
     setFormData({});
     setFormDataSteps(catalogueMock);
@@ -192,6 +222,16 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     step: step,
     isUpdate: false,
   };
+  
+  /**
+   * Handles the change event of the input field for keywords. If the input value ends with a semicolon,
+   * it creates a new chip by removing the semicolon and trimming any whitespace, and adds it to the list of chips.
+   * If the chip is not already in the list, it updates the form data steps with the new list of chips.
+   * Finally, it clears the input value.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The change event triggered by the input field.
+   * @return {void} This function does not return anything.
+   */
   const handleChangeKeyWords = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     if (value.endsWith(";")) {
@@ -212,10 +252,22 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     }
   };
 
+/**
+ * Removes a chip from the list of chips by filtering out the chip to delete.
+ *
+ * @param {string} chipToDelete - The chip to be removed from the list of chips.
+ * @return {void} This function does not return anything.
+ */
   const handleDeleteKeyWords = (chipToDelete: string) => {
     setChips((chips) => chips.filter((chip) => chip !== chipToDelete));
   };
 
+/**
+ * Creates a new catalogue with the given form data and sends a request to the server to create it.
+ *
+ * @param {any} formJson - The form data to create the catalogue with.
+ * @return {void} This function does not return anything.
+ */
   const createCatalogue = (formJson: any) => {
     const deletedDate = new Date();
     const deleted = false;
@@ -236,13 +288,26 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     handleClose();
   };
 
+/**
+ * Decrements the step value by 1, returning to the previous step in the dialog.
+ *
+ * @return {void} This function does not return anything.
+ */
   const handleGoBack = () => {
     setStep(step - 1);
   };
+
   const isGeneralOrTrans =
     userData().user.service === RESPONSIBLE_IDENTITY.GENERAL ||
     userData().user.service === RESPONSIBLE_IDENTITY.transparencia;
 
+  /**
+   * Handles the next step in the form submission process. First handles the format field,
+   * then updates the form data with the new step data, and finally opens the next step.
+   *
+   * @param {React.FormEvent<HTMLFormElement>} event - The form submission event.
+   * @return {void} This function does not return anything.
+   */
   const handleNext = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const currentStepData = new FormData(event.currentTarget);
@@ -284,6 +349,13 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     setStep(step + 1);
   };
 
+/**
+ * Handles the form submission for the current step. Collects the form data for the 
+ * current step, merges it with the existing form data, and creates the catalogue.
+ *
+ * @param {React.FormEvent<HTMLFormElement>} event - The form submission event.
+ * @return {void} This function does not return anything.
+ */
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const currentStepData = new FormData(event.currentTarget);
     const currentStepJson = Object.fromEntries(currentStepData.entries());
@@ -292,6 +364,13 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     createCatalogue(mergedFormData);
   };
 
+  /**
+   * Updates the form data steps and sets the data quality based on the field and value provided.
+   *
+   * @param {string} field - The name of the field to update.
+   * @param {any} value - The new value for the field.
+   * @return {void} This function does not return anything.
+   */
   const handleChange = (field: string, value: any) => {
     if(field==="dataQuality"){
       setDataQuality(value);

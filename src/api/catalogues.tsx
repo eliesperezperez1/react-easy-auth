@@ -4,6 +4,12 @@ import {
 } from "../interfaces/catalogue.interface";
 import { API } from "../utils/constants";
 
+/**
+ * Sends a request to the server to retrieve all catalogues.
+ *
+ * @param {string} refreshToken - The refresh token used for authentication.
+ * @return {Promise<Response>} A promise that resolves to the server's response.
+ */
 export const getCataloguesRequest = async (refreshToken: string) =>
   fetch(`${API}/catalogue`, {
     method: "GET",
@@ -13,6 +19,13 @@ export const getCataloguesRequest = async (refreshToken: string) =>
     },
   });
 
+/**
+ * Sends a POST request to the server to create a new catalogue.
+ *
+ * @param {CreateCatalogue} catalogue - The catalogue to be created.
+ * @param {string} refreshToken - The refresh token for authentication.
+ * @return {Promise<Response>} A Promise that resolves to the Response object of the fetch request.
+ */
 export const createCatalogueRequest = async (
   catalogue: CreateCatalogue,
   refreshToken: string
@@ -27,6 +40,13 @@ export const createCatalogueRequest = async (
     },
   });
 
+/**
+ * Sends a request to the server to permanently delete a catalogue.
+ *
+ * @param {string} id - The ID of the catalogue to be deleted.
+ * @param {string} refreshToken - The refresh token used for authentication.
+ * @return {Promise<Response>} A promise that resolves to the server's response.
+ */
 export const deletePermamentCatalogueRequest = async (
   id: string,
   refreshToken: string
@@ -39,6 +59,14 @@ export const deletePermamentCatalogueRequest = async (
     },
   });
 
+/**
+ * Sends a request to the server to delete a catalogue.
+ *
+ * @param {string} id - The ID of the catalogue to be deleted.
+ * @param {UpdateCatalogue} catalogue - The updated catalogue data.
+ * @param {string} refreshToken - The refresh token used for authentication.
+ * @return {Promise<Response>} A promise that resolves to the server's response.
+ */
 export const deleteCatalogueRequest = async (
   id: string,
   catalogue: UpdateCatalogue,
@@ -54,6 +82,14 @@ export const deleteCatalogueRequest = async (
     },
   });
 
+/**
+ * Sends a request to the server to update a catalogue.
+ *
+ * @param {string} id - The ID of the catalogue to be updated.
+ * @param {UpdateCatalogue} catalogue - The updated catalogue data.
+ * @param {string} refreshToken - The refresh token used for authentication.
+ * @return {Promise<Response>} A promise that resolves to the server's response.
+ */
 export const updateCatalogueRequest = async (
   id: string,
   catalogue: UpdateCatalogue,
@@ -69,6 +105,13 @@ export const updateCatalogueRequest = async (
     },
   });
 
+/**
+ * Sends a GET request to the server to retrieve a specific catalogue.
+ *
+ * @param {string} refreshToken - The refresh token used for authentication.
+ * @param {string} id - The ID of the catalogue to retrieve.
+ * @return {Promise<Response>} A promise that resolves to the server's response.
+ */
 export const getCatalogueRequest = async (refreshToken: string, id: string) =>
   fetch(`${API}/catalogue/${id}`, {
     method: "GET",
@@ -77,6 +120,12 @@ export const getCatalogueRequest = async (refreshToken: string, id: string) =>
       "Access-Control-Allow-Origin": "*",
     },
   });
+/**
+ * Retrieves the high value catalogue from the server.
+ *
+ * @param {string} refreshToken - The refresh token used for authentication.
+ * @return {Promise<Response>} A promise that resolves to the server's response containing the high value catalogue.
+ */
 export const getHighValue = async (refreshToken: string) =>
   fetch(`${API}/catalogue/highValue`, {
     method: "GET",
