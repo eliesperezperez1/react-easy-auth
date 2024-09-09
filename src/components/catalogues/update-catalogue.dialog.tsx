@@ -11,10 +11,13 @@ import { updateCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import {
   Box,
+  Checkbox,
   Chip,
   FormControl,
+  ListItemText,
   MenuItem,
   Select,
+  SelectChangeEvent,
   Switch,
   ThemeProvider,
   Typography,
@@ -36,6 +39,9 @@ import ButtonsForm, { buttonsFormInfo } from "./buttons-form";
 import Rating from "@mui/material/Rating";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { getDynamicStyle } from "../../utils/functions/table-functions";
+import { NO_APPLY } from "../../utils/enums/no-apply.enum";
+import { UPDATE_FREQUENCY } from "../../utils/enums/update-frequency.enum";
+import { FORMAT } from "../../utils/enums/format.enum";
 
 export interface UpdateDialogData {
   open: boolean;
@@ -69,11 +75,12 @@ export default function UpdateCatalogueDialog(props: {
   const [masterData, setMasterData] = useState(false);
   const [referenceData, setReferenceData] = useState(false);
   const [highValue, setHighValue] = useState(false);
-  const [genderInfo, setGenderInfo] = useState(false);
-  const [RAT, setRAT] = useState(false);
-  const [dataProtection, setDataProtection] = useState(false);
-  const [dataStandards, setDataStandards] = useState(false);
-  const [dataAnonymize, setDataAnonymize] = useState(false);
+  const [formats, setFormats] = useState<string[]>([]);
+  const [genderInfo, setGenderInfo] = useState<NO_APPLY>();
+  const [RAT, setRAT] = useState<NO_APPLY>();
+  const [dataProtection, setDataProtection] = useState<NO_APPLY>();
+  const [dataStandards, setDataStandards] = useState<NO_APPLY>();
+  const [dataAnonymize, setDataAnonymize] = useState<NO_APPLY>(NO_APPLY.false);
   const [sharedData, setSharedData] = useState(false);
   const [VLCi, setVLCi] = useState(false);
   const [ArcGIS, setArcGIS] = useState(false);
@@ -82,7 +89,10 @@ export default function UpdateCatalogueDialog(props: {
   const [MongoDB, setMongoDB] = useState(false);
   const [OpenDataSoft, setOpenDataSoft] = useState(false);
   const [chips, setChips] = useState<string[]>([]);
+  const [chipsDataAnonymize, setChipsDataAnonymize] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
+  const [inputValueDataAnonymize, setInputValueDataAnonymize] = useState<string>("");
+  const [disabledDataAnonymize, setDisabledDataAnonymize] = useState(false);
   const { actualTheme } = useAlternateTheme();
 
   useEffect(() => {
@@ -90,8 +100,15 @@ export default function UpdateCatalogueDialog(props: {
     setOpen(props.enviar.open);
     setActiveAds(props.enviar.catalogue.activeAds);
     setStep(1);
-    if (props.enviar.catalogue.keyWords.length > 0) {
+    if (props.enviar.catalogue.keyWords !== undefined || props.enviar.catalogue.keyWords !== null) {
       setChips(props.enviar.catalogue.keyWords);
+    }
+    if (props.enviar.catalogue.dataAnonymize !== undefined || props.enviar.catalogue.dataAnonymize !== null) {
+      setChipsDataAnonymize(props.enviar.catalogue.dataAnonymize);
+    }
+    if(props.enviar.catalogue.dataProtection === NO_APPLY.no_apply){
+      setDisabledDataAnonymize(true);
+      setDataProtection(NO_APPLY.no_apply);
     }
   }, [props.enviar.open, props.enviar.catalogue]);
 
@@ -195,6 +212,47 @@ export default function UpdateCatalogueDialog(props: {
  */
   const handleDeleteKeyWords = (chipToDelete: string) => {
     setChips((chips) => chips.filter((chip) => chip !== chipToDelete));
+  };
+
+  
+  /**
+   * Handles the change event of the input field for dataAnonymize. If the input value ends with a semicolon,
+   * it creates a new chip by removing the semicolon and trimming any whitespace, and adds it to the list of chips.
+   * If the chip is not already in the list, it updates the form data steps with the new list of chips.
+   * Finally, it clears the input value.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The change event triggered by the input field.
+   * @return {void} This function does not return anything.
+   */
+  const handleChangeDataAnonymize = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    if (value.endsWith(";")) {
+      const newChip = value.slice(0, -1).trim();
+      if (newChip) {
+        setChipsDataAnonymize((prevChips) => {
+          if (!prevChips.includes(newChip)) {
+            return [...prevChips, newChip];
+          } else {
+            return prevChips;
+          }
+        });
+        setUpdate({ ...update, dataAnonymize: [...chipsDataAnonymize] });
+      }
+      setInputValueDataAnonymize("");
+    } else {
+      setInputValueDataAnonymize(value);
+    }
+    
+  };
+
+/**
+ * Removes a chip from the list of chips by filtering out the chip to delete.
+ *
+ * @param {string} chipToDelete - The chip to be removed from the list of chips.
+ * @return {void} This function does not return anything.
+ */
+  const handleDeleteDataAnonymize = (chipToDelete: string) => {
+    setChipsDataAnonymize((chipsDataAnonymize) => chipsDataAnonymize.filter((chip) => chip !== chipToDelete));
   };
 
 /**
@@ -324,6 +382,132 @@ export default function UpdateCatalogueDialog(props: {
     updateCatalogue(mergedFormData);
   };
 
+  /**
+   * Runs when the `dataProtection` state changes.
+   * If `dataProtection` is set to "no apply", it:
+   * - Sets `dataAnonymize` to "no apply"
+   * - Updates `update` with `dataAnonymize` set to "no apply"
+   * - Disables the `dataAnonymize` field
+   * - Sets the input value of `dataAnonymize` to "NO_APPLY"
+   * If `dataProtection` is not set to "no apply", it enables the `dataAnonymize` field.
+   *
+   * @param {string} dataProtection - The value of the `dataProtection` state.
+   */
+  useEffect(() => {
+    if (dataProtection === NO_APPLY.no_apply) {
+      setDataAnonymize(NO_APPLY.no_apply);
+      setUpdate({ ...update, dataAnonymize: [NO_APPLY.no_apply] });
+      setDisabledDataAnonymize(true); // or setDisabled(dataAnonymize !== NO_APPLY.no_apply)
+      setInputValueDataAnonymize("NO_APPLY");
+      setChipsDataAnonymize(["NO_APPLY"]);
+    } else {
+      setDataAnonymize(NO_APPLY.false);
+      setChipsDataAnonymize([]);
+      setUpdate({ ...update, dataAnonymize: [] });
+      setInputValueDataAnonymize("");
+      setDisabledDataAnonymize(false); // or setDisabled(dataAnonymize !== NO_APPLY.no_apply)
+
+    }
+  }, [dataProtection]);
+
+   /**
+   * Handles the change event of the input field for formats. If the input value is a string,
+   * it splits the string into an array of strings using the comma as a separator.
+   * Then, it sets the `formats` state with the new array of strings.
+   * If the `formats` array contains at least one string, it updates the `update` state
+   * with the new array of strings.
+   *
+   * @param {SelectChangeEvent<typeof formats>} event - The change event triggered by the input field.
+   * @return {void} This function does not return anything.
+   */
+   const handleChangeFormats = (event: SelectChangeEvent<typeof formats>) => {
+    const { target: { value }, } = event;
+    setFormats(
+      typeof value === 'string' ? value.split(',') : value,
+    );
+    if(formats !== undefined && formats !== null && formats.length > 0){
+      setUpdate({
+        ...update,
+        format: formats,
+      });
+    }
+  };
+
+/**
+ * Removes a chip from the list of chips by filtering out the chip to delete.
+ *
+ * @param {string} chipToDelete - The chip to be removed from the list of chips.
+ * @return {void} This function does not return anything.
+ */
+  const handleDeleteFormats = (chipToDelete: string) => {
+    setFormats((chips) => chips.filter((chip) => chip !== chipToDelete));
+    if(formats !== undefined && formats !== null && formats.length > 0){
+      setUpdate({
+        ...update,
+        format: formats.filter((chip) => chip !== chipToDelete),
+      });
+    }
+  };
+
+  /**
+   * Handles the change event triggered by a switch (checkbox) component.
+   *
+   * This function updates the state of the switch and the corresponding field in the update state.
+   * The function is used to manage the state of the switches in the catalogue creation form.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The change event triggered by the switch component.
+   * @return {void} This function does not return anything.
+   */
+  const handleSwitchs = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const name = event.target.name;
+    const checked = event.target.checked;
+    switch(name){
+      case "VLCi":
+        setVLCi(checked);
+        setUpdate({
+          ...update,
+          VLCi: checked,
+        });
+        break;
+      case "ArcGIS":
+        setArcGIS(checked);
+        setUpdate({
+          ...update,
+          ArcGIS: checked,
+        });
+        break;
+      case "Pentaho":
+        setPentaho(checked);
+        setUpdate({
+          ...update,
+          Pentaho: checked,
+        });
+        break;
+      case "CKAN":
+        setCKAN(checked);
+        setUpdate({
+          ...update,
+          CKAN: checked,
+        });
+        break;
+      case "MongoDB":
+        setMongoDB(checked);
+        setUpdate({
+          ...update,
+          MongoDB: checked,
+        });
+        break;
+      case "OpenDataSoft":
+        setOpenDataSoft(checked);
+        setUpdate({
+          ...update,
+          OpenDataSoft: checked,
+        });
+        break;
+    }
+  }
+
+
   const dynamicStyle = getDynamicStyle(actualTheme);
   const labels = ['', '', '', '', ''];
   const [hover, setHover] = useState(-1);
@@ -340,7 +524,7 @@ export default function UpdateCatalogueDialog(props: {
             maxWidth="lg"
           >
             <DialogTitle style={dynamicStyle}>
-              {t("dialog.addRegister")}
+              {t("dialog.updateRegister")}
             </DialogTitle>
             <DialogContent style={dynamicStyle}>
               <div className="dialogContentText">
@@ -658,9 +842,31 @@ export default function UpdateCatalogueDialog(props: {
                             onChange={handleChange}
                           />
                         </div>
+                        <div className="horizontalForm">
+                          <p>{t("columnsNames.format")}</p>
+                          <FormControl variant="standard">
+                            
+                            <Select
+                              labelId="demo-multiple-chip-label"
+                              id="demo-multiple-chip"
+                              multiple
+                              value={formats}
+                              onChange={handleChangeFormats}
+                              renderValue={(selected) => (selected as string[]).join(', ')}
+                            >
+                              {Object.entries(FORMAT).map(([key, value]) => (
+                                <MenuItem key={key} value={value}>
+                                  <Checkbox checked={formats.indexOf(value) > -1} />
+                                  <ListItemText primary={value} />
+                                </MenuItem>
+                              ))}
+                            </Select>
+                            
+                          </FormControl>
+                        </div>
                         <div className="horizontalFormSwitch">
                           <p>{t("columnsNames.genderInfo")}</p>
-                          <Switch
+                          {/*<Switch
                             id="genderInfo"
                             name="genderInfo"
                             value={genderInfo}
@@ -669,7 +875,29 @@ export default function UpdateCatalogueDialog(props: {
                               setGenderInfo(event.target.checked)
                             }
                             color="primary" // Opcional: ajusta el color del switch
-                          />
+                          />*/}
+                          <FormControl variant="standard">
+                            <Select
+                              id="genderInfo"
+                              name="genderInfo"
+                              margin="dense"
+                              defaultValue={update.genderInfo}
+                              onChange={(event) => {
+                                setUpdate({
+                                  ...update,
+                                  genderInfo: event.target.value as NO_APPLY,
+                                });
+                              }}
+                            >
+                              {Object.entries(NO_APPLY).map(
+                                ([key, value]) => (
+                                  <MenuItem key={key} value={value}>
+                                    {value}
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
                         </div>
                         <div className="horizontalForm">
                           <p>{t("columnsNames.structuredComments")}</p>
@@ -739,41 +967,89 @@ export default function UpdateCatalogueDialog(props: {
                       <div className="row">
                         <div className="horizontalFormSwitch">
                           <p>RAT</p>
-                          <Switch
+                          {/*<Switch
                             id="RAT"
                             name="RAT"
                             value={RAT}
                             checked={RAT}
                             onChange={(event) => setRAT(event.target.checked)}
                             color="primary" // Opcional: ajusta el color del switch
-                          />
+                          />*/}
+                          <FormControl variant="standard">
+                            <Select
+                              id="RAT"
+                              name="RAT"
+                              margin="dense"
+                              defaultValue={update.RAT}
+                              onChange={(event) => {
+                                setUpdate({
+                                  ...update,
+                                  RAT: event.target.value as NO_APPLY,
+                                });
+                                setRAT(event.target.value as NO_APPLY);
+                              }}
+                            >
+                              {Object.entries(NO_APPLY).map(
+                                ([key, value]) => (
+                                  <MenuItem key={key} value={value}>
+                                    {value}
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
                         </div>
                         <div className="horizontalFormSwitch">
                           <p>{t("columnsNames.dataProtection")}</p>
-                          <Switch
-                            //required
-                            id="dataProtection"
-                            name="dataProtection"
-                            value={dataProtection}
-                            checked={dataProtection}
-                            onChange={(event) =>
-                              setDataProtection(event.target.checked)
-                            }
-                            color="primary" // Opcional: ajusta el color del switch
-                          />
+                          <FormControl variant="standard">
+                            <Select
+                              id="dataProtection"
+                              name="dataProtection"
+                              margin="dense"
+                              defaultValue={update.dataProtection}
+                              onChange={(event) => {
+                                setUpdate({
+                                  ...update,
+                                  dataProtection: event.target.value as NO_APPLY,
+                                });
+                                setDataProtection(event.target.value as NO_APPLY);
+                              }}
+                            >
+                              {Object.entries(NO_APPLY).map(
+                                ([key, value]) => (
+                                  <MenuItem key={key} value={value}>
+                                    {value}
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
                         </div>
                         <div className="horizontalFormSwitch">
                           <p>{t("columnsNames.dataStandards")}</p>
-                          <Switch
-                            id="dataStandards"
-                            name="dataStandards"
-                            value={dataStandards}
-                            checked={dataStandards}
-                            onChange={(event) =>
-                              setDataStandards(event.target.checked)
-                            }
-                            color="primary" // Opcional: ajusta el color del switch
-                          />
+                          <FormControl variant="standard">
+                            <Select
+                              id="dataStandards"
+                              name="dataStandards"
+                              margin="dense"
+                              defaultValue={update.dataStandards}
+                              onChange={(event) => {
+                                setUpdate({
+                                  ...update,
+                                  dataStandards: event.target.value as NO_APPLY,
+                                });
+                                setDataStandards(event.target.value as NO_APPLY);
+                              }}
+                            >
+                              {Object.entries(NO_APPLY).map(
+                                ([key, value]) => (
+                                  <MenuItem key={key} value={value}>
+                                    {value}
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
                         </div>
                         <div className="horizontalForm">
                           <p>{t("columnsNames.dataProtectionComments")}</p>
@@ -791,7 +1067,7 @@ export default function UpdateCatalogueDialog(props: {
                         </div>
                         <div className="horizontalFormSwitch">
                           <p>{t("columnsNames.dataAnonymize")}</p>
-                          <Switch
+                          {/*<Switch
                             id="dataAnonymize"
                             name="dataAnonymize"
                             value={dataAnonymize}
@@ -801,6 +1077,39 @@ export default function UpdateCatalogueDialog(props: {
                             }
                             color="primary" // Opcional: ajusta el color del switch
                           />
+                          */}
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column-reverse",
+                            }}
+                            
+                          >
+                            <TextField
+                              autoFocus
+                              margin="dense"
+                              id="dataAnonymize"
+                              name="dataAnonymize"
+                              type="string"
+                              variant="standard"
+                              value={inputValueDataAnonymize}
+                              onChange={handleChangeDataAnonymize}
+                              disabled={disabledDataAnonymize}
+                            />
+                            <Box
+                              sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}
+                            >
+                              {chipsDataAnonymize.map((chip, index) => (
+                                <Chip
+                                  key={index}
+                                  label={chip}
+                                  onDelete={() => handleDeleteDataAnonymize(chip)}
+                                  deleteIcon={<CancelIcon />}
+                                  disabled={disabledDataAnonymize}
+                                />
+                              ))}
+                            </Box>
+                          </Box>
                         </div>
                         <div className="horizontalFormStars">
                           <p>{t("columnsNames.dataQuality")}</p>
@@ -866,7 +1175,7 @@ export default function UpdateCatalogueDialog(props: {
                             name="VLCi"
                             value={VLCi}
                             checked={VLCi}
-                            onChange={(event) => setVLCi(event.target.checked)}
+                            onChange={(event) => handleSwitchs(event)}
                             color="primary" // Opcional: ajusta el color del switch
                           />
                         </div>
@@ -877,9 +1186,7 @@ export default function UpdateCatalogueDialog(props: {
                             name="ArcGIS"
                             value={ArcGIS}
                             checked={ArcGIS === true}
-                            onChange={(event) =>
-                              setArcGIS(event.target.checked)
-                            }
+                            onChange={(event) => handleSwitchs(event)}
                             color="primary" // Opcional: ajusta el color del switch
                           />
                         </div>
@@ -890,9 +1197,7 @@ export default function UpdateCatalogueDialog(props: {
                             name="Pentaho"
                             value={Pentaho}
                             checked={Pentaho}
-                            onChange={(event) =>
-                              setPentaho(event.target.checked)
-                            }
+                            onChange={(event) => handleSwitchs(event)}
                             color="primary" // Opcional: ajusta el color del switch
                           />
                         </div>
@@ -903,7 +1208,7 @@ export default function UpdateCatalogueDialog(props: {
                             name="CKAN"
                             value={CKAN}
                             checked={CKAN}
-                            onChange={(event) => setCKAN(event.target.checked)}
+                            onChange={(event) => handleSwitchs(event)}
                             color="primary" // Opcional: ajusta el color del switch
                           />
                         </div>
@@ -914,9 +1219,7 @@ export default function UpdateCatalogueDialog(props: {
                             name="MongoDB"
                             value={MongoDB}
                             checked={MongoDB}
-                            onChange={(event) =>
-                              setMongoDB(event.target.checked)
-                            }
+                            onChange={(event) => handleSwitchs(event)}
                             color="primary" // Opcional: ajusta el color del switch
                           />
                         </div>
@@ -927,15 +1230,13 @@ export default function UpdateCatalogueDialog(props: {
                             name="OpenDataSoft"
                             value={OpenDataSoft}
                             checked={OpenDataSoft}
-                            onChange={(event) =>
-                              setOpenDataSoft(event.target.checked)
-                            }
+                            onChange={(event) => handleSwitchs(event)}
                             color="primary" // Opcional: ajusta el color del switch
                           />
                         </div>
                         <div className="horizontalForm">
                           <p>{t("columnsNames.temporarySolution")}</p>
-                          <TextField
+                          {/*<TextField
                             autoFocus
                             //required
                             margin="dense"
@@ -946,6 +1247,29 @@ export default function UpdateCatalogueDialog(props: {
                             value={update.temporarySolution}
                             onChange={handleChange}
                           />
+                          */}
+                          <FormControl variant="standard">
+                            <Select
+                              id="temporarySolution"
+                              name="temporarySolution"
+                              margin="dense"
+                              defaultValue={update.temporarySolution}
+                              onChange={(event) => {
+                                setUpdate({
+                                  ...update,
+                                  temporarySolution: event.target.value as UPDATE_FREQUENCY,
+                                });
+                              }}
+                            >
+                              {Object.entries(UPDATE_FREQUENCY).map(
+                                ([key, value]) => (
+                                  <MenuItem key={key} value={value}>
+                                    {value}
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
                         </div>
                         <div className="horizontalForm">
                           <p>{t("columnsNames.chargeStateComments")}</p>

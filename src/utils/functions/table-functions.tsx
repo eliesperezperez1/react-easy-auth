@@ -2,12 +2,15 @@ import { ReactComponent as Val } from "../../assets/val.svg";
 import { ReactComponent as Esp } from "../../assets/esp.svg";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import DoNotDisturbAltRoundedIcon from '@mui/icons-material/DoNotDisturbAltRounded';
 import { ROLE } from "../enums/role.enum";
 import { Chip } from "@mui/material";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import { grey } from "@mui/material/colors";
+import { NO_APPLY } from "../enums/no-apply.enum";
 
 
 /**
@@ -90,9 +93,11 @@ export const buttonStyle = {
  * @param {boolean | undefined | string} p - The input value.
  * @return {JSX.Element} The rendered CheckIcon or CloseIcon.
  */
-export function isChecked(p: boolean | undefined | string) {
-  if (!p) {
-    return <CloseIcon color="error"></CloseIcon>;
+export function isChecked(p: boolean | undefined | string | null) {
+  
+  
+  if (typeof p !== 'boolean') {
+    return <DoNotDisturbAltRoundedIcon sx={{ color: grey[800] }}></DoNotDisturbAltRoundedIcon>;
   } else {
     let aux = p.toString();
     let aux2 = "SI";
@@ -106,6 +111,34 @@ export function isChecked(p: boolean | undefined | string) {
     ) : (
       <CloseIcon color="error"></CloseIcon>
     );
+  }
+}
+/**
+ * Renders a CheckIcon, CloseIcon or DisabledIcon based on the value of the input.
+ *
+ * @param {NO_APPLY | undefined } p - The input value.
+ * @return {JSX.Element} The rendered CheckIcon or CloseIcon.
+ */
+export function isCheckedNoApply(p: NO_APPLY | undefined | boolean) {
+  if (!p) {
+    return <DoNotDisturbAltRoundedIcon sx={{ color: grey[800] }}></DoNotDisturbAltRoundedIcon>;
+  } else if(p !== NO_APPLY.no_apply){ {
+    let aux = p.toString();
+    let aux2 = "SI";
+    let aux3 = "SÍ";
+    let aux4 = "x";
+    return p === NO_APPLY.true ||
+      p === true ||
+      aux.toLowerCase().includes(aux2.toLowerCase()) ||
+      aux.toLowerCase().includes(aux3.toLowerCase()) ||
+      aux.toLowerCase().includes(aux4.toLowerCase()) ? (
+      <CheckIcon color="success"></CheckIcon>
+    ) : (
+      <CloseIcon color="error"></CloseIcon>
+    );
+    }
+  } else {
+    return <DoNotDisturbAltRoundedIcon sx={{ color: grey[800] }}></DoNotDisturbAltRoundedIcon>;
   }
 }
 /**

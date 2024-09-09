@@ -1,10 +1,13 @@
+import { FORMAT } from "../utils/enums/format.enum";
 import { GEOGRAPHICAL_INFO } from "../utils/enums/geographical-info.enum";
 import { LANGUAGE_FORM } from "../utils/enums/language-form.enum";
 import { MINIMUM_VALUE } from "../utils/enums/minimum-value.enum";
+import { NO_APPLY } from "../utils/enums/no-apply.enum";
 import { ORGANISM } from "../utils/enums/organism.enum";
 import { RESPONSIBLE_IDENTITY } from "../utils/enums/responsible-identity.enum";
 import { SHARING_LEVEL } from "../utils/enums/sharing-level.enum";
 import { TOPIC } from "../utils/enums/topic.enum";
+import { UPDATE_FREQUENCY } from "../utils/enums/update-frequency.enum";
 
 export interface Catalogue {
   _id: string;
@@ -25,16 +28,17 @@ export interface Catalogue {
   activeAds: boolean; // boolean
   comments: string;
   typeGeo: GEOGRAPHICAL_INFO;
-  genderInfo: boolean;
+  format: string[];
+  genderInfo: NO_APPLY | undefined;
   structuredComments: string;
   associatedApplication: string;
   autoAcess: boolean;
   originComments: string;
-  RAT: boolean;
-  dataProtection: boolean;
-  dataStandards: boolean;
+  RAT: NO_APPLY | undefined;
+  dataProtection: NO_APPLY | undefined;
+  dataStandards: NO_APPLY | undefined;
   dataProtectionComments: string;
-  dataAnonymize: boolean;
+  dataAnonymize: string[];
   dataQuality: number | null;
   sharingLevel: SHARING_LEVEL;
   sharedData: boolean;
@@ -44,7 +48,7 @@ export interface Catalogue {
   CKAN: boolean;
   MongoDB: boolean;
   OpenDataSoft: boolean;
-  temporarySolution: string; // ES UNA ENUM PERO NO SABEMOS CUAL
+  temporarySolution: UPDATE_FREQUENCY;
   chargeStateComments: string;
   productData: string;
   productComments: string;

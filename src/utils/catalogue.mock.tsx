@@ -3,9 +3,12 @@ import { LANGUAGE_FORM } from './enums/language-form.enum';
 import { Catalogue } from '../interfaces/catalogue.interface';
 import { SHARING_LEVEL } from './enums/sharing-level.enum';
 import { MINIMUM_VALUE } from './enums/minimum-value.enum';
+import { NO_APPLY } from "../utils/enums/no-apply.enum";
 import { TOPIC } from './enums/topic.enum';
 import { ORGANISM } from './enums/organism.enum';
 import { GEOGRAPHICAL_INFO } from './enums/geographical-info.enum';
+import { UPDATE_FREQUENCY } from './enums/update-frequency.enum';
+import { FORMAT } from './enums/format.enum';
 
 export const catalogueMock: Catalogue = {
   _id: '',
@@ -26,16 +29,17 @@ export const catalogueMock: Catalogue = {
   activeAds: false, // boolean
   comments: '',
   typeGeo: GEOGRAPHICAL_INFO.barrio,
-  genderInfo: false,
+  format: [],
+  genderInfo: NO_APPLY.false,
   structuredComments: '',
   associatedApplication: '',
   autoAcess: false,
   originComments: '',
-  RAT: false,
-  dataProtection: false,
-  dataStandards: false,
+  RAT: NO_APPLY.false,
+  dataProtection: NO_APPLY.false,
+  dataStandards: NO_APPLY.false,
   dataProtectionComments: '',
-  dataAnonymize: false,
+  dataAnonymize: [],
   dataQuality: 0,
   sharingLevel: SHARING_LEVEL.open,
   sharedData: false,
@@ -45,7 +49,7 @@ export const catalogueMock: Catalogue = {
   CKAN: false,
   MongoDB: false,
   OpenDataSoft: false,
-  temporarySolution: '', // ES UNA ENUM PERO NO SABEMOS CUAL
+  temporarySolution: UPDATE_FREQUENCY.daily,
   chargeStateComments: '',
   productData: '',
   productComments: '',

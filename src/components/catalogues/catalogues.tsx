@@ -30,6 +30,7 @@ import {
   valOrEsp,
   isChecked,
   arrayCell,
+  isCheckedNoApply,
 } from "../../utils/functions/table-functions";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
@@ -225,13 +226,21 @@ function CatalogueList() {
       width: 200,
       description: t("tooltipText.temporaryCoverage"),
     },
-
+    {
+      field: "format",
+      headerName: t("columnsNames.format"),
+      width: 200,
+      description: t("tooltipText.format"),
+      renderCell: (params: GridRenderCellParams<any, string[]>) => {
+        return arrayCell(params.value);
+      },
+    },
     {
       field: "genderInfo",
       headerName: t("columnsNames.genderInfo"),
       width: 200,
       renderCell: (params) => {
-        return isChecked(params.value);
+        return isCheckedNoApply(params.value);
       },
       description: t("tooltipText.genderInfo"),
     },
@@ -268,7 +277,7 @@ function CatalogueList() {
       headerName: t("columnsNames.RAT"),
       width: 200,
       renderCell: (params) => {
-        return isChecked(params.value);
+        return isCheckedNoApply(params.value);
       },
       description: t("tooltipText.RAT"),
       type: "boolean",
@@ -278,7 +287,7 @@ function CatalogueList() {
       headerName: t("columnsNames.dataProtection"),
       width: 200,
       renderCell: (params) => {
-        return isChecked(params.value);
+        return isCheckedNoApply(params.value);
       },
       description: t("tooltipText.dataProtection"),
       type: "boolean",
@@ -288,7 +297,7 @@ function CatalogueList() {
       headerName: t("columnsNames.dataStandards"),
       width: 200,
       renderCell: (params) => {
-        return isChecked(params.value);
+        return isCheckedNoApply(params.value);
       },
       description: t("tooltipText.dataStandards"),
       type: "boolean",
@@ -303,8 +312,8 @@ function CatalogueList() {
       field: "dataAnonymize",
       headerName: t("columnsNames.dataAnonymize"),
       width: 200,
-      renderCell: (params) => {
-        return isChecked(params.value);
+      renderCell: (params: GridRenderCellParams<any, string[]>) => {
+        return arrayCell(params.value);
       },
       description: t("tooltipText.dataAnonymize"),
     },

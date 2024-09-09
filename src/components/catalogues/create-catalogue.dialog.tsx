@@ -8,11 +8,17 @@ import { createCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import {
   Box,
+  Checkbox,
   Chip,
   FormControl,
+  FormControlLabel,
+  ListItemText,
   MenuItem,
+  OutlinedInput,
   Rating,
   Select,
+  SelectChangeEvent,
+  Stack,
   Switch,
   ThemeProvider,
   Typography,
@@ -29,6 +35,7 @@ import { MINIMUM_VALUE } from "../../utils/enums/minimum-value.enum";
 import { GEOGRAPHICAL_INFO } from "../../utils/enums/geographical-info.enum";
 import { TOPIC } from "../../utils/enums/topic.enum";
 import { SHARING_LEVEL } from "../../utils/enums/sharing-level.enum";
+import { NO_APPLY } from "../../utils/enums/no-apply.enum";
 import { catalogueMock } from "../../utils/catalogue.mock";
 import ButtonsForm, { buttonsFormInfo } from "./buttons-form";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -36,6 +43,8 @@ import { getDynamicStyle } from "../../utils/functions/table-functions";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import { LocalizationProvider, esES } from "@mui/x-date-pickers";
 import { grey } from "@mui/material/colors";
+import { UPDATE_FREQUENCY } from "../../utils/enums/update-frequency.enum";
+import { FORMAT } from "../../utils/enums/format.enum";
 
 export interface DialogData {
   open: boolean;
@@ -69,12 +78,13 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [masterData, setMasterData] = useState(true);
   const [referenceData, setReferenceData] = useState(true);
   const [highValue, setHighValue] = useState(true);
-  const [genderInfo, setGenderInfo] = useState(true);
+  const [formats, setFormats] = useState<string[]>([]);
+  const [genderInfo, setGenderInfo] = useState<NO_APPLY>();
   const [autoAcess, setAutoAcess] = useState(true);
-  const [RAT, setRAT] = useState(true);
-  const [dataProtection, setDataProtection] = useState(true);
-  const [dataStandards, setDataStandards] = useState(true);
-  const [dataAnonymize, setDataAnonymize] = useState(true);
+  const [RAT, setRAT] = useState<NO_APPLY>();
+  const [dataProtection, setDataProtection] = useState<NO_APPLY>();
+  const [dataStandards, setDataStandards] = useState<NO_APPLY>();
+  const [dataAnonymize, setDataAnonymize] = useState<NO_APPLY>(NO_APPLY.false);
   const [sharedData, setSharedData] = useState(true);
   const [VLCi, setVLCi] = useState(true);
   const [ArcGIS, setArcGIS] = useState(true);
@@ -82,10 +92,13 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [CKAN, setCKAN] = useState(true);
   const [MongoDB, setMongoDB] = useState(true);
   const [OpenDataSoft, setOpenDataSoft] = useState(true);
-  const [format, setFormat] = useState<string[]>([]);
   const [chips, setChips] = useState<string[]>([]);
+  const [chipsDataAnonymize, setChipsDataAnonymize] = useState<string[]>([]);
+  const [chipsFormats, setChipsFormats] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
+  const [inputValueDataAnonymize, setInputValueDataAnonymize] = useState<string>("");
   const [dataQuality, setDataQuality] = useState(0);
+  const [disabledDataAnonymize, setDisabledDataAnonymize] = useState(false);
   const { actualTheme } = useAlternateTheme();
   const dynamicStyle = getDynamicStyle(actualTheme);
 /**
@@ -211,7 +224,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     setFormData({});
     setFormDataSteps(catalogueMock);
     setStep(1);
-    setFormat([]);
+    setFormats([]);
     setOpen(false);
     props.enviar.closeDialog(false);
   };
@@ -260,6 +273,46 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
  */
   const handleDeleteKeyWords = (chipToDelete: string) => {
     setChips((chips) => chips.filter((chip) => chip !== chipToDelete));
+  };
+
+  /**
+   * Handles the change event of the input field for dataAnonymize. If the input value ends with a semicolon,
+   * it creates a new chip by removing the semicolon and trimming any whitespace, and adds it to the list of chips.
+   * If the chip is not already in the list, it updates the form data steps with the new list of chips.
+   * Finally, it clears the input value.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The change event triggered by the input field.
+   * @return {void} This function does not return anything.
+   */
+  const handleChangeDataAnonymize = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    if (value.endsWith(";")) {
+      const newChip = value.slice(0, -1).trim();
+      if (newChip) {
+        setChipsDataAnonymize((prevChips) => {
+          if (!prevChips.includes(newChip)) {
+            return [...prevChips, newChip];
+          } else {
+            return prevChips;
+          }
+        });
+        setFormDataSteps({ ...formDataSteps, dataAnonymize: [...chipsDataAnonymize] });
+      }
+      setInputValueDataAnonymize("");
+    } else {
+      setInputValueDataAnonymize(value);
+    }
+    
+  };
+
+/**
+ * Removes a chip from the list of chips by filtering out the chip to delete.
+ *
+ * @param {string} chipToDelete - The chip to be removed from the list of chips.
+ * @return {void} This function does not return anything.
+ */
+  const handleDeleteDataAnonymize = (chipToDelete: string) => {
+    setChipsDataAnonymize((chipsDataAnonymize) => chipsDataAnonymize.filter((chip) => chip !== chipToDelete));
   };
 
 /**
@@ -313,11 +366,11 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     const currentStepData = new FormData(event.currentTarget);
 
     if (
-      (format !== undefined || format !== null) &&
+      (formats !== undefined || formats !== null) &&
       (currentStepData.get("format") !== null ||
         currentStepData.get("format") !== undefined)
     ) {
-      const formatosDatos = format.toString();
+      const formatosDatos = formats.toString();
       const formatosDatosMod: string = formatosDatos.replace(/,/g, " / ");
       currentStepData.set("format", formatosDatosMod);
     }
@@ -347,6 +400,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       OpenDataSoft,
     }));
     setStep(step + 1);
+    console.log(formData);
   };
 
 /**
@@ -382,9 +436,139 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     }));
   };
 
+  /**
+   * Runs when the `dataProtection` state changes.
+   * If `dataProtection` is set to "no apply", it:
+   * - Sets `dataAnonymize` to "no apply"
+   * - Updates `formDataSteps` with `dataAnonymize` set to "no apply"
+   * - Disables the `dataAnonymize` field
+   * - Sets the input value of `dataAnonymize` to "NO_APPLY"
+   * If `dataProtection` is not set to "no apply", it enables the `dataAnonymize` field.
+   *
+   * @param {string} dataProtection - The value of the `dataProtection` state.
+   */
+  useEffect(() => {
+    if (dataProtection === NO_APPLY.no_apply) {
+      setDataAnonymize(NO_APPLY.no_apply);
+      setFormDataSteps({ ...formDataSteps, dataAnonymize: [NO_APPLY.no_apply] });
+      setDisabledDataAnonymize(true); // or setDisabled(dataAnonymize !== NO_APPLY.no_apply)
+      setInputValueDataAnonymize("NO_APPLY");
+      setChipsDataAnonymize(["NO_APPLY"]);
+    } else {
+      setDataAnonymize(NO_APPLY.false);
+      setChipsDataAnonymize([]);
+      setFormDataSteps({ ...formDataSteps, dataAnonymize: [] });
+      setInputValueDataAnonymize("");
+      setDisabledDataAnonymize(false); // or setDisabled(dataAnonymize !== NO_APPLY.no_apply)
+
+    }
+  }, [dataProtection]);
+
+  /**
+   * Handles the change event of the input field for formats. If the input value is a string,
+   * it splits the string into an array of strings using the comma as a separator.
+   * Then, it sets the `formats` state with the new array of strings.
+   * If the `formats` array contains at least one string, it updates the `formDataSteps` state
+   * with the new array of strings.
+   *
+   * @param {SelectChangeEvent<typeof formats>} event - The change event triggered by the input field.
+   * @return {void} This function does not return anything.
+   */
+  const handleChangeFormats = (event: SelectChangeEvent<typeof formats>) => {
+    const { target: { value }, } = event;
+    
+    setFormats(
+      typeof value === 'string' ? value.split(',') : value,
+    );
+    console.log("Hay " + formats.length + " formatos");
+    if(formats !== undefined && formats !== null && formats.length > 0){
+      setFormDataSteps({
+        ...formDataSteps,
+        format: formats,
+      });
+    }
+  };
+
+/**
+ * Removes a chip from the list of chips by filtering out the chip to delete.
+ *
+ * @param {string} chipToDelete - The chip to be removed from the list of chips.
+ * @return {void} This function does not return anything.
+ */
+  const handleDeleteFormats = (chipToDelete: string) => {
+    setFormats((chips) => chips.filter((chip) => chip !== chipToDelete));
+    if(formats !== undefined && formats !== null && formats.length > 0){
+      console.log("Formatos antes eliminar: " + formDataSteps.format);
+      setFormDataSteps({
+        ...formDataSteps,
+        format: formats.filter((chip) => chip !== chipToDelete),
+      });
+      console.log("Formatos después eliminar: " + formDataSteps.format);
+    }
+  };
+
+  /**
+   * Handles the change event triggered by a switch (checkbox) component.
+   *
+   * This function updates the state of the switch and the corresponding field in the formDataSteps state.
+   * The function is used to manage the state of the switches in the catalogue creation form.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The change event triggered by the switch component.
+   * @return {void} This function does not return anything.
+   */
+  const handleSwitchs = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const name = event.target.name;
+    const checked = event.target.checked;
+    switch(name){
+      case "VLCi":
+        setVLCi(checked);
+        setFormDataSteps({
+          ...formDataSteps,
+          VLCi: checked,
+        });
+        break;
+      case "ArcGIS":
+        setArcGIS(checked);
+        setFormDataSteps({
+          ...formDataSteps,
+          ArcGIS: checked,
+        });
+        break;
+      case "Pentaho":
+        setPentaho(checked);
+        setFormDataSteps({
+          ...formDataSteps,
+          Pentaho: checked,
+        });
+        break;
+      case "CKAN":
+        setCKAN(checked);
+        setFormDataSteps({
+          ...formDataSteps,
+          CKAN: checked,
+        });
+        break;
+      case "MongoDB":
+        setMongoDB(checked);
+        setFormDataSteps({
+          ...formDataSteps,
+          MongoDB: checked,
+        });
+        break;
+      case "OpenDataSoft":
+        setOpenDataSoft(checked);
+        setFormDataSteps({
+          ...formDataSteps,
+          OpenDataSoft: checked,
+        });
+        break;
+    }
+  }
+
   //const labels = ['Poor', 'Fair', 'Average', 'Good', 'Excellent'];
   const labels = ['', '', '', '', ''];
   const [hover, setHover] = useState(-1);
+
 
   return (
     <>
@@ -578,6 +762,12 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                               name="minimumVariables"
                               margin="dense"
                               defaultValue={formDataSteps.minimumVariables}
+                              onChange={(event) => {
+                                setFormDataSteps({
+                                  ...formDataSteps,
+                                  minimumVariables: event.target.value as MINIMUM_VALUE,
+                                });
+                              }}
                             >
                               {Object.entries(MINIMUM_VALUE).map(
                                 ([key, value]) => (
@@ -720,9 +910,31 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             }
                           />
                         </div>
+                        <div className="horizontalForm">
+                          <p>{t("columnsNames.format")}</p>
+                          <FormControl variant="standard">
+                            
+                            <Select
+                              labelId="demo-multiple-chip-label"
+                              id="demo-multiple-chip"
+                              multiple
+                              value={formats}
+                              onChange={handleChangeFormats}
+                              renderValue={(selected) => (selected as string[]).join(', ')}
+                            >
+                              {Object.entries(FORMAT).map(([key, value]) => (
+                                <MenuItem key={key} value={value}>
+                                  <Checkbox checked={formats.indexOf(value) > -1} />
+                                  <ListItemText primary={value} />
+                                </MenuItem>
+                              ))}
+                            </Select>
+                            
+                          </FormControl>
+                        </div>
                         <div className="horizontalFormSwitch">
                           <p>{t("columnsNames.genderInfo")}</p>
-                          <Switch
+                          {/*<Switch
                             id="genderInfo"
                             name="genderInfo"
                             value={genderInfo}
@@ -731,7 +943,27 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                               setGenderInfo(event.target.checked)
                             }
                             color="primary" // Opcional: ajusta el color del switch
-                          />
+                          />*/}
+                          <FormControl variant="standard">
+                            <Select
+                              id="genderInfo"
+                              name="genderInfo"
+                              margin="dense"
+                              defaultValue={formDataSteps.genderInfo}
+                              onChange={(event) => {
+                                setGenderInfo(event.target.value as NO_APPLY);
+                                console.log(event.target.value);
+                              }}
+                            >
+                              {Object.entries(NO_APPLY).map(
+                                ([key, value]) => (
+                                  <MenuItem key={key} value={value}>
+                                    {value}
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
                         </div>
                         <div className="horizontalForm">
                           <p>{t("columnsNames.structuredComments")}</p>
@@ -813,41 +1045,77 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       <div className="row">
                         <div className="horizontalFormSwitch">
                           <p>RAT</p>
-                          <Switch
+                          {/*<Switch
                             id="RAT"
                             name="RAT"
                             value={RAT}
                             checked={RAT}
                             onChange={(event) => setRAT(event.target.checked)}
                             color="primary"
-                          />
+                          />*/}
+                          <FormControl variant="standard">
+                            <Select
+                              id="RAT"
+                              name="RAT"
+                              margin="dense"
+                              defaultValue={formDataSteps.RAT}
+                              onChange={(event) => {
+                                setRAT(event.target.value as NO_APPLY);
+                              }}
+                            >
+                              {Object.entries(NO_APPLY).map(
+                                ([key, value]) => (
+                                  <MenuItem key={key} value={value}>
+                                    {value}
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
                         </div>
                         <div className="horizontalFormSwitch">
                           <p>{t("columnsNames.dataProtection")}</p>
-                          <Switch
-                            //required
-                            id="dataProtection"
-                            name="dataProtection"
-                            value={dataProtection}
-                            checked={dataProtection}
-                            onChange={(event) =>
-                              setDataProtection(event.target.checked)
-                            }
-                            color="primary"
-                          />
+                          <FormControl variant="standard">
+                            <Select
+                              id="dataProtection"
+                              name="dataProtection"
+                              margin="dense"
+                              defaultValue={formDataSteps.dataProtection}
+                              onChange={(event) => {
+                                setDataProtection(event.target.value as NO_APPLY);
+                              }}
+                            >
+                              {Object.entries(NO_APPLY).map(
+                                ([key, value]) => (
+                                  <MenuItem key={key} value={value}>
+                                    {value}
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
                         </div>
                         <div className="horizontalFormSwitch">
                           <p>{t("columnsNames.dataStandards")}</p>
-                          <Switch
-                            id="dataStandards"
-                            name="dataStandards"
-                            value={dataStandards}
-                            checked={dataStandards}
-                            onChange={(event) =>
-                              setDataStandards(event.target.checked)
-                            }
-                            color="primary"
-                          />
+                          <FormControl variant="standard">
+                            <Select
+                              id="dataStandards"
+                              name="dataStandards"
+                              margin="dense"
+                              defaultValue={formDataSteps.dataStandards}
+                              onChange={(event) => {
+                                setDataStandards(event.target.value as NO_APPLY);
+                              }}
+                            >
+                              {Object.entries(NO_APPLY).map(
+                                ([key, value]) => (
+                                  <MenuItem key={key} value={value}>
+                                    {value}
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
                         </div>
                         <div className="horizontalForm">
                           <p>{t("columnsNames.dataProtectionComments")}</p>
@@ -869,7 +1137,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                         </div>
                         <div className="horizontalFormSwitch">
                           <p>{t("columnsNames.dataAnonymize")}</p>
-                          <Switch
+                          {/*<Switch
                             id="dataAnonymize"
                             name="dataAnonymize"
                             value={dataAnonymize}
@@ -879,6 +1147,39 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             }
                             color="primary"
                           />
+                          */}
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column-reverse",
+                            }}
+                            
+                          >
+                            <TextField
+                              autoFocus
+                              margin="dense"
+                              id="dataAnonymize"
+                              name="dataAnonymize"
+                              type="string"
+                              variant="standard"
+                              value={inputValueDataAnonymize}
+                              onChange={handleChangeDataAnonymize}
+                              disabled={disabledDataAnonymize}
+                            />
+                            <Box
+                              sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}
+                            >
+                              {chipsDataAnonymize.map((chip, index) => (
+                                <Chip
+                                  key={index}
+                                  label={chip}
+                                  onDelete={() => handleDeleteDataAnonymize(chip)}
+                                  deleteIcon={<CancelIcon />}
+                                  disabled={disabledDataAnonymize}
+                                />
+                              ))}
+                            </Box>
+                          </Box>
                         </div>
                         <div className="horizontalFormStars">
                           <p>{t("columnsNames.dataQuality")}</p>
@@ -944,7 +1245,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             name="VLCi"
                             value={VLCi}
                             checked={VLCi}
-                            onChange={(event) => setVLCi(event.target.checked)}
+                            onChange={(event) => 
+                              handleSwitchs(event)
+                            }
                             color="primary"
                           />
                         </div>
@@ -956,7 +1259,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             value={ArcGIS}
                             checked={ArcGIS === true}
                             onChange={(event) =>
-                              setArcGIS(event.target.checked)
+                              handleSwitchs(event)
                             }
                             color="primary"
                           />
@@ -969,7 +1272,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             value={Pentaho}
                             checked={Pentaho}
                             onChange={(event) =>
-                              setPentaho(event.target.checked)
+                              handleSwitchs(event)
                             }
                             color="primary"
                           />
@@ -981,7 +1284,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             name="CKAN"
                             value={CKAN}
                             checked={CKAN}
-                            onChange={(event) => setCKAN(event.target.checked)}
+                            onChange={(event) => 
+                              handleSwitchs(event)
+                            }
                             color="primary"
                           />
                         </div>
@@ -993,7 +1298,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             value={MongoDB}
                             checked={MongoDB}
                             onChange={(event) =>
-                              setMongoDB(event.target.checked)
+                              handleSwitchs(event)
                             }
                             color="primary"
                           />
@@ -1006,13 +1311,14 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             value={OpenDataSoft}
                             checked={OpenDataSoft}
                             onChange={(event) =>
-                              setOpenDataSoft(event.target.checked)
+                              handleSwitchs(event)
                             }
                             color="primary"
                           />
                         </div>
                         <div className="horizontalForm">
                           <p>{t("columnsNames.temporarySolution")}</p>
+                          {/*
                           <TextField
                             autoFocus
                             margin="dense"
@@ -1025,6 +1331,27 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                               handleChange("temporarySolution", e.target.value)
                             }
                           />
+                          */}
+                          <FormControl variant="standard">
+                            <Select
+                              id="temporarySolution"
+                              name="temporarySolution"
+                              margin="dense"
+                              defaultValue={formDataSteps.temporarySolution}
+                              onChange={(event) => {
+                                setFormDataSteps({
+                                  ...formDataSteps,
+                                  temporarySolution: event.target.value as UPDATE_FREQUENCY,
+                                });
+                              }}
+                            >
+                              {Object.entries(UPDATE_FREQUENCY).map(([key, value]) => (
+                                <MenuItem key={key} value={value}>
+                                  {value}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
                         </div>
                         <div className="horizontalForm">
                           <p>{t("columnsNames.chargeStateComments")}</p>
@@ -1109,3 +1436,5 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     </>
   );
 }
+
+
