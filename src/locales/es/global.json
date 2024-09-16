@@ -24,7 +24,7 @@
     "columnsNames": {
         "title": "Nombre",
         "description": "Descripción",
-        "topic": "Área",
+        "topic": "Categoría/Temática",
         "responsibleIdentity": "Servicio",
         "datasetsRelation": "Registros relacionados",
         "fieldList": "Lista de campos",

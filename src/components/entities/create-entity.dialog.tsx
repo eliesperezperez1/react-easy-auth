@@ -7,8 +7,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
 import { CreateEntity } from "../../interfaces/entity.interface";
 import { createEntityRequest } from "../../api/entities";
-import { useAuthHeader } from "react-auth-kit";
-import { Box, ThemeProvider, createTheme } from "@mui/material";
+import { useAuthHeader, useAuthUser } from "react-auth-kit";
+import { Box, FormControl, MenuItem, Select, ThemeProvider, createTheme } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { useTranslation } from "react-i18next";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -16,6 +16,9 @@ import "./create-entity.dialog.css";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import { grey } from "@mui/material/colors";
 import { esES } from "@mui/material/locale";
+import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
+import { TOPIC } from "../../utils/enums/topic.enum";
+import { StyledProfileBody } from "baseui/menu";
 
 export interface DialogData {
   open: boolean;
@@ -95,6 +98,7 @@ const baseTheme = (actualTheme: any) =>
 export default function CreateEntityDialog(props: { enviar: DialogData }) {
   const [open, setOpen] = useState<boolean>(false);
   const authHeader = useAuthHeader();
+  const userData = useAuthUser();
   const [t, i18n] = useTranslation();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
@@ -177,6 +181,7 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
 
     // Merge current step data with existing form data
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
+    console.log(currentStepData.get("responsibleIdentity"));
     setStep(step + 1);
   };
 
@@ -201,6 +206,7 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
    * @return {void} This function does not return anything.
    */
   const handleGoBack = () => {
+    console.log(formDataSteps);
     setStep(step - 1);
   };
 
@@ -217,6 +223,28 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
       ...prevData,
       [field]: value,
     }));
+  };
+
+  /**
+   * Renders a list of MenuItem components based on the values of the RESPONSIBLE_IDENTITY enum.
+   * Excludes the GENERAL value from the list.
+   *
+   * @return {JSX.Element[]} An array of MenuItem components.
+   */
+  const renderResponsibleIdentity = () => {
+    const menuItems = Object.entries(RESPONSIBLE_IDENTITY).map(
+      ([key, value]) => {
+        if (value === RESPONSIBLE_IDENTITY.GENERAL) {
+          return null;
+        }
+        return (
+          <MenuItem key={key} value={value}>
+            {value}
+          </MenuItem>
+        );
+      }
+    );
+    return menuItems;
   };
 
   const dynamicStyle = {
@@ -257,36 +285,47 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
                     <div className="verticalForm">
                       <div className="horizontalForm">
                         <p>{t("columnsNames.responsibleIdentity")}</p>
-                        <TextField
-                          sx={{
-                            color: "white",
-                          }}
-                          autoFocus
-                          margin="dense"
-                          id="responsibleIdentity"
-                          name="responsibleIdentity"
-                          type="string"
-                          variant="standard"
-                          value={formDataSteps.responsibleIdentity}
-                          onChange={(e) =>
-                            handleChange("responsibleIdentity", e.target.value)
-                          }
-                        />
+                        <FormControl variant="standard">
+                            <Select
+                              id="responsibleIdentity"
+                              name="responsibleIdentity"
+                              margin="dense"
+                              defaultValue={formDataSteps.responsibleIdentity}
+                              //disabled={!isGeneralOrTrans} || No creo que haga falta porque solo un super admin puede crear servicios
+                              onChange={(event) => {
+                                setFormDataSteps({
+                                  ...formDataSteps,
+                                  responsibleIdentity: event.target
+                                    .value as RESPONSIBLE_IDENTITY,
+                                });
+                              }}
+                            >
+                              {renderResponsibleIdentity()}
+                            </Select>
+                          </FormControl>
                       </div>
                       <div className="horizontalForm">
                         <p>{t("columnsNames.topic")}</p>
-                        <TextField
-                          autoFocus
-                          margin="dense"
-                          id="topic"
-                          name="topic"
-                          type="string"
-                          variant="standard"
-                          value={formDataSteps.topic}
-                          onChange={(e) =>
-                            handleChange("topic", e.target.value)
-                          }
-                        />
+                        <FormControl variant="standard">
+                            <Select
+                              id="topic"
+                              name="topic"
+                              margin="dense"
+                              defaultValue={formDataSteps.topic}
+                              onChange={(event) => {
+                                setFormDataSteps({
+                                  ...formDataSteps,
+                                  topic: event.target.value as TOPIC,
+                                });
+                              }}
+                            >
+                              {Object.entries(TOPIC).map(([key, value]) => (
+                                <MenuItem key={key} value={value}>
+                                  {value}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
                       </div>
                       {/* <div className="horizontalForm">
                   <p>

@@ -38,10 +38,10 @@ function App() {
   function getCookie(name: string) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(";").shift();
+    if (parts!==undefined && parts.length === 2) return parts.pop().split(";").shift();
   }
 
-  const token = getCookie("token");
+  //const token = getCookie("token");
 
 /**
  * Checks if a JWT token is expired by decoding it and comparing the expiration time with the current time.
@@ -53,7 +53,7 @@ function App() {
   function isTokenExpired(token: string) {
     try {
       const decoded = jwtDecode(token);
-      const flag = decoded.exp < Date.now() / 1000;
+      const flag = decoded.exp! < Date.now() / 1000;
       if(flag){
         document.cookie =
           "_auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -107,7 +107,7 @@ function App() {
 
   useEffect(() => {
     const token = getCookie("_auth");
-    if (isTokenExpired(token)) {
+    if (token!==undefined && isTokenExpired(token)) {
       navigate("/login");
     }
   }, [navigate]);

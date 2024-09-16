@@ -154,9 +154,10 @@ function EntitiesList() {
  * @return {boolean} Returns true if the row could be selectable, otherwise false.
  */
   function rowCouldBeSelectable(params: any) {
+    
     return (
       (userData.role === ROLE.ADMIN &&
-        params.row.responsibleIdentity === userData.service) ||
+        params.row.responsibleIdentityVAL === userData.service) ||
       userData.role === ROLE.SUPER_ADMIN
     );
   }
@@ -218,6 +219,15 @@ function EntitiesList() {
  * @return {boolean} Returns true if the user has the role of admin or super admin, otherwise false.
  */
   function itCouldBeSelectable() {
+    const rolUsuario = userData.role;
+    const servicioUsuario = userData.service;
+    //const rolDataset = prueba.responsibleIdentity;
+    /*
+    return (
+      (userData.role === ROLE.ADMIN &&
+        params === userData.service) ||
+      userData.role === ROLE.SUPER_ADMIN
+    );*/
     return userData.role === ROLE.ADMIN || userData.role === ROLE.SUPER_ADMIN;
   }
 
@@ -340,6 +350,7 @@ function EntitiesList() {
                   selectedCatalogues={selectedEntities}
                   deleteRegisters={deleteRegisters}
                   isCatalogues={false}
+                  isEntities={true}
                   showshowDeleted={() => {
                     setDeletedTable(!deletedTable);
                     showDeleted();

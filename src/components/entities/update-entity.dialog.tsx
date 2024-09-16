@@ -7,14 +7,16 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
 import { Entity, UpdateEntity } from "../../interfaces/entity.interface";
 import { updateEntityRequest } from "../../api/entities";
-import { useAuthHeader } from "react-auth-kit";
-import { Box } from "@mui/material";
+import { useAuthHeader, useAuthUser } from "react-auth-kit";
+import { Box, FormControl, MenuItem, Select } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
 import { ThemeProvider } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
+import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
+import { TOPIC } from "../../utils/enums/topic.enum";
 export interface UpdateDialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
@@ -37,6 +39,7 @@ export default function UpdateEntityDialog(props: {
 }) {
   const [open, setOpen] = useState<boolean>(false);
   const authHeader = useAuthHeader();
+  const userData = useAuthUser();
   const [update, setUpdate] = useState<UpdateEntity>({});
   const [t, i18n] = useTranslation();
   const [step, setStep] = useState(1);
@@ -131,6 +134,62 @@ export default function UpdateEntityDialog(props: {
     setStep(step - 1);
   };
 
+  /**
+   * Renders a list of MenuItem components based on the values of the RESPONSIBLE_IDENTITY enum.
+   * Excludes the GENERAL value from the list.
+   *
+   * @return {JSX.Element[]} An array of MenuItem components.
+   */
+  const renderResponsibleIdentity = () => {
+    const menuItems = Object.entries(RESPONSIBLE_IDENTITY).map(
+      ([key, value]) => {
+        if (value === RESPONSIBLE_IDENTITY.GENERAL) {
+          return null;
+        }
+        return (
+          <MenuItem key={key} value={value}>
+            {value}
+          </MenuItem>
+        );
+      }
+    );
+    if (
+      update.responsibleIdentity &&
+      !Object.values(RESPONSIBLE_IDENTITY).includes(update.responsibleIdentity)
+    ) {
+      menuItems.push(
+        <MenuItem key="custom" value={update.responsibleIdentity}>
+          {update.responsibleIdentity}
+        </MenuItem>
+      );
+    }
+    return menuItems;
+  };
+  /**
+   * Renders a list of MenuItem components based on the values of the TOPIC enum.
+   * If the update.topic value is not included in the enum values, a custom 
+   * MenuItem component is added.
+   *
+   * @return {JSX.Element[]} An array of MenuItem components.
+   */
+  const renderTopic = () => {
+    const menuItems = Object.entries(TOPIC).map(([key, value]) => {
+      return (
+        <MenuItem key={key} value={value}>
+          {value}
+        </MenuItem>
+      );
+    });
+    if (update.topic && !Object.values(TOPIC).includes(update.topic)) {
+      menuItems.push(
+        <MenuItem key="custom" value={update.topic}>
+          {update.topic}
+        </MenuItem>
+      );
+    }
+    return menuItems;
+  };
+
   const dynamicStyle = {
     backgroundColor: actualTheme === "light" ? "white" : "#252525",
     color: actualTheme === "light" ? "#252525" : "white",
@@ -173,30 +232,42 @@ export default function UpdateEntityDialog(props: {
                 <div className="verticalForm">
                   <div className="horizontalForm">
                     <p>{t("columnsNames.responsibleIdentity")}</p>
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="responsibleIdentity"
-                      name="responsibleIdentity"
-                      type="string"
-                      variant="standard"
-                      value={update.responsibleIdentity}
-                      onChange={handleChange}
-                    />
+                    <FormControl variant="standard">
+                      <Select
+                        id="responsibleIdentity"
+                        name="responsibleIdentity"
+                        margin="dense"
+                        defaultValue={update.responsibleIdentity}
+                        //disabled={!isGeneralOrTrans}
+                        onChange={(event) => {
+                          setUpdate({
+                            ...update,
+                            responsibleIdentity: event.target.value as RESPONSIBLE_IDENTITY,
+                          });
+                        }}
+                      >
+                        {renderResponsibleIdentity()}
+                      </Select>
+                    </FormControl>
                   </div>
                   <div className="horizontalForm">
                     <p>{t("columnsNames.topic")}</p>
-                    <TextField
-                      autoFocus
-                      required
-                      margin="dense"
-                      id="topic"
-                      name="topic"
-                      type="string"
-                      variant="standard"
-                      value={update.topic}
-                      onChange={handleChange}
-                    />
+                    <FormControl variant="standard">
+                      <Select
+                        id="topic"
+                        name="topic"
+                        margin="dense"
+                        defaultValue={update.topic}
+                        onChange={(event) => {
+                          setUpdate({
+                            ...update,
+                            topic: event.target.value as TOPIC,
+                          });
+                        }}
+                      >
+                        {renderTopic()}
+                      </Select>
+                    </FormControl>
                   </div>
                   <div className="horizontalForm">
                     <p>{t("columnsNames.contactPerson")}</p>

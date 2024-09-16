@@ -33,6 +33,7 @@ export interface CustomToolbarProperties {
   deletedTable: boolean;
   verifiedTable?: boolean;
   isCatalogues?: boolean;
+  isEntities?: boolean;
   visibleData: MutableRefObject<GridApiCommunity>;
   selectedCatalogues: any[];
   deleteRegisters: () => void;
@@ -66,6 +67,7 @@ function CustomToolbar(props: CustomToolbarProperties) {
     selectedCatalogues,
     visibleData,
     isCatalogues,
+    isEntities,
     showVerified,
     showshowDeleted,
     restoreRegisters,
@@ -172,15 +174,17 @@ function CustomToolbar(props: CustomToolbarProperties) {
             </Button>
           ) : (
             <>
+              {!(isEntities && userData.role !== ROLE.SUPER_ADMIN) && (
+                <Button
+                  startIcon={<AddIcon />}
+                  onClick={createDialogOpen}
+                  sx={buttonStyles}
+                >
+                  {t("dataTable.addDataset")}
+                </Button>
+              )}
               <Button
-                startIcon={<AddIcon />}
-                onClick={createDialogOpen}
-                sx={buttonStyles}
-              >
-                {t("dataTable.addDataset")}
-              </Button>
-              <Button
-                disabled={selectedCatalogues.length <= 0}
+                disabled={selectedCatalogues.length <= 0 || selectedCatalogues.length > 1}
                 startIcon={<EditIcon />}
                 sx={buttonStyles}
                 onClick={getSelectedCatalogues}

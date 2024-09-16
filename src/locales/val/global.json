@@ -24,7 +24,7 @@
     "columnsNames": {
         "title": "Nom",
         "description": "Descripció",
-        "topic": "Àrea",
+        "topic": "Categoria/Temàtica",
         "responsibleIdentity": "Servici",
         "datasetsRelation": "Registres relacionats",
         "fieldList": "Llista de camps",

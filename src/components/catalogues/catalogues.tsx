@@ -714,6 +714,8 @@ function CatalogueList() {
                     verifiedTable={verifiedTable}
                     visibleData={gridApiRef}
                     selectedCatalogues={selectedCatalogues}
+                    isCatalogues={true}
+                    isEntities={false}
                     deleteRegisters={deleteRegisters}
                     showshowDeleted={() => {
                       setDeletedTable(!deletedTable);
@@ -723,7 +725,6 @@ function CatalogueList() {
                         showNotDeleted();
                       }
                     }}
-                    isCatalogues={true}
                     showVerified={() => {
                       setverifiedTable(!verifiedTable);
                       if (deletedTable) {

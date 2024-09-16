@@ -106,7 +106,7 @@ function UserList() {
       }
       getAndSetUsers();
     }
-  }, [datosDialog.getInfo, datosUpdateDialog.getInfo]);
+  }, [user()]);//[datosDialog.getInfo, datosUpdateDialog.getInfo]);
 
   /**
    * Retrieves users from the server using the auth header and updates the state with the received data.
@@ -218,7 +218,8 @@ function UserList() {
   function rowCouldBeSelectable(params: any) {
     return (
       (userData.role === ROLE.ADMIN &&
-        params.row.responsibleIdentity === userData.service) ||
+        params.row.service === userData.service &&
+        params.row.role === ( ROLE.SUPER_VIEWER || ROLE.VIEWER)) ||
       userData.role === ROLE.SUPER_ADMIN
     );
   }
@@ -279,6 +280,7 @@ function UserList() {
                     deletedTable={deletedTable}
                     visibleData={gridApiRef}
                     selectedCatalogues={selectedUsers}
+                    isEntities={false}
                     deleteRegisters={deleteRegisters}
                     showshowDeleted={() => {
                       setDeletedTable(!deletedTable);

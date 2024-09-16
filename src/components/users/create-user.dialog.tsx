@@ -80,6 +80,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
 
   useEffect(() => {
     setOpen(props.enviar.open);
+    formDataSteps.service = user().user.service;
   });
   
 /**
@@ -219,9 +220,9 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
  */
   const renderRole = () => {
     const menuItems = Object.entries(ROLE).map(([key, value]) => {
-      if (value === ROLE.SUPER_ADMIN && user().user.role !== ROLE.SUPER_ADMIN) {
+      if ((value === ROLE.SUPER_ADMIN || value === ROLE.ADMIN) && user().user.role !== ROLE.SUPER_ADMIN) {
         return null;
-      }
+      } 
       return (
         <MenuItem key={key} value={value}>
           {t("enums.roles." + value)}
@@ -452,7 +453,12 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                           name="service"
                           margin="dense"
                           variant="standard"
-                          defaultValue={formDataSteps.service}
+                          disabled={user().user.role !== ROLE.SUPER_ADMIN}
+                          defaultValue={
+                            user().user.role !== ROLE.SUPER_ADMIN
+                            ? user().user.service
+                            : formDataSteps.service
+                          }
                           onChange={(event) => {
                             setFormDataSteps({
                               ...formDataSteps,
