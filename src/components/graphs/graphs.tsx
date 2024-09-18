@@ -16,6 +16,7 @@ import {
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { THEMEAPP } from "../../utils/enums/themeApp.enum";
 
 /**
  * Renders a list of graphs based on the catalogues data. The first graph is a pie chart that displays the count of unique values in the `responsibleIdentity` property of the `catalogues` array. The second graph is a bar chart that displays the count of catalogues for each unique value in the `responsibleIdentity` property.
@@ -32,8 +33,8 @@ function GraphList() {
   const user = useAuthUser();
   const { actualTheme } = useAlternateTheme();
   const dynamicStyle = {
-    backgroundColor: actualTheme === "light" ? "white" : "#252525",
-    color: actualTheme === "light" ? "#252525" : "white",
+    backgroundColor: actualTheme === THEMEAPP.light ? "white" : "#252525",
+    color: actualTheme === THEMEAPP.light ? "#252525" : "white",
   };
 
   useEffect(() => {

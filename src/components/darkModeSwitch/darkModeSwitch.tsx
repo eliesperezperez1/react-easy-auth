@@ -38,10 +38,10 @@ const DarkModeSwitch = () => {
    * @return {Promise<void>} A promise that resolves when the theme has been successfully updated.
    */
   async function switchThemeApp() {
-    if (actualTheme === "light") {
+    if (actualTheme === THEMEAPP.light) {
       toggleTheme();
       if (userData !== null && userData !== userMock) {
-        updateUserThemeApp({ ...userData, themeApp: THEMEAPP.DA }, authHeader())
+        updateUserThemeApp({ ...userData, themeApp: THEMEAPP.dark }, authHeader())
           .then((response) => response.json())
           .then((data: User) => {
             const authDivided = authHeader().split(" ");
@@ -55,10 +55,10 @@ const DarkModeSwitch = () => {
             });
           });
       }
-    } else if (actualTheme === "dark") {
+    } else if (actualTheme === THEMEAPP.dark) {
       toggleTheme();
       if (userData !== null && userData !== userMock) {
-        updateUserThemeApp({ ...userData, themeApp: THEMEAPP.LI }, authHeader())
+        updateUserThemeApp({ ...userData, themeApp: THEMEAPP.light }, authHeader())
           .then((response) => response.json())
           .then((data: User) => {
             const authDivided = authHeader().split(" ");
@@ -86,12 +86,12 @@ const DarkModeSwitch = () => {
         backgroundImage: "transparent",
         borderRadius: 45,
         overflow: "hidden",
-        borderColor: actualTheme === "light" ? "#252525" : "white",
+        borderColor: actualTheme === THEMEAPP.light ? "#252525" : "white",
         borderWidth: 2,
       }}
     >
       <img
-        src={actualTheme === "light" ? Sol : Luna}
+        src={actualTheme === THEMEAPP.light ? Sol : Luna}
         alt="Image"
         style={{
           objectFit: "cover",

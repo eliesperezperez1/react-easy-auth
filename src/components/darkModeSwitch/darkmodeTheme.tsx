@@ -1,6 +1,7 @@
 import { createTheme } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { esES } from '@mui/x-data-grid';
+import { THEMEAPP } from "../../utils/enums/themeApp.enum";
 
 /**
  * Creates a base theme for the application based on the provided actualTheme, and change
@@ -25,8 +26,8 @@ const baseTheme = (actualTheme:any) => createTheme(
         },
       },
       palette:{
-        mode: actualTheme==="light" ? "light" : "dark",
-        ...(actualTheme === 'light'
+        mode: actualTheme===THEMEAPP.light ? THEMEAPP.light : THEMEAPP.dark,
+        ...(actualTheme === THEMEAPP.light
         ? {
             // palette values for light mode
             primary: grey,

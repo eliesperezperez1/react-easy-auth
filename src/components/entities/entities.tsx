@@ -29,6 +29,7 @@ import {
 import CustomToolbar from "../custom-toolbar/custom-toolbar";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
+import { THEMEAPP } from "../../utils/enums/themeApp.enum";
 
 /**
  * Renders a list of entities with a DataGrid component that displays the entities' contact person, location, topic, responsible identity, phone number, and email. 
@@ -82,7 +83,7 @@ function EntitiesList() {
         <a 
         href={getLocationUrl(params.value)}
         style={{
-          color: actualTheme==="light" ? "darkblue" : "lightblue", // Set your desired color here
+          color: actualTheme===THEMEAPP.light ? "darkblue" : "lightblue", // Set your desired color here
           // Add any other styling properties you need
         }}
         >
@@ -119,7 +120,7 @@ function EntitiesList() {
         <a 
         href={"tel:+34" + params.value}
         style={{
-          color: actualTheme==="light" ? "darkblue" : "lightblue", // Set your desired color here
+          color: actualTheme===THEMEAPP.light ? "darkblue" : "lightblue", // Set your desired color here
           // Add any other styling properties you need
         }}
         >
@@ -136,7 +137,7 @@ function EntitiesList() {
         <a 
         href={"mailto:" + params.value}
         style={{
-          color: actualTheme==="light" ? "darkblue" : "lightblue", // Set your desired color here
+          color: actualTheme===THEMEAPP.light ? "darkblue" : "lightblue", // Set your desired color here
           // Add any other styling properties you need
         }}
         >
@@ -301,8 +302,8 @@ function EntitiesList() {
           sx={{
             height: "100%",
             width: "100%",
-            backgroundColor: actualTheme==="light" ? "white" : "#252525",
-            color: actualTheme==="light" ? "#252525" : "white",
+            backgroundColor: actualTheme===THEMEAPP.light ? "white" : "#252525",
+            color: actualTheme===THEMEAPP.light ? "#252525" : "white",
             "& .header-theme": {
               backgroundColor: "lightblue",
               border: "1px 1px 0px 0px solid black",
@@ -312,12 +313,12 @@ function EntitiesList() {
               margin: "none",
             },
             "& .MuiDataGrid-row:hover": {
-              color: actualTheme==='light' ? paletaColores("colorTextAlter") : paletaColores("colorBgRowSelectedBorder"),
-              bgcolor: actualTheme==='light' ? paletaColores("colorRowHover") : paletaColores("colorRowHoverDark"),
+              color: actualTheme===THEMEAPP.light ? paletaColores("colorTextAlter") : paletaColores("colorBgRowSelectedBorder"),
+              bgcolor: actualTheme===THEMEAPP.light ? paletaColores("colorRowHover") : paletaColores("colorRowHoverDark"),
               border: "1px solid " + paletaColores("colorBgRowSelectedBorder"),
             },
             "a":{
-              color: actualTheme==="light" ? "darkblue" : "lightblue",
+              color: actualTheme===THEMEAPP.light ? "darkblue" : "lightblue",
             }
           }}
           initialState={{

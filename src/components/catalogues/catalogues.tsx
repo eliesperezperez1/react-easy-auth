@@ -47,6 +47,7 @@ import { refreshODSRequest } from "../../api/ods";
 import { ORGANISM } from "../../utils/enums/organism.enum";
 import { MINIMUM_VALUE } from "../../utils/enums/minimum-value.enum";
 import { TOPIC } from "../../utils/enums/topic.enum";
+import { THEMEAPP } from "../../utils/enums/themeApp.enum";
 
 /**
  * Renders a CatalogueList component that displays a table of catalogues.
@@ -561,22 +562,18 @@ function CatalogueList() {
  */
   function deleteRegisters() {
     selectedCatalogues.forEach((sc: string) => {
-      let cata = catalogues.find((v: any) => v._id === sc);
+      let cata = catalogues.find((v) => v._id === sc);
       if (cata) {
-        updateCatalogueRequest(
-          cata._id,
-          { ...cata, deleted: true, deletedDate: new Date() },
-          authHeader()
-        );
+        updateCatalogueRequest(cata._id, { ...cata, deleted: true },authHeader());
       }
     });
     getAndSetCatalogues();
-    classifyCatalogues(catalogues);
+    /*classifyCatalogues(catalogues);
     if (deletedTable) {
       showDeleted();
     } else {
       showNotDeleted();
-    }
+    }*/
   }
 
 /**
@@ -666,19 +663,19 @@ function CatalogueList() {
             sx={{
               height: "100%",
               width: "100%",
-              backgroundColor: actualTheme === "light" ? "white" : "#252525",
-              color: actualTheme === "light" ? "#252525" : "white",
+              backgroundColor: actualTheme === THEMEAPP.light ? "white" : "#252525",
+              color: actualTheme === THEMEAPP.light ? "#252525" : "white",
               "& .header-theme": {
                 backgroundColor: "lightblue",
                 border: "1px 1px 0px 0px solid black",
               },
               "& .MuiDataGrid-row:hover": {
                 color:
-                  actualTheme === "light"
+                  actualTheme === THEMEAPP.light
                     ? paletaColores("colorTextAlter")
                     : paletaColores("colorBgRowSelectedBorder"),
                 bgcolor:
-                  actualTheme === "light"
+                  actualTheme === THEMEAPP.light
                     ? paletaColores("colorRowHover")
                     : paletaColores("colorRowHoverDark"),
                 border:

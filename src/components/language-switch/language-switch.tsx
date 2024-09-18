@@ -11,6 +11,7 @@ import { User } from "../../interfaces/user.interface";
 import { updateUserLanguage } from "../../api/users";
 import { LANGUAGE } from "../../utils/enums/language.enum";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import { THEMEAPP } from "../../utils/enums/themeApp.enum";
 
 /**
  * Component that returns a button that allows the user to change the language 
@@ -104,7 +105,7 @@ function ChangeLanguage() {
         backgroundImage: "transparent",
         borderRadius: 45,
         overflow: "hidden",
-        borderColor: actualTheme === "light" ? "#252525" : "white",
+        borderColor: actualTheme === THEMEAPP.light ? "#252525" : "white",
         borderWidth: 2,
       }}
     >

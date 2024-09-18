@@ -45,6 +45,7 @@ import { LocalizationProvider, esES } from "@mui/x-date-pickers";
 import { grey } from "@mui/material/colors";
 import { UPDATE_FREQUENCY } from "../../utils/enums/update-frequency.enum";
 import { FORMAT } from "../../utils/enums/format.enum";
+import { THEMEAPP } from "../../utils/enums/themeApp.enum";
 
 export interface DialogData {
   open: boolean;
@@ -81,9 +82,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [formats, setFormats] = useState<string[]>([]);
   const [genderInfo, setGenderInfo] = useState<NO_APPLY>();
   const [autoAcess, setAutoAcess] = useState(true);
-  const [RAT, setRAT] = useState<NO_APPLY>();
+  const [RAT, setRAT] = useState<NO_APPLY>(); // NO SE GUARDA
   const [dataProtection, setDataProtection] = useState<NO_APPLY>();
-  const [dataStandards, setDataStandards] = useState<NO_APPLY>();
+  const [dataStandards, setDataStandards] = useState<NO_APPLY>(); // NO SE GUARDA
   const [dataAnonymize, setDataAnonymize] = useState<NO_APPLY>(NO_APPLY.false);
   const [sharedData, setSharedData] = useState(true);
   const [VLCi, setVLCi] = useState(true);
@@ -117,7 +118,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
           MuiTextField: {
             styleOverrides: {
               root: {
-                color: actualTheme === "light" ? "black" : "white",
+                color: actualTheme === THEMEAPP.light ? "black" : "white",
               },
             },
           },
@@ -132,7 +133,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
           MuiInput: {
             styleOverrides: {
               root: {
-                color: actualTheme === "light" ? "black" : "white",
+                color: actualTheme === THEMEAPP.light ? "black" : "white",
               },
             },
           },
@@ -142,28 +143,28 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
             },
             styleOverrides: {
               icon: {
-                color: actualTheme === "light" ? "black" : "white",
+                color: actualTheme === THEMEAPP.light ? "black" : "white",
               },
             },
           },
           MuiMenuList: {
             styleOverrides: {
               root: {
-                color: actualTheme === "light" ? "black" : "white",
+                color: actualTheme === THEMEAPP.light ? "black" : "white",
               },
             },
           },
           MuiMenuItem: {
             styleOverrides: {
               root: {
-                color: actualTheme === "light" ? "black" : "white",
+                color: actualTheme === THEMEAPP.light ? "black" : "white",
               },
             },
           },
         },
         palette: {
-          mode: actualTheme === "light" ? "light" : "dark",
-          ...(actualTheme === "light"
+          mode: actualTheme === THEMEAPP.light ? THEMEAPP.light : THEMEAPP.dark,
+          ...(actualTheme === THEMEAPP.light
             ? {
                 primary: grey,
                 divider: grey[800],
@@ -327,6 +328,8 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     const prueba = formJson as CreateCatalogue;
     const create: CreateCatalogue = {
       ...prueba,
+      RAT,
+      dataStandards,
       dataQuality,
       deleted,
       deletedDate,

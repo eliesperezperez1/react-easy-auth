@@ -28,6 +28,8 @@ import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import { buttonStyle } from "../../utils/functions/table-functions";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { THEMEAPP } from "../../utils/enums/themeApp.enum";
+import Value from "baseui/select/value";
 export interface DialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
@@ -61,7 +63,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
     language: "",
     role: "",
     service: RESPONSIBLE_IDENTITY,
-    themeApp: "",
+    themeApp: THEMEAPP,
   });
   const [showPassword, setShowPassword] = useState(false);
 
@@ -98,7 +100,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
       language: "",
       role: "",
       service: RESPONSIBLE_IDENTITY,
-      themeApp: "",
+      themeApp: THEMEAPP,
     });
     setFormData({});
     setStep(1);
@@ -247,9 +249,25 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
     });
     return menuItems;
   };
+
+  /**
+   * Renders a list of MenuItem components based on the values of the THEMEAPP enum.
+   *
+   * @return {JSX.Element[]} An array of JSX elements representing the theme options.
+   */
+  const renderTheme = () => {
+    const menuItems = Object.entries(THEMEAPP).map(([key, value]) => {
+      return (
+        <MenuItem key={key} value={key}>
+          {t("enums.themeApp." + value)}
+        </MenuItem>
+      );
+    });
+    return menuItems;
+  };
   const dynamicStyle = {
-    backgroundColor: actualTheme === "light" ? "white" : "#252525",
-    color: actualTheme === "light" ? "#252525" : "white",
+    backgroundColor: actualTheme === THEMEAPP.light ? "white" : "#252525",
+    color: actualTheme === THEMEAPP.light ? "#252525" : "white",
     "& .MuiInputBaseRoot": { border: "none" },
   };
 
@@ -429,6 +447,24 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                         </Select>
                       </div>
                       <div className="horizontalForm">
+                        <p>Tema</p>
+                        <Select
+                          id="themeApp"
+                          name="themeApp"
+                          margin="dense"
+                          variant="standard"
+                          defaultValue={formDataSteps.themeApp}
+                          onChange={(event) => {
+                            setFormDataSteps({
+                              ...formDataSteps,
+                              themeApp: event.target.value as typeof THEMEAPP,
+                            });
+                          }}
+                        >
+                          {renderTheme()}
+                        </Select>
+                      </div>
+                      <div className="horizontalForm">
                         <p>{t("columnsNames.role")}</p>
                         <Select
                           id="role"
@@ -493,8 +529,8 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
             </DialogContent>
             <DialogActions
               sx={{
-                backgroundColor: actualTheme === "light" ? "white" : "#252525",
-                color: actualTheme === "light" ? "#252525" : "white",
+                backgroundColor: actualTheme === THEMEAPP.light ? "white" : "#252525",
+                color: actualTheme === THEMEAPP.light ? "#252525" : "white",
               }}
             ></DialogActions>
           </Dialog>

@@ -12,6 +12,7 @@ import { userMock } from "../../utils/user.mock";
 import { User } from "../../interfaces/user.interface";
 import DarkModeSwitch from "../darkModeSwitch/darkModeSwitch";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import { THEMEAPP } from "../../utils/enums/themeApp.enum";
 export interface ChangeLanguageEvent {
   change: () => void;
 }
@@ -63,8 +64,8 @@ const Menu = (props: { change: ChangeLanguageEvent }) => {
   const dynamicStyle = {
     //backgroundColor: userData.themeApp === 'light' ? 'white' : 'black',
     //color: userData.themeApp === 'light' ? 'black' : 'white',
-    backgroundColor: actualTheme === "light" ? "white" : "#252525",
-    color: actualTheme === "light" ? "#252525" : "white",
+    backgroundColor: actualTheme === THEMEAPP.light ? "white" : "#252525",
+    color: actualTheme === THEMEAPP.light ? "#252525" : "white",
   };
 
   useEffect(() => {

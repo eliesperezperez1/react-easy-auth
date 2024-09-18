@@ -17,6 +17,7 @@ import { ThemeProvider } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
 import { TOPIC } from "../../utils/enums/topic.enum";
+import { THEMEAPP } from "../../utils/enums/themeApp.enum";
 export interface UpdateDialogData {
   open: boolean;
   closeDialog: (a: boolean) => void;
@@ -191,8 +192,8 @@ export default function UpdateEntityDialog(props: {
   };
 
   const dynamicStyle = {
-    backgroundColor: actualTheme === "light" ? "white" : "#252525",
-    color: actualTheme === "light" ? "#252525" : "white",
+    backgroundColor: actualTheme === THEMEAPP.light ? "white" : "#252525",
+    color: actualTheme === THEMEAPP.light ? "#252525" : "white",
     "& .MuiInputBaseRoot": { border: "none" },
   };
 
@@ -205,8 +206,8 @@ export default function UpdateEntityDialog(props: {
         open={open}
         onClose={handleClose}
         sx={{
-          backgroundColor: actualTheme==="light" ? "white" : "#252525",
-          color: actualTheme==="light" ? "#252525" : "white",
+          backgroundColor: actualTheme===THEMEAPP.light ? "white" : "#252525",
+          color: actualTheme===THEMEAPP.light ? "#252525" : "white",
           "& .MuiTextField-root": { m: 1, width: "20ch" },
           "& .MuiFormControl-root": { m: 1, width: "20ch" },
           "&. MuiInputBase-root": { m: 1, width: "20ch", border: "none" },

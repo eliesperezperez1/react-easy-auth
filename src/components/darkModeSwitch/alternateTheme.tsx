@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuthHeader, useAuthUser, useSignIn } from "react-auth-kit";
 import { userMock } from "../../utils/user.mock";
 import { User } from "../../interfaces/user.interface";
+import { THEMEAPP } from '../../utils/enums/themeApp.enum';
 
 /**
  * Custom hook to manage the theme of the application.
@@ -18,7 +19,7 @@ const useAlternateTheme = () => {
       setUserData(user().user);
       setActualTheme(user().user.themeApp);
     } else {
-      setActualTheme("light");
+      setActualTheme(THEMEAPP.light);
     }
   }, [user()]);
 
@@ -28,7 +29,7 @@ const useAlternateTheme = () => {
    * @return {void} This function does not return anything.
    */
   const toggleTheme = () => {
-    setActualTheme(actualTheme === 'light' ? 'dark' : 'light');
+    setActualTheme(actualTheme === THEMEAPP.light ? THEMEAPP.dark : THEMEAPP.light);
   };
 
   return { actualTheme, toggleTheme };

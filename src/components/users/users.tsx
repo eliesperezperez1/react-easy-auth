@@ -28,6 +28,7 @@ import {
 } from "../../utils/functions/table-functions";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
+import { THEMEAPP } from "../../utils/enums/themeApp.enum";
 
 /**
  * Renders a list of users in the datagrid with their information and allows for CRUD operations.
@@ -124,11 +125,11 @@ function UserList() {
         let deleted = data.filter((d: User) => d.deleted === true);
         setUsers(notDeleted);
         setDeletedUsers(deleted);
-        if (deletedTable) {
+       /* if (deletedTable) {
           setRows(deleted);
         } else {
           setRows(notDeleted);
-        }
+        }*/
       });
   }
 /**
@@ -162,6 +163,14 @@ function UserList() {
       setRows(deletedUsers);
     } else {
       setRows(users);
+    }
+  }
+
+  function showNotDeleted() {
+    if (!deletedTable) {
+      setRows(users);
+    } else {
+      setRows(deletedUsers);
     }
   }
 
@@ -223,6 +232,10 @@ function UserList() {
       userData.role === ROLE.SUPER_ADMIN
     );
   }
+  
+  useEffect(() => {
+    showNotDeleted();
+  }, [deletedTable, showNotDeleted]);
 
   if (!users.length)
     return (
@@ -242,19 +255,19 @@ function UserList() {
             sx={{
               height: "100%",
               width: "100%",
-              backgroundColor: actualTheme === "light" ? "white" : "#252525",
-              color: actualTheme === "light" ? "#252525" : "white",
+              backgroundColor: actualTheme === THEMEAPP.light ? "white" : "#252525",
+              color: actualTheme === THEMEAPP.light ? "#252525" : "white",
               "& .header-theme": {
                 backgroundColor: "lightblue",
                 border: "1px 1px 0px 0px solid black",
               },
               "& .MuiDataGrid-row:hover": {
                 color:
-                  actualTheme === "light"
+                  actualTheme === THEMEAPP.light
                     ? paletaColores("colorTextAlter")
                     : paletaColores("colorBgRowSelectedBorder"),
                 bgcolor:
-                  actualTheme === "light"
+                  actualTheme === THEMEAPP.light
                     ? paletaColores("colorRowHover")
                     : paletaColores("colorRowHoverDark"),
                 border:

@@ -1,5 +1,5 @@
 export enum THEMEAPP {
-    LI = "light",
-    DA = "dark",
+    light = "light",
+    dark = "dark",
   }
   

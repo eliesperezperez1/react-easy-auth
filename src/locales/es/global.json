@@ -241,6 +241,10 @@
             "esES": "Castellano",
             "caES": "Valenciano",
             "alt": "Otro"
+        },
+        "themeApp": {
+            "light": "Claro",
+            "dark": "Oscuro"
         }
     }
 }

@@ -1,6 +1,7 @@
 import { GridPagination } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
+import { THEMEAPP } from "../../utils/enums/themeApp.enum";
 
 /**
  * Renders a custom pagination component using the MUI GridPagination component.
@@ -17,7 +18,7 @@ function CustomPagination(props: any) {
     <GridPagination
       labelRowsPerPage={t("tooltipText.rowsPage")}
       sx={{
-        color: actualTheme==="light" ? "black" : "white",
+        color: actualTheme===THEMEAPP.light ? "black" : "white",
       }}
       showFirstButton
       showLastButton

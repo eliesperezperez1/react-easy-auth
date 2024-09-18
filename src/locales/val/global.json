@@ -240,6 +240,10 @@
             "esES": "Castellà",
             "caES": "Valencià",
             "alt": "Altre"
+        },
+        "themeApp": {
+            "light": "Clar",
+            "dark": "Fosc"
         }
     }
 }

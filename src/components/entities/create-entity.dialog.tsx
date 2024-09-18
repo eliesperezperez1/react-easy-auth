@@ -19,6 +19,7 @@ import { esES } from "@mui/material/locale";
 import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
 import { TOPIC } from "../../utils/enums/topic.enum";
 import { StyledProfileBody } from "baseui/menu";
+import { THEMEAPP } from "../../utils/enums/themeApp.enum";
 
 export interface DialogData {
   open: boolean;
@@ -52,14 +53,14 @@ const baseTheme = (actualTheme: any) =>
         MuiInput: {
           styleOverrides: {
             root: {
-              color: actualTheme === "light" ? "black" : "white",
+              color: actualTheme === THEMEAPP.light ? "black" : "white",
             },
           },
         },
       },
       palette: {
-        mode: actualTheme === "light" ? "light" : "dark",
-        ...(actualTheme === "light"
+        mode: actualTheme === THEMEAPP.light ? THEMEAPP.light : THEMEAPP.dark,
+        ...(actualTheme === THEMEAPP.light
           ? {
               // palette values for light mode
               primary: grey,
@@ -248,8 +249,8 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
   };
 
   const dynamicStyle = {
-    backgroundColor: actualTheme === "light" ? "white" : "#252525",
-    color: actualTheme === "light" ? "#252525" : "white",
+    backgroundColor: actualTheme === THEMEAPP.light ? "white" : "#252525",
+    color: actualTheme === THEMEAPP.light ? "#252525" : "white",
     "& .MuiInputBaseRoot": { border: "none" },
   };
 
@@ -262,8 +263,8 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
             open={open}
             onClose={handleClose}
             sx={{
-              backgroundColor: actualTheme === "light" ? "white" : "#252525",
-              color: actualTheme === "light" ? "#252525" : "white",
+              backgroundColor: actualTheme === THEMEAPP.light ? "white" : "#252525",
+              color: actualTheme === THEMEAPP.light ? "#252525" : "white",
               "& .MuiTextField-root": { m: 1, width: "20ch" },
               "& .MuiFormControl-root": { m: 1, width: "20ch" },
               "& .MuiInputBaseRoot": { m: 1, width: "20ch", border: "none" },
@@ -571,8 +572,8 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
             </DialogContent>
             <DialogActions
               sx={{
-                backgroundColor: actualTheme === "light" ? "white" : "#252525",
-                color: actualTheme === "light" ? "#252525" : "white",
+                backgroundColor: actualTheme === THEMEAPP.light ? "white" : "#252525",
+                color: actualTheme === THEMEAPP.light ? "#252525" : "white",
                 "& .MuiInputBaseRoot": { border: "none" },
               }}
             ></DialogActions>
