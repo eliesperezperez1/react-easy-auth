@@ -303,6 +303,7 @@ function UserList() {
                       setOpenDialog(true);
                     }}
                     getSelectedCatalogues={getSelectedUsers}
+                    restoreRegisters={restoreRegisters}
                   ></CustomToolbar>
                 );
               },

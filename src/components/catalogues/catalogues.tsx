@@ -512,6 +512,7 @@ function CatalogueList() {
       .then((response) => response.json())
       .then((data) => {
         setCatalogues(data);
+        classifyCatalogues(data);
       });
   }
 
@@ -560,21 +561,25 @@ function CatalogueList() {
  *
  * @return {void} This function does not return anything.
  */
-  function deleteRegisters() {
-    selectedCatalogues.forEach((sc: string) => {
-      let cata = catalogues.find((v) => v._id === sc);
-      if (cata) {
-        updateCatalogueRequest(cata._id, { ...cata, deleted: true },authHeader());
+    function deleteRegisters() {
+      selectedCatalogues.forEach((sc: string) => {
+        let cata = catalogues.find((v: any) => v._id === sc);
+        if (cata) {
+          updateCatalogueRequest(
+            cata._id,
+            { ...cata, deleted: true, deletedDate: new Date() },
+            authHeader()
+          );
+        }
+      });
+      getAndSetCatalogues();
+      classifyCatalogues(catalogues);
+      if (deletedTable) {
+        showDeleted();
+      } else {
+        showNotDeleted();
       }
-    });
-    getAndSetCatalogues();
-    /*classifyCatalogues(catalogues);
-    if (deletedTable) {
-      showDeleted();
-    } else {
-      showNotDeleted();
-    }*/
-  }
+    }
 
 /**
  * Determines if something could be selected based on the current user role which can be either admin or super admin.
@@ -593,8 +598,14 @@ function CatalogueList() {
  */
   function restoreRegisters() {
     selectedCatalogues.forEach((sc: string) => {
-      let cata = deletedCatalogues.find((v: any) => v._id === sc);
+      let cata;
+      if(verifiedTable){
+        cata = deletedVerified.find((v: any) => v._id === sc);
+      } else {
+        cata = deletedNotVerified.find((v: any) => v._id === sc);
+      }
       if (cata) {
+        console.log("Encontrado");
         updateCatalogueRequest(
           cata._id,
           { ...cata, deleted: false },
@@ -603,6 +614,12 @@ function CatalogueList() {
       }
     });
     getAndSetCatalogues();
+    classifyCatalogues(catalogues);
+    if (deletedTable) {
+      showDeleted();
+    } else {
+      showNotDeleted();
+    }
   }
 
   useEffect(() => {

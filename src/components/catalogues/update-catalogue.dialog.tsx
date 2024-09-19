@@ -312,7 +312,6 @@ export default function UpdateCatalogueDialog(props: {
    * @return {void} This function does not return anything.
    */
   const updateCatalogue = (formJson: any) => {
-    //const b = formJson.creationDate;
     const deletedDate = new Date();
     const deleted = false;
     const prueba = formJson as UpdateCatalogue;

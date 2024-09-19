@@ -15,12 +15,11 @@ export interface Catalogue {
   description: string;
   responsibleIdentity: RESPONSIBLE_IDENTITY;
   topic: TOPIC;
-  territorialScope: string;
   temporaryCoverage: string;
   organism: ORGANISM;
   language: LANGUAGE_FORM;
   keyWords: string[];
-  minimumVariables: MINIMUM_VALUE | undefined;
+  minimumVariables: MINIMUM_VALUE;
   contactPerson: string;
   masterData: boolean;
   referenceData: boolean;
@@ -29,17 +28,17 @@ export interface Catalogue {
   comments: string;
   typeGeo: GEOGRAPHICAL_INFO;
   format: string[];
-  genderInfo: NO_APPLY | undefined;
+  genderInfo: NO_APPLY;
   structuredComments: string;
   associatedApplication: string;
   autoAcess: boolean;
   originComments: string;
-  RAT: NO_APPLY | undefined;
-  dataProtection: NO_APPLY | undefined;
-  dataStandards: NO_APPLY | undefined;
+  RAT: NO_APPLY;
+  dataProtection: NO_APPLY;
+  dataStandards: NO_APPLY;
   dataProtectionComments: string;
   dataAnonymize: string[];
-  dataQuality: number | null;
+  dataQuality: number;
   sharingLevel: SHARING_LEVEL;
   sharedData: boolean;
   VLCi: boolean;
@@ -59,7 +58,7 @@ export interface Catalogue {
 
 export type CreateCatalogue = Omit<
   Catalogue,
-  "_id" | "createdAt" | "updatedAt"
+  "_id"
 >;
 
 export type UpdateCatalogue = Partial<CreateCatalogue>;

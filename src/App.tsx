@@ -126,8 +126,9 @@ function App() {
             element={
               <RequireAuth loginPath="/login">
                 <>
-                  <Menu change={change} />
-                  <Home />
+                  {/*<Menu change={change} />
+                  <Home /> */}
+                  <Login />
                 </>
               </RequireAuth>
             }

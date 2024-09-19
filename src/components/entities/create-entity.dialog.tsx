@@ -112,7 +112,6 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
     email: "",
   });
   const { actualTheme } = useAlternateTheme();
-  //const [creationDate, setCreationDate] = useState(getCurrentDateTime());
 
   useEffect(() => {
     setOpen(props.enviar.open);
@@ -328,45 +327,6 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
                             </Select>
                           </FormControl>
                       </div>
-                      {/* <div className="horizontalForm">
-                  <p>
-                  {t("columnsNames.lastUpdate")}
-                  </p>
-                  <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="lastUpdate"
-                    name="lastUpdate"
-                    type="datetime-local"
-                    variant="standard"
-
-                    sx= {{
-                      backgroundColor: 'none',
-                      width: '100%',
-                      border: 'none',
-                      borderBottom: '1px solid lightgrey',
-                      '& input': {
-                        backgroundColor: 'none',
-                        border: 'none',
-                        
-                      },
-                    }}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      style:{
-                        backgroundColor: 'none',
-                        width: '100%',
-                        border: 'none',
-                        borderBottom: '1px solid lightgrey',
-                      },
-                      readOnly: true,
-                    }}
-                  />
-                  
-                </div> */}
                       <div className="horizontalForm">
                         <p>{t("columnsNames.contactPerson")}</p>
                         <TextField
@@ -455,46 +415,6 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
                           }
                         />
                       </div>
-                      {/* <div className="horizontalForm">
-                <p>
-                  Fecha de creación
-                </p>
-                <TextField
-                  autoFocus
-                  required
-                  margin="dense"
-                  id="creationDate"
-                  name="creationDate"
-                  type="datetime-local"
-                  variant="standard"
-              
-
-                  sx= {{
-                    backgroundColor: 'none',
-                    width: '100%',
-                    border: 'none',
-                    borderBottom: '1px solid lightgrey',
-                    '& input': {
-                      backgroundColor: 'none',
-                      border: 'none',
-                      
-                    },
-                  }}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  inputProps={{
-                    style:{
-                      backgroundColor: 'none',
-                      width: '100%',
-                      border: 'none',
-                      borderBottom: '1px solid lightgrey',
-                    },
-                    readOnly: true,
-                  }}
-                />
-                
-              </div> */}
                       <div className="horizontalForm">
                         <p>{t("login.email")}</p>
                         <TextField

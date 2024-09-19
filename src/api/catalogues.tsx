@@ -81,6 +81,7 @@ export const deleteCatalogueRequest = async (
       Authorization: refreshToken,
     },
   });
+  
 
 /**
  * Sends a request to the server to update a catalogue.
@@ -134,3 +135,5 @@ export const getHighValue = async (refreshToken: string) =>
       "Access-Control-Allow-Origin": "*",
     },
   });
+
+  

@@ -328,8 +328,11 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     const prueba = formJson as CreateCatalogue;
     const create: CreateCatalogue = {
       ...prueba,
-      RAT,
-      dataStandards,
+      minimumVariables : formDataSteps.minimumVariables === undefined ? MINIMUM_VALUE.no_apply : formDataSteps.minimumVariables,
+      genderInfo: genderInfo === undefined ? NO_APPLY.no_apply : genderInfo,
+      RAT: RAT === undefined ? NO_APPLY.no_apply : RAT,
+      dataProtection: dataProtection === undefined ? NO_APPLY.no_apply : dataProtection,
+      dataStandards: dataStandards === undefined ? NO_APPLY.no_apply : dataStandards,
       dataQuality,
       deleted,
       deletedDate,

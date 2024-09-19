@@ -12,6 +12,7 @@ import { updateUserLanguage } from "../../api/users";
 import { LANGUAGE } from "../../utils/enums/language.enum";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import { THEMEAPP } from "../../utils/enums/themeApp.enum";
+import { LANGUAGE_FORM } from "../../utils/enums/language-form.enum";
 
 /**
  * Component that returns a button that allows the user to change the language 
@@ -51,7 +52,7 @@ function ChangeLanguage() {
     if (idioma === "es") {
       setIdioma("val");
       if (userData !== null && userData !== userMock) {
-        updateUserLanguage({ ...userData, language: LANGUAGE.CA }, authHeader())
+        updateUserLanguage({ ...userData, language: LANGUAGE_FORM.caES }, authHeader())
           .then((response) => response.json())
           .then((data: User) => {
             const authDivided = authHeader().split(" ");
@@ -68,7 +69,7 @@ function ChangeLanguage() {
     } else {
       setIdioma("es");
       if (userData !== userMock) {
-        updateUserLanguage({ ...userData, language: LANGUAGE.ES }, authHeader())
+        updateUserLanguage({ ...userData, language: LANGUAGE_FORM.esES }, authHeader())
           .then((response) => response.json())
           .then((data: User) => {
             const authDivided = authHeader().split(" ");

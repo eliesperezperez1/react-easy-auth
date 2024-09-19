@@ -12,7 +12,7 @@ import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import { useTranslation } from "react-i18next";
 import "./entities.css";
 import { entityMock } from "../../utils/entity.mock";
-import { getEntitiesRequest, getEntityRequest } from "../../api/entities";
+import { getEntitiesRequest, getEntityRequest, updateEntityRequest } from "../../api/entities";
 import { User } from "../../interfaces/user.interface";
 import UpdateEntityDialog, { UpdateDialogData } from "./update-entity.dialog";
 import { userMock } from "../../utils/user.mock";
@@ -222,13 +222,6 @@ function EntitiesList() {
   function itCouldBeSelectable() {
     const rolUsuario = userData.role;
     const servicioUsuario = userData.service;
-    //const rolDataset = prueba.responsibleIdentity;
-    /*
-    return (
-      (userData.role === ROLE.ADMIN &&
-        params === userData.service) ||
-      userData.role === ROLE.SUPER_ADMIN
-    );*/
     return userData.role === ROLE.ADMIN || userData.role === ROLE.SUPER_ADMIN;
   }
 
@@ -244,9 +237,9 @@ function EntitiesList() {
     selectedEntities.forEach((sc: string) => {
       let cata = entities.find((v) => v._id === sc);
       if (cata) {
-        updateCatalogueRequest(
+        updateEntityRequest(
           cata._id,
-          { ...cata, deleted: true, deletedDate: new Date() },
+          { ...cata, deleted: true},
           authHeader()
         );
       }
@@ -264,7 +257,7 @@ function EntitiesList() {
     selectedEntities.forEach((sc: string) => {
       let cata = deletedEntities.find((v) => v._id === sc);
       if (cata) {
-        updateCatalogueRequest(
+        updateEntityRequest(
           cata._id,
           { ...cata, deleted: false },
           authHeader()
@@ -360,6 +353,7 @@ function EntitiesList() {
                     setOpenDialog(true);
                   }}
                   getSelectedCatalogues={getSelectedEntities}
+                  restoreRegisters={restoreRegisters}
                 ></CustomToolbar>
               );
             },
