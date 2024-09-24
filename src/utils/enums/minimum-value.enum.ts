@@ -1,6 +1,6 @@
 export enum MINIMUM_VALUE {
-  true = "SI",
-  false = "NO",
+  true = "Si",
+  false = "No",
   part = "Parcialmente",
-  no_apply = "NO APLICA",
+  no_apply = "No aplica",
 }

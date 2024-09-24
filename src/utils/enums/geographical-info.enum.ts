@@ -5,5 +5,5 @@ export enum GEOGRAPHICAL_INFO {
   direccion = "Dirección",
   distrito = "Distrito",
   seccion = "Sección censal",
-  noAplica = "No aplica",
+  no_apply = "No aplica",
 }

@@ -1,5 +1,5 @@
 export enum NO_APPLY {
-    false = "NO",
-    true = "SI",
-    no_apply = "NO APLICA",
+    false = "No",
+    true = "Si",
+    no_apply = "No aplica",
 } 

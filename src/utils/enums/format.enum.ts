@@ -8,5 +8,4 @@ export enum FORMAT {
     GEOJSON = "geoJSON",
     SHP = "shp",
     OTHERS = "Otros",
-    FORMAT = "FORMAT",
 }   
