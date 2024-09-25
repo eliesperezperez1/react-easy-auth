@@ -11,6 +11,7 @@ import {
   getUserRequest,
   getUsersRequest,
   updateUserRequest,
+  deletePermamentUserRequest,
 } from "../../api/users";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import { useTranslation } from "react-i18next";
@@ -183,7 +184,13 @@ function UserList() {
     selectedUsers.forEach((sc: string) => {
       let cata = users.find((v) => v._id === sc);
       if (cata) {
-        updateUserRequest(cata._id, { ...cata, deleted: true }, authHeader());
+        updateUserRequest(
+          cata._id, 
+          { ...cata, deleted: true }, 
+          authHeader()
+        ).then(() => {
+          window.location.reload();
+        });
       }
     });
     getAndSetUsers();
@@ -198,7 +205,35 @@ function UserList() {
     selectedUsers.forEach((sc: string) => {
       let cata = deletedUsers.find((v) => v._id === sc);
       if (cata) {
-        updateUserRequest(cata._id, { ...cata, deleted: false }, authHeader());
+        updateUserRequest(
+          cata._id, 
+          { ...cata, deleted: false },
+          authHeader()
+        ).then(() => {
+          window.location.reload();
+        });
+      }
+    });
+    getAndSetUsers();
+  }
+
+  /**
+   * Deletes the selected users from the database permanently and updates the user data.
+   * For each selected user, it makes a request to the server using the deletePermamentUserRequest function.
+   * Once the response is received, it reloads the page and fetches the updated user data.
+   *
+   * @return {void} This function does not return anything.
+   */
+  function deletePermanentUsers() {
+    selectedUsers.forEach((sc: string) => {
+      let cata = deletedUsers.find((v) => v._id === sc);
+      if (cata) {
+        deletePermamentUserRequest(
+          cata._id, 
+          authHeader()
+        ).then(() => {
+          window.location.reload();
+        });
       }
     });
     getAndSetUsers();
@@ -304,6 +339,7 @@ function UserList() {
                     }}
                     getSelectedCatalogues={getSelectedUsers}
                     restoreRegisters={restoreRegisters}
+                    deletePermanentRegisters={deletePermanentUsers}
                   ></CustomToolbar>
                 );
               },

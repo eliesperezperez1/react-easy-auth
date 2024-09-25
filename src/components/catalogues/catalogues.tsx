@@ -611,7 +611,9 @@ function CatalogueList() {
           cata._id,
           { ...cata, deleted: false },
           authHeader()
-        );
+        ).then(() => {
+          window.location.reload();
+        });
       }
     });
     getAndSetCatalogues();
@@ -623,6 +625,12 @@ function CatalogueList() {
     }
   }
 
+/**
+ * Deletes the selected catalogues permanently and updates the state with the new catalogue data. Then, it classifies the new 
+ * catalogues and calls `showDeleted` or `showNotDeleted` depending on the value of the `deletedTable` state.
+ *
+ * @return {void} This function does not return anything.
+ */
   function deletePermanentRegisters() {
     selectedCatalogues.forEach((sc: string) => {
       let cata;
@@ -635,7 +643,9 @@ function CatalogueList() {
         deletePermamentCatalogueRequest(
           cata._id,
           authHeader()
-        );
+        ).then(() => {
+          window.location.reload();
+        });
       }
     });
     getAndSetCatalogues();

@@ -5,14 +5,14 @@ import {
   useGridApiRef,
 } from "@mui/x-data-grid";
 import { Chip, ThemeProvider } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Entity } from "../../interfaces/entity.interface";
 import { updateCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import { useTranslation } from "react-i18next";
 import "./entities.css";
 import { entityMock } from "../../utils/entity.mock";
-import { getEntitiesRequest, getEntityRequest, updateEntityRequest } from "../../api/entities";
+import { getEntitiesRequest, getEntityRequest, updateEntityRequest, deletePermamentEntityRequest, } from "../../api/entities";
 import { User } from "../../interfaces/user.interface";
 import UpdateEntityDialog, { UpdateDialogData } from "./update-entity.dialog";
 import { userMock } from "../../utils/user.mock";
@@ -53,6 +53,9 @@ function EntitiesList() {
   const [userData, setUserData] = useState<User>(userMock);
   const gridApiRef = useGridApiRef();
   const {actualTheme} = useAlternateTheme();
+  const prevOpenDialogRef = useRef(openDialog);
+  const prevOpenUpdateDialogRef = useRef(openUpdateDialog);
+
 
   const [t, i18n] = useTranslation();
 
@@ -242,7 +245,9 @@ function EntitiesList() {
           cata._id,
           { ...cata, deleted: true},
           authHeader()
-        );
+        ).then(() => {
+          window.location.reload();
+        });
       }
     });
     getAndSetEntities();
@@ -262,7 +267,32 @@ function EntitiesList() {
           cata._id,
           { ...cata, deleted: false },
           authHeader()
-        );
+        ).then(() => {
+          window.location.reload();
+        });
+      }
+    });
+    getAndSetEntities();
+  }
+
+/**
+ * Deletes the selected entities permanently from the server by calling
+ * `deletePermamentEntityRequest` for each entity ID in the `selectedEntities`
+ * array. Then, it reloads the page and fetches the updated entities by calling
+ * `getAndSetEntities`.
+ *
+ * @return {void} This function does not return anything.
+ */
+  function deletePermamentEntity() {
+    selectedEntities.forEach((sc: string) => {
+      let cata = deletedEntities.find((v) => v._id === sc);
+      if (cata) {
+        deletePermamentEntityRequest(
+          cata._id,
+          authHeader()
+        ).then(() => {
+          window.location.reload();
+        });
       }
     });
     getAndSetEntities();
@@ -277,6 +307,14 @@ function EntitiesList() {
     }
     getAndSetEntities();
   }, []);
+
+  useEffect(() => {
+    if ((!openDialog && prevOpenDialogRef.current) || (!openUpdateDialog && prevOpenUpdateDialogRef.current)) {
+      window.location.reload();
+    }
+    prevOpenDialogRef.current = openDialog;
+    prevOpenUpdateDialogRef.current = openUpdateDialog;
+  }, [openDialog, openUpdateDialog]);
 
   if (!entities.length)
     return (
@@ -355,6 +393,7 @@ function EntitiesList() {
                   }}
                   getSelectedCatalogues={getSelectedEntities}
                   restoreRegisters={restoreRegisters}
+                  deletePermanentRegisters={deletePermamentEntity}
                 ></CustomToolbar>
               );
             },
