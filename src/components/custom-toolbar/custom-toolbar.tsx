@@ -42,6 +42,7 @@ export interface CustomToolbarProperties {
   createDialogOpen: () => void;
   getSelectedCatalogues: () => void;
   restoreRegisters?: () => void;
+  deletePermanentRegisters?: () => void;
   refreshODS?: () => void;
 }
 
@@ -71,6 +72,7 @@ function CustomToolbar(props: CustomToolbarProperties) {
     showVerified,
     showshowDeleted,
     restoreRegisters,
+    deletePermanentRegisters,
     createDialogOpen,
     getSelectedCatalogues,
     deleteRegisters,
@@ -164,6 +166,7 @@ function CustomToolbar(props: CustomToolbarProperties) {
       >
         {isAdminOrSuperAdmin &&
           (deletedTable ? (
+            <>
             <Button
               disabled={selectedCatalogues.length <= 0}
               startIcon={<RestoreIcon />}
@@ -172,6 +175,15 @@ function CustomToolbar(props: CustomToolbarProperties) {
             >
               Restaurar
             </Button>
+            <Button
+              disabled={selectedCatalogues.length <= 0}
+              startIcon={<DeleteIcon />}
+              sx={buttonStyles}
+              onClick={deletePermanentRegisters}
+            >
+              Eliminar
+            </Button>
+            </>
           ) : (
             <>
               {!(isEntities && userData.role !== ROLE.SUPER_ADMIN) && (

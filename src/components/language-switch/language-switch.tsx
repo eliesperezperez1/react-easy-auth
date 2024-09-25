@@ -25,7 +25,7 @@ function ChangeLanguage() {
   const authHeader = useAuthHeader();
   const singIn = useSignIn();
   const [t, i18n] = useTranslation();
-  const [idioma, setIdioma] = useState("es");
+  const [idioma, setIdioma] = useState(LANGUAGE_FORM.esES);
   const imagenes = [ValImage, CasImage];
   const [userData, setUserData] = useState<User>(userMock);
   const { actualTheme } = useAlternateTheme();
@@ -33,9 +33,9 @@ function ChangeLanguage() {
   useEffect(() => {
     if (user() && user().user) {
       setUserData(user().user);
-      setIdioma(user().user.language === "caES" ? "val" : "es");
+      setIdioma(user().user.language === LANGUAGE_FORM.caES ? LANGUAGE_FORM.caES : LANGUAGE_FORM.esES);
     } else {
-      setIdioma("es");
+      setIdioma(LANGUAGE_FORM.esES);
     }
   }, [user()]);
 
@@ -49,8 +49,8 @@ function ChangeLanguage() {
   async function switchVisibleSeleccion() {
     if (userData === userMock) console.log("igualesss");
 
-    if (idioma === "es") {
-      setIdioma("val");
+    if (idioma === LANGUAGE_FORM.esES) {
+      setIdioma(LANGUAGE_FORM.caES);
       if (userData !== null && userData !== userMock) {
         updateUserLanguage({ ...userData, language: LANGUAGE_FORM.caES }, authHeader())
           .then((response) => response.json())
@@ -67,7 +67,7 @@ function ChangeLanguage() {
           });
       }
     } else {
-      setIdioma("es");
+      setIdioma(LANGUAGE_FORM.esES);
       if (userData !== userMock) {
         updateUserLanguage({ ...userData, language: LANGUAGE_FORM.esES }, authHeader())
           .then((response) => response.json())
@@ -111,7 +111,7 @@ function ChangeLanguage() {
       }}
     >
       <img
-        src={idioma === "val" ? CasImagen : ValImagen}
+        src={idioma === LANGUAGE_FORM.caES ? CasImagen : ValImagen}
         alt="Image"
         style={{
           objectFit: "cover",

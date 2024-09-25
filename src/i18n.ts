@@ -1,7 +1,7 @@
 import i18next, { i18n as i18nInstance } from "i18next";
 import { initReactI18next } from "react-i18next";
-import es1 from './locales/es/global.json';
-import val1 from './locales/val/global.json';
+import es1 from './locales/Castellano/global.json';
+import val1 from './locales/Valencià/global.json';
 
 export const defaultNS = 'ns1';
 
@@ -20,13 +20,13 @@ export const defaultNS = 'ns1';
  */
 i18next.use(initReactI18next).init({
   debug: true,
-  fallbackLng: 'es',
+  fallbackLng: 'Castellano',
   defaultNS,
   resources: {
-    es: {
+    Castellano: {
       ns1: es1,
     },
-    val: {
+    Valencià: {
       ns1: val1,
     },
   },

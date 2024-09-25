@@ -101,14 +101,24 @@ export default function UpdateCatalogueDialog(props: {
     setActiveAds(props.enviar.catalogue.activeAds);
     setStep(1);
     if (props.enviar.catalogue.keyWords !== undefined || props.enviar.catalogue.keyWords !== null) {
-      setChips(props.enviar.catalogue.keyWords);
+      //let aux = props.enviar.catalogue.keyWords.map((aux: any) => aux);
+      let aux: string[] = props.enviar.catalogue.keyWords && props.enviar.catalogue.keyWords[0] ? props.enviar.catalogue.keyWords[0].split(";").map(word => word.trim()) : [];
+      setChips(aux);
+      //setChips(props.enviar.catalogue.keyWords);
     }
     if (props.enviar.catalogue.dataAnonymize !== undefined || props.enviar.catalogue.dataAnonymize !== null) {
-      setChipsDataAnonymize(props.enviar.catalogue.dataAnonymize);
+      //let aux = props.enviar.catalogue.dataAnonymize.map((aux: any) => aux);
+      let aux: string[] = props.enviar.catalogue.dataAnonymize && props.enviar.catalogue.dataAnonymize[0] ? props.enviar.catalogue.dataAnonymize[0].split(";").map(word => word.trim()) : [];
+      setChipsDataAnonymize(aux);
+      //setChipsDataAnonymize(props.enviar.catalogue.dataAnonymize);
     }
     if(props.enviar.catalogue.dataProtection === NO_APPLY.no_apply){
       setDisabledDataAnonymize(true);
       setDataProtection(NO_APPLY.no_apply);
+    }
+    if(props.enviar.catalogue.format !== undefined || props.enviar.catalogue.dataAnonymize !== null){
+      const aux: string[] = props.enviar.catalogue.format && props.enviar.catalogue.format[0] ? props.enviar.catalogue.format[0].split('/').map(word => word.trim()) : [];
+      setFormats(aux);
     }
   }, [props.enviar.open, props.enviar.catalogue]);
 
@@ -361,6 +371,12 @@ export default function UpdateCatalogueDialog(props: {
       const formatosDatosMod = formatosDatos.replace(/,/g, " / ");
       currentStepData.set("format", formatosDatosMod);
     }
+
+    currentStepData.set("keyWords", "");
+    currentStepData.set("keyWords", chips.join("; "));
+    currentStepData.set("dataAnonymize", "");
+    currentStepData.set("dataAnonymize", chipsDataAnonymize.join("; "));
+
     const currentStepJson = Object.fromEntries(currentStepData.entries());
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
     setStep(step + 1);
@@ -397,12 +413,17 @@ export default function UpdateCatalogueDialog(props: {
       setDataAnonymize(NO_APPLY.no_apply);
       setUpdate({ ...update, dataAnonymize: [NO_APPLY.no_apply] });
       setDisabledDataAnonymize(true); // or setDisabled(dataAnonymize !== NO_APPLY.no_apply)
-      setInputValueDataAnonymize("NO_APPLY");
+      setInputValueDataAnonymize("");
       setChipsDataAnonymize(["NO_APPLY"]);
+      
     } else {
       setDataAnonymize(NO_APPLY.false);
-      setChipsDataAnonymize([]);
-      setUpdate({ ...update, dataAnonymize: [] });
+      if(update.dataAnonymize !== undefined) {
+        setChipsDataAnonymize(update.dataAnonymize);
+      } else {
+        setChipsDataAnonymize([]);
+      }
+      setUpdate({ ...update, dataAnonymize: [...chipsDataAnonymize] });
       setInputValueDataAnonymize("");
       setDisabledDataAnonymize(false); // or setDisabled(dataAnonymize !== NO_APPLY.no_apply)
 
@@ -651,7 +672,7 @@ export default function UpdateCatalogueDialog(props: {
                       </div>
                       <div className="row">
                         <div className="horizontalForm">
-                          <p>{t("columnsNames.keyWords")}*</p>
+                          <p>{t("columnsNames.keyWords")}</p>
                           <Box
                             sx={{
                               display: "flex",
@@ -855,7 +876,7 @@ export default function UpdateCatalogueDialog(props: {
                             >
                               {Object.entries(FORMAT).map(([key, value]) => (
                                 <MenuItem key={key} value={value}>
-                                  <Checkbox checked={formats.indexOf(value) > -1} />
+                                  <Checkbox checked={formats.includes(value)} />
                                   <ListItemText primary={value} />
                                 </MenuItem>
                               ))}

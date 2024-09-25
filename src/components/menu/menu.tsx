@@ -76,7 +76,7 @@ const Menu = (props: { change: ChangeLanguageEvent }) => {
     <nav className="navbar" style={dynamicStyle}>
       <div className="container" style={dynamicStyle}>
         <div className="logo">
-          {userData.themeApp === "light" ? <Brand /> : <BrandWhite />}
+          {userData.themeApp === THEMEAPP.light ? <Brand /> : <BrandWhite />}
         </div>
         <div className="menu-icon" onClick={handleShowNavbar}>
           <MenuIcon />

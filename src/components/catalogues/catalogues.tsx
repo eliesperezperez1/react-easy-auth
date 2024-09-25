@@ -10,6 +10,7 @@ import {
   getCatalogueRequest,
   getCataloguesRequest,
   updateCatalogueRequest,
+  deletePermamentCatalogueRequest,
 } from "../../api/catalogues";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import { useTranslation } from "react-i18next";
@@ -622,6 +623,30 @@ function CatalogueList() {
     }
   }
 
+  function deletePermanentRegisters() {
+    selectedCatalogues.forEach((sc: string) => {
+      let cata;
+      if(verifiedTable){
+        cata = deletedVerified.find((v: any) => v._id === sc);
+      } else {
+        cata = deletedNotVerified.find((v: any) => v._id === sc);
+      }
+      if (cata) {
+        deletePermamentCatalogueRequest(
+          cata._id,
+          authHeader()
+        );
+      }
+    });
+    getAndSetCatalogues();
+    classifyCatalogues(catalogues);
+    if (deletedTable) {
+      showDeleted();
+    } else {
+      showNotDeleted();
+    }
+  }
+
   useEffect(() => {
     if (user() !== null) {
       const a = user() ? user().user : userMock;
@@ -749,6 +774,7 @@ function CatalogueList() {
                     }}
                     refreshODS={refreshODS}
                     restoreRegisters={restoreRegisters}
+                    deletePermanentRegisters={deletePermanentRegisters}
                     createDialogOpen={createDialogOpen}
                     getSelectedCatalogues={getSelectedCatalogues}
                   ></CustomToolbar>

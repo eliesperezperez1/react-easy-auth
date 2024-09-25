@@ -1,5 +1,5 @@
-import ns1 from '../locales/es/global.json';
-import ns2 from '../locales/val/global.json';
+import ns1 from '../locales/Castellano/global.json';
+import ns2 from '../locales/Valencià/global.json';
 
 const resources = {
   ns1,

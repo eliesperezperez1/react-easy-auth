@@ -3,6 +3,6 @@ export const namespaces = {
   };
   
   export const languages = {
-    es: "es",
-    val: "val",
+    es: "Castellano",
+    val: "Valencià",
   };

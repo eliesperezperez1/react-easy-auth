@@ -95,6 +95,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [OpenDataSoft, setOpenDataSoft] = useState(true);
   const [chips, setChips] = useState<string[]>([]);
   const [chipsDataAnonymize, setChipsDataAnonymize] = useState<string[]>([]);
+  const [chipsAux, setChipsAux] = useState<string[]>([]);
   const [chipsFormats, setChipsFormats] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [inputValueDataAnonymize, setInputValueDataAnonymize] = useState<string>("");
@@ -296,14 +297,15 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
           } else {
             return prevChips;
           }
-        });
-        setFormDataSteps({ ...formDataSteps, dataAnonymize: [...chipsDataAnonymize] });
+        })
+        const anonymizeString = chipsDataAnonymize.join("; ");
+        const aux : string[] = [anonymizeString];
+        setFormDataSteps({ ...formDataSteps, dataAnonymize: [...aux] });
       }
       setInputValueDataAnonymize("");
     } else {
       setInputValueDataAnonymize(value);
     }
-    
   };
 
 /**
@@ -314,6 +316,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
  */
   const handleDeleteDataAnonymize = (chipToDelete: string) => {
     setChipsDataAnonymize((chipsDataAnonymize) => chipsDataAnonymize.filter((chip) => chip !== chipToDelete));
+    const anonymizeString = chipsDataAnonymize.filter((chip) => chip !== chipToDelete).join("; ");
+    const aux : string[] = [anonymizeString];
+    setFormDataSteps({ ...formDataSteps, dataAnonymize: aux });
   };
 
 /**
@@ -328,11 +333,11 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     const prueba = formJson as CreateCatalogue;
     const create: CreateCatalogue = {
       ...prueba,
-      minimumVariables : formDataSteps.minimumVariables === undefined ? MINIMUM_VALUE.no_apply : formDataSteps.minimumVariables,
-      genderInfo: genderInfo === undefined ? NO_APPLY.no_apply : genderInfo,
-      RAT: RAT === undefined ? NO_APPLY.no_apply : RAT,
-      dataProtection: dataProtection === undefined ? NO_APPLY.no_apply : dataProtection,
-      dataStandards: dataStandards === undefined ? NO_APPLY.no_apply : dataStandards,
+      minimumVariables : formDataSteps.minimumVariables === undefined ? MINIMUM_VALUE.false : formDataSteps.minimumVariables,
+      genderInfo: genderInfo === undefined ? NO_APPLY.false : genderInfo,
+      RAT: RAT === undefined ? NO_APPLY.false : RAT,
+      dataProtection: dataProtection === undefined ? NO_APPLY.false : dataProtection,
+      dataStandards: dataStandards === undefined ? NO_APPLY.false : dataStandards,
       dataQuality,
       deleted,
       deletedDate,
@@ -381,6 +386,12 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       currentStepData.set("format", formatosDatosMod);
     }
 
+    
+    currentStepData.set("keyWords", "");
+    currentStepData.set("keyWords", chips.join("; "));
+    currentStepData.set("dataAnonymize", "");
+    currentStepData.set("dataAnonymize", chipsDataAnonymize.join("; "));
+
     //--------------------------------------------------------------------
     const currentStepJson = Object.fromEntries(currentStepData.entries());
     setFormDataSteps((prevData) => ({ ...prevData, ...currentStepJson }));
@@ -405,8 +416,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       MongoDB,
       OpenDataSoft,
     }));
+    setFormData((prevData) => ({ ...prevData, dataAnonymize: currentStepData.get("dataAnonymize"), ...currentStepJson }));
     setStep(step + 1);
-    console.log(formData);
+    console.log(formDataSteps);
   };
 
 /**
@@ -458,11 +470,15 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       setDataAnonymize(NO_APPLY.no_apply);
       setFormDataSteps({ ...formDataSteps, dataAnonymize: [NO_APPLY.no_apply] });
       setDisabledDataAnonymize(true); // or setDisabled(dataAnonymize !== NO_APPLY.no_apply)
-      setInputValueDataAnonymize("NO_APPLY");
+      setInputValueDataAnonymize("");
       setChipsDataAnonymize(["NO_APPLY"]);
     } else {
       setDataAnonymize(NO_APPLY.false);
-      setChipsDataAnonymize([]);
+      if (formDataSteps.dataAnonymize === undefined) {
+        setChipsDataAnonymize([]);
+      } else {
+        setChipsDataAnonymize(formDataSteps.dataAnonymize);
+      }
       setFormDataSteps({ ...formDataSteps, dataAnonymize: [] });
       setInputValueDataAnonymize("");
       setDisabledDataAnonymize(false); // or setDisabled(dataAnonymize !== NO_APPLY.no_apply)
@@ -729,7 +745,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                       </div>
                       <div className="row">
                         <div className="horizontalForm">
-                          <p>{t("columnsNames.keyWords")}*</p>
+                          <p>{t("columnsNames.keyWords")}</p>
                           <Box
                             sx={{
                               display: "flex",

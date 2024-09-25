@@ -30,6 +30,7 @@ import CustomToolbar from "../custom-toolbar/custom-toolbar";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
 import baseTheme from "../darkModeSwitch/darkmodeTheme";
 import { THEMEAPP } from "../../utils/enums/themeApp.enum";
+import { LANGUAGE_FORM } from "../../utils/enums/language-form.enum";
 
 /**
  * Renders a list of entities with a DataGrid component that displays the entities' contact person, location, topic, responsible identity, phone number, and email. 
@@ -105,9 +106,9 @@ function EntitiesList() {
     },
     {
       field:
-        userData.language === LANGUAGE.ES
-          ? "responsibleIdentityES"
-          : "responsibleIdentityVAL",
+        userData.language === LANGUAGE_FORM.esES
+          ? "responsibleIdentity"
+          : "responsibleIdentity",
       headerName: t("columnsNames.responsibleIdentity"),
       width: 300,
       description: t("tooltipText.responsibleIdentityService"),
@@ -158,7 +159,7 @@ function EntitiesList() {
     
     return (
       (userData.role === ROLE.ADMIN &&
-        params.row.responsibleIdentityVAL === userData.service) ||
+        params.row.responsibleIdentity === userData.service) ||
       userData.role === ROLE.SUPER_ADMIN
     );
   }
