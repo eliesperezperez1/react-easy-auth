@@ -363,11 +363,11 @@ function EntitiesList() {
                   userData.service === RESPONSIBLE_IDENTITY.GENERAL
                     ? []
                     : [
-                        {
+                        /*{
                           field: "responsibleIdentity",
                           operator: "contains",
                           value: userData.service,
-                        },
+                        },*/
                       ],
                 quickFilterValues: [],
               },

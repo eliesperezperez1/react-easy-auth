@@ -5,7 +5,7 @@ import {
   useGridApiRef,
 } from "@mui/x-data-grid";
 import { ThemeProvider } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { User } from "../../interfaces/user.interface";
 import {
   getUserRequest,
@@ -50,6 +50,8 @@ function UserList() {
   const [userSelected, setUserSelected] = useState<User>(userMock);
   const [userData, setUserData] = useState<User>(userMock);
   const { actualTheme } = useAlternateTheme();
+  const prevOpenDialogRef = useRef(openDialog);
+  const prevOpenUpdateDialogRef = useRef(openUpdateDialog);
 
   const datosDialog: DialogData = {
     open: openDialog,
@@ -263,7 +265,7 @@ function UserList() {
     return (
       (userData.role === ROLE.ADMIN &&
         params.row.service === userData.service &&
-        params.row.role === ( ROLE.SUPER_VIEWER || ROLE.VIEWER)) ||
+        (params.row.role === ROLE.SUPER_VIEWER || params.row.role === ROLE.VIEWER)) ||
       userData.role === ROLE.SUPER_ADMIN
     );
   }
@@ -271,6 +273,14 @@ function UserList() {
   useEffect(() => {
     showNotDeleted();
   }, [deletedTable, showNotDeleted]);
+
+  useEffect(() => {
+    if ((!openDialog && prevOpenDialogRef.current) || (!openUpdateDialog && prevOpenUpdateDialogRef.current)) {
+      window.location.reload();
+    }
+    prevOpenDialogRef.current = openDialog;
+    prevOpenUpdateDialogRef.current = openUpdateDialog;
+  }, [openDialog, openUpdateDialog]);
 
   if (!users.length)
     return (

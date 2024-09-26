@@ -82,7 +82,8 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
 
   useEffect(() => {
     setOpen(props.enviar.open);
-    formDataSteps.service = user().user.service;
+    formDataSteps.service = user().user.service as typeof RESPONSIBLE_IDENTITY;
+    console.log(user().user.service);
   });
   
 /**
@@ -163,7 +164,10 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
     const currentStepData = new FormData(event.currentTarget);
     const currentStepJson = Object.fromEntries(currentStepData.entries());
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
-    const mergedFormData = { ...formData, ...currentStepJson };
+    let mergedFormData = { ...formData, ...currentStepJson };
+    if (user().user.role !== ROLE.SUPER_ADMIN) {
+      mergedFormData = {...mergedFormData, service: user().user.service as typeof RESPONSIBLE_IDENTITY};
+    }
     createUser(mergedFormData);
   };
 
@@ -498,8 +502,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                           onChange={(event) => {
                             setFormDataSteps({
                               ...formDataSteps,
-                              service: event.target
-                                .value as RESPONSIBLE_IDENTITY,
+                              service: event.target.value as typeof RESPONSIBLE_IDENTITY,
                             });
                           }}
                         >
