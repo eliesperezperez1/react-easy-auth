@@ -22,6 +22,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { RESPONSIBLE_IDENTITY } from "../../utils/enums/responsible-identity.enum";
 import { ROLE } from "../../utils/enums/role.enum";
 import { buttonStyle } from "../../utils/functions/table-functions";
@@ -51,6 +53,7 @@ export default function UpdateUserDialog(props: { enviar: UpdateDialogData }) {
   const [formData, setFormData] = useState({});
   const { actualTheme } = useAlternateTheme();
   const [showPassword, setShowPassword] = useState(false);
+  const [isLocked, setIsLocked] = useState(true);
 
   /**
    * Toggles the visibility of the password.
@@ -59,6 +62,18 @@ export default function UpdateUserDialog(props: { enviar: UpdateDialogData }) {
    */
   const handleTogglePassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+
+  /**
+   * Toggles the locking of the password input and clears the password if previously locked.
+   *
+   * @return {void} This function does not return anything.
+   */
+  const handleLockToggle = () => {
+    setIsLocked(!isLocked);
+    if (isLocked) {
+      update.password = "";
+    }
   };
 
   useEffect(() => {
@@ -318,10 +333,14 @@ export default function UpdateUserDialog(props: { enviar: UpdateDialogData }) {
                         />
                       </div>
                       <div className="horizontalForm">
+                        <IconButton onClick={handleLockToggle}>
+                          {isLocked ? <LockIcon /> : <LockOpenIcon />}
+                        </IconButton>
                         <p>{t("login.password")}</p>
                         <TextField
                           variant="standard"
-                          required
+                          //required
+                          disabled={isLocked}
                           id="password"
                           name="password"
                           defaultValue={update.password}
