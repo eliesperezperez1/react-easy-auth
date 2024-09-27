@@ -14,6 +14,7 @@ import {
   ThemeProvider,
   IconButton,
   InputAdornment,
+  Autocomplete,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import "./create-users.dialog.css";
@@ -66,6 +67,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
     themeApp: THEMEAPP,
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [servicioAux, setServicioAux] = useState<RESPONSIBLE_IDENTITY>(RESPONSIBLE_IDENTITY.GENERAL);
 
   /**
    * Toggles the visibility of the password.
@@ -120,6 +122,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
     const prueba = formJson as CreateUser;
     const create: CreateUser = {
       ...prueba,
+      service: servicioAux,
       deleted,
     };
     props.enviar.getInfo();
@@ -200,7 +203,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
    * @return {JSX.Element[]} An array of MenuItem components.
    */
   const renderService = () => {
-    const menuItems = Object.entries(RESPONSIBLE_IDENTITY).map(
+    /*const menuItems = Object.entries(RESPONSIBLE_IDENTITY).map(
       ([key, value]) => {
         if (
           value === RESPONSIBLE_IDENTITY.GENERAL &&
@@ -216,6 +219,10 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
       }
     );
     return menuItems;
+    */
+    return Object.values(RESPONSIBLE_IDENTITY).filter(
+      (value) => value !== RESPONSIBLE_IDENTITY.GENERAL || user().user.role === ROLE.SUPER_ADMIN
+    );
   };
 
 /**
@@ -488,7 +495,7 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                       </div>
                       <div className="horizontalForm">
                         <p>{t("columnsNames.responsibleIdentity")}</p>
-                        <Select
+                        {/*<Select
                           id="service"
                           name="service"
                           margin="dense"
@@ -507,7 +514,34 @@ export default function CreateUserDialog(props: { enviar: DialogData }) {
                           }}
                         >
                           {renderService()}
-                        </Select>
+                        </Select>*/}
+                        <Autocomplete
+                          id="responsibleIdentity"
+                          //name="responsibleIdentity"
+                          //margin="dense"
+                          disabled={user().user.role !== ROLE.SUPER_ADMIN}
+                          defaultValue={
+                            user().user.role !== ROLE.SUPER_ADMIN
+                            ? user().user.service
+                            : formDataSteps.service
+                          }
+                          
+                          onChange={(event, value) => {
+                            setFormDataSteps({
+                              ...formDataSteps,
+                              service: value as typeof RESPONSIBLE_IDENTITY,
+                            });
+                            setServicioAux(value as RESPONSIBLE_IDENTITY);
+                          }}
+                          options={renderService()}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label={t("columnsNames.responsibleIdentity")}
+                              variant="standard"
+                            />
+                          )}
+                        />
                       </div>
                     </div>
                     <div className="buttonsForm">

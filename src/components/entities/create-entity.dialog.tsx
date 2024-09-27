@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { CreateEntity } from "../../interfaces/entity.interface";
 import { createEntityRequest } from "../../api/entities";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
-import { Box, FormControl, MenuItem, Select, ThemeProvider, createTheme } from "@mui/material";
+import { Autocomplete, Box, FormControl, MenuItem, Select, ThemeProvider, createTheme } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { useTranslation } from "react-i18next";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -146,11 +146,13 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
     const prueba = formJson as CreateEntity;
     const create: CreateEntity = {
       ...prueba,
+      responsibleIdentity: (formJson.responsibleIdentity === undefined || formJson.responsibleIdentity === RESPONSIBLE_IDENTITY.GENERAL) ? formDataSteps.responsibleIdentity : formJson.responsibleIdentity,
     };
     createEntityRequest(create, authHeader())
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
+        
       });
     props.enviar.getInfo();
     handleClose();
@@ -232,7 +234,7 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
    * @return {JSX.Element[]} An array of MenuItem components.
    */
   const renderResponsibleIdentity = () => {
-    const menuItems = Object.entries(RESPONSIBLE_IDENTITY).map(
+    /*const menuItems = Object.entries(RESPONSIBLE_IDENTITY).map(
       ([key, value]) => {
         if (value === RESPONSIBLE_IDENTITY.GENERAL) {
           return null;
@@ -244,7 +246,8 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
         );
       }
     );
-    return menuItems;
+    return menuItems;*/
+    return Object.values(RESPONSIBLE_IDENTITY).filter(value => value !== RESPONSIBLE_IDENTITY.GENERAL);
   };
 
   const dynamicStyle = {
@@ -286,7 +289,7 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
                       <div className="horizontalForm">
                         <p>{t("columnsNames.responsibleIdentity")}</p>
                         <FormControl variant="standard">
-                            <Select
+                            {/*<Select
                               id="responsibleIdentity"
                               name="responsibleIdentity"
                               margin="dense"
@@ -302,6 +305,28 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
                             >
                               {renderResponsibleIdentity()}
                             </Select>
+                            */}
+                            <Autocomplete
+                              id="responsibleIdentity"
+                              //name="responsibleIdentity"
+                              //margin="dense"
+                              defaultValue={userData().user.service}
+                              //disabled={!isGeneralOrTrans} || No creo que haga falta porque solo un super admin puede crear servicios
+                              onChange={(event, value) => {
+                                setFormDataSteps({
+                                  ...formDataSteps,
+                                  responsibleIdentity: value as RESPONSIBLE_IDENTITY,
+                                });
+                              }}
+                              options={renderResponsibleIdentity()}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  label={t("columnsNames.responsibleIdentity")}
+                                  variant="standard"
+                                />
+                              )}
+                            />
                           </FormControl>
                       </div>
                       <div className="horizontalForm">

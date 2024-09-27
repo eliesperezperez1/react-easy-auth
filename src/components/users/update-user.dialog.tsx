@@ -8,6 +8,7 @@ import { User, UpdateUser } from "../../interfaces/user.interface";
 import { updateUserRequest } from "../../api/users";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import {
+  Autocomplete,
   Box,
   IconButton,
   InputAdornment,
@@ -116,6 +117,7 @@ export default function UpdateUserDialog(props: { enviar: UpdateDialogData }) {
     const prueba = formJson as UpdateUser;
     setUpdate({
       ...prueba,
+      service: formJson.service === undefined ? update.service : formJson.service,
       deleted,
     });
     updateUserRequest(props.enviar.user._id, update, authHeader()).then(
@@ -133,7 +135,7 @@ export default function UpdateUserDialog(props: { enviar: UpdateDialogData }) {
  * @return {JSX.Element[]} An array of MenuItem components.
  */
   const renderService = () => {
-    const menuItems = Object.entries(RESPONSIBLE_IDENTITY).map(
+    /*const menuItems = Object.entries(RESPONSIBLE_IDENTITY).map(
       ([key, value]) => {
         if (
           value === RESPONSIBLE_IDENTITY.GENERAL &&
@@ -159,6 +161,10 @@ export default function UpdateUserDialog(props: { enviar: UpdateDialogData }) {
       );
     }
     return menuItems;
+    */
+    return Object.values(RESPONSIBLE_IDENTITY).filter(
+      (value) => value !== RESPONSIBLE_IDENTITY.GENERAL || user().user.role === ROLE.SUPER_ADMIN
+    );
   };
 
 /**
@@ -417,7 +423,7 @@ export default function UpdateUserDialog(props: { enviar: UpdateDialogData }) {
                       </div>
                       <div className="horizontalForm">
                         <p>{t("columnsNames.responsibleIdentity")}</p>
-                        <Select
+                        {/*<Select
                           id="service"
                           required
                           name="service"
@@ -434,7 +440,32 @@ export default function UpdateUserDialog(props: { enviar: UpdateDialogData }) {
                           }}
                         >
                           {renderService()}
-                        </Select>
+                        </Select>*/}
+                        <Autocomplete
+                          id="responsibleIdentity"
+                          //name="responsibleIdentity"
+                          //margin="dense"
+                          disabled={user().user.role !== ROLE.SUPER_ADMIN}
+                          defaultValue={update.service}
+                          
+                          onChange={(event, value) => {
+                            setUpdate({
+                              ...update,
+                              service: value as RESPONSIBLE_IDENTITY,
+                            });
+                            update.service = value as RESPONSIBLE_IDENTITY;
+                            console.log("value is: " + value);
+                            console.log("value in update is: " + update.service);
+                          }}
+                          options={renderService()}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label={t("columnsNames.responsibleIdentity")}
+                              variant="standard"
+                            />
+                          )}
+                        />
                       </div>
                     </div>
                     <div className="buttonsForm">

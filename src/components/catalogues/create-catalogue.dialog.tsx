@@ -7,6 +7,7 @@ import { CreateCatalogue } from "../../interfaces/catalogue.interface";
 import { createCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import {
+  Autocomplete,
   Box,
   Checkbox,
   Chip,
@@ -202,7 +203,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
    * @return {JSX.Element[]} An array of MenuItem components.
    */
   const renderResponsibleIdentity = () => {
-    const menuItems = Object.entries(RESPONSIBLE_IDENTITY).map(
+    /*const menuItems = Object.entries(RESPONSIBLE_IDENTITY).map(
       ([key, value]) => {
         if (value === RESPONSIBLE_IDENTITY.GENERAL) {
           return null;
@@ -213,8 +214,8 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
           </MenuItem>
         );
       }
-    );
-    return menuItems;
+    );*/
+    return Object.values(RESPONSIBLE_IDENTITY).filter(value => value !== RESPONSIBLE_IDENTITY.GENERAL);
   };
 
   /**
@@ -333,6 +334,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     const prueba = formJson as CreateCatalogue;
     const create: CreateCatalogue = {
       ...prueba,
+      responsibleIdentity: formJson.responsibleIdentity === undefined ? formDataSteps.responsibleIdentity : formJson.responsibleIdentity,
       minimumVariables : formDataSteps.minimumVariables === undefined ? MINIMUM_VALUE.false : formDataSteps.minimumVariables,
       genderInfo: genderInfo === undefined ? NO_APPLY.false : genderInfo,
       RAT: RAT === undefined ? NO_APPLY.false : RAT,
@@ -653,7 +655,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                         <div className="horizontalForm">
                           <p>{t("columnsNames.responsibleIdentity")}*</p>
                           <FormControl variant="standard">
-                            <Select
+                            {/*<Select
                               id="responsibleIdentity"
                               name="responsibleIdentity"
                               margin="dense"
@@ -668,7 +670,28 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                               }}
                             >
                               {renderResponsibleIdentity()}
-                            </Select>
+                            </Select>*/}
+                            <Autocomplete
+                              id="responsibleIdentity"
+                              //name="responsibleIdentity"
+                              //margin="dense"
+                              defaultValue={userData().user.service}
+                              disabled={!isGeneralOrTrans}
+                              onChange={(event, value) => {
+                                setFormDataSteps({
+                                  ...formDataSteps,
+                                  responsibleIdentity: value as RESPONSIBLE_IDENTITY,
+                                });
+                              }}
+                              options={renderResponsibleIdentity()}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  label={t("columnsNames.responsibleIdentity")}
+                                  variant="standard"
+                                />
+                              )}
+                            />
                           </FormControl>
                         </div>
                         <div className="horizontalForm">

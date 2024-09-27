@@ -10,6 +10,7 @@ import {
 import { updateCatalogueRequest } from "../../api/catalogues";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import {
+  Autocomplete,
   Box,
   Checkbox,
   Chip,
@@ -161,7 +162,7 @@ export default function UpdateCatalogueDialog(props: {
    * @return {JSX.Element[]} An array of MenuItem components.
    */
   const renderResponsibleIdentity = () => {
-    const menuItems = Object.entries(RESPONSIBLE_IDENTITY).map(
+    /*const menuItems = Object.entries(RESPONSIBLE_IDENTITY).map(
       ([key, value]) => {
         if (value === RESPONSIBLE_IDENTITY.GENERAL) {
           return null;
@@ -183,7 +184,8 @@ export default function UpdateCatalogueDialog(props: {
         </MenuItem>
       );
     }
-    return menuItems;
+    return menuItems;*/
+    return Object.values(RESPONSIBLE_IDENTITY).filter(value => value !== RESPONSIBLE_IDENTITY.GENERAL);
   };
   /**
    * Handles the change event of the input field for keywords. If the input value ends with a semicolon,
@@ -327,6 +329,7 @@ export default function UpdateCatalogueDialog(props: {
     const prueba = formJson as UpdateCatalogue;
     setUpdate({
       ...prueba,
+      responsibleIdentity: formJson.responsibleIdentity === undefined ? update.responsibleIdentity : formJson.responsibleIdentity,
       deleted,
       deletedDate,
       verified: true,
@@ -589,7 +592,7 @@ export default function UpdateCatalogueDialog(props: {
                         <div className="horizontalForm">
                           <p>{t("columnsNames.responsibleIdentity")}*</p>
                           <FormControl variant="standard">
-                            <Select
+                            {/*<Select
                               id="responsibleIdentity"
                               name="responsibleIdentity"
                               margin="dense"
@@ -603,7 +606,29 @@ export default function UpdateCatalogueDialog(props: {
                               }}
                             >
                               {renderResponsibleIdentity()}
-                            </Select>
+                            </Select>*/}
+                            <Autocomplete
+                              id="responsibleIdentity"
+                              //name="responsibleIdentity"
+                              //margin="dense"
+                              defaultValue={update.responsibleIdentity}
+                              disabled={!isGeneralOrTrans}
+                              onChange={(event, value) => {
+                                setUpdate({
+                                  ...update,
+                                  responsibleIdentity: value as RESPONSIBLE_IDENTITY,
+                                });
+                                update.responsibleIdentity = value as RESPONSIBLE_IDENTITY;
+                              }}
+                              options={renderResponsibleIdentity()}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  label={t("columnsNames.responsibleIdentity")}
+                                  variant="standard"
+                                />
+                              )}
+                            />
                           </FormControl>
                         </div>
                         <div className="horizontalForm">

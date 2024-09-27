@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { Entity, UpdateEntity } from "../../interfaces/entity.interface";
 import { updateEntityRequest } from "../../api/entities";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
-import { Box, FormControl, MenuItem, Select } from "@mui/material";
+import { Autocomplete, Box, FormControl, MenuItem, Select } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import useAlternateTheme from "../darkModeSwitch/alternateTheme";
@@ -83,7 +83,10 @@ export default function UpdateEntityDialog(props: {
  */
   const updateEntity = (formJson: any) => {
     const prueba = formJson as UpdateEntity;
-    setUpdate(prueba);
+    setUpdate({
+      ...prueba,
+      responsibleIdentity: (formJson.responsibleIdentity === undefined || formJson.responsibleIdentity === RESPONSIBLE_IDENTITY.GENERAL) ? update.responsibleIdentity : formJson.responsibleIdentity,
+      });
     updateEntityRequest(props.enviar.entity._id, update, authHeader()).then(
       (response) => response.json()
     );
@@ -142,6 +145,7 @@ export default function UpdateEntityDialog(props: {
    * @return {JSX.Element[]} An array of MenuItem components.
    */
   const renderResponsibleIdentity = () => {
+    /*
     const menuItems = Object.entries(RESPONSIBLE_IDENTITY).map(
       ([key, value]) => {
         if (value === RESPONSIBLE_IDENTITY.GENERAL) {
@@ -164,7 +168,9 @@ export default function UpdateEntityDialog(props: {
         </MenuItem>
       );
     }
-    return menuItems;
+    return menuItems;*/
+    return Object.values(RESPONSIBLE_IDENTITY).filter(value => value !== RESPONSIBLE_IDENTITY.GENERAL);
+  
   };
   /**
    * Renders a list of MenuItem components based on the values of the TOPIC enum.
@@ -234,7 +240,7 @@ export default function UpdateEntityDialog(props: {
                   <div className="horizontalForm">
                     <p>{t("columnsNames.responsibleIdentity")}</p>
                     <FormControl variant="standard">
-                      <Select
+                      {/*<Select
                         id="responsibleIdentity"
                         name="responsibleIdentity"
                         margin="dense"
@@ -249,6 +255,29 @@ export default function UpdateEntityDialog(props: {
                       >
                         {renderResponsibleIdentity()}
                       </Select>
+                      */}
+                      <Autocomplete
+                        id="responsibleIdentity"
+                        //name="responsibleIdentity"
+                        //margin="dense"
+                        defaultValue={update.responsibleIdentity}
+                        //disabled={!isGeneralOrTrans}
+                        onChange={(event, value) => {
+                          setUpdate({
+                            ...update,
+                            responsibleIdentity: value as RESPONSIBLE_IDENTITY,
+                          });
+                          update.responsibleIdentity = value as RESPONSIBLE_IDENTITY;
+                        }}
+                        options={renderResponsibleIdentity()}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label={t("columnsNames.responsibleIdentity")}
+                            variant="standard"
+                          />
+                        )}
+                      />
                     </FormControl>
                   </div>
                   <div className="horizontalForm">
