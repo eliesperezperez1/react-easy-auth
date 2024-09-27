@@ -324,6 +324,7 @@ export default function UpdateUserDialog(props: { enviar: UpdateDialogData }) {
                           required
                           id="password"
                           name="password"
+                          defaultValue={update.password}
                           type={showPassword ? "text" : "password"}
                           onChange={handleChange}
                           InputProps={{

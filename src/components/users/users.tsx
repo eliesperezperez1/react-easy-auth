@@ -266,7 +266,8 @@ function UserList() {
       (userData.role === ROLE.ADMIN &&
         params.row.service === userData.service &&
         (params.row.role === ROLE.SUPER_VIEWER || params.row.role === ROLE.VIEWER)) ||
-      userData.role === ROLE.SUPER_ADMIN
+      userData.role === ROLE.SUPER_ADMIN ||
+      (userData.email === params.row.email && userData.role === ROLE.ADMIN)
     );
   }
   
