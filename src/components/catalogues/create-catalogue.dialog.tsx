@@ -366,7 +366,6 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const isGeneralOrTrans =
     userData().user.service === RESPONSIBLE_IDENTITY.GENERAL ||
     userData().user.service === RESPONSIBLE_IDENTITY.transparencia;
-
   /**
    * Handles the next step in the form submission process. First handles the format field,
    * then updates the form data with the new step data, and finally opens the next step.
@@ -434,6 +433,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
     const currentStepData = new FormData(event.currentTarget);
     const currentStepJson = Object.fromEntries(currentStepData.entries());
     setFormData((prevData) => ({ ...prevData, ...currentStepJson }));
+    /* 14/10/2024 Santi*/
+    if(!isGeneralOrTrans) formData.responsibleIdentity = userData().user.service as typeof RESPONSIBLE_IDENTITY; 
+    /**/
     const mergedFormData = { ...formData, ...currentStepJson };
     createCatalogue(mergedFormData);
   };
@@ -1439,6 +1441,23 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           }
                         />
                       </div>
+                      {/* Santi 12/11/2024 */}
+                      <div className="horizontalForm">
+                        <p>{t("columnsNames.productLinks")}</p>
+                        <TextField
+                          autoFocus
+                          margin="dense"
+                          id="productLinks"
+                          name="productLinks"
+                          type="string"
+                          variant="standard"
+                          value={formDataSteps.productLinks}
+                          onChange={(e) =>
+                            handleChange("productLinks", e.target.value)
+                          }
+                        />
+                      </div>
+                      {/**/}
                       <div className="horizontalForm">
                         <p>{t("columnsNames.productComments")}</p>
                         <TextField
@@ -1454,6 +1473,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           }
                         />
                       </div>
+                      {/* Santi 12/11/2024 
                       <div className="horizontalFormSwitch">
                         <p>{t("columnsNames.personalData")}</p>
                         <FormControl variant="standard">
@@ -1466,9 +1486,9 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                               setPersonalData(event.target.checked)
                             }
                             color="primary"
-                          />
+                          /> 
                         </FormControl>
-                      </div>
+                      </div> */}
                     </div>
                     <ButtonsForm info={buttonsFormProps} />
                   </form>
@@ -1480,6 +1500,4 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       </ThemeProvider>
     </>
   );
-}
-
-
+}/**/

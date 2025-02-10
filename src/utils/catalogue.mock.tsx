@@ -51,6 +51,9 @@ export const catalogueMock: Catalogue = {
   temporarySolution: UPDATE_FREQUENCY.daily,
   chargeStateComments: '',
   productData: '',
+  /* Santi 12/11/24 */
+  productLinks: '',
+  /**/
   productComments: '',
   deleted: false,
   deletedDate: new Date(),

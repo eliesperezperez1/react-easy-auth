@@ -1352,6 +1352,21 @@ export default function UpdateCatalogueDialog(props: {
                           onChange={handleChange}
                         />
                       </div>
+                      {/* Santi 12/11/2024 */}
+                      <div className="horizontalForm">
+                        <p>{t("columnsNames.productLinks")}</p>
+                        <TextField
+                          autoFocus
+                          margin="dense"
+                          id="productLinks"
+                          name="productLinks"
+                          type="string"
+                          variant="standard"
+                          value={update.productLinks}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      {/**/}
                       <div className="horizontalForm">
                         <p>{t("columnsNames.productComments")}</p>
                         <TextField
@@ -1366,6 +1381,7 @@ export default function UpdateCatalogueDialog(props: {
                           onChange={handleChange}
                         />
                       </div>
+                      {/* Santi 12/11/2024 
                       <div className="horizontalFormSwitch">
                         <p>{t("columnsNames.personalData")}</p>
                         <FormControl variant="standard">
@@ -1378,9 +1394,9 @@ export default function UpdateCatalogueDialog(props: {
                               setPersonalData(event.target.checked)
                             }
                             color="primary" // Opcional: ajusta el color del switch
-                          />
+                          /> 
                         </FormControl>
-                      </div>
+                      </div> */}
                     </div>
                     <ButtonsForm info={buttonsFormProps} />
                   </form>

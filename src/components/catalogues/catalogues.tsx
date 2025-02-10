@@ -424,6 +424,14 @@ function CatalogueList() {
       width: 200,
       description: t("tooltipText.productData"),
     },
+    /* Santi 12/11/2024 */
+    {
+      field: "productLinks",
+      headerName: t("columnsNames.productLinks"),
+      width: 200,
+      description: t("tooltipText.productLinks"),
+    },
+    /**/
     {
       field: "productComments",
       headerName: t("columnsNames.productComments"),

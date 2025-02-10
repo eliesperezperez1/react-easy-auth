@@ -50,6 +50,9 @@ export interface Catalogue {
   temporarySolution: UPDATE_FREQUENCY;
   chargeStateComments: string;
   productData: string;
+  /* Santi 12/11/24 */
+  productLinks: string;
+  /**/
   productComments: string;
   deleted: boolean;
   deletedDate: Date;

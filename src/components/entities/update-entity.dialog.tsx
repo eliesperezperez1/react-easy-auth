@@ -389,8 +389,8 @@ export default function UpdateEntityDialog(props: {
                   <div className="horizontalForm">
                     <p>{t("columnsNames.phoneNumber")}</p>
                     <TextField
-                      autoFocus
-                      required
+                      autoFocus                  
+                      // required Santi 13/11/24
                       margin="dense"
                       id="telephone"
                       name="telephone"

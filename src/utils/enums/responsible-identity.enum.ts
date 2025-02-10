@@ -89,7 +89,9 @@
 
 export enum RESPONSIBLE_IDENTITY{
   GENERAL = "general",
+  as_juridica = "Asesoría Jurídica",
   bombers = "Departamento de Bomberos, Prevención, Intervención de Emergencias y Protección Civil",
+  jurat_tributari = "Jurado Tributario",
   benestar_animal = "Oficina de Bienestar Animal",
   sanscionador = "Servicio Central del Procedimiento Sancionador",
   accio_cultural = "Servicio de Acción Cultural",
@@ -164,7 +166,6 @@ export enum RESPONSIBLE_IDENTITY{
   devesa = "Servicio de Devesa-Albufera",
   cicle_aigua = "Servicio Ciclo Integral del Agua",
   simfonica = "Servicio de Banda Sinfónica",
-  festes = "Servicio de Fiestas y Tradiciones - familia",
   proyectos_singulares = "Servicio de Proyectos Singulares",
   alcaldia_servicio = "Servicio de Alcaldía",
   secretaria_general_y_pleno = "Servicio de Secretaría General y del Pleno",
@@ -175,5 +176,5 @@ export enum RESPONSIBLE_IDENTITY{
   disciplina_urbanistica = "Servicio de Disciplina Urbanística",
   agricultura = "Servicio de Agricultura",
   atencion_especializada = "Servicio de Atención Especializada",
-  fiestas_tradiciones_cultura = "Servicio de Fiestas y Tradiciones - cultura"
+  festes = "Servicio de Fiestas y Tradiciones"
 }

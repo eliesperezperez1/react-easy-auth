@@ -428,7 +428,7 @@ export default function CreateEntityDialog(props: { enviar: DialogData }) {
                         <p>{t("columnsNames.phoneNumber")}</p>
                         <TextField
                           autoFocus
-                          required
+                          // required Santi 13/11/2024
                           margin="dense"
                           id="telephone"
                           name="telephone"

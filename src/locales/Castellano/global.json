@@ -75,6 +75,7 @@
         "temporarySolution": "Frecuencia de actualización",
         "chargeStateComments": "Comentarios sobre el estado de carga",
         "productData": "Producto de datos",
+        "productLinks": "Enlaces de datos",
         "productComments": "Comentarios del producto",
         "organism": "Organismo",
         "keyWords": "Palabras clave",
@@ -227,6 +228,7 @@
         "temporarySolution": "Frecuencia de actualización del dato",
         "chargeStateComments": "Comentarios relativos al estado de carga del dataset",
         "productData": "Nombre del producto de datos",
+        "productLinks": "Enlace web al producto",
         "productComments": "Comentarios relativo al producto de datos"
         
     },
