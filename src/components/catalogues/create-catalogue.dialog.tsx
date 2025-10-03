@@ -75,25 +75,28 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
   const [formDataSteps, setFormDataSteps] = useState(catalogueMock);
-  const [personalData, setPersonalData] = useState(true);
-  const [activeAds, setActiveAds] = useState(true);
-  const [masterData, setMasterData] = useState(true);
-  const [referenceData, setReferenceData] = useState(true);
-  const [highValue, setHighValue] = useState(true);
+  const [personalData, setPersonalData] = useState(false);
+  const [activeAds, setActiveAds] = useState(false);
+  const [masterData, setMasterData] = useState(false);
+  const [referenceData, setReferenceData] = useState(false);
+  const [highValue, setHighValue] = useState(false);
   const [formats, setFormats] = useState<string[]>([]);
   const [genderInfo, setGenderInfo] = useState<NO_APPLY>();
-  const [autoAcess, setAutoAcess] = useState(true);
+  const [autoAcess, setAutoAcess] = useState(false);
   const [RAT, setRAT] = useState<NO_APPLY>(); // NO SE GUARDA
   const [dataProtection, setDataProtection] = useState<NO_APPLY>();
   const [dataStandards, setDataStandards] = useState<NO_APPLY>(); // NO SE GUARDA
   const [dataAnonymize, setDataAnonymize] = useState<NO_APPLY>(NO_APPLY.false);
-  const [sharedData, setSharedData] = useState(true);
-  const [VLCi, setVLCi] = useState(true);
-  const [ArcGIS, setArcGIS] = useState(true);
-  const [Pentaho, setPentaho] = useState(true);
-  const [CKAN, setCKAN] = useState(true);
-  const [MongoDB, setMongoDB] = useState(true);
-  const [OpenDataSoft, setOpenDataSoft] = useState(true);
+  const [sharedData, setSharedData] = useState(false);
+  const [VLCi, setVLCi] = useState(false);
+  const [ArcGIS, setArcGIS] = useState(false);
+  const [Pentaho, setPentaho] = useState(false); 
+  const [CKAN, setCKAN] = useState(false);
+  const [MongoDB, setMongoDB] = useState(false);
+  /* Santi 03/09/25 
+  const [BancoEst, setBancoEst] = useState(false);
+  */ 
+  const [OpenDataSoft, setOpenDataSoft] = useState(false);
   const [chips, setChips] = useState<string[]>([]);
   const [chipsDataAnonymize, setChipsDataAnonymize] = useState<string[]>([]);
   const [chipsAux, setChipsAux] = useState<string[]>([]);
@@ -412,9 +415,13 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
       sharedData,
       VLCi,
       ArcGIS,
-      Pentaho,
+      /* Santi 11/09/25 Pentaho, */
       CKAN,
+      /* Santi 11/09/25 MongoDB, */
       MongoDB,
+      /* Santi 03/09/25 
+      BancoEst,
+      */
       OpenDataSoft,
     }));
     setFormData((prevData) => ({ ...prevData, dataAnonymize: currentStepData.get("dataAnonymize"), ...currentStepJson }));
@@ -566,7 +573,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
           ...formDataSteps,
           Pentaho: checked,
         });
-        break;
+        break; 
       case "CKAN":
         setCKAN(checked);
         setFormDataSteps({
@@ -574,13 +581,14 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
           CKAN: checked,
         });
         break;
+      
       case "MongoDB":
         setMongoDB(checked);
         setFormDataSteps({
           ...formDataSteps,
           MongoDB: checked,
         });
-        break;
+        break; 
       case "OpenDataSoft":
         setOpenDataSoft(checked);
         setFormDataSteps({
@@ -588,6 +596,15 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
           OpenDataSoft: checked,
         });
         break;
+      /* Santi 03/09/25 */ 
+      case "BancoEst":
+        setBancoEst(checked);
+        setFormDataSteps({
+          ...formDataSteps,
+          BancoEst: checked,
+        });
+        break;
+        /**/
     }
   }
 
@@ -852,7 +869,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             onChange={(event) =>
                               setMasterData(event.target.checked)
                             }
-                            color="primary" // Opcional: ajusta el color del switch
+                            color="success" // Opcional: ajusta el color del switch
                           />
                         </div>
                         <div className="horizontalFormSwitch">
@@ -865,7 +882,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             onChange={(event) =>
                               setReferenceData(event.target.checked)
                             }
-                            color="primary" // Opcional: ajusta el color del switch
+                            color="success" // Opcional: ajusta el color del switch
                           />
                         </div>
                         <div className="horizontalFormSwitch">
@@ -879,7 +896,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             onChange={(event) =>
                               setHighValue(event.target.checked)
                             }
-                            color="primary" // Opcional: ajusta el color del switch
+                            color="success" // Opcional: ajusta el color del switch
                           />
                         </div>
                         <div className="horizontalFormSwitch">
@@ -894,7 +911,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                               onChange={(event) =>
                                 setActiveAds(event.target.checked)
                               }
-                              color="primary" // Opcional: ajusta el color del switch
+                              color="success" // Opcional: ajusta el color del switch
                             />
                           </FormControl>
                         </div>
@@ -1063,7 +1080,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                           onChange={(event) =>
                             setAutoAcess(event.target.checked)
                           }
-                          color="primary"
+                          color="success"
                         />
                       </div>
                       <div className="horizontalForm">
@@ -1280,7 +1297,7 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             onChange={(event) =>
                               setSharedData(event.target.checked)
                             }
-                            color="primary"
+                            color="success"
                           />
                         </div>
                       </div>
@@ -1295,11 +1312,11 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             onChange={(event) => 
                               handleSwitchs(event)
                             }
-                            color="primary"
+                            color="success"
                           />
                         </div>
                         <div className="horizontalFormSwitch">
-                          <p>ArcGIS</p>
+                          <p>SIGVAL/Geoportal</p>
                           <Switch
                             id="ArcGIS"
                             name="ArcGIS"
@@ -1308,22 +1325,10 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             onChange={(event) =>
                               handleSwitchs(event)
                             }
-                            color="primary"
+                            color="success"
                           />
                         </div>
-                        <div className="horizontalFormSwitch">
-                          <p>Pentaho</p>
-                          <Switch
-                            id="Pentaho"
-                            name="Pentaho"
-                            value={Pentaho}
-                            checked={Pentaho}
-                            onChange={(event) =>
-                              handleSwitchs(event)
-                            }
-                            color="primary"
-                          />
-                        </div>
+                        
                         <div className="horizontalFormSwitch">
                           <p>CKAN</p>
                           <Switch
@@ -1334,9 +1339,10 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             onChange={(event) => 
                               handleSwitchs(event)
                             }
-                            color="primary"
+                            color="success"
                           />
                         </div>
+
                         <div className="horizontalFormSwitch">
                           <p>MongoDB</p>
                           <Switch
@@ -1347,11 +1353,26 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             onChange={(event) =>
                               handleSwitchs(event)
                             }
-                            color="primary"
+                            color="success"
                           />
                         </div>
+
                         <div className="horizontalFormSwitch">
-                          <p>OpenDataSoft</p>
+                          <p>Pentaho</p>
+                          <Switch
+                            id="Pentaho"
+                            name="Pentaho"
+                            value={Pentaho}
+                            checked={Pentaho}
+                            onChange={(event) =>
+                              handleSwitchs(event)
+                            }
+                            color="success"
+                          />
+                        </div>
+
+                        <div className="horizontalFormSwitch">
+                          <p>Portal de datos abiertos</p>
                           <Switch
                             id="OpenDataSoft"
                             name="OpenDataSoft"
@@ -1360,9 +1381,11 @@ export default function CreateCatalogueDialog(props: { enviar: DialogData }) {
                             onChange={(event) =>
                               handleSwitchs(event)
                             }
-                            color="primary"
+                            color="success"
                           />
                         </div>
+
+                        
                         <div className="horizontalForm">
                           <p>{t("columnsNames.temporarySolution")}</p>
                           {/*

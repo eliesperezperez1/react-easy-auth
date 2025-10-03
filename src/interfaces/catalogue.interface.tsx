@@ -43,9 +43,16 @@ export interface Catalogue {
   sharedData: boolean;
   VLCi: boolean;
   ArcGIS: boolean;
+  /* Santi 03/09/25 */
   Pentaho: boolean;
+  /**/
   CKAN: boolean;
+  /* Santi 03/09/25 */
   MongoDB: boolean;
+  /**/
+  /* Santi 03/09/25 
+  BancoEst: boolean;
+  */
   OpenDataSoft: boolean;
   temporarySolution: UPDATE_FREQUENCY;
   chargeStateComments: string;

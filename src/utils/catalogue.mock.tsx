@@ -44,9 +44,16 @@ export const catalogueMock: Catalogue = {
   sharedData: false,
   VLCi: false,
   ArcGIS: false,
+  /* Santi 03/09/25 */
   Pentaho: false,
+  /**/
   CKAN: false,
+  /* Santi 03/09/25 */
   MongoDB: false,
+  /**/
+  /* Santi 03/09/25 */
+  BancoEst: false,
+  /**/
   OpenDataSoft: false,
   temporarySolution: UPDATE_FREQUENCY.daily,
   chargeStateComments: '',

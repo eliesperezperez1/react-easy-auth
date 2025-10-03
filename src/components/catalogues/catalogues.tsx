@@ -136,6 +136,7 @@ function CatalogueList() {
         return value;
       }),
     },
+    /* 
     {
       field: "language",
       headerName: "Idioma",
@@ -145,6 +146,14 @@ function CatalogueList() {
       ),
       description: t("tooltipText.language"),
     },
+    */
+    {
+      field: "language",
+      headerName: t("columnsNames.language"),
+      width: 140,
+      description: t("tooltipText.language"),
+    },
+
     {
       field: "keyWords",
       headerName: t("columnsNames.keyWords"),
@@ -167,7 +176,7 @@ function CatalogueList() {
     {
       field: "contactPerson",
       headerName: t("columnsNames.contactPerson"),
-      width: 200,
+      width: 300,
       description: t("tooltipText.contactPersonService"),
     },
     {
@@ -219,7 +228,7 @@ function CatalogueList() {
     {
       field: "typeGeo",
       headerName: t("columnsNames.typeGeo"),
-      width: 200,
+      width: 250,
       description: t("tooltipText.typeGeo"),
     },
     {
@@ -332,7 +341,7 @@ function CatalogueList() {
     {
       field: "sharingLevel",
       headerName: t("columnsNames.sharingLevel"),
-      width: 200,
+      width: 250,
       description: t("tooltipText.sharingLevel"),
     },
     {
@@ -357,7 +366,7 @@ function CatalogueList() {
     },
     {
       field: "ArcGIS",
-      headerName: "ArcGIS",
+      headerName: t("columnsNames.ArcGIS"),
       width: 200,
       renderCell: (params) => {
         return isChecked(params.value);
@@ -365,6 +374,7 @@ function CatalogueList() {
       description: t("tooltipText.ArcGIS"),
       type: "boolean",
     },
+    
     {
       field: "Pentaho",
       headerName: "Pentaho",
@@ -375,6 +385,7 @@ function CatalogueList() {
       description: t("tooltipText.Pentaho"),
       type: "boolean",
     },
+    
     {
       field: "CKAN",
       headerName: "CKAN",
@@ -385,6 +396,7 @@ function CatalogueList() {
       description: t("tooltipText.CKAN"),
       type: "boolean",
     },
+    
     {
       field: "MongoDB",
       headerName: "MongoDB",
@@ -395,9 +407,22 @@ function CatalogueList() {
       description: t("tooltipText.MongoDB"),
       type: "boolean",
     },
+    
+    /* Santi 03/09/25 
+    {
+      field: "BancoEst",
+      headerName: t("columnsNames.BancoEst"),
+      width: 200,
+      renderCell: (params) => {
+        return isChecked(params.value);
+      },
+      description: t("tooltipText.BancoEst"),
+      type: "boolean",
+    },
+    */
     {
       field: "OpenDataSoft",
-      headerName: "OpenDataSoft",
+      headerName: t("columnsNames.OpenDataSoft"),
       width: 200,
       renderCell: (params) => {
         return isChecked(params.value);
@@ -424,14 +449,69 @@ function CatalogueList() {
       width: 200,
       description: t("tooltipText.productData"),
     },
-    /* Santi 12/11/2024 */
+    /* Santi 05/09/25 PARA INCLUIR */
+    {
+        field: "productLinks",
+        headerName: t("columnsNames.productLinks"),
+        width: 200,
+        description: t("tooltipText.productLinks"),
+        renderCell: (params) => {
+          const url = params.value;
+          return (
+            <a href={url} target="_blank" rel="noopener noreferrer">
+              {url}
+            </a>
+          );
+        }
+    },
+    /**/
+    /* Santi 08/09/25 Posible ampliación con SEPARADORES y LINKS
+
+    renderCell: (params) => {
+      const links = params.value?.split(',') || [];
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {links.map((url, index) => (
+            <a
+              key={index}
+              href={url.trim()}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {url.trim()}
+            </a>
+          ))}
+        </div>
+      );
+    }
+
+    Y CON VALIDACION DE URL VALIDA:
+
+    const isValidURL = (url: string) =>
+      /^https?:\/\/[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!$&'()*+,;=.]+$/.test(url);
+
+    renderCell: (params) => {
+        const url = params.value;
+
+        return isValidURL(url) ? (
+          <a href={url} target="_blank" rel="noopener noreferrer">
+            {url}
+          </a>
+        ) : (
+          url
+        );
+      }
+        
+    */
+    /* Santi 12/11/2024 
     {
       field: "productLinks",
       headerName: t("columnsNames.productLinks"),
       width: 200,
       description: t("tooltipText.productLinks"),
     },
-    /**/
+    */
     {
       field: "productComments",
       headerName: t("columnsNames.productComments"),
@@ -743,9 +823,11 @@ function CatalogueList() {
               },
             }}
             initialState={{
+              /* Santi 09/09/25 */
               pagination: {
                 paginationModel: { pageSize: 10, page: 0 },
               },
+              /* */
               filter: {
                 filterModel: {
                   items:
@@ -801,7 +883,9 @@ function CatalogueList() {
               Pagination: CustomPagination,
             }}
             getRowId={(row) => row._id}
-            pageSizeOptions={[5, 10, 25]}
+            /* Santi 09/09/25 */
+            pageSizeOptions={[5, 10, 25, 50]}
+            /**/
             isRowSelectable={(params) => rowCouldBeSelectable(params)}
             checkboxSelection={itCouldBeSelectable()}
             onRowSelectionModelChange={(catalogues) => {

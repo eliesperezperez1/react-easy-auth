@@ -6,6 +6,9 @@ import { MutableRefObject, useEffect, useState } from "react";
 import { GridApiCommunity } from "@mui/x-data-grid/models/api/gridApiCommunity";
 import { gridFilteredSortedRowIdsSelector, gridVisibleColumnFieldsSelector } from '@mui/x-data-grid';
 
+import { useTranslation } from "react-i18next";
+
+
 export interface ExportButtonProps {
   visibleData: MutableRefObject<GridApiCommunity>;
 }
@@ -17,6 +20,8 @@ export interface ExportButtonProps {
  * @return {JSX.Element} The rendered ExportButton component.
  */
 function ExportButton({ visibleData }: ExportButtonProps) {
+
+  const [t, i18n] = useTranslation();
   const [openMenuExportar, setOpenMenuExportar] = useState(false);
   useEffect(() => {}, [visibleData])
 
@@ -48,7 +53,21 @@ function ExportButton({ visibleData }: ExportButtonProps) {
  * @return {void} This function does not return anything.
  */
   const handleExport = (type: "xlsx" | "json") => {
-    const dataShowed = getVisibleData();
+
+    const dataShowedPr = getVisibleData();
+    /* Santi 08/09/25 */
+    const dataShowed = dataShowedPr.map(obj => {
+      const nuevoObj: Record<string, any> = {};
+
+      for (let clave in obj) {
+        const tUnsafe = t as (key: string) => string;
+        const nuevaClave = tUnsafe(`columnsNames.${clave}`); // usa traducción o deja la misma
+        nuevoObj[nuevaClave] = obj[clave];
+      }
+
+      return nuevoObj;
+    });
+    /**/
 
     if (type === "xlsx") {
       const worksheet = XLSX.utils.json_to_sheet(dataShowed);

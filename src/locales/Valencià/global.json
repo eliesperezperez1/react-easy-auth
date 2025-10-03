@@ -83,7 +83,11 @@
         "referenceData": "Dada de referència",
         "highValue": "Alt valor",
         "creationDate": "Data de creació",
-        "typeGeo": "Informació geogràfica"
+        "typeGeo": "Informació geogràfica",
+
+        "ArcGIS": "SIGVAL/Geoportal",
+        "BancoDeDatosDeEstadistica": "Banc de dades d'Estadística",
+        "OpenDataSoft":"Portal de dades obertes"
     },
     "login": {
         "welcome": "Benvingut de tornada",
@@ -219,11 +223,17 @@
         "sharingLevel": "¿Qui te acces a aquestes dades dins de la organització?",
         "sharedData": "¿S'han compartit aquestes dades en alguna plataforma?",
         "VLCi": "¿Està compartit en la plataforma Smart City?",
-        "ArcGIS": "¿Està cargat en ArcGIS?",
+
+        "ArcGIS": "¿Està cargat en SIGVAL/Geoportal?",
+
         "Pentaho": "¿Està disponible en Pentaho?",
         "CKAN": "¿Està cargat en CKAN?",
         "MongoDB": "¿Està cargat en MongoDB?",
-        "OpenDataSoft": "¿Està publicat en OpenDataSoft?",
+
+        "OpenDataSoft": "¿Està publicat en el portal de dades obertes?",
+
+        "BancoEst": "¿Está cargat en el banc de dades d'estadística?",
+
         "temporarySolution": "Freqüencia d'actualizació de les dades",
         "chargeStateComments": "Comentaris relatius al estat de carga del dataset",
         "productData": "Nom del producte de dades",

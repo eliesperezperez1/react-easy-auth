@@ -85,9 +85,12 @@ export default function UpdateCatalogueDialog(props: {
   const [sharedData, setSharedData] = useState(false);
   const [VLCi, setVLCi] = useState(false);
   const [ArcGIS, setArcGIS] = useState(false);
-  const [Pentaho, setPentaho] = useState(false);
+  const [Pentaho, setPentaho] = useState(false); 
   const [CKAN, setCKAN] = useState(false);
-  const [MongoDB, setMongoDB] = useState(false);
+  const [MongoDB, setMongoDB] = useState(false); 
+  /* Santi 03/09/25 
+  const [BancoEst, setBancoEst] = useState(false);
+  */ 
   const [OpenDataSoft, setOpenDataSoft] = useState(false);
   const [chips, setChips] = useState<string[]>([]);
   const [chipsDataAnonymize, setChipsDataAnonymize] = useState<string[]>([]);
@@ -520,6 +523,15 @@ export default function UpdateCatalogueDialog(props: {
           MongoDB: checked,
         });
         break;
+      /* Santi 03/09/25 
+      case "BancoEst":
+        setBancoEst(checked);
+        setUpdate({
+          ...update,
+          BancoEst: checked,
+        });
+        break;
+      */
       case "OpenDataSoft":
         setOpenDataSoft(checked);
         setUpdate({
@@ -778,7 +790,7 @@ export default function UpdateCatalogueDialog(props: {
                             onChange={(event) =>
                               setMasterData(event.target.checked)
                             }
-                            color="primary"
+                            color="success"
                           />
                         </div>
                         <div className="horizontalFormSwitch">
@@ -791,7 +803,7 @@ export default function UpdateCatalogueDialog(props: {
                             onChange={(event) =>
                               setReferenceData(event.target.checked)
                             }
-                            color="primary"
+                            color="success"
                           />
                         </div>
                         <div className="horizontalFormSwitch">
@@ -805,7 +817,7 @@ export default function UpdateCatalogueDialog(props: {
                             onChange={(event) =>
                               setHighValue(event.target.checked)
                             }
-                            color="primary"
+                            color="success"
                           />
                         </div>
                         <div className="horizontalFormSwitch">
@@ -820,7 +832,7 @@ export default function UpdateCatalogueDialog(props: {
                               onChange={(event) =>
                                 setActiveAds(event.target.checked)
                               }
-                              color="primary"
+                              color="success"
                             />
                           </FormControl>
                         </div>
@@ -986,7 +998,7 @@ export default function UpdateCatalogueDialog(props: {
                           value={update.autoAcess}
                           checked={update.autoAcess}
                           onChange={handleChange}
-                          color="primary" // Opcional: ajusta el color del switch
+                          color="success" // Opcional: ajusta el color del switch
                         />
                       </div>
                       <div className="horizontalForm">
@@ -1208,7 +1220,7 @@ export default function UpdateCatalogueDialog(props: {
                             onChange={(event) =>
                               setSharedData(event.target.checked)
                             }
-                            color="primary" // Opcional: ajusta el color del switch
+                            color="success" // Opcional: ajusta el color del switch
                           />
                         </div>
                       </div>
@@ -1221,31 +1233,21 @@ export default function UpdateCatalogueDialog(props: {
                             value={VLCi}
                             checked={VLCi}
                             onChange={(event) => handleSwitchs(event)}
-                            color="primary" // Opcional: ajusta el color del switch
+                            color="success" // Opcional: ajusta el color del switch
                           />
                         </div>
                         <div className="horizontalFormSwitch">
-                          <p>ArcGIS</p>
+                          <p>SIGVAL/Geoportal</p>
                           <Switch
                             id="ArcGIS"
                             name="ArcGIS"
                             value={ArcGIS}
                             checked={ArcGIS === true}
                             onChange={(event) => handleSwitchs(event)}
-                            color="primary" // Opcional: ajusta el color del switch
+                            color="success" // Opcional: ajusta el color del switch
                           />
                         </div>
-                        <div className="horizontalFormSwitch">
-                          <p>Pentaho</p>
-                          <Switch
-                            id="Pentaho"
-                            name="Pentaho"
-                            value={Pentaho}
-                            checked={Pentaho}
-                            onChange={(event) => handleSwitchs(event)}
-                            color="primary" // Opcional: ajusta el color del switch
-                          />
-                        </div>
+                        
                         <div className="horizontalFormSwitch">
                           <p>CKAN</p>
                           <Switch
@@ -1254,29 +1256,47 @@ export default function UpdateCatalogueDialog(props: {
                             value={CKAN}
                             checked={CKAN}
                             onChange={(event) => handleSwitchs(event)}
-                            color="primary" // Opcional: ajusta el color del switch
+                            color="success" // Opcional: ajusta el color del switch
                           />
                         </div>
+
                         <div className="horizontalFormSwitch">
-                          <p>MongoDB</p>
-                          <Switch
-                            id="MongoDB"
-                            name="MongoDB"
-                            value={MongoDB}
-                            checked={MongoDB}
-                            onChange={(event) => handleSwitchs(event)}
-                            color="primary" // Opcional: ajusta el color del switch
-                          />
-                        </div>
+                            <p>MongoDB</p>
+                            <Switch
+                              id="MongoDB"
+                              name="MongoDB"
+                              value={MongoDB}
+                              checked={MongoDB}
+                              onChange={(event) =>
+                                handleSwitchs(event)
+                              }
+                              color="success"
+                            />
+                          </div>
+  
                         <div className="horizontalFormSwitch">
-                          <p>OpenDataSoft</p>
+                            <p>Pentaho</p>
+                            <Switch
+                              id="Pentaho"
+                              name="Pentaho"
+                              value={Pentaho}
+                              checked={Pentaho}
+                              onChange={(event) =>
+                                handleSwitchs(event)
+                              }
+                              color="success"
+                            />
+                          </div>              
+
+                        <div className="horizontalFormSwitch">
+                          <p>Portal de datos abiertos</p>
                           <Switch
                             id="OpenDataSoft"
                             name="OpenDataSoft"
                             value={OpenDataSoft}
                             checked={OpenDataSoft}
                             onChange={(event) => handleSwitchs(event)}
-                            color="primary" // Opcional: ajusta el color del switch
+                            color="success" // Opcional: ajusta el color del switch
                           />
                         </div>
                         <div className="horizontalForm">

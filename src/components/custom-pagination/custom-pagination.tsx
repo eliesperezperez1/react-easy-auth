@@ -17,6 +17,9 @@ function CustomPagination(props: any) {
     
     <GridPagination
       labelRowsPerPage={t("tooltipText.rowsPage")}
+      /* Santi 09/09/25 */
+      rowsPerPageOptions={[10, 25, 50, 100, 200]} 
+      /* */
       sx={{
         color: actualTheme===THEMEAPP.light ? "black" : "white",
       }}

@@ -84,7 +84,11 @@
         "referenceData": "Dato de referencia",
         "highValue": "Alto valor",
         "creationDate": "Fecha de creación",
-        "typeGeo": "Información geográfica"
+        "typeGeo": "Información geográfica",
+
+        "ArcGIS": "SIGVAL/Geoportal",
+        "BancoEst": "Banco de datos de Estadística",
+        "OpenDataSoft":"Portal de datos abiertos"
     },
     "login": {
         "welcome": "Bienvenido de vuelta",
@@ -220,11 +224,17 @@
         "sharingLevel": "¿Quién tiene acceso a estos datos dentro de la organización?",
         "sharedData": "¿Se han compartido estos datos en alguna plataforma?",
         "VLCi": "¿Está compartido en la plataforma Smart City?",
-        "ArcGIS": "¿Está cargado en ArcGIS?",
+
+        "ArcGIS": "¿Está cargado en SIGVAL/Geoportal?",
+
         "Pentaho": "¿Está disponible en Pentaho?",
         "CKAN": "¿Está cargado en CKAN?",
         "MongoDB": "¿Está cargado en MongoDB?",
-        "OpenDataSoft": "¿Está publicado en OpenDataSoft?",
+
+        "BancoEst": "¿Está cargado en el banco de datos de estadística?",
+
+        "OpenDataSoft": "¿Está publicado en el portal de datos abiertos?",
+
         "temporarySolution": "Frecuencia de actualización del dato",
         "chargeStateComments": "Comentarios relativos al estado de carga del dataset",
         "productData": "Nombre del producto de datos",
